@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { pool } from '../config/database';
-import { Usuario, LoginDTO, AuthResponse } from '../types';
+import { prisma } from '../config/prisma';
+import { LoginDTO, AuthResponse } from '../types';
 
 /**
  * Login de usuario
@@ -18,18 +18,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Buscar usuario por email
-    const result = await pool.query<Usuario>(
-      'SELECT * FROM usuarios WHERE email = $1',
-      [email.toLowerCase().trim()]
-    );
+    // Buscar usuario por email usando Prisma
+    const usuario = await prisma.usuario.findUnique({
+      where: { email: email.toLowerCase().trim() },
+    });
 
-    if (result.rows.length === 0) {
+    if (!usuario) {
       res.status(401).json({ error: 'Credenciales inválidas' });
       return;
     }
-
-    const usuario = result.rows[0];
 
     // Verificar si el usuario está activo
     if (!usuario.activo) {
@@ -38,7 +35,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verificar contraseña
-    const isPasswordValid = await bcrypt.compare(password, usuario.password_hash);
+    const isPasswordValid = await bcrypt.compare(password, usuario.passwordHash);
 
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Credenciales inválidas' });
@@ -94,17 +91,24 @@ export const me = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const result = await pool.query<Usuario>(
-      'SELECT id, nombre, email, rol, activo, created_at FROM usuarios WHERE id = $1',
-      [userId]
-    );
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        rol: true,
+        activo: true,
+        createdAt: true,
+      },
+    });
 
-    if (result.rows.length === 0) {
+    if (!usuario) {
       res.status(404).json({ error: 'Usuario no encontrado' });
       return;
     }
 
-    res.json(result.rows[0]);
+    res.json(usuario);
   } catch (error) {
     console.error('Error en me:', error);
     res.status(500).json({ error: 'Error al obtener datos del usuario' });
@@ -130,21 +134,18 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    // Obtener usuario
-    const result = await pool.query<Usuario>(
-      'SELECT * FROM usuarios WHERE id = $1',
-      [userId]
-    );
+    // Obtener usuario con Prisma
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: userId },
+    });
 
-    if (result.rows.length === 0) {
+    if (!usuario) {
       res.status(404).json({ error: 'Usuario no encontrado' });
       return;
     }
 
-    const usuario = result.rows[0];
-
     // Verificar contraseña actual
-    const isPasswordValid = await bcrypt.compare(oldPassword, usuario.password_hash);
+    const isPasswordValid = await bcrypt.compare(oldPassword, usuario.passwordHash);
 
     if (!isPasswordValid) {
       res.status(401).json({ error: 'Contraseña actual incorrecta' });
@@ -154,11 +155,11 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
     // Hash de la nueva contraseña
     const newPasswordHash = await bcrypt.hash(newPassword, 10);
 
-    // Actualizar contraseña
-    await pool.query(
-      'UPDATE usuarios SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-      [newPasswordHash, userId]
-    );
+    // Actualizar contraseña con Prisma
+    await prisma.usuario.update({
+      where: { id: userId },
+      data: { passwordHash: newPasswordHash },
+    });
 
     res.json({ message: 'Contraseña actualizada correctamente' });
   } catch (error) {

@@ -7,6 +7,7 @@ import procesamientoRoutes from './routes/procesamiento.routes';
 import notificacionesRoutes from './routes/notificaciones.routes';
 import obrasRoutes from './routes/obras.routes';
 import itemizadosRoutes from './routes/itemizados.routes';
+import statsRoutes from './routes/stats.routes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -53,6 +54,7 @@ app.use('/api/procesamiento', procesamientoRoutes);
 app.use('/api/notificaciones', notificacionesRoutes);
 app.use('/api/obras', obrasRoutes);
 app.use('/api/itemizados', itemizadosRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

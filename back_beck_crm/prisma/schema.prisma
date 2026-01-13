@@ -1,0 +1,250 @@
+// BECK Sistema - Prisma Schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===========================================
+// MODELOS
+// ===========================================
+
+model Usuario {
+  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre        String   @db.VarChar(255)
+  email         String   @unique @db.VarChar(255)
+  passwordHash  String   @map("password_hash") @db.VarChar(255)
+  rol           RolUsuario
+  activo        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  obrasCreadas            Obra[]                     @relation("ObrasCreadasPorUsuario")
+  itemizadosCreados       Itemizado[]                @relation("ItemizadosCreadosPorUsuario")
+  registrosTerreno        RegistroTerreno[]
+  procesamientos          ProcesamientoIngenieria[]
+  notificaciones          Notificacion[]
+  movimientosInventario   MovimientoInventario[]
+  cotizacionesCreadas     Cotizacion[]               @relation("CotizacionesCreadasPorUsuario")
+
+  @@index([email])
+  @@index([rol])
+  @@index([activo])
+  @@map("usuarios")
+}
+
+model Obra {
+  id            String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre        String      @db.VarChar(255)
+  codigo        String      @unique @db.VarChar(100)
+  descripcion   String?     @db.Text
+  estado        EstadoObra  @default(activa)
+  creadoPorId   String      @map("creado_por_id") @db.Uuid
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  creadoPor          Usuario            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+  registrosTerreno   RegistroTerreno[]
+  cotizaciones       Cotizacion[]
+
+  @@index([codigo])
+  @@index([estado])
+  @@index([creadoPorId])
+  @@map("obras")
+}
+
+model Itemizado {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigo          String   @unique @db.VarChar(100)
+  nombre          String   @db.VarChar(255)
+  descripcion     String?  @db.Text
+  precioUnitario  Decimal  @default(0) @map("precio_unitario") @db.Decimal(12, 2)
+  creadoPorId     String   @map("creado_por_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  creadoPor      Usuario                    @relation("ItemizadosCreadosPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+  procesamientos ProcesamientoIngenieria[]
+
+  @@index([codigo])
+  @@index([creadoPorId])
+  @@map("itemizados")
+}
+
+model RegistroTerreno {
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId              String   @map("obra_id") @db.Uuid
+  usuarioId           String   @map("usuario_id") @db.Uuid
+  fecha               DateTime @db.Date
+  diaSemana           String   @map("dia_semana") @db.VarChar(20)
+  descripcionMaterial String   @map("descripcion_material") @db.VarChar(500)
+  modulo              String   @db.VarChar(100)
+  piso                String   @db.VarChar(50)
+  ejeNumerico         Int      @map("eje_numerico")
+  ejeAlfabetico       String   @map("eje_alfabetico") @db.VarChar(10)
+  numeroSello         String   @map("numero_sello") @db.VarChar(100)
+  cantidadSellos      Int      @map("cantidad_sellos")
+  nombreSellador      String   @map("nombre_sellador") @db.VarChar(255)
+  holgura             Decimal  @db.Decimal(3, 1)
+  accesibilidad       Int
+  observaciones       String?  @db.Text
+  fotosUrls           String[] @map("fotos_urls")
+  procesado           Boolean  @default(false)
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  obra          Obra                      @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  usuario       Usuario                   @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  procesamiento ProcesamientoIngenieria?
+
+  @@index([obraId])
+  @@index([usuarioId])
+  @@index([fecha(sort: Desc)])
+  @@index([procesado])
+  @@map("registros_terreno")
+}
+
+model ProcesamientoIngenieria {
+  id                    String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  registroTerrenoId     String   @unique @map("registro_terreno_id") @db.Uuid
+  usuarioId             String   @map("usuario_id") @db.Uuid
+  codigo                String   @db.VarChar(100)
+  itemizadoId           String   @map("itemizado_id") @db.Uuid
+  totalSellosCalculado  Decimal  @map("total_sellos_calculado") @db.Decimal(12, 2)
+  notas                 String?  @db.Text
+  procesadoAt           DateTime @default(now()) @map("procesado_at") @db.Timestamp()
+
+  // Relaciones
+  registroTerreno RegistroTerreno @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
+  usuario         Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  itemizado       Itemizado       @relation(fields: [itemizadoId], references: [id], onDelete: Restrict)
+
+  @@index([registroTerrenoId])
+  @@index([usuarioId])
+  @@index([itemizadoId])
+  @@map("procesamiento_ingenieria")
+}
+
+model Notificacion {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId     String          @map("usuario_id") @db.Uuid
+  tipo          TipoNotificacion
+  referenciaId  String?         @map("referencia_id") @db.Uuid
+  mensaje       String          @db.Text
+  leido         Boolean         @default(false)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamp()
+
+  // Relaciones
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([leido])
+  @@index([createdAt(sort: Desc)])
+  @@map("notificaciones")
+}
+
+model Inventario {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoProducto String   @unique @map("codigo_producto") @db.VarChar(100)
+  nombre         String   @db.VarChar(255)
+  descripcion    String?  @db.Text
+  stockActual    Int      @default(0) @map("stock_actual")
+  stockMinimo    Int      @default(0) @map("stock_minimo")
+  ubicacion      String?  @db.VarChar(255)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  movimientos MovimientoInventario[]
+
+  @@index([codigoProducto])
+  @@index([stockActual])
+  @@map("inventario")
+}
+
+model MovimientoInventario {
+  id               String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productoId       String   @map("producto_id") @db.Uuid
+  tipo             TipoMovimiento
+  cantidad         Int
+  usuarioId        String   @map("usuario_id") @db.Uuid
+  codigoEscaneado  String?  @map("codigo_escaneado") @db.VarChar(255)
+  observaciones    String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  // Relaciones
+  producto Inventario @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  usuario  Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  @@index([productoId])
+  @@index([usuarioId])
+  @@index([createdAt(sort: Desc)])
+  @@map("movimientos_inventario")
+}
+
+model Cotizacion {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  numero        String          @unique @db.VarChar(50)
+  cliente       String          @db.VarChar(255)
+  obraId        String?         @map("obra_id") @db.Uuid
+  items         Json            // Array de items [{itemizado_id, cantidad, precio_unitario, subtotal}]
+  subtotal      Decimal         @db.Decimal(12, 2)
+  descuento     Decimal         @default(0) @db.Decimal(12, 2)
+  total         Decimal         @db.Decimal(12, 2)
+  estado        EstadoCotizacion @default(borrador)
+  creadoPorId   String          @map("creado_por_id") @db.Uuid
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  obra      Obra?    @relation(fields: [obraId], references: [id], onDelete: SetNull)
+  creadoPor Usuario  @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+
+  @@index([numero])
+  @@index([cliente])
+  @@index([estado])
+  @@index([creadoPorId])
+  @@map("cotizaciones")
+}
+
+// ===========================================
+// ENUMS
+// ===========================================
+
+enum RolUsuario {
+  administrador
+  terreno
+  ingenieria
+  visualizador
+}
+
+enum EstadoObra {
+  activa
+  pausada
+  finalizada
+}
+
+enum TipoNotificacion {
+  nuevo_registro
+  registro_procesado
+  alerta_inventario
+  sistema
+}
+
+enum TipoMovimiento {
+  ingreso
+  egreso
+}
+
+enum EstadoCotizacion {
+  borrador
+  enviada
+  aprobada
+  rechazada
+}
