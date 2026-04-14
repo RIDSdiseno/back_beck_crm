@@ -1,12 +1,13 @@
 // Tipos principales del sistema BECK
 
-export type RolUsuario = 'administrador' | 'terreno' | 'ingenieria' | 'visualizador';
+export type RolUsuario = 'administrador' | 'vendedor' | 'terreno' | 'ingenieria' | 'visualizador';
 
 export interface Usuario {
   id: string;
   nombre: string;
   email: string;
-  password_hash: string;
+  azure_id: string | null;
+  password_hash: string | null;
   rol: RolUsuario;
   activo: boolean;
   created_at: Date;
@@ -37,6 +38,7 @@ export interface Itemizado {
 
 export type FactorHolgura = 1 | 1.2 | 1.4 | 1.8;
 export type FactorAccesibilidad = 1 | 2 | 3;
+export type EstadoRegistroTerreno = 'pendiente' | 'en_revision' | 'validado' | 'rechazado';
 
 export interface RegistroTerreno {
   id: string;
@@ -56,7 +58,7 @@ export interface RegistroTerreno {
   accesibilidad: FactorAccesibilidad;
   observaciones?: string;
   fotos_urls: string[]; // Array de URLs de Cloudinary
-  procesado: boolean;
+  estado: EstadoRegistroTerreno;
   created_at: Date;
   updated_at?: Date;
 }

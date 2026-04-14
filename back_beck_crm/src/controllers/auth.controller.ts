@@ -35,6 +35,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verificar contraseña
+    if (!usuario.passwordHash) {
+      res.status(400).json({ error: 'El usuario no tiene una contrasena configurada' });
+      return;
+    }
+
     const isPasswordValid = await bcrypt.compare(password, usuario.passwordHash);
 
     if (!isPasswordValid) {
@@ -50,11 +55,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const rol: AuthResponse['user']['rol'] = usuario.rol;
+
     const token = jwt.sign(
       {
         userId: usuario.id,
         email: usuario.email,
-        rol: usuario.rol,
+        rol,
       },
       secret,
       { expiresIn: '7d' } as SignOptions
@@ -67,7 +74,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
-        rol: usuario.rol,
+        rol,
       },
     };
 
@@ -145,6 +152,11 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
     }
 
     // Verificar contraseña actual
+    if (!usuario.passwordHash) {
+      res.status(400).json({ error: 'El usuario no tiene una contrasena configurada' });
+      return;
+    }
+
     const isPasswordValid = await bcrypt.compare(oldPassword, usuario.passwordHash);
 
     if (!isPasswordValid) {

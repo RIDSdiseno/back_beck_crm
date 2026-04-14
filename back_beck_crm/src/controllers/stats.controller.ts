@@ -12,12 +12,16 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
     // Total de registros procesados
     const registrosProcesados = await prisma.registroTerreno.count({
-      where: { procesado: true },
+      where: {
+        estado: {
+          in: ['en_revision', 'validado', 'rechazado'],
+        },
+      },
     });
 
     // Total de registros pendientes
     const registrosPendientes = await prisma.registroTerreno.count({
-      where: { procesado: false },
+      where: { estado: 'pendiente' },
     });
 
     // Suma de cantidad de sellos
