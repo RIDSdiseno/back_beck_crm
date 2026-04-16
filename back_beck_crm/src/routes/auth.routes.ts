@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, me, changePassword } from '../controllers/auth.controller';
+import { login, loginMicrosoft, me, changePassword } from '../controllers/auth.controller';
 import { authenticate } from '../middlewares/auth';
 
 const router = Router();
@@ -10,6 +10,13 @@ const router = Router();
  * @access  Public
  */
 router.post('/login', login);
+
+/**
+ * @route   POST /api/auth/microsoft
+ * @desc    Login con Microsoft
+ * @access  Public
+ */
+router.post('/microsoft', loginMicrosoft);
 
 /**
  * @route   GET /api/auth/me

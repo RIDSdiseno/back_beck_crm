@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { prisma } from '../config/prisma';
+import { verifyMicrosoftToken } from '../services/microsoftAuth.service';
 import { LoginDTO, AuthResponse } from '../types';
 
 /**
@@ -82,6 +83,102 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ error: 'Error al iniciar sesión' });
+  }
+};
+
+/**
+ * Login con Microsoft
+ * POST /api/auth/microsoft
+ */
+export const loginMicrosoft = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { token } = req.body as { token?: string };
+
+    if (!token) {
+      res.status(400).json({ error: 'Token de Microsoft requerido' });
+      return;
+    }
+
+    const microsoftUser = await verifyMicrosoftToken(token);
+
+    const azureId = microsoftUser.oid;
+    const email = microsoftUser.preferred_username ?? microsoftUser.email;
+    const nombre = microsoftUser.name ?? email;
+
+    if (!azureId || !email || !nombre) {
+      res.status(400).json({ error: 'Token de Microsoft invÃ¡lido' });
+      return;
+    }
+
+    let usuario = await prisma.usuario.findUnique({
+      where: { azureId },
+    });
+
+    if (!usuario) {
+      const normalizedEmail = email.toLowerCase().trim();
+      const usuarioPorEmail = await prisma.usuario.findUnique({
+        where: { email: normalizedEmail },
+      });
+
+      if (usuarioPorEmail) {
+        usuario = await prisma.usuario.update({
+          where: { id: usuarioPorEmail.id },
+          data: {
+            azureId,
+          },
+        });
+      } else {
+        usuario = await prisma.usuario.create({
+          data: {
+            nombre,
+            email: normalizedEmail,
+            azureId,
+            rol: 'vendedor',
+            activo: true,
+            passwordHash: null,
+          },
+        });
+      }
+    }
+
+    if (!usuario.activo) {
+      res.status(403).json({ error: 'Usuario inactivo. Contacta al administrador' });
+      return;
+    }
+
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error('JWT_SECRET no estÃ¡ configurado');
+      res.status(500).json({ error: 'Error de configuraciÃ³n del servidor' });
+      return;
+    }
+
+    const rol: AuthResponse['user']['rol'] = usuario.rol;
+
+    const jwtToken = jwt.sign(
+      {
+        userId: usuario.id,
+        email: usuario.email,
+        rol,
+      },
+      secret,
+      { expiresIn: '7d' } as SignOptions
+    );
+
+    const response: AuthResponse = {
+      token: jwtToken,
+      user: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol,
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error en loginMicrosoft:', error);
+    res.status(500).json({ error: 'Error al iniciar sesiÃ³n con Microsoft' });
   }
 };
 
