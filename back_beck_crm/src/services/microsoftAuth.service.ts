@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import JwksClient  from 'jwks-rsa';
+import JwksClient, { SigningKey } from 'jwks-rsa';
 
 
 const tenantId = process.env.AZURE_AD_TENANT_ID;
@@ -19,12 +19,12 @@ function getKey(header: jwt.JwtHeader, callback: jwt.SigningKeyCallback){
         return;
     }
 
-    client.getSigningKey(header.kid, (err, key) => {
-        if (err) {
-            callback(err);
+    client.getSigningKey(header.kid, (err: Error | null, key?: SigningKey) => {
+        if (err || !key) {
+            callback(err ?? new Error('No signing key'));
             return;
         }
-        const signingKey = key?.getPublicKey();
+        const signingKey = key.getPublicKey();
         if (!signingKey){
             callback(new Error('No se pudo obtener la clave publica'));
             return;
