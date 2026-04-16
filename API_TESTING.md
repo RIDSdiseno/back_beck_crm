@@ -76,6 +76,29 @@ Content-Type: application/json
 }
 ```
 
+#### Login Microsoft Web Flow
+```http
+GET http://localhost:5000/api/auth/microsoft/login
+```
+
+Este endpoint redirige al usuario a Microsoft. Despues del login, Microsoft vuelve a:
+
+```http
+GET http://localhost:5000/api/auth/microsoft/callback
+```
+
+El backend canjea el `code`, genera el JWT propio y redirige al frontend a:
+
+```text
+{FRONTEND_URL}{FRONTEND_AUTH_CALLBACK_PATH}#token={jwt}
+```
+
+Si el flujo falla, el backend redirige al mismo callback del frontend con:
+
+```text
+#error={mensaje}
+```
+
 ---
 
 ### 2️⃣ OBRAS
