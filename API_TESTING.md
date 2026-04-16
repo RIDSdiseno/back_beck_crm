@@ -19,7 +19,6 @@ Deberías ver:
 ✅ Conexión a PostgreSQL establecida
 🚀 Servidor BECK corriendo en puerto 5000
 ```
-
 ## 🔐 Usuarios de Prueba
 
 | Email | Password | Rol |
