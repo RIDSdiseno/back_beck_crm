@@ -11,18 +11,32 @@ import funnelBeckRoutes from './routes/funnelBeck.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
 
 const app = express();
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'https://beck-crm.netlify.app',
+].filter((origin): origin is string => Boolean(origin));
+
+const corsOptions: cors.CorsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origen no permitido por CORS: ${origin}`));
+  },
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
 
 // ===========================================
 // MIDDLEWARES GLOBALES
 // ===========================================
 
 // CORS - Permitir peticiones desde el frontend
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://beck-crm.netlify.app'],
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 // Body parser
 app.use(express.json({ limit: '10mb' }));
