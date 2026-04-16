@@ -2,18 +2,51 @@ import jwt from 'jsonwebtoken';
 import JwksClient, { SigningKey } from 'jwks-rsa';
 
 
-const tenantId = process.env.AZURE_AD_TENANT_ID;
-const clientId = process.env.AZURE_AD_CLIENT_ID;
+let cachedTenantId: string | undefined;
+let cachedClient: ReturnType<typeof JwksClient> | undefined;
 
-if(!tenantId || !clientId) {
-    throw new Error('Faltan variantes de entrno de Azure AD')
+function getMicrosoftAuthContext(): {
+    tenantId: string;
+    clientId: string;
+    client: ReturnType<typeof JwksClient>;
+} {
+    const tenantId = process.env.AZURE_AD_TENANT_ID;
+    const clientId = process.env.AZURE_AD_CLIENT_ID;
+
+    if (!tenantId || !clientId) {
+        throw new Error('Login de Microsoft no configurado: faltan AZURE_AD_TENANT_ID o AZURE_AD_CLIENT_ID');
+    }
+
+    if (!cachedClient || cachedTenantId !== tenantId) {
+        cachedTenantId = tenantId;
+        cachedClient = JwksClient({
+            jwksUri: `https://login.microsoftonline.com/${tenantId}/discovery/v2.0/keys`,
+        });
+    }
+
+    const client = cachedClient;
+
+    if (!client) {
+        throw new Error('No se pudo inicializar el cliente de Microsoft');
+    }
+
+    return {
+        tenantId,
+        clientId,
+        client,
+    };
 }
 
-const client = JwksClient({
-    jwksUri: `https://login.microsoftonline.com/${tenantId}/discovery/v2.0/keys`,
-})
-
 function getKey(header: jwt.JwtHeader, callback: jwt.SigningKeyCallback){
+    let client: ReturnType<typeof JwksClient>;
+
+    try {
+        ({ client } = getMicrosoftAuthContext());
+    } catch (error) {
+        callback(error instanceof Error ? error : new Error('Error de configuración de Microsoft'));
+        return;
+    }
+
     if (!header.kid){
         callback(new Error('Token sin kid'));
         return;
@@ -46,6 +79,16 @@ export const verifyMicrosoftToken = (
     token: string
 ): Promise<MicrosoftTokenPayload> => {
     return new Promise((resolve, reject) => {
+        let tenantId: string;
+        let clientId: string;
+
+        try {
+            ({ tenantId, clientId } = getMicrosoftAuthContext());
+        } catch (error) {
+            reject(error);
+            return;
+        }
+
         jwt.verify(
             token,
             getKey,
