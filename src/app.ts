@@ -9,6 +9,7 @@ import itemizadosRoutes from './routes/itemizados.routes';
 import statsRoutes from './routes/stats.routes';
 import funnelBeckRoutes from './routes/funnelBeck.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
+import usuariosRoutes from './routes/usuarios.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -71,6 +72,7 @@ app.use('/api/itemizados', itemizadosRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/funnel-beck', funnelBeckRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

@@ -97,7 +97,7 @@ const findOrCreateMicrosoftUser = async (azureId: string, email: string, nombre:
       nombre,
       email,
       azureId,
-      rol: 'vendedor',
+      rol: 'visualizador',
       activo: true,
       passwordHash: null,
     },
@@ -261,6 +261,10 @@ export const me = async (req: Request, res: Response): Promise<void> => {
       res.status(404).json({ error: 'Usuario no encontrado' });
       return;
     }
+
+    console.log("REQ USER ID:", req.userId);
+    console.log("REQ USER ROLE:", req.userRole);
+    console.log("RESPUESTA /auth/me:", usuario);
 
     res.json(usuario);
   } catch (error) {

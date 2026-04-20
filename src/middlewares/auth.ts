@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { RolUsuario } from '../types';
+import { prisma } from '../config/prisma';
 
 // Extender el tipo Request para incluir userId y userRole
 declare global {
@@ -21,7 +22,11 @@ export interface JWTPayload {
 /**
  * Middleware para verificar token JWT
  */
-export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -41,8 +46,27 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
 
     const decoded = jwt.verify(token, secret) as JWTPayload;
 
-    req.userId = decoded.userId;
-    req.userRole = decoded.rol;
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        rol: true,
+        activo: true,
+      },
+    });
+
+    if (!usuario) {
+      res.status(401).json({ error: 'Usuario no encontrado' });
+      return;
+    }
+
+    if (!usuario.activo) {
+      res.status(403).json({ error: 'Usuario desactivado' });
+      return;
+    }
+
+    req.userId = usuario.id;
+    req.userRole = usuario.rol as RolUsuario;
 
     next();
   } catch (error) {
@@ -50,10 +74,13 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
       res.status(401).json({ error: 'Token expirado' });
       return;
     }
+
     if (error instanceof jwt.JsonWebTokenError) {
       res.status(401).json({ error: 'Token inválido' });
       return;
     }
+
+    console.error('Error al verificar token:', error);
     res.status(500).json({ error: 'Error al verificar token' });
   }
 };
