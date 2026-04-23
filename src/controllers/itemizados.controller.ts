@@ -1,6 +1,6 @@
 // src/controllers/itemizados.controller.ts
 import { Request, Response } from 'express';
-import { pool } from '../config/database';
+import { query as dbQuery } from '../config/database';
 import { Itemizado } from '../types';
 
 /**
@@ -30,7 +30,7 @@ export const listarItemizados = async (req: Request, res: Response): Promise<voi
 
     query += ' ORDER BY categoria, descripcion';
 
-    const result = await pool.query<Itemizado>(query, params);
+    const result = await dbQuery<Itemizado>(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al listar itemizados:', error);
@@ -46,7 +46,7 @@ export const obtenerItemizado = async (req: Request, res: Response): Promise<voi
   try {
     const { id } = req.params;
 
-    const result = await pool.query<Itemizado>(
+    const result = await dbQuery<Itemizado>(
       'SELECT * FROM itemizados WHERE id = $1',
       [id]
     );
@@ -79,7 +79,7 @@ export const crearItemizado = async (req: Request, res: Response): Promise<void>
     }
 
     // Verificar que el código no exista
-    const checkCodigo = await pool.query(
+    const checkCodigo = await dbQuery(
       'SELECT id FROM itemizados WHERE codigo = $1',
       [codigo]
     );
@@ -88,7 +88,7 @@ export const crearItemizado = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const result = await pool.query<Itemizado>(
+    const result = await dbQuery<Itemizado>(
       `INSERT INTO itemizados (codigo, descripcion, unidad_medida, precio_unitario, categoria, activo)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
@@ -126,7 +126,7 @@ export const actualizarItemizado = async (req: Request, res: Response): Promise<
       req.body;
 
     // Verificar que el itemizado exista
-    const checkItemizado = await pool.query(
+    const checkItemizado = await dbQuery(
       'SELECT id FROM itemizados WHERE id = $1',
       [id]
     );
@@ -137,7 +137,7 @@ export const actualizarItemizado = async (req: Request, res: Response): Promise<
 
     // Si se cambia el código, verificar que no exista
     if (codigo) {
-      const checkCodigo = await pool.query(
+      const checkCodigo = await dbQuery(
         'SELECT id FROM itemizados WHERE codigo = $1 AND id != $2',
         [codigo, id]
       );
@@ -147,7 +147,7 @@ export const actualizarItemizado = async (req: Request, res: Response): Promise<
       }
     }
 
-    const result = await pool.query<Itemizado>(
+    const result = await dbQuery<Itemizado>(
       `UPDATE itemizados
        SET codigo = COALESCE($1, codigo),
            descripcion = COALESCE($2, descripcion),
@@ -183,7 +183,7 @@ export const eliminarItemizado = async (req: Request, res: Response): Promise<vo
     const { id } = req.params;
 
     // Verificar que el itemizado no esté siendo usado en procesamientos
-    const checkProcesamiento = await pool.query(
+    const checkProcesamiento = await dbQuery(
       'SELECT COUNT(*) as count FROM procesamiento_ingenieria WHERE itemizado_id = $1',
       [id]
     );
@@ -196,7 +196,7 @@ export const eliminarItemizado = async (req: Request, res: Response): Promise<vo
       return;
     }
 
-    const result = await pool.query(
+    const result = await dbQuery(
       'DELETE FROM itemizados WHERE id = $1 RETURNING id',
       [id]
     );

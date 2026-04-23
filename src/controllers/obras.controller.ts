@@ -1,6 +1,6 @@
 // src/controllers/obras.controller.ts
 import { Request, Response } from 'express';
-import { pool } from '../config/database';
+import { query as dbQuery } from '../config/database';
 import { Obra } from '../types';
 
 /**
@@ -22,7 +22,7 @@ export const listarObras = async (req: Request, res: Response): Promise<void> =>
 
     query += ' ORDER BY created_at DESC';
 
-    const result = await pool.query<Obra>(query, params);
+    const result = await dbQuery<Obra>(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al listar obras:', error);
@@ -38,7 +38,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
   try {
     const { id } = req.params;
 
-    const result = await pool.query<Obra>('SELECT * FROM obras WHERE id = $1', [id]);
+    const result = await dbQuery<Obra>('SELECT * FROM obras WHERE id = $1', [id]);
 
     if (result.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });
@@ -76,13 +76,13 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verificar que el código no exista
-    const checkCodigo = await pool.query('SELECT id FROM obras WHERE codigo = $1', [codigo]);
+    const checkCodigo = await dbQuery('SELECT id FROM obras WHERE codigo = $1', [codigo]);
     if (checkCodigo.rows.length > 0) {
       res.status(400).json({ error: 'El código de obra ya existe' });
       return;
     }
 
-    const result = await pool.query<Obra>(
+    const result = await dbQuery<Obra>(
       `INSERT INTO obras (codigo, nombre, direccion, ciudad, cliente, activa, fecha_inicio, fecha_termino)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
@@ -130,7 +130,7 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
     } = req.body;
 
     // Verificar que la obra exista
-    const checkObra = await pool.query('SELECT id FROM obras WHERE id = $1', [id]);
+    const checkObra = await dbQuery('SELECT id FROM obras WHERE id = $1', [id]);
     if (checkObra.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
@@ -138,7 +138,7 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
 
     // Si se cambia el código, verificar que no exista
     if (codigo) {
-      const checkCodigo = await pool.query(
+      const checkCodigo = await dbQuery(
         'SELECT id FROM obras WHERE codigo = $1 AND id != $2',
         [codigo, id]
       );
@@ -148,7 +148,7 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       }
     }
 
-    const result = await pool.query<Obra>(
+    const result = await dbQuery<Obra>(
       `UPDATE obras
        SET codigo = COALESCE($1, codigo),
            nombre = COALESCE($2, nombre),
@@ -186,7 +186,7 @@ export const eliminarObra = async (req: Request, res: Response): Promise<void> =
     const { id } = req.params;
 
     // Verificar que la obra no tenga registros asociados
-    const checkRegistros = await pool.query(
+    const checkRegistros = await dbQuery(
       'SELECT COUNT(*) as count FROM registros_terreno WHERE obra_id = $1',
       [id]
     );
@@ -198,7 +198,7 @@ export const eliminarObra = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const result = await pool.query('DELETE FROM obras WHERE id = $1 RETURNING id', [id]);
+    const result = await dbQuery('DELETE FROM obras WHERE id = $1 RETURNING id', [id]);
 
     if (result.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });

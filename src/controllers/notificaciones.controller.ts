@@ -1,6 +1,6 @@
 // src/controllers/notificaciones.controller.ts
 import { Request, Response } from 'express';
-import { pool } from '../config/database';
+import { query as dbQuery } from '../config/database';
 import { Notificacion } from '../types';
 
 /**
@@ -23,7 +23,7 @@ export const listarNotificaciones = async (req: Request, res: Response): Promise
 
     query += ' ORDER BY created_at DESC';
 
-    const result = await pool.query<Notificacion>(query, params);
+    const result = await dbQuery<Notificacion>(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al listar notificaciones:', error);
@@ -41,7 +41,7 @@ export const marcarLeida = async (req: Request, res: Response): Promise<void> =>
     const usuario_id = req.userId;
 
     // Verificar que la notificación pertenezca al usuario
-    const checkQuery = await pool.query(
+    const checkQuery = await dbQuery(
       'SELECT id FROM notificaciones WHERE id = $1 AND usuario_id = $2',
       [id, usuario_id]
     );
@@ -52,7 +52,7 @@ export const marcarLeida = async (req: Request, res: Response): Promise<void> =>
     }
 
     // Marcar como leída
-    const result = await pool.query<Notificacion>(
+    const result = await dbQuery<Notificacion>(
       'UPDATE notificaciones SET leido = TRUE WHERE id = $1 RETURNING *',
       [id]
     );
@@ -72,7 +72,7 @@ export const marcarTodasLeidas = async (req: Request, res: Response): Promise<vo
   try {
     const usuario_id = req.userId;
 
-    await pool.query(
+    await dbQuery(
       'UPDATE notificaciones SET leido = TRUE WHERE usuario_id = $1 AND leido = FALSE',
       [usuario_id]
     );
@@ -92,7 +92,7 @@ export const contarNoLeidas = async (req: Request, res: Response): Promise<void>
   try {
     const usuario_id = req.userId;
 
-    const result = await pool.query(
+    const result = await dbQuery(
       'SELECT COUNT(*) as count FROM notificaciones WHERE usuario_id = $1 AND leido = FALSE',
       [usuario_id]
     );

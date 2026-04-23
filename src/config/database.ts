@@ -1,52 +1,34 @@
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import { prisma } from './prisma';
 
-dotenv.config();
+export type QueryResultRow = any;
 
-// Pool de conexiones a PostgreSQL
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  max: 20, // Máximo de conexiones en el pool
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
-
-// Test de conexión
-pool.on('connect', () => {
-  console.log('✅ Conectado a PostgreSQL');
-});
-
-pool.on('error', (err: Error) => {
-  console.error('❌ Error inesperado en PostgreSQL:', err);
-  process.exit(-1);
-});
-
-// Helper para ejecutar queries con mejor tipado
-export const query = async (text: string, params?: any[]) => {
-  const start = Date.now();
-  try {
-    const res = await pool.query(text, params);
-    const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: res.rowCount });
-    return res;
-  } catch (error) {
-    console.error('Error ejecutando query:', { text, error });
-    throw error;
-  }
+export type QueryResult<T extends QueryResultRow = any> = {
+  rows: T[];
+  rowCount: number;
 };
 
-// Helper para transacciones
-export const transaction = async (callback: (client: any) => Promise<void>) => {
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    await callback(client);
-    await client.query('COMMIT');
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
+const returnsRows = (sql: string): boolean => {
+  const normalized = sql.trim().toLowerCase();
+  return normalized.startsWith('select')
+    || normalized.startsWith('with')
+    || normalized.includes(' returning ');
+};
+
+export const query = async <T extends QueryResultRow = any>(
+  text: string,
+  params: any[] = [],
+): Promise<QueryResult<T>> => {
+  if (returnsRows(text)) {
+    const rows = await prisma.$queryRawUnsafe<T[]>(text, ...params);
+    return {
+      rows,
+      rowCount: rows.length,
+    };
   }
+
+  const rowCount = await prisma.$executeRawUnsafe(text, ...params);
+  return {
+    rows: [],
+    rowCount: Number(rowCount),
+  };
 };

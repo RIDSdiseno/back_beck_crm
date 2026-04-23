@@ -1,6 +1,6 @@
 // src/controllers/procesamiento.controller.ts
 import { Request, Response } from 'express';
-import { pool } from '../config/database';
+import { query as dbQuery } from '../config/database';
 import { ProcesamientoIngenieria } from '../types';
 
 /**
@@ -23,7 +23,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     }
 
     // Obtener datos del registro
-    const registroQuery = await pool.query(
+    const registroQuery = await dbQuery(
       'SELECT cantidad_sellos, holgura, accesibilidad, procesado FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
     );
@@ -47,7 +47,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     const total_sellos_calculado = cantidad_sellos * holgura * accesibilidad;
 
     // Verificar que el itemizado exista
-    const itemizadoCheck = await pool.query(
+    const itemizadoCheck = await dbQuery(
       'SELECT id FROM itemizados WHERE id = $1',
       [itemizado_id]
     );
@@ -57,7 +57,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     }
 
     // Insertar procesamiento (el trigger marcará automáticamente el registro como procesado)
-    const result = await pool.query<ProcesamientoIngenieria>(
+    const result = await dbQuery<ProcesamientoIngenieria>(
       `INSERT INTO procesamiento_ingenieria (
         registro_terreno_id, usuario_id, codigo, itemizado_id, total_sellos_calculado, notas
       ) VALUES ($1, $2, $3, $4, $5, $6)
@@ -68,13 +68,13 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     const procesamiento = result.rows[0];
 
     // Crear notificación para el usuario que creó el registro
-    const registroUsuario = await pool.query(
+    const registroUsuario = await dbQuery(
       'SELECT usuario_id FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
     );
 
     if (registroUsuario.rows.length > 0) {
-      await pool.query(
+      await dbQuery(
         `INSERT INTO notificaciones (usuario_id, tipo, referencia_id, mensaje)
          VALUES ($1, 'procesado', $2, $3)`,
         [
@@ -134,7 +134,7 @@ export const listarProcesamientos = async (req: Request, res: Response): Promise
 
     query += ' ORDER BY p.created_at DESC';
 
-    const result = await pool.query(query, params);
+    const result = await dbQuery(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al listar procesamientos:', error);
@@ -150,7 +150,7 @@ export const obtenerProcesamiento = async (req: Request, res: Response): Promise
   try {
     const { id } = req.params;
 
-    const result = await pool.query(
+    const result = await dbQuery(
       `SELECT
         p.*,
         u.nombre as usuario_nombre,

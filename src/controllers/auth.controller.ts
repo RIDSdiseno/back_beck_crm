@@ -144,6 +144,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    console.log('Login exitoso:', {
+      userId: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    });
+
     res.json(
       buildAuthResponse({
         id: usuario.id,
@@ -225,6 +231,12 @@ export const microsoftCallback = async (req: Request, res: Response): Promise<vo
       rol: usuario.rol,
     });
 
+    console.log('Login Microsoft exitoso:', {
+      userId: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    });
+
     res.redirect(buildFrontendSuccessRedirect(appToken));
   } catch (error) {
     console.error('Error handling Microsoft callback:', error);
@@ -261,10 +273,6 @@ export const me = async (req: Request, res: Response): Promise<void> => {
       res.status(404).json({ error: 'Usuario no encontrado' });
       return;
     }
-
-    console.log("REQ USER ID:", req.userId);
-    console.log("REQ USER ROLE:", req.userRole);
-    console.log("RESPUESTA /auth/me:", usuario);
 
     res.json(usuario);
   } catch (error) {

@@ -1,6 +1,6 @@
 // src/controllers/registros.controller.ts
 import { Request, Response } from 'express';
-import { pool } from '../config/database';
+import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
 
@@ -58,7 +58,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     }
 
     // Validar que la obra exista
-    const obraCheck = await pool.query('SELECT id FROM obras WHERE id = $1', [obra_id]);
+    const obraCheck = await dbQuery('SELECT id FROM obras WHERE id = $1', [obra_id]);
     if (obraCheck.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
@@ -83,7 +83,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     const dia_semana = dias[fecha.getDay()];
 
     // Insertar en BD
-    const result = await pool.query<RegistroTerreno>(
+    const result = await dbQuery<RegistroTerreno>(
       `INSERT INTO registros_terreno (
         obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
         piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
@@ -113,7 +113,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     const registro = result.rows[0];
 
     // Crear notificaciones para usuarios de Ingeniería
-    await pool.query(
+    await dbQuery(
       `INSERT INTO notificaciones (usuario_id, tipo, referencia_id, mensaje)
        SELECT id, 'nuevo_registro', $1, $2
        FROM usuarios WHERE rol = 'ingenieria' AND activo = TRUE`,
@@ -175,7 +175,7 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
 
     query += ' ORDER BY rt.created_at DESC';
 
-    const result = await pool.query(query, params);
+    const result = await dbQuery(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al listar registros:', error);
@@ -204,14 +204,14 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
     // Si es terreno, solo puede ver sus propios registros
     if (user_rol === 'terreno') {
       query += ` AND rt.usuario_id = $2`;
-      const result = await pool.query(query, [id, usuario_id]);
+      const result = await dbQuery(query, [id, usuario_id]);
       if (result.rows.length === 0) {
         res.status(404).json({ error: 'Registro no encontrado' });
         return;
       }
       res.json(result.rows[0]);
     } else {
-      const result = await pool.query(query, [id]);
+      const result = await dbQuery(query, [id]);
       if (result.rows.length === 0) {
         res.status(404).json({ error: 'Registro no encontrado' });
         return;
@@ -230,7 +230,7 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
  */
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query(
+    const result = await dbQuery(
       `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id

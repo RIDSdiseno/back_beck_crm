@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import app from './app';
-import { pool } from './config/database';
+import { query as dbQuery } from './config/database';
 
 const PORT = process.env.PORT || 5000;
 
@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     // Verificar conexión a PostgreSQL
-    await pool.query('SELECT NOW()');
+    await dbQuery('SELECT NOW()');
     console.log('✅ Conexión a PostgreSQL establecida');
 
     // Iniciar servidor

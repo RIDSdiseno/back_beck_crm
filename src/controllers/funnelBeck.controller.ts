@@ -7,6 +7,12 @@ import {
   updateEtapaFunnelBeck,
   updateFunnelBeck,
 } from "../services/funnelBeck.service";
+import {
+  CotizacionError,
+} from "../types/cotizaciones.types";
+import {
+  listCotizacionesByFunnelBeck,
+} from "../services/cotizaciones.service";
 
 export async function createFunnelBeckController(req: Request, res: Response) {
   try {
@@ -51,6 +57,37 @@ export async function getFunnelBeckByIdController(req: Request, res: Response) {
     return res.status(404).json({
       success: false,
       error: error instanceof Error ? error.message : "Oportunidad no encontrada.",
+    });
+  }
+}
+
+export async function getCotizacionesByFunnelBeckController(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id || "").trim();
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        error: "ID inválido.",
+      });
+    }
+
+    const cotizaciones = await listCotizacionesByFunnelBeck(id);
+    return res.status(200).json({
+      success: true,
+      data: cotizaciones,
+    });
+  } catch (error) {
+    if (error instanceof CotizacionError) {
+      return res.status(error.statusCode).json({
+        success: false,
+        error: error.message,
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Error al obtener cotizaciones de la oportunidad.",
     });
   }
 }

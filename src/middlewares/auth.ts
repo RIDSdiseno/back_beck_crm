@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { RolUsuario } from '../types';
-import { prisma } from '../config/prisma';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { RolUsuario } from "../types";
+import { prisma } from "../config/prisma";
 
 // Extender el tipo Request para incluir userId y userRole
 declare global {
@@ -30,8 +30,11 @@ export const authenticate = async (
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ error: 'Token no proporcionado' });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({
+        success: false,
+        error: "Token no proporcionado",
+      });
       return;
     }
 
@@ -39,8 +42,11 @@ export const authenticate = async (
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
-      console.error('JWT_SECRET no está configurado');
-      res.status(500).json({ error: 'Error de configuración del servidor' });
+      console.error("JWT_SECRET no está configurado");
+      res.status(500).json({
+        success: false,
+        error: "Error de configuración del servidor",
+      });
       return;
     }
 
@@ -56,12 +62,18 @@ export const authenticate = async (
     });
 
     if (!usuario) {
-      res.status(401).json({ error: 'Usuario no encontrado' });
+      res.status(401).json({
+        success: false,
+        error: "Usuario no encontrado",
+      });
       return;
     }
 
     if (!usuario.activo) {
-      res.status(403).json({ error: 'Usuario desactivado' });
+      res.status(403).json({
+        success: false,
+        error: "Usuario desactivado",
+      });
       return;
     }
 
@@ -71,32 +83,47 @@ export const authenticate = async (
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      res.status(401).json({ error: 'Token expirado' });
+      res.status(401).json({
+        success: false,
+        error: "Token expirado",
+      });
       return;
     }
 
     if (error instanceof jwt.JsonWebTokenError) {
-      res.status(401).json({ error: 'Token inválido' });
+      res.status(401).json({
+        success: false,
+        error: "Token inválido",
+      });
       return;
     }
 
-    console.error('Error al verificar token:', error);
-    res.status(500).json({ error: 'Error al verificar token' });
+    console.error("Error al verificar token:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error al verificar token",
+    });
   }
 };
 
 /**
- * Middleware para verificar que el usuario tenga uno de los roles permitidos
+ * Middleware para verificar roles
  */
 export const authorize = (...roles: RolUsuario[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.userRole) {
-      res.status(401).json({ error: 'No autenticado' });
+      res.status(401).json({
+        success: false,
+        error: "No autenticado",
+      });
       return;
     }
 
     if (!roles.includes(req.userRole)) {
-      res.status(403).json({ error: 'No tienes permisos para acceder a este recurso' });
+      res.status(403).json({
+        success: false,
+        error: "No tienes permisos para acceder a este recurso",
+      });
       return;
     }
 

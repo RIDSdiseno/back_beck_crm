@@ -10,6 +10,7 @@ import statsRoutes from './routes/stats.routes';
 import funnelBeckRoutes from './routes/funnelBeck.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
 import usuariosRoutes from './routes/usuarios.routes';
+import cotizacionesRoutes from './routes/cotizaciones.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -45,6 +46,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logger simple (en producción usar Winston o similar)
 app.use((req: Request, _res: Response, next: NextFunction) => {
+  if (req.method === 'GET' && req.path === '/api/auth/me') {
+    next();
+    return;
+  }
+
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
@@ -73,6 +79,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/funnel-beck', funnelBeckRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/cotizaciones', cotizacionesRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

@@ -190,29 +190,59 @@ model MovimientoInventario {
 }
 
 model Cotizacion {
-  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  numero        String          @unique @db.VarChar(50)
-  cliente       String          @db.VarChar(255)
-  obraId        String?         @map("obra_id") @db.Uuid
-  items         Json            // Array de items [{itemizado_id, cantidad, precio_unitario, subtotal}]
-  subtotal      Decimal         @db.Decimal(12, 2)
-  descuento     Decimal         @default(0) @db.Decimal(12, 2)
-  total         Decimal         @db.Decimal(12, 2)
-  estado        EstadoCotizacion @default(borrador)
-  creadoPorId   String          @map("creado_por_id") @db.Uuid
-  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  id            String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  numero        String?          @unique @db.VarChar(50)
+  clienteNombre String           @map("cliente_nombre") @db.VarChar(255)
+  obraId        String?          @map("obra_id") @db.Uuid
+  funnelBeckId  String?          @map("funnel_beck_id") @db.Uuid
+  estado        EstadoCotizacion @default(BORRADOR)
+  subtotal      Decimal          @db.Decimal(12, 2)
+  descuento     Decimal          @default(0) @db.Decimal(12, 2)
+  impuesto      Decimal          @default(0) @db.Decimal(12, 2)
+  aplicaImpuesto Boolean         @default(true)
+  total         Decimal          @db.Decimal(12, 2)
+  vigencia      DateTime         @db.Timestamp()
+  observaciones String?          @db.Text
+  creadoPorId   String           @map("creado_por_id") @db.Uuid
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamp()
 
   // Relaciones
-  obra      Obra?    @relation(fields: [obraId], references: [id], onDelete: SetNull)
-  creadoPor Usuario  @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+  obra      Obra?              @relation(fields: [obraId], references: [id], onDelete: SetNull)
+  funnelBeck OperadorBeck?     @relation(fields: [funnelBeckId], references: [id], onDelete: SetNull)
+  creadoPor Usuario            @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+  lineas    LineaCotizacion[]
 
-  @@index([numero])
-  @@index([cliente])
+  @@index([clienteNombre])
   @@index([estado])
+  @@index([obraId])
+  @@index([funnelBeckId])
   @@index([creadoPorId])
   @@map("cotizaciones")
 }
+
+model LineaCotizacion {
+  id             String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  cotizacionId   String              @map("cotizacion_id") @db.Uuid
+  tipoLinea      TipoLineaCotizacion @default(PRODUCTO) @map("tipo_linea")
+  descripcion    String              @db.Text
+  unidad         String?             @db.VarChar(50)
+  cantidad       Decimal             @db.Decimal(10, 3)
+  precioUnitario Decimal             @map("precio_unitario") @db.Decimal(12, 2)
+  gananciaPct    Decimal             @default(0) @map("ganancia_pct") @db.Decimal(6, 2)
+  subtotal       Decimal             @db.Decimal(12, 2)
+  orden          Int                 @default(0)
+  notasLinea     String?             @map("notas_linea") @db.Text
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime            @updatedAt @map("updated_at") @db.Timestamp()
+
+  // Relaciones
+  cotizacion Cotizacion @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
+
+  @@index([cotizacionId])
+  @@map("lineas_cotizacion")
+}
+
 model OperadorBeck {
   id                  String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   nombreProyecto      String                   @map("nombre_proyecto") @db.VarChar(255)
@@ -243,6 +273,9 @@ model OperadorBeck {
   createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamp()
   updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
 
+  // Relaciones
+  cotizaciones        Cotizacion[]
+
   @@index([etapa])
   @@index([estadoCierre])
   @@index([fechaProbableCierre])
@@ -251,6 +284,18 @@ model OperadorBeck {
   @@index([region])
   @@index([comuna])
   @@map("funnel_beck")
+}
+
+model IndicadorEconomico {
+  id         String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tipo       TipoIndicadorEconomico
+  valor      Decimal                 @db.Decimal(12, 4)
+  fecha      DateTime                @db.Timestamp()
+  createdAt  DateTime                @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@unique([tipo])
+  @@map("indicadores_economicos")
 }
 
 // ===========================================
@@ -284,10 +329,16 @@ enum TipoMovimiento {
 }
 
 enum EstadoCotizacion {
-  borrador
-  enviada
-  aprobada
-  rechazada
+  BORRADOR
+  ENVIADA
+  ACEPTADA
+  RECHAZADA
+  VENCIDA
+}
+
+enum TipoLineaCotizacion {
+  PRODUCTO
+  SERVICIO
 }
 
 enum MonedaFunnel {
@@ -318,6 +369,12 @@ enum FuenteLeadFunnel {
   prospeccion
   otro
 }
+
+enum TipoIndicadorEconomico {
+  UF
+  USD
+}
+
 enum EstadoRegistroTerreno {
   pendiente
   en_revision
