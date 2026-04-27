@@ -3,8 +3,10 @@ import {
   EstadoCierreFunnel,
   MonedaFunnel,
   FuenteLeadFunnel,
+  TipoMovimientoCRM,
 } from "@prisma/client";
 import { prisma } from "../config/prisma";
+import { registrarMovimientoCRM } from "./movimientoCrm.service";
 
 
 // De momento referencial. Después esto debería venir de una API o tabla propia.
@@ -107,7 +109,7 @@ function validarCamposObligatorios(data: CreateFunnelBeckInput) {
   });
 }
 
-export async function createFunnelBeck(data: CreateFunnelBeckInput) {
+export async function createFunnelBeck(data: CreateFunnelBeckInput, userId: string) {
   validarCamposObligatorios(data);
 
   const valorOriginal = toNumber(data.valorOriginal);
@@ -130,6 +132,19 @@ export async function createFunnelBeck(data: CreateFunnelBeckInput) {
       etapa: data.etapa ?? "prospecto_identificado",
       estadoCierre: data.estadoCierre ?? null,
       motivoPerdida: normalizeString(data.motivoPerdida) || null,
+    },
+  });
+
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'FUNNEL',
+    tipo: TipoMovimientoCRM.OPORTUNIDAD_CREADA,
+    entidadId: oportunidad.id,
+    descripcion: `Se creó oportunidad ${oportunidad.nombreProyecto} para la empresa ${oportunidad.empresa}`,
+    datos: {
+      nombreProyecto: oportunidad.nombreProyecto,
+      empresa: oportunidad.empresa,
+      etapa: oportunidad.etapa,
     },
   });
 
@@ -156,7 +171,7 @@ export async function getFunnelBeckById(id: string) {
   return oportunidad;
 }
 
-export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput) {
+export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput, userId: string) {
   const existente = await prisma.operadorBeck.findUnique({
     where: { id },
   });
@@ -212,7 +227,7 @@ export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput) 
     motivoPerdida: motivoPerdida ?? undefined,
   });
 
-  return prisma.operadorBeck.update({
+  const oportunidad = await prisma.operadorBeck.update({
     where: { id },
     data: {
       nombreProyecto,
@@ -233,6 +248,27 @@ export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput) 
       motivoPerdida,
     },
   });
+
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'FUNNEL',
+    tipo: 'OPORTUNIDAD_EDITADA',
+    entidadId: oportunidad.id,
+    descripcion: `Se editó oportunidad ${oportunidad.nombreProyecto}`,
+  });
+
+  if (data.etapa !== undefined && data.etapa !== existente.etapa) {
+    await registrarMovimientoCRM({
+      usuarioId: userId,
+      modulo: 'FUNNEL',
+      tipo: 'ETAPA_MODIFICADA',
+      entidadId: oportunidad.id,
+      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${existente.etapa} a ${etapa}`,
+      datos: { de: existente.etapa, a: etapa },
+    });
+  }
+
+  return oportunidad;
 }
 
 export async function updateEtapaFunnelBeck(
@@ -241,7 +277,8 @@ export async function updateEtapaFunnelBeck(
     etapa: EtapaFunnelBeck;
     estadoCierre?: EstadoCierreFunnel;
     motivoPerdida?: string;
-  }
+  },
+  userId: string,
 ) {
   const existente = await prisma.operadorBeck.findUnique({
     where: { id },
@@ -253,7 +290,7 @@ export async function updateEtapaFunnelBeck(
 
   validarEtapaYCierre(payload);
 
-  return prisma.operadorBeck.update({
+  const oportunidad = await prisma.operadorBeck.update({
     where: { id },
     data: {
       etapa: payload.etapa,
@@ -261,9 +298,22 @@ export async function updateEtapaFunnelBeck(
       motivoPerdida: normalizeString(payload.motivoPerdida) || null,
     },
   });
+
+  if (payload.etapa !== existente.etapa) {
+    await registrarMovimientoCRM({
+      usuarioId: userId,
+      modulo: 'FUNNEL',
+      tipo: 'ETAPA_MODIFICADA',
+      entidadId: oportunidad.id,
+      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${existente.etapa} a ${payload.etapa}`,
+      datos: { de: existente.etapa, a: payload.etapa },
+    });
+  }
+
+  return oportunidad;
 }
 
-export async function deleteFunnelBeck(id: string) {
+export async function deleteFunnelBeck(id: string, userId: string) {
   const existente = await prisma.operadorBeck.findUnique({
     where: { id },
   });
@@ -274,6 +324,14 @@ export async function deleteFunnelBeck(id: string) {
 
   await prisma.operadorBeck.delete({
     where: { id },
+  });
+
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'FUNNEL',
+    tipo: 'OPORTUNIDAD_ELIMINADA',
+    entidadId: id,
+    descripcion: `Se eliminó oportunidad ${existente.nombreProyecto}`,
   });
 
   return { message: "Oportunidad eliminada correctamente." };

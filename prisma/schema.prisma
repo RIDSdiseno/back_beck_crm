@@ -1,4 +1,3 @@
-// BECK Sistema - Prisma Schema
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,29 +6,26 @@ datasource db {
   provider = "postgresql"
 }
 
-// ===========================================
-// MODELOS
-// ===========================================
-
 model Usuario {
-  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre        String   @db.VarChar(255)
-  email         String   @unique @db.VarChar(255)
-  azureId       String?  @unique @map("azure_id") @db.VarChar(255)
-  passwordHash String? @map("password_hash") @db.VarChar(255)
-  rol           RolUsuario
-  activo        Boolean  @default(true)
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  obrasCreadas            Obra[]                     @relation("ObrasCreadasPorUsuario")
-  itemizadosCreados       Itemizado[]                @relation("ItemizadosCreadosPorUsuario")
-  registrosTerreno        RegistroTerreno[]
-  procesamientos          ProcesamientoIngenieria[]
-  notificaciones          Notificacion[]
-  movimientosInventario   MovimientoInventario[]
-  cotizacionesCreadas     Cotizacion[]               @relation("CotizacionesCreadasPorUsuario")
+  id                    String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                String                    @db.VarChar(255)
+  email                 String                    @unique @db.VarChar(255)
+  passwordHash          String?                   @map("password_hash") @db.VarChar(255)
+  rol                   RolUsuario
+  activo                Boolean                   @default(true)
+  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  azureId               String?                   @unique @map("azure_id") @db.VarChar(255)
+  cotizacionesCreadas   Cotizacion[]              @relation("CotizacionesCreadasPorUsuario")
+  fotos_registro        fotos_registro[]
+  itemizadosCreados     Itemizado[]               @relation("ItemizadosCreadosPorUsuario")
+  movimientosCrm        MovimientoCRM[]           @relation("MovimientosCrmPorUsuario")
+  movimientosInventario MovimientoInventario[]
+  notificaciones        Notificacion[]
+  obrasCreadas          Obra[]                    @relation("ObrasCreadasPorUsuario")
+  procesamientos        ProcesamientoIngenieria[]
+  registrosTerreno      RegistroTerreno[]
+  usuarios_obras        usuarios_obras[]
 
   @@index([email])
   @@index([rol])
@@ -38,19 +34,18 @@ model Usuario {
 }
 
 model Obra {
-  id            String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre        String      @db.VarChar(255)
-  codigo        String      @unique @db.VarChar(100)
-  descripcion   String?     @db.Text
-  estado        EstadoObra  @default(activa)
-  creadoPorId   String      @map("creado_por_id") @db.Uuid
-  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  creadoPor          Usuario            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
-  registrosTerreno   RegistroTerreno[]
-  cotizaciones       Cotizacion[]
+  id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre           String            @db.VarChar(255)
+  codigo           String            @unique @db.VarChar(100)
+  descripcion      String?
+  estado           EstadoObra        @default(activa)
+  creadoPorId      String            @map("creado_por_id") @db.Uuid
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  cotizaciones     Cotizacion[]
+  creadoPor        Usuario           @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  registrosTerreno RegistroTerreno[]
+  usuarios_obras   usuarios_obras[]
 
   @@index([codigo])
   @@index([estado])
@@ -59,17 +54,15 @@ model Obra {
 }
 
 model Itemizado {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigo          String   @unique @db.VarChar(100)
-  nombre          String   @db.VarChar(255)
-  descripcion     String?  @db.Text
-  precioUnitario  Decimal  @default(0) @map("precio_unitario") @db.Decimal(12, 2)
-  creadoPorId     String   @map("creado_por_id") @db.Uuid
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  creadoPor      Usuario                    @relation("ItemizadosCreadosPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
+  id             String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigo         String                    @unique @db.VarChar(100)
+  nombre         String                    @db.VarChar(255)
+  descripcion    String?
+  precioUnitario Decimal                   @default(0) @map("precio_unitario") @db.Decimal(12, 2)
+  creadoPorId    String                    @map("creado_por_id") @db.Uuid
+  createdAt      DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  creadoPor      Usuario                   @relation("ItemizadosCreadosPorUsuario", fields: [creadoPorId], references: [id])
   procesamientos ProcesamientoIngenieria[]
 
   @@index([codigo])
@@ -78,31 +71,30 @@ model Itemizado {
 }
 
 model RegistroTerreno {
-  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  obraId              String   @map("obra_id") @db.Uuid
-  usuarioId           String   @map("usuario_id") @db.Uuid
-  fecha               DateTime @db.Date
-  diaSemana           String   @map("dia_semana") @db.VarChar(20)
-  descripcionMaterial String   @map("descripcion_material") @db.VarChar(500)
-  modulo              String   @db.VarChar(100)
-  piso                String   @db.VarChar(50)
-  ejeNumerico         Int      @map("eje_numerico")
-  ejeAlfabetico       String   @map("eje_alfabetico") @db.VarChar(10)
-  numeroSello         String   @map("numero_sello") @db.VarChar(100)
-  cantidadSellos      Int      @map("cantidad_sellos")
-  nombreSellador      String   @map("nombre_sellador") @db.VarChar(255)
-  holgura             Decimal  @db.Decimal(3, 1)
+  id                  String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId              String                   @map("obra_id") @db.Uuid
+  usuarioId           String                   @map("usuario_id") @db.Uuid
+  fecha               DateTime                 @db.Date
+  diaSemana           String                   @map("dia_semana") @db.VarChar(20)
+  descripcionMaterial String                   @map("descripcion_material") @db.VarChar(500)
+  modulo              String                   @db.VarChar(100)
+  piso                String                   @db.VarChar(50)
+  ejeNumerico         Int                      @map("eje_numerico")
+  ejeAlfabetico       String                   @map("eje_alfabetico") @db.VarChar(10)
+  numeroSello         String                   @map("numero_sello") @db.VarChar(100)
+  cantidadSellos      Int                      @map("cantidad_sellos")
+  nombreSellador      String                   @map("nombre_sellador") @db.VarChar(255)
+  holgura             Decimal                  @db.Decimal(3, 1)
   accesibilidad       Int
-  observaciones       String?  @db.Text
-  fotosUrls           String[] @map("fotos_urls")
-  estado              EstadoRegistroTerreno @default(pendiente)
-  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  obra          Obra                      @relation(fields: [obraId], references: [id], onDelete: Cascade)
-  usuario       Usuario                   @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  procesamiento ProcesamientoIngenieria?
+  observaciones       String?
+  fotosUrls           String[]                 @map("fotos_urls")
+  createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  estado              EstadoRegistroTerreno    @default(pendiente)
+  fotos_registro      fotos_registro[]
+  procesamiento       ProcesamientoIngenieria?
+  obra                Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  usuario             Usuario                  @relation(fields: [usuarioId], references: [id])
 
   @@index([obraId])
   @@index([usuarioId])
@@ -112,19 +104,17 @@ model RegistroTerreno {
 }
 
 model ProcesamientoIngenieria {
-  id                    String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  registroTerrenoId     String   @unique @map("registro_terreno_id") @db.Uuid
-  usuarioId             String   @map("usuario_id") @db.Uuid
-  codigo                String   @db.VarChar(100)
-  itemizadoId           String   @map("itemizado_id") @db.Uuid
-  totalSellosCalculado  Decimal  @map("total_sellos_calculado") @db.Decimal(12, 2)
-  notas                 String?  @db.Text
-  procesadoAt           DateTime @default(now()) @map("procesado_at") @db.Timestamp()
-
-  // Relaciones
-  registroTerreno RegistroTerreno @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
-  usuario         Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  itemizado       Itemizado       @relation(fields: [itemizadoId], references: [id], onDelete: Restrict)
+  id                   String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  registroTerrenoId    String          @unique @map("registro_terreno_id") @db.Uuid
+  usuarioId            String          @map("usuario_id") @db.Uuid
+  codigo               String          @db.VarChar(100)
+  itemizadoId          String          @map("itemizado_id") @db.Uuid
+  totalSellosCalculado Decimal         @map("total_sellos_calculado") @db.Decimal(12, 2)
+  notas                String?
+  procesadoAt          DateTime        @default(now()) @map("procesado_at") @db.Timestamp(6)
+  itemizado            Itemizado       @relation(fields: [itemizadoId], references: [id])
+  registroTerreno      RegistroTerreno @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
+  usuario              Usuario         @relation(fields: [usuarioId], references: [id])
 
   @@index([registroTerrenoId])
   @@index([usuarioId])
@@ -133,16 +123,14 @@ model ProcesamientoIngenieria {
 }
 
 model Notificacion {
-  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  usuarioId     String          @map("usuario_id") @db.Uuid
-  tipo          TipoNotificacion
-  referenciaId  String?         @map("referencia_id") @db.Uuid
-  mensaje       String          @db.Text
-  leido         Boolean         @default(false)
-  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamp()
-
-  // Relaciones
-  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  id           String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId    String           @map("usuario_id") @db.Uuid
+  tipo         TipoNotificacion
+  referenciaId String?          @map("referencia_id") @db.Uuid
+  mensaje      String
+  leido        Boolean          @default(false)
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  usuario      Usuario          @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
   @@index([leido])
@@ -151,18 +139,16 @@ model Notificacion {
 }
 
 model Inventario {
-  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoProducto String   @unique @map("codigo_producto") @db.VarChar(100)
-  nombre         String   @db.VarChar(255)
-  descripcion    String?  @db.Text
-  stockActual    Int      @default(0) @map("stock_actual")
-  stockMinimo    Int      @default(0) @map("stock_minimo")
-  ubicacion      String?  @db.VarChar(255)
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  movimientos MovimientoInventario[]
+  id             String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoProducto String                 @unique @map("codigo_producto") @db.VarChar(100)
+  nombre         String                 @db.VarChar(255)
+  descripcion    String?
+  stockActual    Int                    @default(0) @map("stock_actual")
+  stockMinimo    Int                    @default(0) @map("stock_minimo")
+  ubicacion      String?                @db.VarChar(255)
+  createdAt      DateTime               @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  movimientos    MovimientoInventario[]
 
   @@index([codigoProducto])
   @@index([stockActual])
@@ -170,18 +156,16 @@ model Inventario {
 }
 
 model MovimientoInventario {
-  id               String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  productoId       String   @map("producto_id") @db.Uuid
-  tipo             TipoMovimiento
-  cantidad         Int
-  usuarioId        String   @map("usuario_id") @db.Uuid
-  codigoEscaneado  String?  @map("codigo_escaneado") @db.VarChar(255)
-  observaciones    String?  @db.Text
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp()
-
-  // Relaciones
-  producto Inventario @relation(fields: [productoId], references: [id], onDelete: Cascade)
-  usuario  Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  id              String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  productoId      String         @map("producto_id") @db.Uuid
+  tipo            TipoMovimiento
+  cantidad        Int
+  usuarioId       String         @map("usuario_id") @db.Uuid
+  codigoEscaneado String?        @map("codigo_escaneado") @db.VarChar(255)
+  observaciones   String?
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  producto        Inventario     @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  usuario         Usuario        @relation(fields: [usuarioId], references: [id])
 
   @@index([productoId])
   @@index([usuarioId])
@@ -190,90 +174,86 @@ model MovimientoInventario {
 }
 
 model Cotizacion {
-  id            String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  numero        String?          @unique @db.VarChar(50)
-  clienteNombre String           @map("cliente_nombre") @db.VarChar(255)
-  obraId        String?          @map("obra_id") @db.Uuid
-  funnelBeckId  String?          @map("funnel_beck_id") @db.Uuid
-  estado        EstadoCotizacion @default(BORRADOR)
-  subtotal      Decimal          @db.Decimal(12, 2)
-  descuento     Decimal          @default(0) @db.Decimal(12, 2)
-  impuesto      Decimal          @default(0) @db.Decimal(12, 2)
-  aplicaImpuesto Boolean         @default(true)
-  total         Decimal          @db.Decimal(12, 2)
-  vigencia      DateTime         @db.Timestamp()
-  observaciones String?          @db.Text
-  creadoPorId   String           @map("creado_por_id") @db.Uuid
-  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamp()
+  id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId           String?           @map("obra_id") @db.Uuid
+  estado           EstadoCotizacion  @default(BORRADOR)
+  creadoPorId      String            @map("creado_por_id") @db.Uuid
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
+  numero           String?           @db.VarChar(50)
+  descuento        Decimal           @default(0) @db.Decimal(12, 2)
+  subtotal         Decimal           @db.Decimal(12, 2)
+  total            Decimal           @db.Decimal(12, 2)
+  clienteNombre    String            @map("cliente_nombre") @db.VarChar(255)
+  observaciones    String?
+  vigencia         DateTime          @db.Timestamp(6)
+  impuesto         Decimal           @default(0) @db.Decimal(12, 2)
+  aplicaImpuesto   Boolean           @default(true)
+  funnelBeckId     String?           @map("funnel_beck_id") @db.Uuid
+  cotizacionBaseId String?           @map("cotizacion_base_id") @db.Uuid
+  esActual         Boolean           @default(true) @map("es_actual")
+  version          Int               @default(1)
+  cotizacionBase   Cotizacion?       @relation("HistorialCotizaciones", fields: [cotizacionBaseId], references: [id])
+  versiones        Cotizacion[]      @relation("HistorialCotizaciones")
+  creadoPor        Usuario           @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  funnelBeck       OperadorBeck?     @relation(fields: [funnelBeckId], references: [id])
+  obra             Obra?             @relation(fields: [obraId], references: [id])
+  lineas           LineaCotizacion[]
 
-  // Relaciones
-  obra      Obra?              @relation(fields: [obraId], references: [id], onDelete: SetNull)
-  funnelBeck OperadorBeck?     @relation(fields: [funnelBeckId], references: [id], onDelete: SetNull)
-  creadoPor Usuario            @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id], onDelete: Restrict)
-  lineas    LineaCotizacion[]
-
+  @@unique([numero, version])
   @@index([clienteNombre])
   @@index([estado])
   @@index([obraId])
   @@index([funnelBeckId])
   @@index([creadoPorId])
+  @@index([numero])
+  @@index([version])
+  @@index([esActual])
+  @@index([cotizacionBaseId])
   @@map("cotizaciones")
 }
 
 model LineaCotizacion {
   id             String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   cotizacionId   String              @map("cotizacion_id") @db.Uuid
-  tipoLinea      TipoLineaCotizacion @default(PRODUCTO) @map("tipo_linea")
-  descripcion    String              @db.Text
-  unidad         String?             @db.VarChar(50)
+  descripcion    String
   cantidad       Decimal             @db.Decimal(10, 3)
   precioUnitario Decimal             @map("precio_unitario") @db.Decimal(12, 2)
-  gananciaPct    Decimal             @default(0) @map("ganancia_pct") @db.Decimal(6, 2)
   subtotal       Decimal             @db.Decimal(12, 2)
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
+  gananciaPct    Decimal             @default(0) @map("ganancia_pct") @db.Decimal(6, 2)
+  notasLinea     String?             @map("notas_linea")
   orden          Int                 @default(0)
-  notasLinea     String?             @map("notas_linea") @db.Text
-  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt      DateTime            @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
-  cotizacion Cotizacion @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
+  tipoLinea      TipoLineaCotizacion @default(PRODUCTO) @map("tipo_linea")
+  unidad         String?             @db.VarChar(50)
+  cotizacion     Cotizacion          @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
 
   @@index([cotizacionId])
   @@map("lineas_cotizacion")
 }
 
 model OperadorBeck {
-  id                  String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombreProyecto      String                   @map("nombre_proyecto") @db.VarChar(255)
-  empresa             String                   @db.VarChar(255)
-
-  // Valor original ingresado por el usuario
-  valorOriginal       Decimal                  @map("valor_original") @db.Decimal(14, 2)
-  monedaOriginal      MonedaFunnel             @map("moneda_original")
-
-  // Valores normalizados para reportes y filtros
-  valorClp            Decimal                  @map("valor_clp") @db.Decimal(14, 2)
-  valorUf             Decimal                  @map("valor_uf") @db.Decimal(14, 4)
-  dolarValor          Decimal?                 @map("dolar_valor") @db.Decimal(12, 4)
-  ufValor             Decimal?                 @map("uf_valor") @db.Decimal(12, 4)
-  fechaTipoCambio     DateTime?                @map("fecha_tipo_cambio") @db.Timestamp()
-
-  fechaProbableCierre DateTime                 @map("fecha_probable_cierre") @db.Date
-  vendedor            String                   @db.VarChar(255)
-
-  region              String                   @db.VarChar(150)
-  comuna              String                   @db.VarChar(150)
-
+  id                  String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombreProyecto      String              @map("nombre_proyecto") @db.VarChar(255)
+  empresa             String              @db.VarChar(255)
+  valorOriginal       Decimal             @map("valor_original") @db.Decimal(14, 2)
+  monedaOriginal      MonedaFunnel        @map("moneda_original")
+  valorClp            Decimal             @map("valor_clp") @db.Decimal(14, 2)
+  valorUf             Decimal             @map("valor_uf") @db.Decimal(14, 4)
+  fechaProbableCierre DateTime            @map("fecha_probable_cierre") @db.Date
+  vendedor            String              @db.VarChar(255)
+  region              String              @db.VarChar(150)
+  comuna              String              @db.VarChar(150)
   fuenteLead          FuenteLeadFunnel?
-  etapa               EtapaFunnelBeck         @default(prospecto_identificado)
+  etapa               EtapaFunnelBeck     @default(prospecto_identificado)
   estadoCierre        EstadoCierreFunnel?
-  motivoPerdida       String?                  @map("motivo_perdida") @db.Text
-
-  createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
-
-  // Relaciones
+  motivoPerdida       String?             @map("motivo_perdida")
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  dolarValor          Decimal?            @map("dolar_valor") @db.Decimal(12, 4)
+  fechaTipoCambio     DateTime?           @map("fecha_tipo_cambio") @db.Timestamp(6)
+  ufValor             Decimal?            @map("uf_valor") @db.Decimal(12, 4)
   cotizaciones        Cotizacion[]
 
   @@index([etapa])
@@ -287,27 +267,71 @@ model OperadorBeck {
 }
 
 model IndicadorEconomico {
-  id         String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  tipo       TipoIndicadorEconomico
-  valor      Decimal                 @db.Decimal(12, 4)
-  fecha      DateTime                @db.Timestamp()
-  createdAt  DateTime                @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt  DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  id        String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  tipo      TipoIndicadorEconomico @unique
+  valor     Decimal                @db.Decimal(12, 4)
+  fecha     DateTime               @db.Timestamp(6)
+  createdAt DateTime               @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  @@unique([tipo])
   @@map("indicadores_economicos")
 }
 
-// ===========================================
-// ENUMS
-// ===========================================
+model usuarios_obras {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuario_id  String   @db.Uuid
+  obra_id     String   @db.Uuid
+  asignado_en DateTime @default(now()) @db.Timestamp(6)
+  obras       Obra     @relation(fields: [obra_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuarios_obras_obra")
+  usuarios    Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuarios_obras_usuario")
+
+  @@unique([usuario_id, obra_id], map: "uq_usuarios_obras")
+  @@index([obra_id], map: "idx_usuarios_obras_obra_id")
+  @@index([usuario_id], map: "idx_usuarios_obras_usuario_id")
+}
+
+model MovimientoCRM {
+  id          String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId   String              @map("usuario_id") @db.Uuid
+  modulo      ModuloMovimientoCRM
+  tipo        TipoMovimientoCRM
+  entidadId   String?             @map("entidad_id") @db.Uuid
+  descripcion String
+  datos       Json?
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  usuario     Usuario             @relation("MovimientosCrmPorUsuario", fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@index([modulo])
+  @@index([tipo])
+  @@index([entidadId])
+  @@index([createdAt(sort: Desc)])
+  @@map("movimientos_crm")
+}
+
+model fotos_registro {
+  id                String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  registro_id       String          @db.Uuid
+  url               String
+  public_id         String          @db.VarChar(255)
+  nombre_archivo    String?         @db.VarChar(255)
+  formato           String?         @db.VarChar(50)
+  bytes             Int?
+  subido_por_id     String?         @db.Uuid
+  created_at        DateTime        @default(now()) @db.Timestamp(6)
+  registros_terreno RegistroTerreno @relation(fields: [registro_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_fotos_registro_registro")
+  usuarios          Usuario?        @relation(fields: [subido_por_id], references: [id], onUpdate: NoAction, map: "fk_fotos_registro_usuario")
+
+  @@index([registro_id], map: "idx_fotos_registro_registro_id")
+  @@index([subido_por_id], map: "idx_fotos_registro_subido_por_id")
+}
 
 enum RolUsuario {
   administrador
-  vendedor
   terreno
   ingenieria
   visualizador
+  vendedor
 }
 
 enum EstadoObra {
@@ -380,4 +404,29 @@ enum EstadoRegistroTerreno {
   en_revision
   validado
   rechazado
+}
+
+enum ModuloMovimientoCRM {
+  FUNNEL
+  COTIZACION
+  USUARIO
+  OBRA
+}
+
+enum TipoMovimientoCRM {
+  OPORTUNIDAD_CREADA
+  OPORTUNIDAD_EDITADA
+  ETAPA_MODIFICADA
+  OPORTUNIDAD_ELIMINADA
+  COTIZACION_CREADA
+  COTIZACION_EDITADA
+  COTIZACION_ENVIADA
+  COTIZACION_ACEPTADA
+  COTIZACION_RECHAZADA
+  COTIZACION_ELIMINADA
+  USUARIO_CREADO
+  USUARIO_ACTIVADO
+  USUARIO_DESACTIVADO
+  ROL_CAMBIADO
+  OBRA_CREADA
 }

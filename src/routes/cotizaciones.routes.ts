@@ -3,6 +3,7 @@ import {
   createCotizacion,
   getCotizaciones,
   getCotizacionById,
+  getCotizacionVersiones,
   updateCotizacion,
   patchCotizacionEstado,
   deleteCotizacion,
@@ -14,6 +15,7 @@ const router = Router();
 
 // Todos autenticados pueden ver
 router.get("/", authenticate, getCotizaciones);
+router.get("/:id/versiones", authenticate, getCotizacionVersiones);
 router.get("/:id", authenticate, getCotizacionById);
 router.get("/:id/pdf", authenticate, downloadCotizacionPdf);
 

@@ -1,5 +1,6 @@
-import { EstadoCotizacion, Prisma, TipoLineaCotizacion } from '@prisma/client';
+import { EstadoCotizacion, Prisma, TipoLineaCotizacion, TipoMovimientoCRM } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { registrarMovimientoCRM } from './movimientoCrm.service';
 import {
   CotizacionError,
   CotizacionTotals,
@@ -21,6 +22,74 @@ const validateDescuentoPct = (descuento: number): void => {
     throw new CotizacionError('El descuento debe estar entre 0 y 100', 400);
   }
 };
+
+const formatMoney = (value: number, moneda?: string | null) => {
+  const safeValue = Number.isFinite(value) ? value : 0;
+
+  if (moneda === 'USD') {
+    return `US$${safeValue.toLocaleString('en-US', {
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  if (moneda === 'UF') {
+    return `UF ${safeValue.toLocaleString('es-CL', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  return `$${Math.round(safeValue).toLocaleString('es-CL')}`;
+};
+
+const OPORTUNIDAD_SELECT = {
+  id: true,
+  nombreProyecto: true,
+} as const;
+
+type OportunidadCotizacion = Prisma.OperadorBeckGetPayload<{
+  select: typeof OPORTUNIDAD_SELECT;
+}>;
+
+const generarNumeroCotizacion = async (): Promise<string> => {
+  const cotizaciones = await prisma.cotizacion.findMany({
+    where: { numero: { not: null } },
+    select: { numero: true },
+  });
+
+  const ultimoNumero = cotizaciones.reduce((max, cotizacion) => {
+    const numero = Number(cotizacion.numero);
+    return Number.isFinite(numero) && numero > max ? numero : max;
+  }, 0);
+
+  return String(ultimoNumero + 1);
+};
+
+const resolveNumeroCotizacion = async (numero?: string | null): Promise<string> => {
+  const normalized = numero?.trim();
+  return normalized || generarNumeroCotizacion();
+};
+
+const findOportunidadCotizacion = async (
+  funnelBeckId: string | null,
+): Promise<OportunidadCotizacion | null> => {
+  if (!funnelBeckId) return null;
+
+  return prisma.operadorBeck.findUnique({
+    where: { id: funnelBeckId },
+    select: OPORTUNIDAD_SELECT,
+  });
+};
+
+const descripcionOportunidad = (
+  oportunidad: OportunidadCotizacion | null,
+  prefix: 'en',
+): string => (
+  oportunidad ? ` ${prefix} oportunidad ${oportunidad.nombreProyecto}` : ''
+);
+
+const descripcionEmpresa = (clienteNombre: string): string =>
+  ` para la empresa ${clienteNombre}`;
 
 // ─── Cálculos ────────────────────────────────────────────────────────────────
 
@@ -178,12 +247,21 @@ const INCLUDE_FULL = {
   funnelBeck: true,
 } as const;
 
+const ESTADO_TIPO_MAP: Partial<Record<EstadoCotizacion, TipoMovimientoCRM>> = {
+  [EstadoCotizacion.ENVIADA]: TipoMovimientoCRM.COTIZACION_ENVIADA,
+  [EstadoCotizacion.ACEPTADA]: TipoMovimientoCRM.COTIZACION_ACEPTADA,
+  [EstadoCotizacion.RECHAZADA]: TipoMovimientoCRM.COTIZACION_RECHAZADA,
+};
+
 // ─── Servicios ───────────────────────────────────────────────────────────────
 
 export const createCotizacion = async (input: CreateCotizacionInput, userId: string) => {
   await validateObra(input.obraId);
   await validateFunnelBeck(input.funnelBeckId);
   validateDescuentoPct(input.descuento);
+
+  const numeroCotizacion = await resolveNumeroCotizacion(input.numero);
+  const oportunidad = await findOportunidadCotizacion(input.funnelBeckId);
 
   const {
     lineasCalculadas,
@@ -195,7 +273,7 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
   const cotizacionId = await prisma.$transaction(async (tx) => {
     const cot = await tx.cotizacion.create({
       data: {
-        numero: input.numero,
+        numero: numeroCotizacion,
         clienteNombre: input.clienteNombre,
         obraId: input.obraId,
         funnelBeckId: input.funnelBeckId ?? null,
@@ -219,7 +297,25 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
     return cot.id;
   });
 
-  return findCotizacion(cotizacionId);
+  const cotizacion = await findCotizacion(cotizacionId);
+  const moneda = 'moneda' in cotizacion ? String(cotizacion.moneda ?? 'CLP') : 'CLP';
+
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'COTIZACION',
+    tipo: TipoMovimientoCRM.COTIZACION_CREADA,
+    entidadId: cotizacion.id,
+    descripcion: `Se creó cotización ${numeroCotizacion} por ${formatMoney(Number(cotizacion.total), moneda)}${descripcionEmpresa(cotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`,
+    datos: {
+      numero: numeroCotizacion,
+      total: Number(cotizacion.total),
+      empresa: cotizacion.clienteNombre,
+      funnelBeckId: oportunidad?.id ?? null,
+      oportunidad: oportunidad?.nombreProyecto ?? null,
+    },
+  });
+
+  return cotizacion;
 };
 
 export const listCotizaciones = async () =>
@@ -247,37 +343,76 @@ export const findCotizacion = async (id: string) => {
   return cot;
 };
 
-export const updateCotizacion = async (id: string, input: UpdateCotizacionInput) => {
+export const getCotizacionVersiones = async (id: string) => {
+  const cotizacion = await prisma.cotizacion.findUnique({
+    where: { id },
+  });
+
+  if (!cotizacion) {
+    throw new CotizacionError('Cotización no encontrada', 404);
+  }
+
+  const baseId = cotizacion.cotizacionBaseId ?? cotizacion.id;
+
+  return prisma.cotizacion.findMany({
+    where: {
+      OR: [
+        { id: baseId },
+        { cotizacionBaseId: baseId },
+      ],
+    },
+    orderBy: {
+      version: 'desc',
+    },
+    include: {
+      lineas: {
+        orderBy: { orden: 'asc' },
+      },
+      creadoPor: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+        },
+      },
+      obra: true,
+      funnelBeck: true,
+    },
+  });
+};
+
+export const updateCotizacion = async (
+  id: string,
+  input: UpdateCotizacionInput,
+  userId: string,
+) => {
   const existing = await prisma.cotizacion.findUnique({
     where: { id },
     include: { lineas: true },
   });
+
   if (!existing) throw new CotizacionError('Cotización no encontrada', 404);
 
-  if (input.obraId !== undefined) {
-    await validateObra(input.obraId);
-  }
-  if (input.funnelBeckId !== undefined) {
-    await validateFunnelBeck(input.funnelBeckId);
-  }
-  if (input.descuento !== undefined) {
-    validateDescuentoPct(input.descuento);
-  }
+  if (input.obraId !== undefined) await validateObra(input.obraId);
+  if (input.funnelBeckId !== undefined) await validateFunnelBeck(input.funnelBeckId);
+  if (input.descuento !== undefined) validateDescuentoPct(input.descuento);
 
-  const updateData: Prisma.CotizacionUncheckedUpdateInput = {};
+  const numeroCotizacion =
+    input.numero !== undefined
+      ? input.numero?.trim() || existing.numero
+      : existing.numero;
+  const funnelBeckIdFinal =
+    input.funnelBeckId !== undefined ? input.funnelBeckId : existing.funnelBeckId;
+  const oportunidad = await findOportunidadCotizacion(funnelBeckIdFinal);
+  const cambioFunnelBeck = existing.funnelBeckId !== funnelBeckIdFinal;
+  const oportunidadAnterior =
+    cambioFunnelBeck && existing.funnelBeckId
+      ? await findOportunidadCotizacion(existing.funnelBeckId)
+      : null;
 
-  if (input.numero !== undefined) updateData.numero = input.numero;
-  if (input.clienteNombre !== undefined) updateData.clienteNombre = input.clienteNombre;
-  if (input.obraId !== undefined) updateData.obraId = input.obraId;
-  if (input.funnelBeckId !== undefined) updateData.funnelBeckId = input.funnelBeckId;
-  if (input.estado !== undefined) updateData.estado = input.estado;
-  if (input.vigencia !== undefined) updateData.vigencia = input.vigencia;
-  if (input.observaciones !== undefined) updateData.observaciones = input.observaciones;
-
-  const replaceLineas = input.lineas !== undefined;
-
-  if (replaceLineas || input.descuento !== undefined || input.aplicaImpuesto !== undefined) {
-    const lineas = input.lineas ?? existing.lineas.map((l) => ({
+  const lineasBase: LineaInput[] =
+    input.lineas ??
+    existing.lineas.map((l) => ({
       tipoLinea: l.tipoLinea,
       descripcion: l.descripcion,
       unidad: l.unidad,
@@ -289,67 +424,176 @@ export const updateCotizacion = async (id: string, input: UpdateCotizacionInput)
       notasLinea: l.notasLinea,
     }));
 
-    const descuento = input.descuento ?? Number(existing.descuento);
+  const descuento = input.descuento ?? Number(existing.descuento);
+  const aplicaImpuesto = input.aplicaImpuesto ?? existing.aplicaImpuesto;
 
-      if (!Number.isFinite(descuento) || descuento < 0 || descuento > 100) {
-        throw new CotizacionError(
-          'La cotización tiene un descuento antiguo guardado como monto. Debe normalizarse antes de editarla.',
-          400,
-        );
-    }
-    const aplicaImpuesto = input.aplicaImpuesto ?? existing.aplicaImpuesto;
-    const {
-      lineasCalculadas,
-      subtotal,
-      impuesto,
-      total,
-    } = calcularTotales(lineas, descuento, aplicaImpuesto);
+  const { lineasCalculadas, subtotal, impuesto, total } = calcularTotales(
+    lineasBase,
+    descuento,
+    aplicaImpuesto,
+  );
 
-    updateData.subtotal = toDecimal(subtotal);
-    updateData.descuento = toDecimal(descuento);
-    updateData.impuesto = toDecimal(impuesto);
-    updateData.aplicaImpuesto = aplicaImpuesto;
-    updateData.total = toDecimal(total);
+  const cotizacionBaseId = existing.cotizacionBaseId ?? existing.id;
+  const nuevaVersion = existing.version + 1;
 
-    if (replaceLineas) {
-      const cotizacionId = await prisma.$transaction(async (tx) => {
-        await tx.cotizacion.update({ where: { id }, data: updateData });
-        await tx.lineaCotizacion.deleteMany({ where: { cotizacionId: id } });
-        await tx.lineaCotizacion.createMany({ data: lineasCreateData(id, lineasCalculadas) });
-        return id;
-      });
+  const nuevaCotizacionId = await prisma.$transaction(async (tx) => {
+    await tx.cotizacion.update({
+      where: { id: existing.id },
+      data: { esActual: false },
+    });
 
-      return findCotizacion(cotizacionId);
-    }
+    const nueva = await tx.cotizacion.create({
+      data: {
+        numero: numeroCotizacion,
+        version: nuevaVersion,
+        esActual: true,
+        cotizacionBaseId,
+
+        clienteNombre:
+          input.clienteNombre !== undefined
+            ? input.clienteNombre
+            : existing.clienteNombre,
+
+        obraId: input.obraId !== undefined ? input.obraId : existing.obraId,
+        funnelBeckId: funnelBeckIdFinal,
+
+        estado: input.estado !== undefined ? input.estado : existing.estado,
+
+        subtotal: toDecimal(subtotal),
+        descuento: toDecimal(descuento),
+        impuesto: toDecimal(impuesto),
+        aplicaImpuesto,
+        total: toDecimal(total),
+
+        vigencia: input.vigencia !== undefined ? input.vigencia : existing.vigencia,
+        observaciones:
+          input.observaciones !== undefined
+            ? input.observaciones
+            : existing.observaciones,
+
+        creadoPorId: userId,
+      },
+      select: { id: true },
+    });
+
+    await tx.lineaCotizacion.createMany({
+      data: lineasCreateData(nueva.id, lineasCalculadas),
+    });
+
+    return nueva.id;
+  });
+
+  const nuevaCotizacion = await findCotizacion(nuevaCotizacionId);
+  const totalAntes = Number(existing.total);
+  const totalDespues = Number(nuevaCotizacion.total);
+  const numeroVisible = nuevaCotizacion.numero ?? existing.numero ?? 'sin número';
+  const moneda = 'moneda' in nuevaCotizacion ? String(nuevaCotizacion.moneda ?? 'CLP') : 'CLP';
+  const anteriores = new Set(
+    existing.lineas.map((linea) =>
+      linea.descripcion.trim().toLowerCase(),
+    ),
+  );
+  const lineasNuevas = nuevaCotizacion.lineas.filter((linea) => {
+    const descripcion = linea.descripcion.trim().toLowerCase();
+    return descripcion && !anteriores.has(descripcion);
+  });
+
+  let descripcion = '';
+
+  if (lineasNuevas.length > 0) {
+    descripcion = `Se editó cotización ${numeroVisible}, se agregó "${lineasNuevas[0].descripcion}" de ${formatMoney(totalAntes, moneda)} a ${formatMoney(totalDespues, moneda)}${descripcionEmpresa(nuevaCotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`;
+  } else if (totalAntes !== totalDespues) {
+    descripcion = `Se editó cotización ${numeroVisible} de ${formatMoney(totalAntes, moneda)} a ${formatMoney(totalDespues, moneda)}${descripcionEmpresa(nuevaCotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`;
+  } else {
+    descripcion = `Se editó cotización ${numeroVisible}${descripcionEmpresa(nuevaCotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`;
   }
 
-  return prisma.cotizacion.update({
-    where: { id },
-    data: updateData,
-    include: INCLUDE_FULL,
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'COTIZACION',
+    tipo: TipoMovimientoCRM.COTIZACION_EDITADA,
+    entidadId: nuevaCotizacion.id,
+    descripcion,
+    datos: {
+      numero: numeroVisible,
+      versionAnterior: existing.version,
+      versionNueva: nuevaCotizacion.version,
+      totalAntes,
+      totalDespues,
+      moneda,
+      empresa: nuevaCotizacion.clienteNombre,
+      funnelBeckId: oportunidad?.id ?? null,
+      oportunidad: oportunidad?.nombreProyecto ?? null,
+      lineasNuevas: lineasNuevas.map((linea) => linea.descripcion),
+    },
   });
+
+  if (cambioFunnelBeck && oportunidad) {
+    const descripcionAsignacion = oportunidadAnterior
+      ? `Se reasignó cotización ${numeroVisible} de oportunidad ${oportunidadAnterior.nombreProyecto} a oportunidad ${oportunidad.nombreProyecto}`
+      : `Se asignó cotización ${numeroVisible} a oportunidad ${oportunidad.nombreProyecto}`;
+
+    await registrarMovimientoCRM({
+      usuarioId: userId,
+      modulo: 'COTIZACION',
+      tipo: TipoMovimientoCRM.COTIZACION_EDITADA,
+      entidadId: nuevaCotizacion.id,
+      descripcion: descripcionAsignacion,
+      datos: {
+        numero: numeroVisible,
+        funnelBeckId: oportunidad.id,
+        oportunidad: oportunidad.nombreProyecto,
+        funnelBeckIdAnterior: oportunidadAnterior?.id ?? null,
+        oportunidadAnterior: oportunidadAnterior?.nombreProyecto ?? null,
+      },
+    });
+  }
+
+  return nuevaCotizacion;
 };
 
-export const patchEstado = async (id: string, estado: EstadoCotizacion) => {
+export const patchEstado = async (id: string, estado: EstadoCotizacion, userId: string) => {
   const existing = await prisma.cotizacion.findUnique({
     where: { id },
     select: { id: true },
   });
   if (!existing) throw new CotizacionError('Cotización no encontrada', 404);
 
-  return prisma.cotizacion.update({
+  const cotizacion = await prisma.cotizacion.update({
     where: { id },
     data: { estado },
     include: INCLUDE_FULL,
   });
+
+  const tipo = ESTADO_TIPO_MAP[estado];
+  if (tipo) {
+    await registrarMovimientoCRM({
+      usuarioId: userId,
+      modulo: 'COTIZACION',
+      tipo,
+      entidadId: cotizacion.id,
+      descripcion: `Cotización #${cotizacion.numero ?? cotizacion.id} marcada como ${estado}`,
+      datos: { estado },
+    });
+  }
+
+  return cotizacion;
 };
 
-export const deleteCotizacion = async (id: string): Promise<void> => {
+export const deleteCotizacion = async (id: string, userId: string): Promise<void> => {
   const existing = await prisma.cotizacion.findUnique({
     where: { id },
-    select: { id: true },
+    select: { id: true, numero: true },
   });
   if (!existing) throw new CotizacionError('Cotización no encontrada', 404);
 
   await prisma.cotizacion.delete({ where: { id } });
+
+  await registrarMovimientoCRM({
+    usuarioId: userId,
+    modulo: 'COTIZACION',
+    tipo: TipoMovimientoCRM.COTIZACION_ELIMINADA,
+    entidadId: id,
+    descripcion: `Se eliminó cotización #${existing.numero ?? id}`,
+  });
 };

@@ -63,6 +63,9 @@ const estadoVal = (value: unknown): EstadoCotizacion | null => {
     : null;
 };
 
+const getAuthUserId = (req: Request): string | null =>
+  req.userId ?? null;
+
 const handleError = (res: Response, error: unknown): void => {
   if (error instanceof CotizacionError) {
     res.status(error.statusCode).json({ success: false, error: error.message });
@@ -179,6 +182,23 @@ export const getCotizaciones = async (req: Request, res: Response): Promise<void
   }
 };
 
+export const getCotizacionVersiones = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = getParam(req.params.id);
+
+    if (!id) {
+      res.status(400).json({ success: false, error: 'ID inválido' });
+      return;
+    }
+
+    const data = await CotizacionService.getCotizacionVersiones(id);
+
+    res.json({ success: true, data });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 export const getCotizacionById = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req, res);
@@ -199,8 +219,10 @@ export const getCotizacionById = async (req: Request, res: Response): Promise<vo
 
 export const updateCotizacion = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req, res);
-    if (!userId) return;
+    if (!req.userId) {
+      res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+      return;
+    }
 
     const id = getParam(req.params.id);
     if (!id) {
@@ -209,6 +231,11 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
     }
 
     const b = req.body as Record<string, unknown>;
+    const userId = getAuthUserId(req);
+    if (!userId) {
+      res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+      return;
+    }
     const has = (key: string) => Object.prototype.hasOwnProperty.call(b, key);
 
     if (has('clienteNombre') && !optStr(b.clienteNombre)) {
@@ -241,18 +268,22 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
 
     const lineas = has('lineas') ? CotizacionService.parseLineas(b.lineas) : undefined;
 
-    const data = await CotizacionService.updateCotizacion(id, {
-      ...(has('numero') && { numero: optStr(b.numero) }),
-      ...(has('clienteNombre') && { clienteNombre: optStr(b.clienteNombre)! }),
-      ...(has('obraId') && { obraId: optStr(b.obraId) }),
-      ...(has('funnelBeckId') && { funnelBeckId: optStr(b.funnelBeckId) }),
-      ...(estado !== undefined && { estado }),
-      ...(descuento !== undefined && { descuento }),
-      ...(aplicaImpuesto !== undefined && { aplicaImpuesto }),
-      ...(has('vigencia') && { vigencia: dateVal(b.vigencia)! }),
-      ...(has('observaciones') && { observaciones: optText(b.observaciones) }),
-      ...(lineas !== undefined && { lineas }),
-    });
+    const data = await CotizacionService.updateCotizacion(
+      id,
+      {
+        ...(has('numero') && { numero: optStr(b.numero) }),
+        ...(has('clienteNombre') && { clienteNombre: optStr(b.clienteNombre)! }),
+        ...(has('obraId') && { obraId: optStr(b.obraId) }),
+        ...(has('funnelBeckId') && { funnelBeckId: optStr(b.funnelBeckId) }),
+        ...(estado !== undefined && { estado }),
+        ...(descuento !== undefined && { descuento }),
+        ...(aplicaImpuesto !== undefined && { aplicaImpuesto }),
+        ...(has('vigencia') && { vigencia: dateVal(b.vigencia)! }),
+        ...(has('observaciones') && { observaciones: optText(b.observaciones) }),
+        ...(lineas !== undefined && { lineas }),
+      },
+      userId // 👈 importante
+    );
 
     res.json({ success: true, data, message: 'Cotización actualizada' });
   } catch (error) {
@@ -280,7 +311,7 @@ export const patchCotizacionEstado = async (req: Request, res: Response): Promis
       return;
     }
 
-    const data = await CotizacionService.patchEstado(id, estado);
+    const data = await CotizacionService.patchEstado(id, estado, userId);
     res.json({ success: true, data, message: 'Estado actualizado' });
   } catch (error) {
     handleError(res, error);
@@ -298,7 +329,7 @@ export const deleteCotizacion = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    await CotizacionService.deleteCotizacion(id);
+    await CotizacionService.deleteCotizacion(id, userId);
     res.json({ success: true, message: 'Cotización eliminada' });
   } catch (error) {
     handleError(res, error);

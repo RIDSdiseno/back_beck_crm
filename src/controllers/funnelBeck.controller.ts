@@ -16,7 +16,7 @@ import {
 
 export async function createFunnelBeckController(req: Request, res: Response) {
   try {
-    const oportunidad = await createFunnelBeck(req.body);
+    const oportunidad = await createFunnelBeck(req.body, req.userId ?? '');
     return res.status(201).json({
       success: true,
       data: oportunidad,
@@ -95,7 +95,7 @@ export async function getCotizacionesByFunnelBeckController(req: Request, res: R
 export async function updateFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const oportunidad = await updateFunnelBeck(id, req.body);
+    const oportunidad = await updateFunnelBeck(id, req.body, req.userId ?? '');
     return res.status(200).json({
       success: true,
       data: oportunidad,
@@ -112,7 +112,7 @@ export async function updateFunnelBeckController(req: Request, res: Response) {
 export async function updateEtapaFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const oportunidad = await updateEtapaFunnelBeck(id, req.body);
+    const oportunidad = await updateEtapaFunnelBeck(id, req.body, req.userId ?? '');
     return res.status(200).json({
       success: true,
       data: oportunidad,
@@ -129,7 +129,7 @@ export async function updateEtapaFunnelBeckController(req: Request, res: Respons
 export async function deleteFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const result = await deleteFunnelBeck(id);
+    const result = await deleteFunnelBeck(id, req.userId ?? '');
     return res.status(200).json({
       success: true,
       message: result.message,

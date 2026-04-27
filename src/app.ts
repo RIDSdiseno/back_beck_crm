@@ -11,6 +11,8 @@ import funnelBeckRoutes from './routes/funnelBeck.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
 import usuariosRoutes from './routes/usuarios.routes';
 import cotizacionesRoutes from './routes/cotizaciones.routes';
+import movimientosCrmRoutes from './routes/movimientosCrm.routes';
+
 
 const app = express();
 const allowedOrigins = [
@@ -68,6 +70,7 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
+
 // Rutas de API
 app.use('/api/auth', authRoutes);
 app.use('/api/registros-terreno', registrosRoutes);
@@ -80,6 +83,7 @@ app.use('/api/funnel-beck', funnelBeckRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/cotizaciones', cotizacionesRoutes);
+app.use('/api/movimientos-crm', movimientosCrmRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

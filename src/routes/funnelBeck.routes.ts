@@ -8,15 +8,16 @@ import {
   updateEtapaFunnelBeckController,
   updateFunnelBeckController,
 } from "../controllers/funnelBeck.controller";
+import { authenticate } from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/", getAllFunnelBeckController);
-router.get("/:id/cotizaciones", getCotizacionesByFunnelBeckController);
-router.get("/:id", getFunnelBeckByIdController);
-router.post("/", createFunnelBeckController);
-router.put("/:id", updateFunnelBeckController);
-router.patch("/:id/etapa", updateEtapaFunnelBeckController);
-router.delete("/:id", deleteFunnelBeckController);
+router.get("/", authenticate, getAllFunnelBeckController);
+router.get("/:id/cotizaciones", authenticate, getCotizacionesByFunnelBeckController);
+router.get("/:id", authenticate, getFunnelBeckByIdController);
+router.post("/", authenticate, createFunnelBeckController);
+router.put("/:id", authenticate, updateFunnelBeckController);
+router.patch("/:id/etapa", authenticate, updateEtapaFunnelBeckController);
+router.delete("/:id", authenticate, deleteFunnelBeckController);
 
 export default router;

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -110,6 +111,29 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
       },
     });
 
+    const adminId = req.userId ?? '';
+
+    if (data.rol !== undefined && data.rol !== usuarioExistente.rol) {
+      await registrarMovimientoCRM({
+        usuarioId: adminId,
+        modulo: 'USUARIO',
+        tipo: 'ROL_CAMBIADO',
+        entidadId: usuarioActualizado.id,
+        descripcion: `Se cambió rol de ${usuarioActualizado.nombre} de ${usuarioExistente.rol} a ${data.rol}`,
+        datos: { de: usuarioExistente.rol, a: data.rol },
+      });
+    }
+
+    if (data.activo !== undefined && data.activo !== usuarioExistente.activo) {
+      await registrarMovimientoCRM({
+        usuarioId: adminId,
+        modulo: 'USUARIO',
+        tipo: data.activo ? 'USUARIO_ACTIVADO' : 'USUARIO_DESACTIVADO',
+        entidadId: usuarioActualizado.id,
+        descripcion: `Se ${data.activo ? 'activó' : 'desactivó'} usuario ${usuarioActualizado.nombre}`,
+      });
+    }
+
     res.json(usuarioActualizado);
   } catch (error) {
     console.error('Error actualizando usuario:', error);
@@ -140,6 +164,14 @@ export const eliminarUsuario = async (req: Request, res: Response): Promise<void
       data: {
         activo: false,
       },
+    });
+
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'USUARIO',
+      tipo: 'USUARIO_DESACTIVADO',
+      entidadId: id,
+      descripcion: `Se desactivó usuario ${usuarioExistente.nombre}`,
     });
 
     res.json({ message: 'Usuario desactivado correctamente' });
