@@ -12,6 +12,40 @@ import { registrarMovimientoCRM } from "./movimientoCrm.service";
 // De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
 
+const ETAPA_LABELS: Record<string, string> = {
+  prospecto_identificado: "Prospecto Identificado",
+  visita_levantamiento: "Visita / Levantamiento",
+  cotizacion_elaborada: "Cotización Elaborada",
+  cotizacion_enviada: "Cotización Enviada",
+  en_negociacion: "En Negociación",
+  cerrada: "Cerrada",
+};
+
+function formatEtapa(etapa: string): string {
+  return ETAPA_LABELS[etapa] ?? etapa;
+}
+
+function formatFecha(fecha: Date | string | null | undefined): string {
+  if (!fecha) return "sin fecha";
+  return new Date(fecha).toLocaleDateString("es-CL");
+}
+
+const FUENTE_LEAD_LABELS: Record<string, string> = {
+  web: "Web",
+  prospeccion: "Prospección",
+  cliente_recurrente: "Cliente recurrente",
+  referido: "Referido",
+  otro: "Otro",
+};
+
+function formatFuenteLead(value: string | null | undefined): string {
+  if (!value) return "Sin fuente";
+  return (
+    FUENTE_LEAD_LABELS[value] ??
+    value.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase())
+  );
+}
+
 type CreateFunnelBeckInput = {
   nombreProyecto: string;
   empresa: string;
@@ -249,12 +283,50 @@ export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput, 
     },
   });
 
+  const cambios: string[] = [];
+  if (existente.nombreProyecto !== nombreProyecto) {
+    cambios.push(`nombre de "${existente.nombreProyecto}" a "${nombreProyecto}"`);
+  }
+  if (existente.empresa !== empresa) {
+    cambios.push(`empresa de "${existente.empresa}" a "${empresa}"`);
+  }
+  if (Number(existente.valorOriginal) !== valorOriginal) {
+    cambios.push(`valor de $${existente.valorOriginal} a $${valorOriginal}`);
+  }
+  if (existente.etapa !== etapa) {
+    cambios.push(`etapa de ${formatEtapa(existente.etapa)} a ${formatEtapa(etapa)}`);
+  }
+  if (
+    data.fechaProbableCierre !== undefined &&
+    formatFecha(existente.fechaProbableCierre) !== formatFecha(data.fechaProbableCierre)
+  ) {
+    cambios.push(
+      `fecha de cierre de ${formatFecha(existente.fechaProbableCierre)} a ${formatFecha(data.fechaProbableCierre)}`,
+    );
+  }
+  if (existente.region !== region) {
+    cambios.push(`región de "${existente.region}" a "${region}"`);
+  }
+  if (existente.comuna !== comuna) {
+    cambios.push(`comuna de "${existente.comuna}" a "${comuna}"`);
+  }
+  if (data.fuenteLead !== undefined && existente.fuenteLead !== data.fuenteLead) {
+    cambios.push(
+      `fuente de lead de "${formatFuenteLead(existente.fuenteLead)}" a "${formatFuenteLead(data.fuenteLead)}"`,
+    );
+  }
+
+  const descripcionEdicion =
+    cambios.length > 0
+      ? `Se editó oportunidad ${existente.nombreProyecto}: ${cambios.join(", ")}`
+      : `Se editó oportunidad ${existente.nombreProyecto}`;
+
   await registrarMovimientoCRM({
     usuarioId: userId,
     modulo: 'FUNNEL',
     tipo: 'OPORTUNIDAD_EDITADA',
     entidadId: oportunidad.id,
-    descripcion: `Se editó oportunidad ${oportunidad.nombreProyecto}`,
+    descripcion: descripcionEdicion,
   });
 
   if (data.etapa !== undefined && data.etapa !== existente.etapa) {
@@ -263,7 +335,7 @@ export async function updateFunnelBeck(id: string, data: UpdateFunnelBeckInput, 
       modulo: 'FUNNEL',
       tipo: 'ETAPA_MODIFICADA',
       entidadId: oportunidad.id,
-      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${existente.etapa} a ${etapa}`,
+      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${formatEtapa(existente.etapa)} a ${formatEtapa(etapa)}`,
       datos: { de: existente.etapa, a: etapa },
     });
   }
@@ -305,7 +377,7 @@ export async function updateEtapaFunnelBeck(
       modulo: 'FUNNEL',
       tipo: 'ETAPA_MODIFICADA',
       entidadId: oportunidad.id,
-      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${existente.etapa} a ${payload.etapa}`,
+      descripcion: `Se movió ${oportunidad.nombreProyecto} de ${formatEtapa(existente.etapa)} a ${formatEtapa(payload.etapa)}`,
       datos: { de: existente.etapa, a: payload.etapa },
     });
   }
@@ -331,7 +403,12 @@ export async function deleteFunnelBeck(id: string, userId: string) {
     modulo: 'FUNNEL',
     tipo: 'OPORTUNIDAD_ELIMINADA',
     entidadId: id,
-    descripcion: `Se eliminó oportunidad ${existente.nombreProyecto}`,
+    descripcion: `Se eliminó oportunidad ${existente.nombreProyecto} para la empresa ${existente.empresa}`,
+    datos: {
+      nombreProyecto: existente.nombreProyecto,
+      empresa: existente.empresa,
+      etapa: existente.etapa,
+    },
   });
 
   return { message: "Oportunidad eliminada correctamente." };

@@ -160,6 +160,7 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
         vigencia,
         observaciones: optText(b.observaciones),
         lineas,
+        total: numVal(b.total) ?? undefined,
       },
       userId,
     );
@@ -281,6 +282,7 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
         ...(has('vigencia') && { vigencia: dateVal(b.vigencia)! }),
         ...(has('observaciones') && { observaciones: optText(b.observaciones) }),
         ...(lineas !== undefined && { lineas }),
+        ...(has('total') && { total: numVal(b.total) ?? undefined }),
       },
       userId // 👈 importante
     );

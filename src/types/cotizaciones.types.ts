@@ -33,6 +33,7 @@ export type CreateCotizacionInput = {
   vigencia: Date;
   observaciones: string | null;
   lineas: LineaInput[];
+  total?: number;
 };
 
 export type UpdateCotizacionInput = {
@@ -46,6 +47,7 @@ export type UpdateCotizacionInput = {
   vigencia?: Date;
   observaciones?: string | null;
   lineas?: LineaInput[];
+  total?: number;
 };
 
 export class CotizacionError extends Error {

@@ -23,11 +23,13 @@ const validateDescuentoPct = (descuento: number): void => {
   }
 };
 
-const formatMoney = (value: number, moneda?: string | null) => {
-  const safeValue = Number.isFinite(value) ? value : 0;
+const formatMoney = (value: number | string | Prisma.Decimal | null | undefined, moneda?: string | null) => {
+  const numericValue = Number(value);
+  const safeValue = Number.isFinite(numericValue) ? numericValue : 0;
 
   if (moneda === 'USD') {
     return `US$${safeValue.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })}`;
   }
@@ -305,10 +307,10 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
     modulo: 'COTIZACION',
     tipo: TipoMovimientoCRM.COTIZACION_CREADA,
     entidadId: cotizacion.id,
-    descripcion: `Se creó cotización ${numeroCotizacion} por ${formatMoney(Number(cotizacion.total), moneda)}${descripcionEmpresa(cotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`,
+    descripcion: `Se creó cotización ${numeroCotizacion} por ${formatMoney(input.total ?? total, moneda)}${descripcionEmpresa(cotizacion.clienteNombre)}${descripcionOportunidad(oportunidad, 'en')}`,
     datos: {
       numero: numeroCotizacion,
-      total: Number(cotizacion.total),
+      total: input.total ?? total,
       empresa: cotizacion.clienteNombre,
       funnelBeckId: oportunidad?.id ?? null,
       oportunidad: oportunidad?.nombreProyecto ?? null,
@@ -484,8 +486,8 @@ export const updateCotizacion = async (
   });
 
   const nuevaCotizacion = await findCotizacion(nuevaCotizacionId);
-  const totalAntes = Number(existing.total);
-  const totalDespues = Number(nuevaCotizacion.total);
+  const totalAntes = parseFloat(existing.total.toFixed(2));
+  const totalDespues = input.total ?? total;
   const numeroVisible = nuevaCotizacion.numero ?? existing.numero ?? 'sin número';
   const moneda = 'moneda' in nuevaCotizacion ? String(nuevaCotizacion.moneda ?? 'CLP') : 'CLP';
   const anteriores = new Set(
@@ -583,9 +585,12 @@ export const patchEstado = async (id: string, estado: EstadoCotizacion, userId: 
 export const deleteCotizacion = async (id: string, userId: string): Promise<void> => {
   const existing = await prisma.cotizacion.findUnique({
     where: { id },
-    select: { id: true, numero: true },
+    select: { id: true, numero: true, clienteNombre: true, total: true, funnelBeckId: true },
   });
   if (!existing) throw new CotizacionError('Cotización no encontrada', 404);
+
+  const oportunidad = await findOportunidadCotizacion(existing.funnelBeckId);
+  const numero = existing.numero ?? id;
 
   await prisma.cotizacion.delete({ where: { id } });
 
@@ -594,6 +599,13 @@ export const deleteCotizacion = async (id: string, userId: string): Promise<void
     modulo: 'COTIZACION',
     tipo: TipoMovimientoCRM.COTIZACION_ELIMINADA,
     entidadId: id,
-    descripcion: `Se eliminó cotización #${existing.numero ?? id}`,
+    descripcion: `Se eliminó cotización ${numero} por ${formatMoney(existing.total)} para la empresa ${existing.clienteNombre}${oportunidad ? ` en oportunidad ${oportunidad.nombreProyecto}` : ''}`,
+    datos: {
+      numero,
+      total: Number(existing.total),
+      clienteNombre: existing.clienteNombre,
+      funnelBeckId: existing.funnelBeckId,
+      oportunidad: oportunidad?.nombreProyecto ?? null,
+    },
   });
 };
