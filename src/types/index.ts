@@ -1,6 +1,6 @@
 // Tipos principales del sistema BECK
 
-export type RolUsuario = 'administrador' | 'vendedor' | 'terreno' | 'ingenieria' | 'visualizador';
+export type RolUsuario = 'administrador' | 'vendedor' | 'terreno' | 'ingenieria' | 'visualizador' | 'jefeobra';
 
 export interface Usuario {
   id: string;

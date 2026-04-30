@@ -38,6 +38,8 @@ model Obra {
   nombre           String            @db.VarChar(255)
   codigo           String            @unique @db.VarChar(100)
   descripcion      String?
+  direccion        String?
+  cliente          String?           @db.VarChar(255)
   estado           EstadoObra        @default(activa)
   creadoPorId      String            @map("creado_por_id") @db.Uuid
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
@@ -332,10 +334,12 @@ enum RolUsuario {
   ingenieria
   visualizador
   vendedor
+  jefeobra
 }
 
 enum EstadoObra {
   activa
+  inactiva
   pausada
   finalizada
 }

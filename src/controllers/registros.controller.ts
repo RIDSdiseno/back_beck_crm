@@ -3,6 +3,9 @@ import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
+import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
+import { prisma } from '../config/prisma';
+import PDFDocument from 'pdfkit';
 
 /**
  * Crear un nuevo registro de terreno con fotos
@@ -132,7 +135,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
 /**
  * Listar registros de terreno
- * GET /api/registros-terreno
+ * GET /api/registros
  * Query params opcionales: procesado (boolean), obra_id (uuid)
  */
 export const listarRegistros = async (req: Request, res: Response): Promise<void> => {
@@ -141,42 +144,48 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
     const usuario_id = req.userId;
     const user_rol = req.userRole;
 
-    let query = `
-      SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre
-      FROM registros_terreno rt
-      LEFT JOIN obras o ON rt.obra_id = o.id
-      LEFT JOIN usuarios u ON rt.usuario_id = u.id
-      WHERE 1=1
-    `;
+    const where: Prisma.RegistroTerrenoWhereInput = {};
 
-    const params: any[] = [];
-    let paramIndex = 1;
-
-    // Filtro por procesado
     if (procesado !== undefined) {
-      query += ` AND rt.procesado = $${paramIndex}`;
-      params.push(procesado === 'true');
-      paramIndex++;
+      where.estado = procesado === 'true'
+        ? { not: EstadoRegistroTerreno.pendiente }
+        : EstadoRegistroTerreno.pendiente;
     }
 
-    // Filtro por obra
-    if (obra_id) {
-      query += ` AND rt.obra_id = $${paramIndex}`;
-      params.push(obra_id);
-      paramIndex++;
+    if (typeof obra_id === 'string') {
+      where.obraId = obra_id;
     }
 
-    // Si el usuario es rol terreno, solo ver sus propios registros
     if (user_rol === 'terreno') {
-      query += ` AND rt.usuario_id = $${paramIndex}`;
-      params.push(usuario_id);
-      paramIndex++;
+      where.usuarioId = usuario_id;
     }
 
-    query += ' ORDER BY rt.created_at DESC';
+    const registros = await prisma.registroTerreno.findMany({
+      where,
+      include: {
+        obra: {
+          select: {
+            id: true,
+            nombre: true,
+            codigo: true,
+          },
+        },
+        usuario: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+          },
+        },
+      },
+      orderBy: [
+        { fecha: 'desc' },
+        { createdAt: 'desc' },
+      ],
+    });
 
-    const result = await dbQuery(query, params);
-    res.json(result.rows);
+    res.json(registros);
   } catch (error) {
     console.error('Error al listar registros:', error);
     res.status(500).json({ error: 'Error al listar registros' });
@@ -225,9 +234,322 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
 };
 
 /**
- * Listar registros pendientes de procesamiento (para Ingeniería)
- * GET /api/registros-terreno/pendientes
+ * Actualizar estado de un registro
+ * PATCH /api/registros/:id/estado
  */
+export const actualizarEstadoRegistro = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const { estado } = req.body as { estado?: string };
+
+    const estadosValidos: EstadoRegistroTerreno[] = [
+      EstadoRegistroTerreno.pendiente,
+      EstadoRegistroTerreno.validado,
+      EstadoRegistroTerreno.rechazado,
+    ];
+
+    if (!estado || !estadosValidos.includes(estado as EstadoRegistroTerreno)) {
+      res.status(400).json({ error: 'Estado inválido. Debe ser: pendiente, validado o rechazado' });
+      return;
+    }
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: { estado: estado as EstadoRegistroTerreno },
+    });
+
+    res.json(registro);
+  } catch (error) {
+    console.error('Error al actualizar estado:', error);
+    res.status(500).json({ error: 'Error al actualizar estado del registro' });
+  }
+};
+
+/**
+ * Listar registros pendientes de procesamiento (para Ingeniería)
+ * GET /api/registros/pendientes
+ */
+interface ActualizarRegistroTerrenoBody {
+  descripcion_material?: unknown;
+  modulo?: unknown;
+  piso?: unknown;
+  eje_numerico?: unknown;
+  eje_alfabetico?: unknown;
+  numero_sello?: unknown;
+  cantidad_sellos?: unknown;
+  nombre_sellador?: unknown;
+  holgura?: unknown;
+  accesibilidad?: unknown;
+  observaciones?: unknown;
+  estado?: unknown;
+}
+
+const estadosEditables: EstadoRegistroTerreno[] = [
+  EstadoRegistroTerreno.pendiente,
+  EstadoRegistroTerreno.validado,
+  EstadoRegistroTerreno.rechazado,
+];
+
+/**
+ * Actualizar un registro de terreno
+ * PUT /api/registros/:id
+ */
+export const actualizarRegistro = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id;
+    const body = req.body as ActualizarRegistroTerrenoBody;
+
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de registro invalido' });
+      return;
+    }
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (body.estado !== undefined && !estadosEditables.includes(body.estado as EstadoRegistroTerreno)) {
+      res.status(400).json({ error: 'Estado invalido. Debe ser: pendiente, validado o rechazado' });
+      return;
+    }
+
+    const data: Prisma.RegistroTerrenoUpdateInput = {};
+
+    if (body.descripcion_material !== undefined) {
+      data.descripcionMaterial = String(body.descripcion_material);
+    }
+    if (body.modulo !== undefined) {
+      data.modulo = String(body.modulo);
+    }
+    if (body.piso !== undefined) {
+      data.piso = String(body.piso);
+    }
+    if (body.eje_numerico !== undefined) {
+      data.ejeNumerico = Number(body.eje_numerico);
+    }
+    if (body.eje_alfabetico !== undefined) {
+      data.ejeAlfabetico = String(body.eje_alfabetico);
+    }
+    if (body.numero_sello !== undefined) {
+      data.numeroSello = String(body.numero_sello);
+    }
+    if (body.cantidad_sellos !== undefined) {
+      data.cantidadSellos = Number(body.cantidad_sellos);
+    }
+    if (body.nombre_sellador !== undefined) {
+      data.nombreSellador = String(body.nombre_sellador);
+    }
+    if (body.holgura !== undefined) {
+      data.holgura = new Prisma.Decimal(String(body.holgura));
+    }
+    if (body.accesibilidad !== undefined) {
+      data.accesibilidad = Number(body.accesibilidad);
+    }
+    if (body.observaciones !== undefined) {
+      data.observaciones = body.observaciones === null ? null : String(body.observaciones);
+    }
+    if (body.estado !== undefined) {
+      data.estado = body.estado as EstadoRegistroTerreno;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data,
+      include: {
+        obra: {
+          select: {
+            id: true,
+            nombre: true,
+            codigo: true,
+          },
+        },
+        usuario: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+          },
+        },
+      },
+    });
+
+    res.json(registro);
+  } catch (error) {
+    console.error('Error al actualizar registro:', error);
+    res.status(500).json({ error: 'Error al actualizar registro' });
+  }
+};
+
+const formatRegistroDate = (fecha: Date): string => {
+  return new Intl.DateTimeFormat('es-CL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(fecha);
+};
+
+const writePdfField = (
+  doc: PDFKit.PDFDocument,
+  label: string,
+  value: string | number | null | undefined
+): void => {
+  doc
+    .font('Helvetica-Bold')
+    .fontSize(10)
+    .fillColor('#334155')
+    .text(`${label}: `, { continued: true })
+    .font('Helvetica')
+    .fillColor('#0f172a')
+    .text(value === null || value === undefined || value === '' ? '-' : String(value));
+};
+
+/**
+ * Descargar PDF con detalle de un registro de terreno
+ * GET /api/registros/:id/pdf
+ */
+export const descargarRegistroPdf = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id;
+
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de registro invalido' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.findUnique({
+      where: { id },
+      include: {
+        obra: {
+          select: {
+            id: true,
+            nombre: true,
+            codigo: true,
+          },
+        },
+        usuario: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+          },
+        },
+      },
+    });
+
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const codigoRegistro = `REG-${registro.id.slice(0, 6)}`;
+    const filename = `registro-${codigoRegistro}.pdf`;
+    const doc = new PDFDocument({ size: 'A4', margin: 48 });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    doc.pipe(res);
+
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(18)
+      .fillColor('#f97316')
+      .text('BECK Soluciones');
+
+    doc
+      .moveDown(0.4)
+      .fontSize(16)
+      .fillColor('#0f172a')
+      .text('Registro de sello cortafuego');
+
+    doc
+      .moveDown(0.3)
+      .font('Helvetica')
+      .fontSize(11)
+      .fillColor('#475569')
+      .text(`Codigo del registro: ${codigoRegistro}`);
+
+    doc.moveDown(1);
+    doc
+      .strokeColor('#e2e8f0')
+      .lineWidth(1)
+      .moveTo(48, doc.y)
+      .lineTo(547, doc.y)
+      .stroke();
+
+    doc.moveDown(1);
+    writePdfField(doc, 'Obra', `${registro.obra.nombre} (${registro.obra.codigo})`);
+    writePdfField(doc, 'Usuario/Terreno', `${registro.usuario.nombre} - ${registro.usuario.email}`);
+    writePdfField(doc, 'Fecha', formatRegistroDate(registro.fecha));
+    writePdfField(doc, 'Dia semana', registro.diaSemana);
+    writePdfField(doc, 'Material', registro.descripcionMaterial);
+    writePdfField(doc, 'Modulo', registro.modulo);
+    writePdfField(doc, 'Piso', registro.piso);
+    writePdfField(doc, 'Eje numerico', registro.ejeNumerico);
+    writePdfField(doc, 'Eje alfabetico', registro.ejeAlfabetico);
+    writePdfField(doc, 'N° sello', registro.numeroSello);
+    writePdfField(doc, 'Cantidad sellos', registro.cantidadSellos);
+    writePdfField(doc, 'Sellador', registro.nombreSellador);
+    writePdfField(doc, 'Holgura', registro.holgura.toString());
+    writePdfField(doc, 'Accesibilidad', registro.accesibilidad);
+    writePdfField(doc, 'Estado', registro.estado);
+
+    doc.moveDown(0.5);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(11)
+      .fillColor('#334155')
+      .text('Observaciones');
+    doc
+      .font('Helvetica')
+      .fontSize(10)
+      .fillColor('#0f172a')
+      .text(registro.observaciones || '-', { width: 500 });
+
+    doc.moveDown(0.8);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(11)
+      .fillColor('#334155')
+      .text('Fotos URL');
+
+    if (registro.fotosUrls.length > 0) {
+      registro.fotosUrls.forEach((url, index) => {
+        doc
+          .font('Helvetica')
+          .fontSize(9)
+          .fillColor('#2563eb')
+          .text(`${index + 1}. ${url}`, { width: 500, link: url, underline: true });
+      });
+    } else {
+      doc
+        .font('Helvetica')
+        .fontSize(10)
+        .fillColor('#0f172a')
+        .text('-');
+    }
+
+    doc.end();
+  } catch (error) {
+    console.error('Error al descargar PDF de registro:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Error al generar PDF del registro' });
+    } else {
+      res.end();
+    }
+  }
+};
+
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery(

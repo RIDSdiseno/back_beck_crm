@@ -73,7 +73,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Rutas de API
 app.use('/api/auth', authRoutes);
-app.use('/api/registros-terreno', registrosRoutes);
+app.use('/api/registros', registrosRoutes);
 app.use('/api/procesamiento', procesamientoRoutes);
 app.use('/api/notificaciones', notificacionesRoutes);
 app.use('/api/obras', obrasRoutes);

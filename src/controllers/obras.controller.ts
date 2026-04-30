@@ -1,108 +1,203 @@
-// src/controllers/obras.controller.ts
+﻿// src/controllers/obras.controller.ts
 import { Request, Response } from 'express';
-import { query as dbQuery } from '../config/database';
-import { Obra } from '../types';
+import { EstadoObra, Prisma } from '@prisma/client';
+import { prisma } from '../config/prisma';
+import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 
-/**
- * Listar obras
- * GET /api/obras
- * Query params opcionales: activa (boolean)
- */
+const generarCodigoObra = (nombre: string): string => {
+  const year = new Date().getFullYear();
+  const palabras = nombre
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .split(' ')
+    .filter(Boolean);
+  const iniciales = palabras.map((p) => p[0].toUpperCase()).join('');
+  return `${iniciales}-${year}`;
+};
+
+const estadosObraValidos: EstadoObra[] = [
+  EstadoObra.activa,
+  EstadoObra.inactiva,
+  EstadoObra.pausada,
+  EstadoObra.finalizada,
+];
+
+const obraUsuariosInclude = {
+  usuarios_obras: {
+    select: {
+      usuarios: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+          rol: true,
+          activo: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.ObraInclude;
+
+type ObraConUsuarios = Prisma.ObraGetPayload<{
+  include: typeof obraUsuariosInclude;
+}>;
+
+type ObraResponse = Omit<ObraConUsuarios, 'usuarios_obras'> & {
+  usuarios: ObraConUsuarios['usuarios_obras'][number]['usuarios'][];
+};
+
+const formatObraResponse = (obra: ObraConUsuarios): ObraResponse => {
+  const { usuarios_obras, ...obraData } = obra;
+  return {
+    ...obraData,
+    usuarios: usuarios_obras.map((asignacion) => asignacion.usuarios),
+  };
+};
+
+const parseEstadoObra = (estado: unknown): EstadoObra | undefined => {
+  if (typeof estado !== 'string') return undefined;
+  return estadosObraValidos.includes(estado as EstadoObra)
+    ? (estado as EstadoObra)
+    : undefined;
+};
+
+type CrearObraBody = {
+  codigo?: unknown;
+  nombre?: unknown;
+  descripcion?: unknown;
+  direccion?: unknown;
+  cliente?: unknown;
+  estado?: unknown;
+};
+
+type ActualizarObraBody = {
+  codigo?: unknown;
+  nombre?: unknown;
+  direccion?: unknown;
+  cliente?: unknown;
+  estado?: unknown;
+};
+
+type CambiarEstadoObraBody = {
+  estado?: unknown;
+};
+
+type AsignarUsuariosObraBody = {
+  usuariosIds?: unknown;
+  usuarioIds?: unknown;
+};
+
 export const listarObras = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { activa } = req.query;
+    const estado =
+      typeof req.query.estado === 'string' ? req.query.estado : undefined;
+    const activa =
+      typeof req.query.activa === 'string' ? req.query.activa : undefined;
 
-    let query = 'SELECT * FROM obras WHERE 1=1';
-    const params: any[] = [];
+    let whereEstado: EstadoObra | undefined;
 
-    if (activa !== undefined) {
-      query += ' AND activa = $1';
-      params.push(activa === 'true');
+    const estadoFiltro = parseEstadoObra(estado);
+    if (estadoFiltro) {
+      whereEstado = estadoFiltro;
+    } else if (activa === 'true') {
+      whereEstado = EstadoObra.activa;
     }
 
-    query += ' ORDER BY created_at DESC';
+    const obras = await prisma.obra.findMany({
+      where: whereEstado ? { estado: whereEstado } : undefined,
+      include: obraUsuariosInclude,
+      orderBy: { createdAt: 'desc' },
+    });
 
-    const result = await dbQuery<Obra>(query, params);
-    res.json(result.rows);
+    res.json(obras.map(formatObraResponse));
   } catch (error) {
     console.error('Error al listar obras:', error);
     res.status(500).json({ error: 'Error al listar obras' });
   }
 };
 
-/**
- * Obtener una obra por ID
- * GET /api/obras/:id
- */
 export const obtenerObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
 
-    const result = await dbQuery<Obra>('SELECT * FROM obras WHERE id = $1', [id]);
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de obra invalido' });
+      return;
+    }
 
-    if (result.rows.length === 0) {
+    const obra = await prisma.obra.findUnique({
+      where: { id },
+      include: obraUsuariosInclude,
+    });
+
+    if (!obra) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
 
-    res.json(result.rows[0]);
+    res.json(formatObraResponse(obra));
   } catch (error) {
     console.error('Error al obtener obra:', error);
     res.status(500).json({ error: 'Error al obtener obra' });
   }
 };
 
-/**
- * Crear una nueva obra (solo Admin)
- * POST /api/obras
- */
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {
-      codigo,
-      nombre,
-      direccion,
-      ciudad,
-      cliente,
-      activa,
-      fecha_inicio,
-      fecha_termino,
-    } = req.body;
+    const { codigo, nombre, descripcion, direccion, cliente, estado } =
+      req.body as CrearObraBody;
 
-    // Validar campos obligatorios
-    if (!codigo || !nombre || !direccion || !ciudad || !cliente) {
-      res.status(400).json({ error: 'Faltan campos obligatorios' });
+    if (typeof nombre !== 'string' || !nombre.trim()) {
+      res.status(400).json({ error: 'Faltan campos obligatorios: nombre' });
       return;
     }
 
-    // Verificar que el código no exista
-    const checkCodigo = await dbQuery('SELECT id FROM obras WHERE codigo = $1', [codigo]);
-    if (checkCodigo.rows.length > 0) {
-      res.status(400).json({ error: 'El código de obra ya existe' });
+    const estadoObra = estado === undefined ? EstadoObra.activa : parseEstadoObra(estado);
+    if (!estadoObra) {
+      res.status(400).json({ error: 'Estado invalido' });
       return;
     }
 
-    const result = await dbQuery<Obra>(
-      `INSERT INTO obras (codigo, nombre, direccion, ciudad, cliente, activa, fecha_inicio, fecha_termino)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING *`,
-      [
-        codigo,
-        nombre,
-        direccion,
-        ciudad,
-        cliente,
-        activa !== undefined ? activa : true,
-        fecha_inicio || null,
-        fecha_termino || null,
-      ]
-    );
+    const codigoBase =
+      typeof codigo === 'string' && codigo.trim()
+        ? codigo.trim()
+        : generarCodigoObra(nombre);
+    let codigoFinal = codigoBase;
+    let sufijo = 2;
+    while (await prisma.obra.findFirst({ where: { codigo: codigoFinal } })) {
+      codigoFinal = `${codigoBase}-${sufijo}`;
+      sufijo++;
+    }
 
-    res.status(201).json(result.rows[0]);
-  } catch (error: any) {
+    const obra = await prisma.obra.create({
+      data: {
+        nombre: nombre.trim(),
+        codigo: codigoFinal,
+        descripcion: typeof descripcion === 'string' ? descripcion : undefined,
+        direccion: typeof direccion === 'string' ? direccion : undefined,
+        cliente: typeof cliente === 'string' ? cliente : undefined,
+        estado: estadoObra,
+        creadoPorId: req.userId ?? '',
+      },
+      include: obraUsuariosInclude,
+    });
+
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'OBRA',
+      tipo: 'OBRA_CREADA',
+      entidadId: obra.id,
+      descripcion: `Se creó obra ${obra.nombre}`,
+    });
+
+    res.status(201).json(formatObraResponse(obra));
+  } catch (error) {
     console.error('Error al crear obra:', error);
 
-    if (error.code === '23505') {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
       res.status(400).json({ error: 'El código de obra ya existe' });
       return;
     }
@@ -111,64 +206,48 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-/**
- * Actualizar una obra (solo Admin)
- * PUT /api/obras/:id
- */
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const {
-      codigo,
-      nombre,
-      direccion,
-      ciudad,
-      cliente,
-      activa,
-      fecha_inicio,
-      fecha_termino,
-    } = req.body;
+    const id = req.params.id;
+    const { nombre, codigo, direccion, cliente, estado } = req.body as ActualizarObraBody;
 
-    // Verificar que la obra exista
-    const checkObra = await dbQuery('SELECT id FROM obras WHERE id = $1', [id]);
-    if (checkObra.rows.length === 0) {
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de obra invalido' });
+      return;
+    }
+
+    const existente = await prisma.obra.findUnique({ where: { id } });
+    if (!existente) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
 
-    // Si se cambia el código, verificar que no exista
-    if (codigo) {
-      const checkCodigo = await dbQuery(
-        'SELECT id FROM obras WHERE codigo = $1 AND id != $2',
-        [codigo, id]
-      );
-      if (checkCodigo.rows.length > 0) {
-        res.status(400).json({ error: 'El código de obra ya existe' });
-        return;
-      }
+    const estadoObra = estado === undefined ? undefined : parseEstadoObra(estado);
+    if (estado !== undefined && !estadoObra) {
+      res.status(400).json({ error: 'Estado invalido' });
+      return;
     }
 
-    const result = await dbQuery<Obra>(
-      `UPDATE obras
-       SET codigo = COALESCE($1, codigo),
-           nombre = COALESCE($2, nombre),
-           direccion = COALESCE($3, direccion),
-           ciudad = COALESCE($4, ciudad),
-           cliente = COALESCE($5, cliente),
-           activa = COALESCE($6, activa),
-           fecha_inicio = COALESCE($7, fecha_inicio),
-           fecha_termino = COALESCE($8, fecha_termino),
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $9
-       RETURNING *`,
-      [codigo, nombre, direccion, ciudad, cliente, activa, fecha_inicio, fecha_termino, id]
-    );
+    const obra = await prisma.obra.update({
+      where: { id },
+      data: {
+        ...(typeof nombre === 'string' && { nombre: nombre.trim() }),
+        ...(typeof codigo === 'string' && { codigo: codigo.trim() }),
+        ...(typeof direccion === 'string' && { direccion }),
+        ...(typeof cliente === 'string' && { cliente }),
+        ...(estadoObra !== undefined && { estado: estadoObra }),
+      },
+      include: obraUsuariosInclude,
+    });
 
-    res.json(result.rows[0]);
-  } catch (error: any) {
+    res.json(formatObraResponse(obra));
+  } catch (error) {
     console.error('Error al actualizar obra:', error);
 
-    if (error.code === '23505') {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
       res.status(400).json({ error: 'El código de obra ya existe' });
       return;
     }
@@ -177,37 +256,189 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
   }
 };
 
-/**
- * Eliminar una obra (solo Admin)
- * DELETE /api/obras/:id
- */
+export const cambiarEstadoObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id;
+    const { estado } = req.body as CambiarEstadoObraBody;
+
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de obra invalido' });
+      return;
+    }
+
+    const estadoObra = parseEstadoObra(estado);
+    if (!estadoObra) {
+      res.status(400).json({
+        error: 'Estado invalido. Debe ser: activa, inactiva, pausada o finalizada',
+      });
+      return;
+    }
+
+    const existente = await prisma.obra.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    const obra = await prisma.obra.update({
+      where: { id },
+      data: { estado: estadoObra },
+      include: obraUsuariosInclude,
+    });
+
+    res.json(formatObraResponse(obra));
+  } catch (error) {
+    console.error('Error al cambiar estado de obra:', error);
+    res.status(500).json({ error: 'Error al cambiar estado de obra' });
+  }
+};
+
 export const eliminarObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
-    // Verificar que la obra no tenga registros asociados
-    const checkRegistros = await dbQuery(
-      'SELECT COUNT(*) as count FROM registros_terreno WHERE obra_id = $1',
-      [id]
-    );
+    const existente = await prisma.obra.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
 
-    if (parseInt(checkRegistros.rows[0].count) > 0) {
+    const registrosCount = await prisma.registroTerreno.count({
+      where: { obraId: id },
+    });
+
+    if (registrosCount > 0) {
       res.status(400).json({
         error: 'No se puede eliminar la obra porque tiene registros asociados',
       });
       return;
     }
 
-    const result = await dbQuery('DELETE FROM obras WHERE id = $1 RETURNING id', [id]);
-
-    if (result.rows.length === 0) {
-      res.status(404).json({ error: 'Obra no encontrada' });
-      return;
-    }
+    await prisma.obra.delete({ where: { id } });
 
     res.json({ mensaje: 'Obra eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar obra:', error);
     res.status(500).json({ error: 'Error al eliminar obra' });
+  }
+};
+
+export const asignarUsuariosObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id;
+    const { usuariosIds, usuarioIds } = req.body as AsignarUsuariosObraBody;
+    const idsPayload = usuariosIds ?? usuarioIds;
+
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de obra invalido' });
+      return;
+    }
+
+    if (!Array.isArray(idsPayload) || !idsPayload.every((value) => typeof value === 'string')) {
+      res.status(400).json({ error: 'usuariosIds debe ser un array de strings' });
+      return;
+    }
+
+    const obra = await prisma.obra.findUnique({ where: { id } });
+    if (!obra) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    const uniqueIds = [...new Set(idsPayload)];
+    const usuariosExistentes = await prisma.usuario.findMany({
+      where: { id: { in: uniqueIds } },
+      select: { id: true },
+    });
+    const usuariosExistentesIds = new Set(usuariosExistentes.map((usuario) => usuario.id));
+    const usuariosInvalidos = uniqueIds.filter((usuarioId) => !usuariosExistentesIds.has(usuarioId));
+
+    if (usuariosInvalidos.length > 0) {
+      res.status(400).json({
+        error: 'Uno o mas usuarios no existen',
+        usuariosInvalidos,
+      });
+      return;
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.usuarios_obras.deleteMany({ where: { obra_id: id } });
+      if (uniqueIds.length > 0) {
+        await tx.usuarios_obras.createMany({
+          data: uniqueIds.map((usuarioId) => ({
+            usuario_id: usuarioId,
+            obra_id: id,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    });
+
+    const obraActualizada = await prisma.obra.findUnique({
+      where: { id },
+      include: obraUsuariosInclude,
+    });
+
+    if (!obraActualizada) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    res.json(formatObraResponse(obraActualizada));
+  } catch (error) {
+    console.error('Error al asignar usuarios a obra:', error);
+    res.status(500).json({ error: 'Error al asignar usuarios' });
+  }
+};
+
+export const listarUsuariosObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+
+    const obra = await prisma.obra.findUnique({ where: { id } });
+    if (!obra) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    const asignaciones = await prisma.usuarios_obras.findMany({
+      where: { obra_id: id },
+      select: {
+        usuarios: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+            activo: true,
+          },
+        },
+      },
+    });
+
+    const usuarios = asignaciones.map((a) => a.usuarios);
+
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al listar usuarios de obra:', error);
+    res.status(500).json({ error: 'Error al listar usuarios de obra' });
+  }
+};
+
+export const misObras = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.userId ?? '';
+
+    const asignaciones = await prisma.usuarios_obras.findMany({
+      where: { usuario_id: userId },
+      select: { obras: true },
+    });
+
+    const obras = asignaciones.map((a) => a.obras);
+
+    res.json(obras);
+  } catch (error) {
+    console.error('Error al obtener mis obras:', error);
+    res.status(500).json({ error: 'Error al obtener mis obras' });
   }
 };

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const s = require\\('fs'\\).readFileSync\\('src/controllers/obras.controller.ts','utf8'\\); const line = s.split\\('\\\\n'\\).find\\(l => l.includes\\('replace'\\)\\); console.log\\(JSON.stringify\\(line\\)\\);\")"
     ]
   }
 }
