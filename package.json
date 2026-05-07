@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "dev": "prisma generate && tsx watch src/index.ts",
-    "build": "prisma generate && tsc",
+    "dev": "prisma generate && prisma generate --schema=prisma/firemat.schema.prisma && tsx watch src/index.ts",
+    "build": "prisma generate && prisma generate --schema=prisma/firemat.schema.prisma && tsc && node scripts/copy-generated.cjs",
     "start": "node dist/index.js",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && prisma generate --schema=prisma/firemat.schema.prisma"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
