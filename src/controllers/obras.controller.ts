@@ -4,17 +4,6 @@ import { EstadoObra, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 
-const generarCodigoObra = (nombre: string): string => {
-  const year = new Date().getFullYear();
-  const palabras = nombre
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .split(' ')
-    .filter(Boolean);
-  const iniciales = palabras.map((p) => p[0].toUpperCase()).join('');
-  return `${iniciales}-${year}`;
-};
-
 const estadosObraValidos: EstadoObra[] = [
   EstadoObra.activa,
   EstadoObra.inactiva,
@@ -166,16 +155,8 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const codigoBase =
-      typeof codigo === 'string' && codigo.trim()
-        ? codigo.trim()
-        : generarCodigoObra(nombre);
-    let codigoFinal = codigoBase;
-    let sufijo = 2;
-    while (await prisma.obra.findFirst({ where: { codigo: codigoFinal } })) {
-      codigoFinal = `${codigoBase}-${sufijo}`;
-      sufijo++;
-    }
+    const codigoFinal =
+      typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null;
 
     const obra = await prisma.obra.create({
       data: {
@@ -240,7 +221,9 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       where: { id },
       data: {
         ...(typeof nombre === 'string' && { nombre: nombre.trim() }),
-        ...(typeof codigo === 'string' && { codigo: codigo.trim() }),
+        ...(codigo !== undefined && {
+          codigo: typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null,
+        }),
         ...(typeof direccion === 'string' && { direccion }),
         ...(typeof cliente === 'string' && { cliente }),
         ...(estadoObra !== undefined && { estado: estadoObra }),

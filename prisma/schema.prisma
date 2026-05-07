@@ -36,7 +36,7 @@ model Usuario {
 model Obra {
   id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   nombre           String            @db.VarChar(255)
-  codigo           String            @unique @db.VarChar(100)
+  codigo           String?           @unique @db.VarChar(100)
   descripcion      String?
   estado           EstadoObra        @default(activa)
   creadoPorId      String            @map("creado_por_id") @db.Uuid
