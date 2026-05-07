@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/firemat-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Categoria {
+  id       Int        @id @default(autoincrement())
+  nombre   String
+  Producto Producto[]
+}
+
+model Movimiento {
+  id            Int      @id @default(autoincrement())
+  tipo          String
+  cantidad      Int
+  stockAnterior Int
+  stockNuevo    Int
+  motivo        String?
+  documento     String?
+  createdAt     DateTime @default(now())
+  productoId    Int
+  userId        Int?
+  Producto      Producto @relation(fields: [productoId], references: [id])
+}
+
+model Producto {
+  id             Int            @id @default(autoincrement())
+  nombre         String
+  descripcion    String?
+  stock          Int
+  ubicacion      String?
+  createdAt      DateTime       @default(now())
+  precio         Float
+  minStock       Int            @default(0)
+  activo         Boolean        @default(true)
+  criticidad     String         @default("Media")
+  imagen         String?
+  categoriaId    Int
+  stockReservado Int            @default(0)
+  Movimiento     Movimiento[]
+  Categoria      Categoria      @relation(fields: [categoriaId], references: [id])
+  Venta          Venta[]
+  VentaDetalle   VentaDetalle[]
+}
+
+model Venta {
+  id           Int            @id @default(autoincrement())
+  productoId   Int
+  cliente      String
+  contacto     String?
+  cantidad     Int
+  precio       Float
+  total        Float
+  estado       String         @default("PROSPECTO")
+  responsable  String?
+  fechaCierre  DateTime?
+  createdAt    DateTime       @default(now())
+  Producto     Producto       @relation(fields: [productoId], references: [id])
+  VentaDetalle VentaDetalle[]
+}
+
+model VentaDetalle {
+  id         Int      @id @default(autoincrement())
+  ventaId    Int
+  productoId Int
+  cantidad   Int
+  precio     Float
+  subtotal   Float
+  Producto   Producto @relation(fields: [productoId], references: [id])
+  Venta      Venta    @relation(fields: [ventaId], references: [id])
+}
+
+model user {
+  id        String   @id
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+}

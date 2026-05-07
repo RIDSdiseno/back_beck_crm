@@ -13,38 +13,40 @@ import { authenticate, authorize } from "../middlewares/auth";
 
 const router = Router();
 
-// Todos autenticados pueden ver
-router.get("/", authenticate, getCotizaciones);
-router.get("/:id/versiones", authenticate, getCotizacionVersiones);
-router.get("/:id", authenticate, getCotizacionById);
-router.get("/:id/pdf", authenticate, downloadCotizacionPdf);
+const canReadCotizaciones = authorize("administrador", "vendedor", "ingenieria", "visualizador");
+const canWriteCotizaciones = authorize("administrador", "vendedor");
+
+router.get("/", authenticate, canReadCotizaciones, getCotizaciones);
+router.get("/:id/versiones", authenticate, canReadCotizaciones, getCotizacionVersiones);
+router.get("/:id", authenticate, canReadCotizaciones, getCotizacionById);
+router.get("/:id/pdf", authenticate, canReadCotizaciones, downloadCotizacionPdf);
 
 // Solo roles con permiso de edición
 router.post(
   "/",
   authenticate,
-  authorize("administrador", "vendedor", "terreno", "ingenieria"),
+  canWriteCotizaciones,
   createCotizacion
 );
 
 router.put(
   "/:id",
   authenticate,
-  authorize("administrador", "vendedor", "terreno", "ingenieria"),
+  canWriteCotizaciones,
   updateCotizacion
 );
 
 router.patch(
   "/:id/estado",
   authenticate,
-  authorize("administrador", "vendedor", "terreno", "ingenieria"),
+  canWriteCotizaciones,
   patchCotizacionEstado
 );
 
 router.delete(
   "/:id",
   authenticate,
-  authorize("administrador", "vendedor", "terreno", "ingenieria"),
+  authorize("administrador"),
   deleteCotizacion
 );
 

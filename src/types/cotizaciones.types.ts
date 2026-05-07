@@ -12,6 +12,7 @@ export type LineaInput = {
   subtotal: number;
   orden: number;
   notasLinea: string | null;
+  productoFirematId?: number | null;
 };
 
 export type CotizacionTotals = {

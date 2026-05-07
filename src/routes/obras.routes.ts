@@ -15,7 +15,10 @@ import { authenticate, authorize } from '../middlewares/auth';
 
 const router = Router();
 
-router.get('/', authenticate, authorize('administrador'), listarObras);
+const canReadObras = authorize('administrador', 'ingenieria', 'visualizador');
+const canManageObras = authorize('administrador', 'ingenieria');
+
+router.get('/', authenticate, canReadObras, listarObras);
 
 // mis-obras debe estar antes de /:id para no ser capturado como parámetro
 router.get('/mis-obras', authenticate, misObras);
@@ -23,52 +26,59 @@ router.get('/mis-obras', authenticate, misObras);
 router.get(
   '/:id/usuarios',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   listarUsuariosObra,
 );
 
 router.post(
   '/',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   crearObra,
 );
 
 router.put(
   '/:id',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   actualizarObra,
 );
 
 router.patch(
   '/:id/estado',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   cambiarEstadoObra,
 );
 
 router.put(
   '/:id/usuarios',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
+  asignarUsuariosObra,
+);
+
+router.post(
+  '/:id/usuarios',
+  authenticate,
+  canManageObras,
   asignarUsuariosObra,
 );
 
 router.delete(
   '/:id',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   eliminarObra,
 );
 
 router.post(
   '/:id/asignar-usuarios',
   authenticate,
-  authorize('administrador'),
+  canManageObras,
   asignarUsuariosObra,
 );
 
-router.get('/:id', authenticate, authorize('administrador'), obtenerObra);
+router.get('/:id', authenticate, canReadObras, obtenerObra);
 
 export default router;

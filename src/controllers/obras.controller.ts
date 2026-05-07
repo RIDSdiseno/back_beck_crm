@@ -61,6 +61,14 @@ const parseEstadoObra = (estado: unknown): EstadoObra | undefined => {
     : undefined;
 };
 
+const unirNombres = (nombres: string[]): string => {
+  if (nombres.length <= 1) {
+    return nombres[0] ?? '';
+  }
+
+  return `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+};
+
 type CrearObraBody = {
   codigo?: unknown;
   nombre?: unknown;
@@ -240,6 +248,65 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       include: obraUsuariosInclude,
     });
 
+    const cambios: string[] = [];
+
+    if (existente.nombre !== obra.nombre) {
+      cambios.push(`el nombre de la obra de "${existente.nombre}" a "${obra.nombre}"`);
+    }
+
+    if (existente.codigo !== obra.codigo) {
+      cambios.push(`el código de "${existente.codigo}" a "${obra.codigo}"`);
+    }
+
+    if ((existente.direccion ?? '') !== (obra.direccion ?? '')) {
+      cambios.push(
+        `la dirección de "${existente.direccion ?? 'Sin dirección'}" a "${
+          obra.direccion ?? 'Sin dirección'
+        }"`
+      );
+    }
+
+    if ((existente.cliente ?? '') !== (obra.cliente ?? '')) {
+      cambios.push(
+        `el cliente de "${existente.cliente ?? 'Sin cliente'}" a "${
+          obra.cliente ?? 'Sin cliente'
+        }"`
+      );
+    }
+
+    if (existente.estado !== obra.estado) {
+      cambios.push(`el estado de "${existente.estado}" a "${obra.estado}"`);
+    }
+
+    const descripcionMovimiento =
+      cambios.length > 0
+        ? `Se modificó ${cambios.join(', ')} en la obra ${obra.nombre}`
+        : `Se modificó obra ${obra.nombre}`;
+
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'OBRA',
+      tipo: 'OBRA_EDITADA',
+      entidadId: obra.id,
+      descripcion: descripcionMovimiento,
+      datos: {
+        antes: {
+          nombre: existente.nombre,
+          codigo: existente.codigo,
+          direccion: existente.direccion,
+          cliente: existente.cliente,
+          estado: existente.estado,
+        },
+        despues: {
+          nombre: obra.nombre,
+          codigo: obra.codigo,
+          direccion: obra.direccion,
+          cliente: obra.cliente,
+          estado: obra.estado,
+        },
+      },
+    });
+
     res.json(formatObraResponse(obra));
   } catch (error) {
     console.error('Error al actualizar obra:', error);
@@ -316,6 +383,19 @@ export const eliminarObra = async (req: Request, res: Response): Promise<void> =
 
     await prisma.obra.delete({ where: { id } });
 
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'OBRA',
+      tipo: 'OBRA_ELIMINADA',
+      entidadId: id,
+      descripcion: `Se eliminó obra ${existente.nombre}`,
+      datos: {
+        nombre: existente.nombre,
+        codigo: existente.codigo,
+        estado: existente.estado,
+      },
+    });
+
     res.json({ mensaje: 'Obra eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar obra:', error);
@@ -361,6 +441,46 @@ export const asignarUsuariosObra = async (req: Request, res: Response): Promise<
       return;
     }
 
+    const asignacionesPrevias = await prisma.usuarios_obras.findMany({
+      where: { obra_id: id },
+      select: { usuario_id: true },
+    });
+    const idsPrevios = asignacionesPrevias.map((asignacion) => asignacion.usuario_id);
+    const idsPreviosSet = new Set(idsPrevios);
+    const uniqueIdsSet = new Set(uniqueIds);
+    const idsAgregados = uniqueIds.filter((usuarioId) => !idsPreviosSet.has(usuarioId));
+    const idsRemovidos = idsPrevios.filter((usuarioId) => !uniqueIdsSet.has(usuarioId));
+
+    const usuariosMovimientoIds = [...new Set([...idsAgregados, ...idsRemovidos])];
+    const usuariosMovimiento = await prisma.usuario.findMany({
+      where: { id: { in: usuariosMovimientoIds } },
+      select: { id: true, nombre: true },
+    });
+    const nombresPorId = new Map(
+      usuariosMovimiento.map((usuario) => [usuario.id, usuario.nombre])
+    );
+    const nombresAgregados = idsAgregados.map(
+      (usuarioId) => nombresPorId.get(usuarioId) ?? usuarioId
+    );
+    const nombresRemovidos = idsRemovidos.map(
+      (usuarioId) => nombresPorId.get(usuarioId) ?? usuarioId
+    );
+    const accionesMovimiento: string[] = [];
+
+    if (nombresAgregados.length > 0) {
+      accionesMovimiento.push(`Se asignó a ${unirNombres(nombresAgregados)}`);
+    }
+
+    if (nombresRemovidos.length > 0) {
+      const prefijo = accionesMovimiento.length > 0 ? 'se quitó' : 'Se quitó';
+      accionesMovimiento.push(`${prefijo} a ${unirNombres(nombresRemovidos)}`);
+    }
+
+    const descripcionMovimiento =
+      `${accionesMovimiento.join(' y ')} ${
+        idsAgregados.length === 0 && idsRemovidos.length > 0 ? 'de' : 'en'
+      } la obra ${obra.nombre}`;
+
     await prisma.$transaction(async (tx) => {
       await tx.usuarios_obras.deleteMany({ where: { obra_id: id } });
       if (uniqueIds.length > 0) {
@@ -373,6 +493,22 @@ export const asignarUsuariosObra = async (req: Request, res: Response): Promise<
         });
       }
     });
+
+    if (idsAgregados.length > 0 || idsRemovidos.length > 0) {
+      await registrarMovimientoCRM({
+        usuarioId: req.userId ?? '',
+        modulo: 'OBRA',
+        tipo: 'OBRA_EDITADA',
+        entidadId: id,
+        descripcion: descripcionMovimiento,
+        datos: {
+          obraId: id,
+          agregados: idsAgregados,
+          removidos: idsRemovidos,
+          usuariosActuales: uniqueIds,
+        },
+      });
+    }
 
     const obraActualizada = await prisma.obra.findUnique({
       where: { id },

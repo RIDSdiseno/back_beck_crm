@@ -79,6 +79,41 @@ const handleError = (res: Response, error: unknown): void => {
   res.status(500).json({ success: false, error: 'Error interno del servidor' });
 };
 
+const canViewGanancia = (req: Request): boolean => req.userRole === 'administrador';
+
+const stripGananciaPctFromRawLineas = (raw: unknown): unknown => {
+  if (!Array.isArray(raw)) return raw;
+
+  return raw.map((item) => (
+    item && typeof item === 'object'
+      ? { ...(item as Record<string, unknown>), gananciaPct: 0 }
+      : item
+  ));
+};
+
+export const maskCotizacionGanancia = <T>(value: T, showGanancia: boolean): T => {
+  if (showGanancia) return value;
+
+  if (Array.isArray(value)) {
+    return value.map((item) => maskCotizacionGanancia(item, false)) as T;
+  }
+
+  if (!value || typeof value !== 'object') return value;
+
+  const record = value as Record<string, unknown>;
+  const masked: Record<string, unknown> = { ...record };
+
+  if (Array.isArray(record.lineas)) {
+    masked.lineas = record.lineas.map((linea) => (
+      linea && typeof linea === 'object'
+        ? { ...(linea as Record<string, unknown>), gananciaPct: 0 }
+        : linea
+    ));
+  }
+
+  return masked as T;
+};
+
 // ─── PDF helpers ─────────────────────────────────────────────────────────────
 
 const formatCLP = (value: number): string =>
@@ -147,9 +182,11 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const lineas = CotizacionService.parseLineas(b.lineas);
+    const lineas = CotizacionService.parseLineas(
+      canViewGanancia(req) ? b.lineas : stripGananciaPctFromRawLineas(b.lineas),
+    );
 
-    const cotizacion = await CotizacionService.createCotizacion(
+    const { cotizacion, advertencias } = await CotizacionService.createCotizacion(
       {
         numero: optStr(b.numero),
         clienteNombre,
@@ -165,7 +202,12 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
       userId,
     );
 
-    res.status(201).json({ success: true, data: cotizacion, message: 'Cotización creada' });
+    res.status(201).json({
+      success: true,
+      data: maskCotizacionGanancia(cotizacion, canViewGanancia(req)),
+      advertencias,
+      message: 'Cotización creada',
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -177,7 +219,7 @@ export const getCotizaciones = async (req: Request, res: Response): Promise<void
     if (!userId) return;
 
     const data = await CotizacionService.listCotizaciones();
-    res.json({ success: true, data });
+    res.json({ success: true, data: maskCotizacionGanancia(data, canViewGanancia(req)) });
   } catch (error) {
     handleError(res, error);
   }
@@ -194,7 +236,7 @@ export const getCotizacionVersiones = async (req: Request, res: Response): Promi
 
     const data = await CotizacionService.getCotizacionVersiones(id);
 
-    res.json({ success: true, data });
+    res.json({ success: true, data: maskCotizacionGanancia(data, canViewGanancia(req)) });
   } catch (error) {
     handleError(res, error);
   }
@@ -212,7 +254,7 @@ export const getCotizacionById = async (req: Request, res: Response): Promise<vo
     }
 
     const data = await CotizacionService.findCotizacion(id);
-    res.json({ success: true, data });
+    res.json({ success: true, data: maskCotizacionGanancia(data, canViewGanancia(req)) });
   } catch (error) {
     handleError(res, error);
   }
@@ -267,9 +309,13 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const lineas = has('lineas') ? CotizacionService.parseLineas(b.lineas) : undefined;
+    const lineas = has('lineas')
+      ? CotizacionService.parseLineas(
+        canViewGanancia(req) ? b.lineas : stripGananciaPctFromRawLineas(b.lineas),
+      )
+      : undefined;
 
-    const data = await CotizacionService.updateCotizacion(
+    const { cotizacion: data, advertencias } = await CotizacionService.updateCotizacion(
       id,
       {
         ...(has('numero') && { numero: optStr(b.numero) }),
@@ -284,10 +330,15 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
         ...(lineas !== undefined && { lineas }),
         ...(has('total') && { total: numVal(b.total) ?? undefined }),
       },
-      userId // 👈 importante
+      userId,
     );
 
-    res.json({ success: true, data, message: 'Cotización actualizada' });
+    res.json({
+      success: true,
+      data: maskCotizacionGanancia(data, canViewGanancia(req)),
+      advertencias,
+      message: 'Cotización actualizada',
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -314,7 +365,11 @@ export const patchCotizacionEstado = async (req: Request, res: Response): Promis
     }
 
     const data = await CotizacionService.patchEstado(id, estado, userId);
-    res.json({ success: true, data, message: 'Estado actualizado' });
+    res.json({
+      success: true,
+      data: maskCotizacionGanancia(data, canViewGanancia(req)),
+      message: 'Estado actualizado',
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -357,7 +412,7 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
       unidad: l.unidad,
       cantidad: Number(l.cantidad),
       precioUnitario: Number(l.precioUnitario),
-      gananciaPct: Number(l.gananciaPct),
+      gananciaPct: canViewGanancia(req) ? Number(l.gananciaPct) : 0,
       subtotal: Number(l.subtotal),
       orden: l.orden,
       notasLinea: l.notasLinea,

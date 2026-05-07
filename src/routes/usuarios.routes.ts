@@ -1,27 +1,19 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { authenticate } from '../middlewares/auth';
+import { Router } from 'express';
+import { authenticate, authorize } from '../middlewares/auth';
 import {
   listarUsuarios,
+  crearUsuario,
   actualizarUsuario,
   eliminarUsuario,
 } from '../controllers/usuarios.controller';
 
 const router = Router();
 
-const requireAdmin = (req: Request, res: Response, next: NextFunction): void => {
-  if (req.userRole !== 'administrador') {
-    res.status(403).json({ error: 'No autorizado' });
-    return;
-  }
-
-  next();
-};
-
 router.use(authenticate);
-router.use(requireAdmin);
 
-router.get('/', listarUsuarios);
-router.put('/:id', actualizarUsuario);
-router.delete('/:id', eliminarUsuario);
+router.get('/', authorize('administrador', 'ingenieria'), listarUsuarios);
+router.post('/', authorize('administrador'), crearUsuario);
+router.put('/:id', authorize('administrador'), actualizarUsuario);
+router.delete('/:id', authorize('administrador'), eliminarUsuario);
 
 export default router;

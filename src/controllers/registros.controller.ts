@@ -6,6 +6,7 @@ import { RegistroTerreno } from '../types';
 import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
+import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 
 /**
  * Crear un nuevo registro de terreno con fotos
@@ -114,6 +115,34 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     );
 
     const registro = result.rows[0];
+
+    const obra = await prisma.obra.findUnique({
+      where: { id: obra_id },
+      select: {
+        id: true,
+        nombre: true,
+        codigo: true,
+      },
+    });
+
+    await registrarMovimientoCRM({
+      usuarioId: usuario_id ?? '',
+      modulo: 'OBRA',
+      tipo: 'REGISTRO_CREADO',
+      entidadId: registro.id,
+      descripcion: `Se creó registro de sello en la obra ${obra?.nombre ?? obra_id}`,
+      datos: {
+        registroId: registro.id,
+        obraId: obra_id,
+        obraNombre: obra?.nombre ?? null,
+        usuarioId: usuario_id,
+        material: descripcion_material,
+        modulo,
+        piso,
+        cantidadSellos: Number(cantidad_sellos),
+        estado:'pendiente',
+      },
+    });
 
     // Crear notificaciones para usuarios de Ingeniería
     await dbQuery(

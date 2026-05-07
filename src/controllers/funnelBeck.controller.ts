@@ -13,6 +13,7 @@ import {
 import {
   listCotizacionesByFunnelBeck,
 } from "../services/cotizaciones.service";
+import { maskCotizacionGanancia } from "./cotizaciones.controller";
 
 export async function createFunnelBeckController(req: Request, res: Response) {
   try {
@@ -75,7 +76,7 @@ export async function getCotizacionesByFunnelBeckController(req: Request, res: R
     const cotizaciones = await listCotizacionesByFunnelBeck(id);
     return res.status(200).json({
       success: true,
-      data: cotizaciones,
+      data: maskCotizacionGanancia(cotizaciones, req.userRole === "administrador"),
     });
   } catch (error) {
     if (error instanceof CotizacionError) {

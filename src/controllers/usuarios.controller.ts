@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
@@ -9,20 +10,30 @@ const esRolValido = (rol: string): rol is RolUsuario => {
 
 /**
  * GET /api/usuarios
- * Solo admin
+ * Admin ve datos de gestion. Ingenieria solo ve campos seguros para asignacion.
  */
-export const listarUsuarios = async (_req: Request, res: Response): Promise<void> => {
+export const listarUsuarios = async (req: Request, res: Response): Promise<void> => {
   try {
+    const isIngenieria = req.userRole === 'ingenieria';
+
     const usuarios = await prisma.usuario.findMany({
-      select: {
-        id: true,
-        nombre: true,
-        email: true,
-        rol: true,
-        activo: true,
-        azureId: true,
-        createdAt: true,
-      },
+      select: isIngenieria
+        ? {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+            activo: true,
+          }
+        : {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+            activo: true,
+            azureId: true,
+            createdAt: true,
+          },
       orderBy: {
         createdAt: 'desc',
       },
@@ -32,6 +43,82 @@ export const listarUsuarios = async (_req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Error listando usuarios:', error);
     res.status(500).json({ error: 'Error al listar usuarios' });
+  }
+};
+
+export const crearUsuario = async (req: Request, res: Response): Promise <void> => {
+  try{
+    const { nombre, email, password, rol, activo } = req.body as {
+      nombre?: string;
+      email?: string;
+      password?: string;
+      rol?: string;
+      activo?: boolean;
+    };
+    if (!nombre?.trim() || !email?.trim() || !password?.trim() || !rol){
+      res.status(400).json({
+        error: "Nombre, email, contraseña y rol son obligatorios",
+      });
+      return;
+    }
+
+    if (!password || password.length < 6){
+      res.status(400).json({
+        error: "La contraseña dene tener almenos 6 caracteres",
+      });
+      return;
+    }
+    if (!esRolValido(rol)){
+      res.status(400).json({ error: "Rol no válido"});
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const usuarioExistente = await prisma.usuario.findUnique({
+      where: { email: normalizedEmail },
+    });
+
+    if (usuarioExistente) {
+      res.status(409).json({
+        error: "Ya existe un usuario con ese email",
+      });
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const usuarioCreado = await prisma.usuario.create({
+      data: {
+        nombre: nombre.trim(),
+        email: normalizedEmail,
+        passwordHash,
+        rol: rol as RolUsuario,
+        activo: activo?? true,
+        azureId: null,
+      },
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        rol: true,
+        activo: true,
+        azureId: true,
+        createdAt: true,
+      },
+    });
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? "",
+      modulo: "USUARIO",
+      tipo: "USUARIO_CREADO",
+      entidadId: usuarioCreado.id,
+      descripcion: `Se creó usuario ${usuarioCreado.nombre}`,
+    });
+
+    res.status(201).json(usuarioCreado);
+  }catch (error){
+    console.error("Error creando usuario:", error);
+    res.status(500).json({ error: "Error al crear usuario" });
   }
 };
 

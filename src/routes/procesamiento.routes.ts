@@ -9,6 +9,8 @@ import { authenticate, authorize } from '../middlewares/auth';
 
 const router = Router();
 
+const canUseProcesamiento = authorize('ingenieria', 'administrador');
+
 /**
  * POST /api/procesamiento
  * Procesar un registro de terreno
@@ -17,7 +19,7 @@ const router = Router();
 router.post(
   '/',
   authenticate,
-  authorize('ingenieria', 'administrador'),
+  canUseProcesamiento,
   procesarRegistro
 );
 
@@ -25,12 +27,12 @@ router.post(
  * GET /api/procesamiento
  * Listar procesamientos con filtros opcionales
  */
-router.get('/', authenticate, listarProcesamientos);
+router.get('/', authenticate, canUseProcesamiento, listarProcesamientos);
 
 /**
  * GET /api/procesamiento/:id
  * Obtener un procesamiento específico
  */
-router.get('/:id', authenticate, obtenerProcesamiento);
+router.get('/:id', authenticate, canUseProcesamiento, obtenerProcesamiento);
 
 export default router;

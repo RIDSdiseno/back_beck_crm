@@ -25,8 +25,10 @@ Deberías ver:
 |-------|----------|-----|
 | `admin@beck.com` | `Admin123!` | Administrador |
 | `terreno@beck.com` | `Terreno123!` | Terreno |
-| `ing@beck.com` | `Ing123!` | Ingeniería |
+| `ing@becksoluciones.cl` | `123456` | Ingeniería |
 | `view@beck.com` | `View123!` | Visualizador |
+| `vendedor@becksoluciones.cl` | `Ven123!` | Vendedor |
+
 
 ---
 

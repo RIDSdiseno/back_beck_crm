@@ -14,6 +14,8 @@ import { upload } from '../middlewares/upload';
 
 const router = Router();
 
+const canReadRegistros = authorize('administrador', 'ingenieria', 'visualizador', 'terreno');
+
 /**
  * POST /api/registros
  * Crear registro con fotos (1-5 imágenes)
@@ -31,7 +33,7 @@ router.post(
  * GET /api/registros
  * Listar registros con filtros opcionales
  */
-router.get('/', authenticate, listarRegistros);
+router.get('/', authenticate, canReadRegistros, listarRegistros);
 
 /**
  * GET /api/registros/pendientes
@@ -85,6 +87,6 @@ router.put(
  * GET /api/registros/:id
  * Obtener un registro especifico
  */
-router.get('/:id', authenticate, obtenerRegistro);
+router.get('/:id', authenticate, canReadRegistros, obtenerRegistro);
 
 export default router;

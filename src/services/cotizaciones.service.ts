@@ -1,5 +1,6 @@
 import { EstadoCotizacion, Prisma, TipoLineaCotizacion, TipoMovimientoCRM } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { firematPrisma } from '../config/firematPrisma';
 import { registrarMovimientoCRM } from './movimientoCrm.service';
 import {
   CotizacionError,
@@ -70,6 +71,27 @@ const generarNumeroCotizacion = async (): Promise<string> => {
 const resolveNumeroCotizacion = async (numero?: string | null): Promise<string> => {
   const normalized = numero?.trim();
   return normalized || generarNumeroCotizacion();
+};
+
+const validateNumeroDisponibleParaUpdate = async (
+  numero: string | null,
+  idsMismaCotizacion: string[],
+): Promise<void> => {
+  if (!numero) return;
+
+  const duplicada = await prisma.cotizacion.findFirst({
+    where: {
+      numero,
+      id: {
+        notIn: idsMismaCotizacion,
+      },
+    },
+    select: { id: true },
+  });
+
+  if (duplicada) {
+    throw new CotizacionError('Ya existe una cotización con ese número', 409);
+  }
 };
 
 const findOportunidadCotizacion = async (
@@ -151,14 +173,26 @@ export const parseLineas = (
 
     if (!tipoLinea) {
       throw new CotizacionError(
-        `Línea ${pos}: tipoLinea debe ser PRODUCTO o SERVICIO`,
+        `Línea ${pos}: tipoLinea debe ser uno de: ${VALID_TIPOS.join(', ')}`,
         400,
       );
     }
 
+    let productoFirematId: number | null = null;
+    if (tipoLinea === TipoLineaCotizacion.PRODUCTO_FIREMAT) {
+      const pfId = Number(r.productoFirematId);
+      if (!Number.isInteger(pfId) || pfId <= 0) {
+        throw new CotizacionError(
+          `Línea ${pos}: productoFirematId es obligatorio para PRODUCTO_FIREMAT`,
+          400,
+        );
+      }
+      productoFirematId = pfId;
+    }
+
     const descripcion =
       typeof r.descripcion === 'string' ? r.descripcion.trim() : '';
-    if (!descripcion) {
+    if (!descripcion && tipoLinea !== TipoLineaCotizacion.PRODUCTO_FIREMAT) {
       throw new CotizacionError(`Línea ${pos}: descripción obligatoria`, 400);
     }
 
@@ -167,7 +201,7 @@ export const parseLineas = (
       throw new CotizacionError(`Línea ${pos}: cantidad debe ser mayor a 0`, 400);
     }
 
-    const precioUnitario = Number(r.precioUnitario);
+    const precioUnitario = Number(r.precioUnitario ?? 0);
     if (!Number.isFinite(precioUnitario) || precioUnitario < 0) {
       throw new CotizacionError(
         `Línea ${pos}: precioUnitario debe ser >= 0`,
@@ -198,11 +232,65 @@ export const parseLineas = (
       subtotal: 0,
       orden,
       notasLinea,
+      productoFirematId,
     };
 
     linea.subtotal = calcLineSubtotal(linea);
     return linea;
   });
+};
+
+const enrichLineasFiremat = async (
+  lineas: LineaInput[],
+): Promise<{ lineas: LineaInput[]; advertencias: string[] }> => {
+  const advertencias: string[] = [];
+
+  const enriched = await Promise.all(
+    lineas.map(async (linea, index) => {
+      if (linea.tipoLinea !== TipoLineaCotizacion.PRODUCTO_FIREMAT) return linea;
+
+      const { productoFirematId } = linea;
+      if (!productoFirematId) {
+        throw new CotizacionError(
+          `Línea ${index + 1}: productoFirematId es obligatorio para PRODUCTO_FIREMAT`,
+          400,
+        );
+      }
+
+      const producto = await firematPrisma.producto.findUnique({
+        where: { id: productoFirematId },
+      });
+
+      if (!producto) {
+        throw new CotizacionError(
+          `Línea ${index + 1}: producto Firemat ID ${productoFirematId} no existe`,
+          400,
+        );
+      }
+
+      if (!producto.activo) {
+        throw new CotizacionError(
+          `Línea ${index + 1}: el producto Firemat "${producto.nombre}" está inactivo`,
+          400,
+        );
+      }
+
+      const stockDisponible = producto.stock - producto.stockReservado;
+      if (linea.cantidad > stockDisponible) {
+        advertencias.push(
+          `Línea ${index + 1} "${producto.nombre}": cantidad (${linea.cantidad}) supera el stock disponible (${stockDisponible})`,
+        );
+      }
+
+      return {
+        ...linea,
+        descripcion: linea.descripcion || producto.nombre,
+        precioUnitario: linea.precioUnitario > 0 ? linea.precioUnitario : producto.precio,
+      };
+    }),
+  );
+
+  return { lineas: enriched, advertencias };
 };
 
 // ─── Helpers DB ──────────────────────────────────────────────────────────────
@@ -241,6 +329,7 @@ const lineasCreateData = (cotizacionId: string, lineas: LineaInput[]) =>
     subtotal: toDecimal(l.subtotal),
     orden: l.orden,
     notasLinea: l.notasLinea,
+    productoFirematId: l.productoFirematId ?? null,
   }));
 
 const INCLUDE_FULL = {
@@ -265,12 +354,14 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
   const numeroCotizacion = await resolveNumeroCotizacion(input.numero);
   const oportunidad = await findOportunidadCotizacion(input.funnelBeckId);
 
+  const { lineas: lineasEnriquecidas, advertencias } = await enrichLineasFiremat(input.lineas);
+
   const {
     lineasCalculadas,
     subtotal,
     impuesto,
     total,
-  } = calcularTotales(input.lineas, input.descuento, input.aplicaImpuesto);
+  } = calcularTotales(lineasEnriquecidas, input.descuento, input.aplicaImpuesto);
 
   const cotizacionId = await prisma.$transaction(async (tx) => {
     const cot = await tx.cotizacion.create({
@@ -317,11 +408,12 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
     },
   });
 
-  return cotizacion;
+  return { cotizacion, advertencias };
 };
 
 export const listCotizaciones = async () =>
   prisma.cotizacion.findMany({
+    where: { esActual: true },
     include: INCLUDE_FULL,
     orderBy: { createdAt: 'desc' },
   });
@@ -403,6 +495,23 @@ export const updateCotizacion = async (
     input.numero !== undefined
       ? input.numero?.trim() || existing.numero
       : existing.numero;
+  const cotizacionBaseId = existing.cotizacionBaseId ?? existing.id;
+  const versionesMismaCotizacion = await prisma.cotizacion.findMany({
+    where: {
+      OR: [
+        { id: cotizacionBaseId },
+        { cotizacionBaseId },
+      ],
+    },
+    select: {
+      id: true,
+      version: true,
+    },
+  });
+  const idsMismaCotizacion = versionesMismaCotizacion.map((cotizacion) => cotizacion.id);
+
+  await validateNumeroDisponibleParaUpdate(numeroCotizacion, idsMismaCotizacion);
+
   const funnelBeckIdFinal =
     input.funnelBeckId !== undefined ? input.funnelBeckId : existing.funnelBeckId;
   const oportunidad = await findOportunidadCotizacion(funnelBeckIdFinal);
@@ -412,9 +521,18 @@ export const updateCotizacion = async (
       ? await findOportunidadCotizacion(existing.funnelBeckId)
       : null;
 
-  const lineasBase: LineaInput[] =
-    input.lineas ??
-    existing.lineas.map((l) => ({
+  const descuento = input.descuento ?? Number(existing.descuento);
+  const aplicaImpuesto = input.aplicaImpuesto ?? existing.aplicaImpuesto;
+
+  let lineasParaCalcular: LineaInput[];
+  let advertencias: string[] = [];
+
+  if (input.lineas !== undefined) {
+    const resultado = await enrichLineasFiremat(input.lineas);
+    lineasParaCalcular = resultado.lineas;
+    advertencias = resultado.advertencias;
+  } else {
+    lineasParaCalcular = existing.lineas.map((l) => ({
       tipoLinea: l.tipoLinea,
       descripcion: l.descripcion,
       unidad: l.unidad,
@@ -424,23 +542,29 @@ export const updateCotizacion = async (
       subtotal: Number(l.subtotal),
       orden: l.orden,
       notasLinea: l.notasLinea,
+      productoFirematId: l.productoFirematId ?? null,
     }));
-
-  const descuento = input.descuento ?? Number(existing.descuento);
-  const aplicaImpuesto = input.aplicaImpuesto ?? existing.aplicaImpuesto;
+  }
 
   const { lineasCalculadas, subtotal, impuesto, total } = calcularTotales(
-    lineasBase,
+    lineasParaCalcular,
     descuento,
     aplicaImpuesto,
   );
 
-  const cotizacionBaseId = existing.cotizacionBaseId ?? existing.id;
-  const nuevaVersion = existing.version + 1;
+  const nuevaVersion = Math.max(
+    existing.version,
+    ...versionesMismaCotizacion.map((cotizacion) => cotizacion.version),
+  ) + 1;
 
   const nuevaCotizacionId = await prisma.$transaction(async (tx) => {
-    await tx.cotizacion.update({
-      where: { id: existing.id },
+    await tx.cotizacion.updateMany({
+      where: {
+        OR: [
+          { id: cotizacionBaseId },
+          { cotizacionBaseId },
+        ],
+      },
       data: { esActual: false },
     });
 
@@ -551,7 +675,7 @@ export const updateCotizacion = async (
     });
   }
 
-  return nuevaCotizacion;
+  return { cotizacion: nuevaCotizacion, advertencias };
 };
 
 export const patchEstado = async (id: string, estado: EstadoCotizacion, userId: string) => {

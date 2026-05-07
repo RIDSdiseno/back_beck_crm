@@ -12,6 +12,10 @@ import indicadoresRoutes from "./routes/indicadores.routes";
 import usuariosRoutes from './routes/usuarios.routes';
 import cotizacionesRoutes from './routes/cotizaciones.routes';
 import movimientosCrmRoutes from './routes/movimientosCrm.routes';
+import firematProductosRoutes from './routes/firemat/productos.routes';
+import firematInventarioRoutes from './routes/firemat/inventario.routes';
+import firematVentasRoutes from './routes/firemat/ventas.routes';
+import { authenticate, denyRoles } from './middlewares/auth';
 
 
 const app = express();
@@ -73,17 +77,23 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Rutas de API
 app.use('/api/auth', authRoutes);
-app.use('/api/registros', registrosRoutes);
-app.use('/api/procesamiento', procesamientoRoutes);
-app.use('/api/notificaciones', notificacionesRoutes);
-app.use('/api/obras', obrasRoutes);
-app.use('/api/itemizados', itemizadosRoutes);
-app.use('/api/stats', statsRoutes);
-app.use('/api/funnel-beck', funnelBeckRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/cotizaciones', cotizacionesRoutes);
-app.use('/api/movimientos-crm', movimientosCrmRoutes);
+
+const blockFieldRoles = [authenticate, denyRoles('terreno', 'jefeobra')];
+
+app.use('/api/registros', blockFieldRoles, registrosRoutes);
+app.use('/api/procesamiento', blockFieldRoles, procesamientoRoutes);
+app.use('/api/notificaciones', blockFieldRoles, notificacionesRoutes);
+app.use('/api/obras', blockFieldRoles, obrasRoutes);
+app.use('/api/itemizados', blockFieldRoles, itemizadosRoutes);
+app.use('/api/stats', blockFieldRoles, statsRoutes);
+app.use('/api/funnel-beck', blockFieldRoles, funnelBeckRoutes);
+app.use('/api/usuarios', blockFieldRoles, usuariosRoutes);
+app.use('/api/cotizaciones', blockFieldRoles, cotizacionesRoutes);
+app.use('/api/movimientos-crm', blockFieldRoles, movimientosCrmRoutes);
+app.use('/api/firemat/productos', blockFieldRoles, firematProductosRoutes);
+app.use('/api/firemat/inventario', blockFieldRoles, firematInventarioRoutes);
+app.use('/api/firemat/ventas', blockFieldRoles, firematVentasRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

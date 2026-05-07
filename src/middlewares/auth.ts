@@ -130,3 +130,20 @@ export const authorize = (...roles: RolUsuario[]) => {
     next();
   };
 };
+
+/**
+ * Middleware para bloquear roles sin acceso al CRM web/API privada.
+ */
+export const denyRoles = (...roles: RolUsuario[]) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (req.userRole && roles.includes(req.userRole)) {
+      res.status(403).json({
+        success: false,
+        error: "Acceso denegado",
+      });
+      return;
+    }
+
+    next();
+  };
+};
