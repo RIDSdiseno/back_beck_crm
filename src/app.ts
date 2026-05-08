@@ -16,6 +16,7 @@ import firematProductosRoutes from './routes/firemat/productos.routes';
 import firematInventarioRoutes from './routes/firemat/inventario.routes';
 import firematVentasRoutes from './routes/firemat/ventas.routes';
 import cotizacionesFirematRoutes from './routes/firemat/cotizaciones-firemat.routes';
+import funnelFirematRoutes from './routes/firemat/funnel-firemat.routes';
 import { authenticate, denyRoles } from './middlewares/auth';
 
 
@@ -95,6 +96,7 @@ app.use('/api/movimientos-crm', blockFieldRoles, movimientosCrmRoutes);
 app.use('/api/firemat/productos', blockFieldRoles, firematProductosRoutes);
 app.use('/api/firemat/inventario', blockFieldRoles, firematInventarioRoutes);
 app.use('/api/firemat/ventas', blockFieldRoles, firematVentasRoutes);
+app.use('/api/firemat/funnel', blockFieldRoles, funnelFirematRoutes);
 app.use('/api/firemat/cotizaciones', cotizacionesFirematRoutes);
 
 // Ruta 404

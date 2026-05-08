@@ -257,6 +257,34 @@ exports.Prisma.CotizacionFirematDetalleScalarFieldEnum = {
   observacion: 'observacion'
 };
 
+exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
+  id: 'id',
+  cliente: 'cliente',
+  contacto: 'contacto',
+  telefono: 'telefono',
+  correo: 'correo',
+  tipoCliente: 'tipoCliente',
+  productoId: 'productoId',
+  cantidadEstimada: 'cantidadEstimada',
+  responsable: 'responsable',
+  etapa: 'etapa',
+  montoEstimado: 'montoEstimado',
+  probabilidadCierre: 'probabilidadCierre',
+  proximaAccion: 'proximaAccion',
+  fechaProximaAccion: 'fechaProximaAccion',
+  observaciones: 'observaciones',
+  origen: 'origen',
+  estadoStock: 'estadoStock',
+  cotizacionId: 'cotizacionId',
+  motivoPerdida: 'motivoPerdida',
+  motivoPostergacion: 'motivoPostergacion',
+  fechaReactivacion: 'fechaReactivacion',
+  documentoRespaldo: 'documentoRespaldo',
+  fechaCierre: 'fechaCierre',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -283,7 +311,8 @@ exports.Prisma.ModelName = {
   Cliente: 'Cliente',
   Oportunidad: 'Oportunidad',
   CotizacionFiremat: 'CotizacionFiremat',
-  CotizacionFirematDetalle: 'CotizacionFirematDetalle'
+  CotizacionFirematDetalle: 'CotizacionFirematDetalle',
+  FunnelFirematOpportunity: 'FunnelFirematOpportunity'
 };
 
 /**

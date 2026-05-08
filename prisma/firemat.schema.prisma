@@ -47,6 +47,7 @@ model Producto {
   Categoria                Categoria                  @relation(fields: [categoriaId], references: [id])
   Venta                    Venta[]
   VentaDetalle             VentaDetalle[]
+  FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
 
 model Venta {
@@ -146,6 +147,7 @@ model CotizacionFiremat {
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
   detalles           CotizacionFirematDetalle[]
+  FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
 
 model CotizacionFirematDetalle {
@@ -160,4 +162,35 @@ model CotizacionFirematDetalle {
   observacion     String?
   cotizacion      CotizacionFiremat @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
   producto        Producto          @relation(fields: [productoId], references: [id])
+}
+
+model FunnelFirematOpportunity {
+  id                   Int       @id @default(autoincrement())
+  cliente              String
+  contacto             String?
+  telefono             String?
+  correo               String?
+  tipoCliente          String?
+  productoId           Int?
+  cantidadEstimada     Int?
+  responsable          String?
+  etapa                String    @default("PROSPECTO")
+  montoEstimado        Float     @default(0)
+  probabilidadCierre   Int?
+  proximaAccion        String?
+  fechaProximaAccion   DateTime?
+  observaciones        String?
+  origen               String?
+  estadoStock          String?
+  cotizacionId         Int?
+  motivoPerdida        String?
+  motivoPostergacion   String?
+  fechaReactivacion    DateTime?
+  documentoRespaldo    String?
+  fechaCierre          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  producto             Producto?          @relation(fields: [productoId], references: [id])
+  cotizacion           CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
 }
