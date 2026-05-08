@@ -23,11 +23,12 @@ Deberías ver:
 
 | Email | Password | Rol |
 |-------|----------|-----|
-| `admin@beck.com` | `Admin123!` | Administrador |
-| `terreno@beck.com` | `Terreno123!` | Terreno |
-| `ing@becksoluciones.cl` | `123456` | Ingeniería |
-| `view@beck.com` | `View123!` | Visualizador |
+| `admin@becksoluciones.cl  ` | `Admin123!` | Administrador |
+| `terreno@becksoluciones.cl` | `Terreno123!` | Terreno |
+| `ing@becksoluciones.cl` | `Ing123!` | Ingeniería |
+| `view@becksoluciones.cl` | `View123!` | Visualizador |
 | `vendedor@becksoluciones.cl` | `Ven123!` | Vendedor |
+| `jefeobra@becksoluciones.cl` | `jefeo123!` | Jefe de obra |
 
 
 ---

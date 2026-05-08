@@ -165,7 +165,11 @@ exports.Prisma.VentaScalarFieldEnum = {
   estado: 'estado',
   responsable: 'responsable',
   fechaCierre: 'fechaCierre',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  fechaProximaAccion: 'fechaProximaAccion',
+  origen: 'origen',
+  probabilidad: 'probabilidad',
+  proximaAccion: 'proximaAccion'
 };
 
 exports.Prisma.VentaDetalleScalarFieldEnum = {
@@ -183,6 +187,74 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ClienteScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  rut: 'rut',
+  email: 'email',
+  telefono: 'telefono',
+  direccion: 'direccion',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OportunidadScalarFieldEnum = {
+  id: 'id',
+  clienteId: 'clienteId',
+  titulo: 'titulo',
+  descripcion: 'descripcion',
+  unidadNegocio: 'unidadNegocio',
+  estado: 'estado',
+  etapa: 'etapa',
+  montoEstimado: 'montoEstimado',
+  proximaAccion: 'proximaAccion',
+  fechaProximaAccion: 'fechaProximaAccion',
+  probabilidad: 'probabilidad',
+  createdAt: 'createdAt',
+  productoId: 'productoId'
+};
+
+exports.Prisma.CotizacionFirematScalarFieldEnum = {
+  id: 'id',
+  cliente: 'cliente',
+  contacto: 'contacto',
+  tipoCliente: 'tipoCliente',
+  responsable: 'responsable',
+  estado: 'estado',
+  subtotal: 'subtotal',
+  descuento: 'descuento',
+  impuesto: 'impuesto',
+  total: 'total',
+  fechaCotizacion: 'fechaCotizacion',
+  fechaVencimiento: 'fechaVencimiento',
+  fechaEnvio: 'fechaEnvio',
+  fechaSeguimiento: 'fechaSeguimiento',
+  fechaCierre: 'fechaCierre',
+  probabilidadCierre: 'probabilidadCierre',
+  comentariosCliente: 'comentariosCliente',
+  objeciones: 'objeciones',
+  observaciones: 'observaciones',
+  motivoPerdida: 'motivoPerdida',
+  motivoPostergacion: 'motivoPostergacion',
+  fechaReactivacion: 'fechaReactivacion',
+  version: 'version',
+  esActual: 'esActual',
+  cotizacionBaseId: 'cotizacionBaseId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CotizacionFirematDetalleScalarFieldEnum = {
+  id: 'id',
+  cotizacionId: 'cotizacionId',
+  productoId: 'productoId',
+  cantidad: 'cantidad',
+  precioUnitario: 'precioUnitario',
+  descuentoPct: 'descuentoPct',
+  subtotal: 'subtotal',
+  stockDisponible: 'stockDisponible',
+  observacion: 'observacion'
 };
 
 exports.Prisma.SortOrder = {
@@ -207,7 +279,11 @@ exports.Prisma.ModelName = {
   Producto: 'Producto',
   Venta: 'Venta',
   VentaDetalle: 'VentaDetalle',
-  user: 'user'
+  user: 'user',
+  Cliente: 'Cliente',
+  Oportunidad: 'Oportunidad',
+  CotizacionFiremat: 'CotizacionFiremat',
+  CotizacionFirematDetalle: 'CotizacionFirematDetalle'
 };
 
 /**
