@@ -42,12 +42,12 @@ model Producto {
   categoriaId              Int
   stockReservado           Int                        @default(0)
   CotizacionFirematDetalle CotizacionFirematDetalle[]
+  FunnelFirematOpportunity FunnelFirematOpportunity[]
   Movimiento               Movimiento[]
   Oportunidad              Oportunidad[]
   Categoria                Categoria                  @relation(fields: [categoriaId], references: [id])
   Venta                    Venta[]
   VentaDetalle             VentaDetalle[]
-  FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
 
 model Venta {
@@ -146,6 +146,7 @@ model CotizacionFiremat {
   cotizacionBaseId         Int?
   createdAt                DateTime                   @default(now())
   updatedAt                DateTime                   @updatedAt
+  numero                   String?                    @unique
   detalles                 CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
@@ -165,7 +166,7 @@ model CotizacionFirematDetalle {
 }
 
 model FunnelFirematOpportunity {
-  id                 Int       @id @default(autoincrement())
+  id                 Int                @id @default(autoincrement())
   cliente            String
   contacto           String?
   telefono           String?
@@ -174,8 +175,8 @@ model FunnelFirematOpportunity {
   productoId         Int?
   cantidadEstimada   Int?
   responsable        String?
-  etapa              String    @default("PROSPECTO")
-  montoEstimado      Float     @default(0)
+  etapa              String             @default("PROSPECTO")
+  montoEstimado      Float              @default(0)
   probabilidadCierre Int?
   proximaAccion      String?
   fechaProximaAccion DateTime?
@@ -188,9 +189,9 @@ model FunnelFirematOpportunity {
   fechaReactivacion  DateTime?
   documentoRespaldo  String?
   fechaCierre        DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  producto   Producto?          @relation(fields: [productoId], references: [id])
-  cotizacion CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  probabilidad       Int?               @default(50)
+  cotizacion         CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
+  producto           Producto?          @relation(fields: [productoId], references: [id])
 }

@@ -242,7 +242,8 @@ exports.Prisma.CotizacionFirematScalarFieldEnum = {
   esActual: 'esActual',
   cotizacionBaseId: 'cotizacionBaseId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  numero: 'numero'
 };
 
 exports.Prisma.CotizacionFirematDetalleScalarFieldEnum = {
@@ -282,7 +283,8 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   documentoRespaldo: 'documentoRespaldo',
   fechaCierre: 'fechaCierre',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  probabilidad: 'probabilidad'
 };
 
 exports.Prisma.SortOrder = {

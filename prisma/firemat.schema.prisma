@@ -42,12 +42,12 @@ model Producto {
   categoriaId              Int
   stockReservado           Int                        @default(0)
   CotizacionFirematDetalle CotizacionFirematDetalle[]
+  FunnelFirematOpportunity FunnelFirematOpportunity[]
   Movimiento               Movimiento[]
   Oportunidad              Oportunidad[]
   Categoria                Categoria                  @relation(fields: [categoriaId], references: [id])
   Venta                    Venta[]
   VentaDetalle             VentaDetalle[]
-  FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
 
 model Venta {
@@ -119,34 +119,35 @@ model Oportunidad {
 }
 
 model CotizacionFiremat {
-  id                 Int                        @id @default(autoincrement())
-  cliente            String
-  contacto           String?
-  tipoCliente        String?
-  responsable        String?
-  estado             String                     @default("BORRADOR")
-  subtotal           Float                      @default(0)
-  descuento          Float                      @default(0)
-  impuesto           Float                      @default(0)
-  total              Float                      @default(0)
-  fechaCotizacion    DateTime                   @default(now())
-  fechaVencimiento   DateTime?
-  fechaEnvio         DateTime?
-  fechaSeguimiento   DateTime?
-  fechaCierre        DateTime?
-  probabilidadCierre Int?
-  comentariosCliente String?
-  objeciones         String?
-  observaciones      String?
-  motivoPerdida      String?
-  motivoPostergacion String?
-  fechaReactivacion  DateTime?
-  version            Int                        @default(1)
-  esActual           Boolean                    @default(true)
-  cotizacionBaseId   Int?
-  createdAt          DateTime                   @default(now())
-  updatedAt          DateTime                   @updatedAt
-  detalles           CotizacionFirematDetalle[]
+  id                       Int                        @id @default(autoincrement())
+  cliente                  String
+  contacto                 String?
+  tipoCliente              String?
+  responsable              String?
+  estado                   String                     @default("BORRADOR")
+  subtotal                 Float                      @default(0)
+  descuento                Float                      @default(0)
+  impuesto                 Float                      @default(0)
+  total                    Float                      @default(0)
+  fechaCotizacion          DateTime                   @default(now())
+  fechaVencimiento         DateTime?
+  fechaEnvio               DateTime?
+  fechaSeguimiento         DateTime?
+  fechaCierre              DateTime?
+  probabilidadCierre       Int?
+  comentariosCliente       String?
+  objeciones               String?
+  observaciones            String?
+  motivoPerdida            String?
+  motivoPostergacion       String?
+  fechaReactivacion        DateTime?
+  version                  Int                        @default(1)
+  esActual                 Boolean                    @default(true)
+  cotizacionBaseId         Int?
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  numero                   String?                    @unique
+  detalles                 CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
 }
 
@@ -165,7 +166,7 @@ model CotizacionFirematDetalle {
 }
 
 model FunnelFirematOpportunity {
-  id                   Int       @id @default(autoincrement())
+  id                   Int                @id @default(autoincrement())
   cliente              String
   contacto             String?
   telefono             String?
@@ -174,8 +175,8 @@ model FunnelFirematOpportunity {
   productoId           Int?
   cantidadEstimada     Int?
   responsable          String?
-  etapa                String    @default("PROSPECTO")
-  montoEstimado        Float     @default(0)
+  etapa                String             @default("PROSPECTO")
+  montoEstimado        Float              @default(0)
   probabilidadCierre   Int?
   proximaAccion        String?
   fechaProximaAccion   DateTime?
@@ -188,9 +189,9 @@ model FunnelFirematOpportunity {
   fechaReactivacion    DateTime?
   documentoRespaldo    String?
   fechaCierre          DateTime?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-
-  producto             Producto?          @relation(fields: [productoId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  probabilidad         Int?               @default(50)
   cotizacion           CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
+  producto             Producto?          @relation(fields: [productoId], references: [id])
 }
