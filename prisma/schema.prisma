@@ -257,6 +257,42 @@ model OperadorBeck {
   etapa               EtapaFunnelBeck     @default(prospecto_identificado)
   estadoCierre        EstadoCierreFunnel?
   motivoPerdida       String?             @map("motivo_perdida")
+
+  // Prospecto identificado
+  rutEmpresa          String?             @map("rut_empresa") @db.VarChar(20)
+  cargoContacto       String?             @map("cargo_contacto") @db.VarChar(120)
+  telefonoContacto    String?             @map("telefono_contacto") @db.VarChar(50)
+  correoContacto      String?             @map("correo_contacto") @db.VarChar(255)
+  nombreContacto      String?             @map("nombre_contacto") @db.VarChar(255)
+  tipoCliente         String?             @map("tipo_cliente") @db.VarChar(100)
+  tipoOportunidad     String?             @map("tipo_oportunidad") @db.VarChar(100)
+
+  // Primera reunión / seguimiento
+  fechaPrimerContacto DateTime?           @map("fecha_primer_contacto") @db.Date
+  tipoContacto        String?             @map("tipo_contacto") @db.VarChar(100)
+  necesidadDetectada  String?             @map("necesidad_detectada")
+  timingEstimado      String?             @map("timing_estimado") @db.VarChar(100)
+  nivelInteres        String?             @map("nivel_interes") @db.VarChar(50)
+
+  // Próxima acción / seguimiento
+  proximaAccion       String?             @map("proxima_accion")
+  fechaProximaAccion  DateTime?           @map("fecha_proxima_accion") @db.Date
+
+  // Propuesta / negociación
+  probabilidadCierre  Int?                @map("probabilidad_cierre")
+  objeciones          String?
+  contrapropuestas    String?
+  ajustesSolicitados  String?             @map("ajustes_solicitados")
+
+  // Cierre perdido / postergado
+  etapaPerdida        String?             @map("etapa_perdida") @db.VarChar(100)
+  motivoPostergacion  String?             @map("motivo_postergacion")
+  fechaReactivacion   DateTime?           @map("fecha_reactivacion") @db.Date
+
+  // Cierre ganado
+  documentoRespaldo   String?             @map("documento_respaldo")
+  flujoPosterior      String?             @map("flujo_posterior")
+
   createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt           DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   dolarValor          Decimal?            @map("dolar_valor") @db.Decimal(12, 4)
@@ -397,6 +433,7 @@ enum EtapaFunnelBeck {
 enum EstadoCierreFunnel {
   ganada
   perdida
+  postergada
 }
 
 enum FuenteLeadFunnel {
