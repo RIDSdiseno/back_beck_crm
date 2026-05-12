@@ -151,7 +151,8 @@ exports.Prisma.ProductoScalarFieldEnum = {
   criticidad: 'criticidad',
   imagen: 'imagen',
   categoriaId: 'categoriaId',
-  stockReservado: 'stockReservado'
+  stockReservado: 'stockReservado',
+  sku: 'sku'
 };
 
 exports.Prisma.VentaScalarFieldEnum = {

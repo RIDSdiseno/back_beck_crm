@@ -17,6 +17,7 @@ import firematInventarioRoutes from './routes/firemat/inventario.routes';
 import firematVentasRoutes from './routes/firemat/ventas.routes';
 import cotizacionesFirematRoutes from './routes/firemat/cotizaciones-firemat.routes';
 import funnelFirematRoutes from './routes/firemat/funnel-firemat.routes';
+import firematCategoriasRoutes from './routes/firemat/categorias.routes';
 import { authenticate, denyRoles } from './middlewares/auth';
 
 
@@ -93,6 +94,7 @@ app.use('/api/funnel-beck', blockFieldRoles, funnelBeckRoutes);
 app.use('/api/usuarios', blockFieldRoles, usuariosRoutes);
 app.use('/api/cotizaciones', blockFieldRoles, cotizacionesRoutes);
 app.use('/api/movimientos-crm', blockFieldRoles, movimientosCrmRoutes);
+app.use('/api/firemat/categorias', blockFieldRoles, firematCategoriasRoutes);
 app.use('/api/firemat/productos', blockFieldRoles, firematProductosRoutes);
 app.use('/api/firemat/inventario', blockFieldRoles, firematInventarioRoutes);
 app.use('/api/firemat/ventas', blockFieldRoles, firematVentasRoutes);

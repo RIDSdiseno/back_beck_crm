@@ -41,6 +41,7 @@ model Producto {
   imagen                   String?
   categoriaId              Int
   stockReservado           Int                        @default(0)
+  sku                      String?                    @unique
   CotizacionFirematDetalle CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
   Movimiento               Movimiento[]

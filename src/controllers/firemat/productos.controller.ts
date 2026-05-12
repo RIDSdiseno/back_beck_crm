@@ -2,21 +2,52 @@ import { Request, Response } from 'express';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 
+type ProdWithCat = Prisma.ProductoGetPayload<{ include: { Categoria: true } }>;
+
+const parseIdParam = (value: string | string[] | undefined): number | null => {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw) return null;
+  const id = Number(raw);
+  return Number.isInteger(id) && id > 0 ? id : null;
+};
+
+const CRITICIDADES = ['baja', 'media', 'alta'];
+
+const normCriticidad = (v: string): string => {
+  const l = v.toLowerCase();
+  return l.charAt(0).toUpperCase() + l.slice(1);
+};
+
+const toDTO = (p: ProdWithCat) => ({
+  id: p.id,
+  nombre: p.nombre,
+  sku: p.sku,
+  descripcion: p.descripcion,
+  categoria: p.Categoria.nombre,
+  categoriaId: p.categoriaId,
+  precio: p.precio,
+  stockActual: p.stock,
+  stockReservado: p.stockReservado,
+  stockDisponible: p.stock - p.stockReservado,
+  stockMinimo: p.minStock,
+  ubicacion: p.ubicacion,
+  criticidad: p.criticidad,
+  activo: p.activo,
+  imagen: p.imagen,
+  alertaStockBajo: p.stock <= p.minStock,
+  createdAt: p.createdAt,
+});
+
 export const getProductosFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
     const { q, activo, categoriaId } = req.query;
-
     const where: Prisma.ProductoWhereInput = {};
 
-    if (typeof activo === 'string') {
-      where.activo = activo === 'true';
-    }
-
+    if (typeof activo === 'string') where.activo = activo === 'true';
     if (typeof categoriaId === 'string' && categoriaId.trim()) {
       const id = parseInt(categoriaId, 10);
       if (!isNaN(id)) where.categoriaId = id;
     }
-
     if (typeof q === 'string' && q.trim()) {
       where.OR = [
         { nombre: { contains: q.trim(), mode: 'insensitive' } },
@@ -30,28 +61,290 @@ export const getProductosFiremat = async (req: Request, res: Response): Promise<
       orderBy: { createdAt: 'desc' },
     });
 
-    const data = productos.map((p) => ({
-      id: p.id,
-      nombre: p.nombre,
-      descripcion: p.descripcion,
-      precio: p.precio,
-      stock: p.stock,
-      stockReservado: p.stockReservado,
-      stockDisponible: p.stock - p.stockReservado,
-      minStock: p.minStock,
-      activo: p.activo,
-      criticidad: p.criticidad,
-      ubicacion: p.ubicacion,
-      imagen: p.imagen,
-      categoria: p.Categoria.nombre,
-      categoriaId: p.categoriaId,
-      alertaStockBajo: p.stock <= p.minStock,
-      createdAt: p.createdAt,
-    }));
-
-    res.json({ success: true, data });
+    res.json({ success: true, data: productos.map(toDTO) });
   } catch (error) {
     console.error('Error al obtener productos Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al obtener productos' });
+  }
+};
+
+export const getProductoFirematById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseIdParam(req.params.id);
+    if (!id) {
+      res.status(400).json({ success: false, error: 'ID inválido' });
+      return;
+    }
+
+    const producto = await firematPrisma.producto.findUnique({
+      where: { id },
+      include: { Categoria: true },
+    });
+
+    if (!producto) {
+      res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return;
+    }
+
+    res.json({ success: true, data: toDTO(producto) });
+  } catch (error) {
+    console.error('Error al obtener producto Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al obtener producto' });
+  }
+};
+
+export const createProductoFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      nombre,
+      sku,
+      descripcion,
+      categoriaId,
+      precio,
+      stockInicial,
+      stockMinimo,
+      ubicacion,
+      criticidad,
+      activo,
+      imagen,
+    } = req.body;
+
+    if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
+      res.status(400).json({ success: false, error: 'nombre es requerido' });
+      return;
+    }
+    if (!sku || typeof sku !== 'string' || !sku.trim()) {
+      res.status(400).json({ success: false, error: 'sku es requerido' });
+      return;
+    }
+    if (categoriaId === undefined || categoriaId === null) {
+      res.status(400).json({ success: false, error: 'categoriaId es requerido' });
+      return;
+    }
+    const catId = parseInt(String(categoriaId), 10);
+    if (isNaN(catId)) {
+      res.status(400).json({ success: false, error: 'categoriaId inválido' });
+      return;
+    }
+
+    const precioNum = parseFloat(String(precio ?? 0));
+    if (isNaN(precioNum) || precioNum < 0) {
+      res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
+      return;
+    }
+    const stockIni = parseInt(String(stockInicial ?? 0), 10);
+    if (isNaN(stockIni) || stockIni < 0) {
+      res.status(400).json({ success: false, error: 'stockInicial debe ser >= 0' });
+      return;
+    }
+    const stockMin = parseInt(String(stockMinimo ?? 0), 10);
+    if (isNaN(stockMin) || stockMin < 0) {
+      res.status(400).json({ success: false, error: 'stockMinimo debe ser >= 0' });
+      return;
+    }
+
+    if (criticidad !== undefined && !CRITICIDADES.includes(String(criticidad).toLowerCase())) {
+      res.status(400).json({ success: false, error: 'criticidad debe ser baja, media o alta' });
+      return;
+    }
+    if (activo !== undefined && typeof activo !== 'boolean') {
+      res.status(400).json({ success: false, error: 'activo debe ser boolean' });
+      return;
+    }
+
+    const cat = await firematPrisma.categoria.findUnique({ where: { id: catId } });
+    if (!cat) {
+      res.status(400).json({ success: false, error: 'categoriaId no existe' });
+      return;
+    }
+
+    const producto = await firematPrisma.producto.create({
+      data: {
+        nombre: nombre.trim(),
+        sku: sku.trim(),
+        descripcion: descripcion?.trim() ?? null,
+        categoriaId: catId,
+        precio: precioNum,
+        stock: stockIni,
+        minStock: stockMin,
+        ubicacion: ubicacion?.trim() ?? null,
+        criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
+        activo: activo ?? true,
+        imagen: imagen?.trim() ?? null,
+      },
+      include: { Categoria: true },
+    });
+
+    res.status(201).json({ success: true, data: toDTO(producto) });
+  } catch (error: any) {
+    if (error?.code === 'P2002') {
+      res.status(409).json({ success: false, error: 'El sku ya está en uso' });
+      return;
+    }
+    console.error('Error al crear producto Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al crear producto' });
+  }
+};
+
+export const updateProductoFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseIdParam(req.params.id);
+    if (!id) {
+      res.status(400).json({ success: false, error: 'ID inválido' });
+      return;
+    }
+
+    const existing = await firematPrisma.producto.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return;
+    }
+
+    if ('stock' in req.body || 'stockActual' in req.body || 'stock_actual' in req.body) {
+      res.status(400).json({
+        success: false,
+        error: 'stockActual no se puede modificar directamente. Use /firemat/inventario para registrar movimientos.',
+      });
+      return;
+    }
+
+    const {
+      nombre,
+      sku,
+      descripcion,
+      categoriaId,
+      precio,
+      stockMinimo,
+      ubicacion,
+      criticidad,
+      activo,
+      imagen,
+    } = req.body;
+
+    const data: Prisma.ProductoUpdateInput = {};
+
+    if (nombre !== undefined) {
+      if (typeof nombre !== 'string' || !nombre.trim()) {
+        res.status(400).json({ success: false, error: 'nombre inválido' });
+        return;
+      }
+      data.nombre = nombre.trim();
+    }
+
+    if (sku !== undefined) {
+      if (typeof sku !== 'string' || !sku.trim()) {
+        res.status(400).json({ success: false, error: 'sku inválido' });
+        return;
+      }
+      const dup = await firematPrisma.producto.findFirst({
+        where: { sku: sku.trim(), NOT: { id } },
+      });
+      if (dup) {
+        res.status(409).json({ success: false, error: 'El sku ya está en uso' });
+        return;
+      }
+      data.sku = sku.trim();
+    }
+
+    if (descripcion !== undefined) data.descripcion = descripcion?.trim() ?? null;
+
+    if (categoriaId !== undefined) {
+      const catId = parseInt(String(categoriaId), 10);
+      if (isNaN(catId)) {
+        res.status(400).json({ success: false, error: 'categoriaId inválido' });
+        return;
+      }
+      const cat = await firematPrisma.categoria.findUnique({ where: { id: catId } });
+      if (!cat) {
+        res.status(400).json({ success: false, error: 'categoriaId no existe' });
+        return;
+      }
+      data.Categoria = { connect: { id: catId } };
+    }
+
+    if (precio !== undefined) {
+      const p = parseFloat(String(precio));
+      if (isNaN(p) || p < 0) {
+        res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
+        return;
+      }
+      data.precio = p;
+    }
+
+    if (stockMinimo !== undefined) {
+      const sm = parseInt(String(stockMinimo), 10);
+      if (isNaN(sm) || sm < 0) {
+        res.status(400).json({ success: false, error: 'stockMinimo debe ser >= 0' });
+        return;
+      }
+      data.minStock = sm;
+    }
+
+    if (ubicacion !== undefined) data.ubicacion = ubicacion?.trim() ?? null;
+    if (imagen !== undefined) data.imagen = imagen?.trim() ?? null;
+
+    if (criticidad !== undefined) {
+      if (!CRITICIDADES.includes(String(criticidad).toLowerCase())) {
+        res.status(400).json({ success: false, error: 'criticidad debe ser baja, media o alta' });
+        return;
+      }
+      data.criticidad = normCriticidad(String(criticidad));
+    }
+
+    if (activo !== undefined) {
+      if (typeof activo !== 'boolean') {
+        res.status(400).json({ success: false, error: 'activo debe ser boolean' });
+        return;
+      }
+      data.activo = activo;
+    }
+
+    const updated = await firematPrisma.producto.update({
+      where: { id },
+      data,
+      include: { Categoria: true },
+    });
+
+    res.json({ success: true, data: toDTO(updated) });
+  } catch (error: any) {
+    if (error?.code === 'P2002') {
+      res.status(409).json({ success: false, error: 'El sku ya está en uso' });
+      return;
+    }
+    console.error('Error al actualizar producto Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al actualizar producto' });
+  }
+};
+
+export const patchEstadoProductoFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseIdParam(req.params.id);
+    if (!id) {
+      res.status(400).json({ success: false, error: 'ID inválido' });
+      return;
+    }
+
+    const existing = await firematPrisma.producto.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return;
+    }
+
+    const { activo } = req.body;
+    if (typeof activo !== 'boolean') {
+      res.status(400).json({ success: false, error: 'activo debe ser boolean' });
+      return;
+    }
+
+    const updated = await firematPrisma.producto.update({
+      where: { id },
+      data: { activo },
+      include: { Categoria: true },
+    });
+
+    res.json({ success: true, data: toDTO(updated) });
+  } catch (error) {
+    console.error('Error al cambiar estado producto Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al cambiar estado' });
   }
 };
