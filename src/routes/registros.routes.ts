@@ -9,8 +9,12 @@ import {
   actualizarRegistro,
   descargarRegistroPdf,
 } from '../controllers/registros.controller';
+import {
+  importarRegistrosExcel,
+  descargarEjemploExcel,
+} from '../controllers/importar-registros.controller';
 import { authenticate, authorize } from '../middlewares/auth';
-import { upload } from '../middlewares/upload';
+import { upload, uploadExcelFile } from '../middlewares/upload';
 
 const router = Router();
 
@@ -27,6 +31,31 @@ router.post(
   authorize('terreno', 'administrador'),
   upload.array('fotos', 5), // Max 5 fotos
   crearRegistro
+);
+
+/**
+ * POST /api/registros/importar
+ * Importar registros desde Excel (hojas: SELLOS CORTAFUEGOS, Junta Lineal ESPUMA)
+ * Solo administrador e ingenieria
+ */
+router.post(
+  '/importar',
+  authenticate,
+  authorize('administrador', 'ingenieria'),
+  uploadExcelFile,
+  importarRegistrosExcel
+);
+
+/**
+ * GET /api/registros/ejemplo-excel
+ * Descarga el archivo Excel de ejemplo con obra "Obra Demo"
+ * Solo administrador e ingenieria
+ */
+router.get(
+  '/ejemplo-excel',
+  authenticate,
+  authorize('administrador', 'ingenieria'),
+  descargarEjemploExcel,
 );
 
 /**

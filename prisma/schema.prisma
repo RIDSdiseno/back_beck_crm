@@ -81,15 +81,18 @@ model RegistroTerreno {
   descripcionMaterial String                   @map("descripcion_material") @db.VarChar(500)
   modulo              String                   @db.VarChar(100)
   piso                String                   @db.VarChar(50)
-  ejeNumerico         Int                      @map("eje_numerico")
+  ejeNumerico         String                   @map("eje_numerico") @db.VarChar(50)
   ejeAlfabetico       String                   @map("eje_alfabetico") @db.VarChar(10)
   numeroSello         String                   @map("numero_sello") @db.VarChar(100)
   cantidadSellos      Int                      @map("cantidad_sellos")
+  metrosLineales      Float?                   @map("metros_lineales")
   nombreSellador      String                   @map("nombre_sellador") @db.VarChar(255)
   holgura             Decimal                  @db.Decimal(3, 1)
   accesibilidad       Int
   observaciones       String?
   fotosUrls           String[]                 @map("fotos_urls")
+  tipoRegistro        String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
+  itemizadoSacyr      String?                  @map("itemizado_sacyr") @db.VarChar(255)
   createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   estado              EstadoRegistroTerreno    @default(pendiente)
@@ -102,6 +105,7 @@ model RegistroTerreno {
   @@index([usuarioId])
   @@index([fecha(sort: Desc)])
   @@index([estado])
+  @@index([tipoRegistro])
   @@map("registros_terreno")
 }
 
@@ -109,12 +113,13 @@ model ProcesamientoIngenieria {
   id                   String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   registroTerrenoId    String          @unique @map("registro_terreno_id") @db.Uuid
   usuarioId            String          @map("usuario_id") @db.Uuid
-  codigo               String          @db.VarChar(100)
-  itemizadoId          String          @map("itemizado_id") @db.Uuid
-  totalSellosCalculado Decimal         @map("total_sellos_calculado") @db.Decimal(12, 2)
+  // Nullable: no siempre disponible al pasar a en_revision; se completa en validado
+  codigo               String?         @db.VarChar(100)
+  itemizadoId          String?         @map("itemizado_id") @db.Uuid
+  totalSellosCalculado Decimal?        @map("total_sellos_calculado") @db.Decimal(12, 2)
   notas                String?
   procesadoAt          DateTime        @default(now()) @map("procesado_at") @db.Timestamp(6)
-  itemizado            Itemizado       @relation(fields: [itemizadoId], references: [id])
+  itemizado            Itemizado?      @relation(fields: [itemizadoId], references: [id])
   registroTerreno      RegistroTerreno @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
   usuario              Usuario         @relation(fields: [usuarioId], references: [id])
 

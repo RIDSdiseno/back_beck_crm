@@ -39,6 +39,7 @@ export interface Itemizado {
 export type FactorHolgura = 1 | 1.2 | 1.4 | 1.8;
 export type FactorAccesibilidad = 1 | 2 | 3;
 export type EstadoRegistroTerreno = 'pendiente' | 'en_revision' | 'validado' | 'rechazado';
+export type TipoRegistroTerreno = 'sello_cortafuego' | 'junta_lineal_espuma';
 
 export interface RegistroTerreno {
   id: string;
@@ -49,7 +50,7 @@ export interface RegistroTerreno {
   descripcion_material: string;
   modulo: string;
   piso: string;
-  eje_numerico: number;
+  eje_numerico: string;
   eje_alfabetico: string;
   numero_sello: string;
   cantidad_sellos: number;
@@ -57,7 +58,10 @@ export interface RegistroTerreno {
   holgura: FactorHolgura;
   accesibilidad: FactorAccesibilidad;
   observaciones?: string;
-  fotos_urls: string[]; // Array de URLs de Cloudinary
+  fotos_urls: string[];
+  tipo_registro: TipoRegistroTerreno;
+  metros_lineales?: number | null;
+  itemizado_sacyr?: string | null;
   estado: EstadoRegistroTerreno;
   created_at: Date;
   updated_at?: Date;
@@ -67,10 +71,10 @@ export interface ProcesamientoIngenieria {
   id: string;
   registro_terreno_id: string;
   usuario_id: string;
-  codigo: string;
-  itemizado_id: string;
-  total_sellos_calculado: number; // cantidad_sellos × holgura × accesibilidad
-  notas?: string;
+  codigo: string | null;
+  itemizado_id: string | null;
+  total_sellos_calculado: number | null;
+  notas?: string | null;
   procesado_at: Date;
 }
 
@@ -153,11 +157,11 @@ export interface AuthResponse {
 
 export interface CreateRegistroTerrenoDTO {
   obra_id: string;
-  fecha?: string; // ISO string, si no se envía usa fecha actual
+  fecha?: string;
   descripcion_material: string;
   modulo: string;
   piso: string;
-  eje_numerico: number;
+  eje_numerico: string;
   eje_alfabetico: string;
   numero_sello: string;
   cantidad_sellos: number;
@@ -165,6 +169,8 @@ export interface CreateRegistroTerrenoDTO {
   holgura: FactorHolgura;
   accesibilidad: FactorAccesibilidad;
   observaciones?: string;
+  tipo_registro?: TipoRegistroTerreno;
+  metros_lineales?: number | null;
   // fotos se suben como multipart/form-data
 }
 

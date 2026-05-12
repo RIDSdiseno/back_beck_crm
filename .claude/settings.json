@@ -11,7 +11,8 @@
       "Bash(find \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\" -type f \\\\\\( -name \"*.ts\" -o -name \"*.js\" \\\\\\) ! -path \"*/node_modules/*\" ! -path \"*/dist/*\" ! -path \"*/generated/*\" 2>nul | wc -l)",
       "Bash(find \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\" -type f \\\\\\( -name \"*.ts\" -o -name \"*.js\" \\\\\\) ! -path \"*/node_modules/*\" ! -path \"*/dist/*\" ! -path \"*/generated/*\" 2>nul)",
       "Bash(find \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\" -type f \\\\\\( -name \"*config*\" -o -name \"*constant*\" \\\\\\) 2>nul)",
-      "Bash(npx prisma *)"
+      "Bash(npx prisma *)",
+      "Bash(npm install *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\RIDS\\Desktop\\back_beck_crm\\src\\controllers\\firemat",

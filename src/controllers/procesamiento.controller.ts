@@ -24,7 +24,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     // Obtener datos del registro
     const registroQuery = await dbQuery(
-      'SELECT cantidad_sellos, holgura, accesibilidad, procesado FROM registros_terreno WHERE id = $1',
+      'SELECT cantidad_sellos, holgura, accesibilidad FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
     );
 
@@ -35,9 +35,13 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     const registro = registroQuery.rows[0];
 
-    // Verificar que no esté ya procesado
-    if (registro.procesado) {
-      res.status(400).json({ error: 'Este registro ya fue procesado' });
+    // Verificar que no exista ya un procesamiento para este registro
+    const existeProcesamiento = await dbQuery(
+      'SELECT id FROM procesamiento_ingenieria WHERE registro_terreno_id = $1',
+      [registro_terreno_id]
+    );
+    if (existeProcesamiento.rows.length > 0) {
+      res.status(400).json({ error: 'Este registro ya tiene un procesamiento asociado' });
       return;
     }
 
@@ -76,7 +80,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     if (registroUsuario.rows.length > 0) {
       await dbQuery(
         `INSERT INTO notificaciones (usuario_id, tipo, referencia_id, mensaje)
-         VALUES ($1, 'procesado', $2, $3)`,
+         VALUES ($1, 'registro_procesado', $2, $3)`,
         [
           registroUsuario.rows[0].usuario_id,
           registro_terreno_id,
@@ -132,7 +136,7 @@ export const listarProcesamientos = async (req: Request, res: Response): Promise
       params.push(registro_terreno_id);
     }
 
-    query += ' ORDER BY p.created_at DESC';
+    query += ' ORDER BY p.procesado_at DESC';
 
     const result = await dbQuery(query, params);
     res.json(result.rows);
