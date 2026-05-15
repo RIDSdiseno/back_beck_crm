@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  cambiarEmpresa,
   changePassword,
   login,
   loginMicrosoftDeprecated,
@@ -17,5 +18,6 @@ router.get('/microsoft/login', microsoftLogin);
 router.get('/microsoft/callback', microsoftCallback);
 router.get('/me', authenticate, me);
 router.put('/change-password', authenticate, changePassword);
+router.post('/cambiar-empresa', authenticate, cambiarEmpresa);
 
 export default router;

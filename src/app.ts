@@ -18,6 +18,8 @@ import firematVentasRoutes from './routes/firemat/ventas.routes';
 import cotizacionesFirematRoutes from './routes/firemat/cotizaciones-firemat.routes';
 import funnelFirematRoutes from './routes/firemat/funnel-firemat.routes';
 import firematCategoriasRoutes from './routes/firemat/categorias.routes';
+import beckUsuariosParametrosRoutes from './routes/beck/usuarios-parametros.routes';
+import firematUsuariosParametrosRoutes from './routes/firemat/usuarios-parametros.routes';
 import { authenticate, denyRoles } from './middlewares/auth';
 
 
@@ -82,24 +84,35 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 
-const blockFieldRoles = [authenticate, denyRoles('terreno', 'jefeobra')];
+// Roles que solo operan en BECK (bloquea terreno/jefeobra de todo, y Firemat de BECK)
+const blockBeckRoutes = [
+  authenticate,
+  denyRoles('terreno', 'jefeobra', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
+];
 
-app.use('/api/registros', blockFieldRoles, registrosRoutes);
-app.use('/api/procesamiento', blockFieldRoles, procesamientoRoutes);
-app.use('/api/notificaciones', blockFieldRoles, notificacionesRoutes);
-app.use('/api/obras', blockFieldRoles, obrasRoutes);
-app.use('/api/itemizados', blockFieldRoles, itemizadosRoutes);
-app.use('/api/stats', blockFieldRoles, statsRoutes);
-app.use('/api/funnel-beck', blockFieldRoles, funnelBeckRoutes);
-app.use('/api/usuarios', blockFieldRoles, usuariosRoutes);
-app.use('/api/cotizaciones', blockFieldRoles, cotizacionesRoutes);
-app.use('/api/movimientos-crm', blockFieldRoles, movimientosCrmRoutes);
-app.use('/api/firemat/categorias', blockFieldRoles, firematCategoriasRoutes);
-app.use('/api/firemat/productos', blockFieldRoles, firematProductosRoutes);
-app.use('/api/firemat/inventario', blockFieldRoles, firematInventarioRoutes);
-app.use('/api/firemat/ventas', blockFieldRoles, firematVentasRoutes);
-app.use('/api/firemat/funnel', blockFieldRoles, funnelFirematRoutes);
-app.use('/api/firemat/cotizaciones', cotizacionesFirematRoutes);
+// Rutas BECK — solo roles Beck + administrador
+app.use('/api/registros', blockBeckRoutes, registrosRoutes);
+app.use('/api/procesamiento', blockBeckRoutes, procesamientoRoutes);
+app.use('/api/notificaciones', blockBeckRoutes, notificacionesRoutes);
+app.use('/api/obras', blockBeckRoutes, obrasRoutes);
+app.use('/api/itemizados', blockBeckRoutes, itemizadosRoutes);
+app.use('/api/stats', blockBeckRoutes, statsRoutes);
+app.use('/api/funnel-beck', blockBeckRoutes, funnelBeckRoutes);
+app.use('/api/usuarios', blockBeckRoutes, usuariosRoutes);
+app.use('/api/cotizaciones', blockBeckRoutes, cotizacionesRoutes);
+app.use('/api/movimientos-crm', blockBeckRoutes, movimientosCrmRoutes);
+
+// Rutas parametros de usuarios por empresa
+app.use('/api/beck/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
+app.use('/api/firemat/usuarios-parametros', authenticate, firematUsuariosParametrosRoutes);
+
+// Rutas Firemat — permisos finos definidos en cada router
+app.use('/api/firemat/categorias', authenticate, firematCategoriasRoutes);
+app.use('/api/firemat/productos', authenticate, firematProductosRoutes);
+app.use('/api/firemat/inventario', authenticate, firematInventarioRoutes);
+app.use('/api/firemat/ventas', authenticate, firematVentasRoutes);
+app.use('/api/firemat/funnel', authenticate, funnelFirematRoutes);
+app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

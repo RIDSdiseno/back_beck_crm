@@ -29,6 +29,7 @@ Deberías ver:
 | `view@becksoluciones.cl` | `View123!` | Visualizador |
 | `vendedor@becksoluciones.cl` | `Ven123!` | Vendedor |
 | `jefeobra@becksoluciones.cl` | `jefeo123!` | Jefe de obra |
+| `bodeguero@firemat.cl` | `bodeguero123!` | bodeguero |
 
 
 ---

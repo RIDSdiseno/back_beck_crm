@@ -7,18 +7,20 @@ import {
   patchEtapaFunnelFiremat,
   updateFunnelFiremat,
 } from '../../controllers/firemat/funnel-firemat.controller';
-import { authenticate, authorize } from '../../middlewares/auth';
+import { authorize } from '../../middlewares/auth';
 
 const router = Router();
 
-const canReadFunnelFiremat = authorize('administrador', 'vendedor', 'visualizador');
-const canWriteFunnelFiremat = authorize('administrador', 'vendedor');
+// bodeguero excluido — no accede al funnel comercial
+const canRead  = authorize('administrador', 'vendedor_firemat', 'visualizador_firemat');
+// visualizador_firemat es solo lectura
+const canWrite = authorize('administrador', 'vendedor_firemat');
 
-router.get('/', authenticate, canReadFunnelFiremat, getFunnelFiremat);
-router.get('/:id', authenticate, canReadFunnelFiremat, getFunnelFirematById);
-router.post('/', authenticate, canWriteFunnelFiremat, createFunnelFiremat);
-router.put('/:id', authenticate, canWriteFunnelFiremat, updateFunnelFiremat);
-router.patch('/:id/etapa', authenticate, canWriteFunnelFiremat, patchEtapaFunnelFiremat);
-router.delete('/:id', authenticate, authorize('administrador'), deleteFunnelFiremat);
+router.get('/', canRead, getFunnelFiremat);
+router.get('/:id', canRead, getFunnelFirematById);
+router.post('/', canWrite, createFunnelFiremat);
+router.put('/:id', canWrite, updateFunnelFiremat);
+router.patch('/:id/etapa', canWrite, patchEtapaFunnelFiremat);
+router.delete('/:id', authorize('administrador'), deleteFunnelFiremat);
 
 export default router;

@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Request, Response } from 'express';
 import { EstadoCotizacion, Prisma } from '@prisma/client';
 import { CotizacionError, LineaInput } from '../types/cotizaciones.types';
@@ -114,14 +116,32 @@ export const maskCotizacionGanancia = <T>(value: T, showGanancia: boolean): T =>
   return masked as T;
 };
 
-// ─── PDF helpers ─────────────────────────────────────────────────────────────
+// ─── PDF constants & helpers ──────────────────────────────────────────────────
 
+const PDF_MARGIN    = 40;
+const PDF_W         = 595;
+const PDF_CONTENT_W = PDF_W - PDF_MARGIN * 2; // 515
+
+const BECK_YELLOW = '#f5c400';
+const BECK_DARK   = '#111827';
+const TEXT_DARK   = '#1e293b';
+const TEXT_MUTED  = '#64748b';
+
+const ESTADO_COT_COLORS: Record<string, string> = {
+  BORRADOR:  '#64748b',
+  ENVIADA:   '#2563eb',
+  ACEPTADA:  '#16a34a',
+  RECHAZADA: '#dc2626',
+  VENCIDA:   '#d97706',
+};
+
+// CLP sin decimales: $240.000
 const formatCLP = (value: number): string =>
   new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(value);
 
 const formatPct = (value: number): string =>
@@ -130,24 +150,43 @@ const formatPct = (value: number): string =>
     maximumFractionDigits: 2,
   }).format(value)}%`;
 
-const pdfHeader = (doc: any, y: number): void => {
-  doc.font('Helvetica-Bold').fontSize(10);
-  doc.text('Descripción', 50, y, { width: 240 });
-  doc.text('Cant.', 298, y, { width: 50, align: 'right' });
-  doc.text('P.Unit.', 355, y, { width: 80, align: 'right' });
-  doc.text('%Gan.', 442, y, { width: 50, align: 'right' });
-  doc.text('Subtotal', 500, y, { width: 60, align: 'right' });
-  doc.moveTo(50, y + 16).lineTo(560, y + 16).stroke();
-};
+const formatCotDate = (date: Date): string =>
+  new Intl.DateTimeFormat('es-CL', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+  }).format(date);
 
-const pdfRow = (doc: any, y: number, linea: LineaInput): void => {
-  doc.font('Helvetica').fontSize(10);
-  doc.text(linea.descripcion, 50, y, { width: 240 });
-  doc.text(String(linea.cantidad), 298, y, { width: 50, align: 'right' });
-  doc.text(formatCLP(linea.precioUnitario), 355, y, { width: 80, align: 'right' });
-  doc.text(`${linea.gananciaPct}%`, 442, y, { width: 50, align: 'right' });
-  doc.text(formatCLP(linea.subtotal), 500, y, { width: 60, align: 'right' });
-};
+function cotHRule(doc: any, color = '#e2e8f0'): void {
+  doc.strokeColor(color).lineWidth(0.5)
+    .moveTo(PDF_MARGIN, doc.y)
+    .lineTo(PDF_W - PDF_MARGIN, doc.y)
+    .stroke();
+  doc.y += 6;
+}
+
+function cotSectionHeader(doc: any, title: string): void {
+  doc.y += 4;
+  const y = doc.y;
+  doc.rect(PDF_MARGIN, y, PDF_CONTENT_W, 18).fill(BECK_DARK);
+  doc.font('Helvetica-Bold').fontSize(8).fillColor('#ffffff')
+    .text(title, PDF_MARGIN + 8, y + 5, { width: PDF_CONTENT_W - 16, lineBreak: false });
+  doc.y = y + 18 + 7;
+}
+
+function cotFieldRow(
+  doc: any,
+  label: string,
+  value: string | number | null | undefined,
+): void {
+  const y      = doc.y;
+  const labelW = 140;
+  const valW   = PDF_CONTENT_W - labelW;
+  const valStr = value == null || value === '' ? '-' : String(value);
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(TEXT_MUTED)
+    .text(label, PDF_MARGIN, y, { width: labelW, lineBreak: false });
+  doc.font('Helvetica').fontSize(9).fillColor(TEXT_DARK)
+    .text(valStr, PDF_MARGIN + labelW, y, { width: valW });
+  if (doc.y < y + 13) doc.y = y + 13;
+}
 
 // ─── Controllers ─────────────────────────────────────────────────────────────
 
@@ -406,71 +445,210 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
 
     const cotizacion = await CotizacionService.findCotizacion(id);
 
-    const lineas: LineaInput[] = cotizacion.lineas.map((l) => ({
-      tipoLinea: l.tipoLinea,
-      descripcion: l.descripcion,
-      unidad: l.unidad,
-      cantidad: Number(l.cantidad),
-      precioUnitario: Number(l.precioUnitario),
-      gananciaPct: canViewGanancia(req) ? Number(l.gananciaPct) : 0,
-      subtotal: Number(l.subtotal),
-      orden: l.orden,
-      notasLinea: l.notasLinea,
-    }));
-    const subtotal = Number(cotizacion.subtotal);
-    const descuentoPct = Number(cotizacion.descuento);
+    // Precio unitario cliente = costo base + ganancia aplicada
+    // El subtotal en DB ya incluye la ganancia — solo corregimos la columna P.UNIT.
+    const lineas: LineaInput[] = cotizacion.lineas.map((l) => {
+      const precioCosto   = Number(l.precioUnitario);
+      const gananciaPct   = Number(l.gananciaPct);
+      const precioCliente = Math.round(precioCosto * (1 + gananciaPct / 100));
+      return {
+        tipoLinea:      l.tipoLinea,
+        descripcion:    l.descripcion,
+        unidad:         l.unidad,
+        cantidad:       Number(l.cantidad),
+        precioUnitario: precioCliente,
+        gananciaPct:    0,
+        subtotal:       Number(l.subtotal),
+        orden:          l.orden,
+        notasLinea:     l.notasLinea,
+      };
+    });
+
+    const subtotal      = Number(cotizacion.subtotal);
+    const descuentoPct  = Number(cotizacion.descuento);
     const descuentoMonto = Math.round((subtotal * (descuentoPct / 100) + Number.EPSILON) * 100) / 100;
+    const impuesto      = Number(cotizacion.impuesto);
+    const total         = Number(cotizacion.total);
 
     const fileName = `cotizacion-${cotizacion.numero ?? cotizacion.id}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
 
-    const doc = new PDFDocument({ margin: 50, size: 'A4' });
+    // ── Documento ─────────────────────────────────────────────────────────────
+    const doc = new PDFDocument({ size: 'A4', margin: PDF_MARGIN });
     doc.pipe(res);
 
-    doc.font('Helvetica-Bold').fontSize(18).text('Cotización', { align: 'center' });
-    doc.moveDown();
-    doc.font('Helvetica').fontSize(11);
-    doc.text(`Cliente: ${cotizacion.clienteNombre}`);
-    doc.text(`Número: ${cotizacion.numero ?? 'Sin número'}`);
-    doc.text(`Fecha: ${new Date(cotizacion.createdAt).toLocaleDateString('es-CL')}`);
-    doc.text(`Vigencia: ${new Date(cotizacion.vigencia).toLocaleDateString('es-CL')}`);
-    doc.text(`Estado: ${cotizacion.estado}`);
-    if (cotizacion.obra) doc.text(`Obra: ${cotizacion.obra.nombre}`);
+    // Logo
+    const logoPath   = path.join(process.cwd(), 'public', 'logo-beck.png');
+    const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
+
+    // ══════════════════════════════════════════════════════════════
+    // ENCABEZADO
+    // ══════════════════════════════════════════════════════════════
+
+    // Barra amarilla superior
+    doc.rect(0, 0, PDF_W, 5).fill(BECK_YELLOW);
+    doc.y = 14;
+
+    const headerY = doc.y;
+
+    if (logoBuffer) {
+      doc.image(logoBuffer, PDF_MARGIN, headerY, { height: 38 });
+    }
+    const textStartX = logoBuffer ? PDF_MARGIN + 52 : PDF_MARGIN;
+
+    doc.font('Helvetica-Bold').fontSize(15).fillColor(BECK_DARK)
+      .text('BECK Soluciones', textStartX, headerY, { lineBreak: false });
+    doc.font('Helvetica').fontSize(9).fillColor(TEXT_MUTED)
+      .text('Cotización Comercial', textStartX, headerY + 20, { lineBreak: false });
+
+    // Fecha de generación (derecha)
+    const genDate = new Intl.DateTimeFormat('es-CL', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    }).format(new Date());
+    doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
+      .text(`Generado: ${genDate}`, PDF_MARGIN, headerY + 32, {
+        width: PDF_CONTENT_W,
+        align: 'right',
+        lineBreak: false,
+      });
+
+    doc.y = headerY + 50;
+
+    // Línea amarilla separadora
+    doc.rect(PDF_MARGIN, doc.y, PDF_CONTENT_W, 1.5).fill(BECK_YELLOW);
+    doc.y += 10;
+
+    // ══════════════════════════════════════════════════════════════
+    // TÍTULO
+    // ══════════════════════════════════════════════════════════════
+    doc.font('Helvetica-Bold').fontSize(14).fillColor(BECK_DARK)
+      .text('Cotización');
+    doc.y += 3;
+    doc.font('Helvetica').fontSize(10).fillColor(TEXT_MUTED)
+      .text(`N° ${cotizacion.numero ?? 'S/N'}   ·   Fecha: ${formatCotDate(new Date(cotizacion.createdAt))}`);
+    doc.y += 8;
+
+    // Badge de estado
+    const badgeColor = ESTADO_COT_COLORS[cotizacion.estado] ?? '#64748b';
+    const badgeY = doc.y;
+    doc.rect(PDF_MARGIN, badgeY, 90, 15).fill(badgeColor);
+    doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
+      .text(cotizacion.estado, PDF_MARGIN + 5, badgeY + 4, { width: 80, lineBreak: false });
+    doc.y = badgeY + 22;
+
+    cotHRule(doc);
+
+    // ══════════════════════════════════════════════════════════════
+    // DATOS DEL CLIENTE
+    // ══════════════════════════════════════════════════════════════
+    cotSectionHeader(doc, 'DATOS DEL CLIENTE');
+    cotFieldRow(doc, 'Cliente:', cotizacion.clienteNombre);
+    cotFieldRow(doc, 'N° Cotización:', cotizacion.numero ?? 'Sin número');
+    cotFieldRow(doc, 'Fecha emisión:', formatCotDate(new Date(cotizacion.createdAt)));
+    cotFieldRow(doc, 'Vigencia hasta:', formatCotDate(new Date(cotizacion.vigencia)));
+    cotFieldRow(doc, 'Estado:', cotizacion.estado);
+    if (cotizacion.obra) {
+      cotFieldRow(doc, 'Obra asociada:', cotizacion.obra.nombre);
+    }
     if (cotizacion.observaciones) {
-      doc.moveDown(0.5);
-      doc.text(`Observaciones: ${cotizacion.observaciones}`);
+      cotFieldRow(doc, 'Observaciones:', cotizacion.observaciones);
     }
-    doc.moveDown();
 
-    let y = doc.y;
-    pdfHeader(doc, y);
-    y += 26;
+    cotHRule(doc);
 
+    // ══════════════════════════════════════════════════════════════
+    // DETALLE
+    // ══════════════════════════════════════════════════════════════
+    cotSectionHeader(doc, 'DETALLE');
+
+    // Posiciones de columnas (dentro de PDF_MARGIN=40, PDF_W=595)
+    const COL_DESC_X  = PDF_MARGIN;        // 40
+    const COL_DESC_W  = 240;
+    const COL_CANT_X  = PDF_MARGIN + 248;  // 288
+    const COL_CANT_W  = 42;
+    const COL_PUNIT_X = PDF_MARGIN + 297;  // 337
+    const COL_PUNIT_W = 88;
+    const COL_SUB_X   = PDF_MARGIN + 392;  // 432
+    const COL_SUB_W   = PDF_W - PDF_MARGIN - (PDF_MARGIN + 392); // 123
+
+    const drawTableHeader = (): void => {
+      const thY = doc.y;
+      doc.rect(PDF_MARGIN, thY, PDF_CONTENT_W, 16).fill(BECK_DARK);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor('#ffffff');
+      doc.text('DESCRIPCIÓN', COL_DESC_X + 4, thY + 4, { width: COL_DESC_W - 4, lineBreak: false });
+      doc.text('CANT.', COL_CANT_X, thY + 4, { width: COL_CANT_W, align: 'right', lineBreak: false });
+      doc.text('P. UNIT.', COL_PUNIT_X, thY + 4, { width: COL_PUNIT_W, align: 'right', lineBreak: false });
+      doc.text('SUBTOTAL', COL_SUB_X, thY + 4, { width: COL_SUB_W - 2, align: 'right', lineBreak: false });
+      doc.y = thY + 16;
+    };
+
+    drawTableHeader();
+
+    let rowIdx = 0;
     for (const linea of lineas) {
-      if (y > 720) {
+      if (doc.y > 750) {
         doc.addPage();
-        y = 50;
-        pdfHeader(doc, y);
-        y += 26;
+        doc.y = PDF_MARGIN;
+        drawTableHeader();
+        rowIdx = 0;
       }
-      pdfRow(doc, y, linea);
-      y += 22;
+
+      const rowY = doc.y;
+      const rowH = 18;
+
+      // Fondo alternado en filas impares
+      if (rowIdx % 2 === 1) {
+        doc.rect(PDF_MARGIN, rowY, PDF_CONTENT_W, rowH).fill('#f8fafc');
+      }
+
+      doc.font('Helvetica').fontSize(9).fillColor(TEXT_DARK);
+      doc.text(linea.descripcion, COL_DESC_X + 4, rowY + 4, { width: COL_DESC_W - 4, lineBreak: false });
+      doc.text(String(linea.cantidad), COL_CANT_X, rowY + 4, { width: COL_CANT_W, align: 'right', lineBreak: false });
+      doc.text(formatCLP(linea.precioUnitario), COL_PUNIT_X, rowY + 4, { width: COL_PUNIT_W, align: 'right', lineBreak: false });
+      doc.text(formatCLP(linea.subtotal), COL_SUB_X, rowY + 4, { width: COL_SUB_W - 2, align: 'right', lineBreak: false });
+
+      doc.y = rowY + rowH;
+      rowIdx++;
     }
 
-    y += 10;
-    doc.moveTo(360, y).lineTo(560, y).stroke();
-    y += 10;
+    // Línea inferior de tabla
+    doc.strokeColor('#e2e8f0').lineWidth(0.5)
+      .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke();
+    doc.y += 14;
 
-    doc.font('Helvetica').fontSize(11);
-    doc.text(`Subtotal: ${formatCLP(subtotal)}`, 360, y, { width: 200, align: 'right' });
-    y += 18;
-    doc.text(`Descuento (${formatPct(descuentoPct)}): ${formatCLP(descuentoMonto)}`, 360, y, { width: 200, align: 'right' });
-    y += 18;
-    doc.text(`Impuesto (IVA): ${formatCLP(Number(cotizacion.impuesto))}`, 360, y, { width: 200, align: 'right' });
-    y += 20;
-    doc.font('Helvetica-Bold');
-    doc.text(`Total: ${formatCLP(Number(cotizacion.total))}`, 360, y, { width: 200, align: 'right' });
+    // ══════════════════════════════════════════════════════════════
+    // TOTALES
+    // ══════════════════════════════════════════════════════════════
+    const TOT_LABEL_X = 355;
+    const TOT_LABEL_W = 100;
+    const TOT_VAL_X   = 460;
+    const TOT_VAL_W   = PDF_W - PDF_MARGIN - TOT_VAL_X; // 95
+
+    let totY = doc.y;
+
+    const drawTotLine = (label: string, value: string, bold = false): void => {
+      doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(10).fillColor(TEXT_DARK);
+      doc.text(label, TOT_LABEL_X, totY, { width: TOT_LABEL_W, lineBreak: false });
+      doc.text(value, TOT_VAL_X, totY, { width: TOT_VAL_W, align: 'right', lineBreak: false });
+      totY += 17;
+    };
+
+    drawTotLine('Subtotal:', formatCLP(subtotal));
+    if (descuentoPct > 0) {
+      drawTotLine(`Descuento (${formatPct(descuentoPct)}):`, `-${formatCLP(descuentoMonto)}`);
+    }
+    if (impuesto > 0) {
+      drawTotLine('IVA (19%):', formatCLP(impuesto));
+    }
+
+    // Separador antes del total
+    doc.strokeColor('#e2e8f0').lineWidth(0.5)
+      .moveTo(TOT_LABEL_X, totY - 4).lineTo(PDF_W - PDF_MARGIN, totY - 4).stroke();
+    totY += 4;
+
+    drawTotLine('TOTAL:', formatCLP(total), true);
 
     doc.end();
   } catch (error) {

@@ -3,22 +3,14 @@ import {
   getInventarioFiremat,
   getMovimientosInventarioFiremat,
 } from '../../controllers/firemat/inventario.controller';
-import { authenticate, authorize } from '../../middlewares/auth';
+import { authorize } from '../../middlewares/auth';
 
 const router = Router();
 
-router.get(
-  '/',
-  authenticate,
-  authorize('administrador', 'vendedor', 'visualizador'),
-  getInventarioFiremat
-);
+// vendedor_firemat excluido — no ajusta stock manualmente
+const canRead = authorize('administrador', 'bodeguero', 'visualizador_firemat');
 
-router.get(
-  '/movimientos',
-  authenticate,
-  authorize('administrador', 'vendedor', 'visualizador'),
-  getMovimientosInventarioFiremat
-);
+router.get('/', canRead, getInventarioFiremat);
+router.get('/movimientos', canRead, getMovimientosInventarioFiremat);
 
 export default router;

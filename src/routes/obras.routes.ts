@@ -15,7 +15,7 @@ import { authenticate, authorize } from '../middlewares/auth';
 
 const router = Router();
 
-const canReadObras = authorize('administrador', 'ingenieria', 'visualizador');
+const canReadObras = authorize('administrador', 'ingenieria', 'visualizador', 'terreno', 'jefeobra');
 const canManageObras = authorize('administrador', 'ingenieria');
 
 router.get('/', authenticate, canReadObras, listarObras);

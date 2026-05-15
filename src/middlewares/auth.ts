@@ -9,6 +9,7 @@ declare global {
     interface Request {
       userId?: string;
       userRole?: RolUsuario;
+      empresaContexto?: 'beck' | 'firemat';
     }
   }
 }

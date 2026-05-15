@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
+import { ROLES_BECK, ROLES_FIREMAT } from '../helpers/roles';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -10,13 +11,23 @@ const esRolValido = (rol: string): rol is RolUsuario => {
 
 /**
  * GET /api/usuarios
- * Admin ve datos de gestion. Ingenieria solo ve campos seguros para asignacion.
+ * Soporta ?empresa=beck|firemat para filtrar por contexto de empresa.
+ * Admin ve datos de gestión. Ingenieria solo ve campos seguros para asignación.
  */
 export const listarUsuarios = async (req: Request, res: Response): Promise<void> => {
   try {
     const isIngenieria = req.userRole === 'ingenieria';
+    const empresa = req.query.empresa as string | undefined;
+
+    let rolesFilter: RolUsuario[] | undefined;
+    if (empresa === 'beck') {
+      rolesFilter = ROLES_BECK;
+    } else if (empresa === 'firemat') {
+      rolesFilter = ROLES_FIREMAT;
+    }
 
     const usuarios = await prisma.usuario.findMany({
+      where: rolesFilter ? { rol: { in: rolesFilter } } : {},
       select: isIngenieria
         ? {
             id: true,

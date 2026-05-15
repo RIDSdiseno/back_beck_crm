@@ -9,7 +9,15 @@ import {
   exchangeCodeForMicrosoftUser,
   validateMicrosoftState,
 } from '../services/microsoftAuth.service';
-import { AuthResponse, LoginDTO } from '../types';
+import { AuthResponse, LoginDTO, RolUsuario } from '../types';
+
+const ALLOWED_EMAIL_DOMAINS = ['@becksoluciones.cl', '@firemat.cl'] as const;
+
+const isDominioValido = (email: string): boolean =>
+  ALLOWED_EMAIL_DOMAINS.some(domain => email.endsWith(domain));
+
+const getEmpresaDefault = (email: string): 'beck' | 'firemat' =>
+  email.endsWith('@firemat.cl') ? 'firemat' : 'beck';
 
 type AuthUser = {
   id: string;
@@ -56,6 +64,7 @@ const buildAuthResponse = (usuario: AuthUser): AuthResponse => ({
     nombre: usuario.nombre,
     email: usuario.email,
     rol: usuario.rol,
+    empresaDefault: getEmpresaDefault(usuario.email.toLowerCase()),
   },
 });
 
@@ -92,12 +101,14 @@ const findOrCreateMicrosoftUser = async (azureId: string, email: string, nombre:
     return usuario;
   }
 
+  const defaultRol: RolUsuario = email.endsWith('@firemat.cl') ? 'visualizador_firemat' : 'visualizador';
+
   return prisma.usuario.create({
     data: {
       nombre,
       email,
       azureId,
-      rol: 'visualizador',
+      rol: defaultRol,
       activo: true,
       passwordHash: null,
     },
@@ -118,6 +129,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    if (!isDominioValido(normalizedEmail)) {
+      res.status(403).json({ error: 'Dominio de correo no permitido' });
+      return;
+    }
+
     const usuario = await prisma.usuario.findUnique({
       where: { email: normalizedEmail },
     });
@@ -213,6 +230,12 @@ export const microsoftCallback = async (req: Request, res: Response): Promise<vo
     validateMicrosoftState(state);
 
     const microsoftUser = await exchangeCodeForMicrosoftUser(code);
+
+    if (!isDominioValido(microsoftUser.email)) {
+      redirectToFrontendError(res, 'Dominio de correo no permitido.');
+      return;
+    }
+
     const usuario = await findOrCreateMicrosoftUser(
       microsoftUser.azureId,
       microsoftUser.email,
@@ -231,13 +254,16 @@ export const microsoftCallback = async (req: Request, res: Response): Promise<vo
       rol: usuario.rol,
     });
 
+    const empresaDefault = getEmpresaDefault(usuario.email);
+
     console.log('Login Microsoft exitoso:', {
       userId: usuario.id,
       email: usuario.email,
       rol: usuario.rol,
+      empresaDefault,
     });
 
-    res.redirect(buildFrontendSuccessRedirect(appToken));
+    res.redirect(buildFrontendSuccessRedirect(appToken, empresaDefault));
   } catch (error) {
     console.error('Error handling Microsoft callback:', error);
     redirectToFrontendError(res, 'Error al iniciar sesion con Microsoft.');
@@ -274,11 +300,41 @@ export const me = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.json(usuario);
+    res.json({
+      ...usuario,
+      empresaDefault: getEmpresaDefault(usuario.email.toLowerCase()),
+    });
   } catch (error) {
     console.error('Error in me:', error);
     res.status(500).json({ error: 'Error al obtener datos del usuario' });
   }
+};
+
+/**
+ * Cambiar empresa activa
+ * POST /api/auth/cambiar-empresa
+ * Solo administradores pueden cambiar de empresa.
+ */
+export const cambiarEmpresa = (req: Request, res: Response): void => {
+  if (req.userRole !== 'administrador') {
+    res.status(403).json({
+      success: false,
+      error: 'Solo administradores pueden cambiar de empresa',
+    });
+    return;
+  }
+
+  const { empresa } = req.body as { empresa?: unknown };
+
+  if (empresa !== 'beck' && empresa !== 'firemat') {
+    res.status(400).json({
+      success: false,
+      error: "El campo 'empresa' debe ser 'beck' o 'firemat'",
+    });
+    return;
+  }
+
+  res.json({ success: true, empresa });
 };
 
 /**

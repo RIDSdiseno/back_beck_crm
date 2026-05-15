@@ -195,9 +195,9 @@ export const exchangeCodeForMicrosoftUser = async (code: string): Promise<Micros
   };
 };
 
-export const buildFrontendSuccessRedirect = (token: string): string => {
+export const buildFrontendSuccessRedirect = (token: string, empresaDefault: 'beck' | 'firemat'): string => {
   const frontendCallbackUrl = buildFrontendCallbackUrl();
-  frontendCallbackUrl.hash = new URLSearchParams({ token }).toString();
+  frontendCallbackUrl.hash = new URLSearchParams({ token, empresaDefault }).toString();
   return frontendCallbackUrl.toString();
 };
 

@@ -1,6 +1,15 @@
 // Tipos principales del sistema BECK
 
-export type RolUsuario = 'administrador' | 'vendedor' | 'terreno' | 'ingenieria' | 'visualizador' | 'jefeobra';
+export type RolUsuario =
+  | 'administrador'
+  | 'vendedor'
+  | 'terreno'
+  | 'ingenieria'
+  | 'visualizador'
+  | 'jefeobra'
+  | 'vendedor_firemat'
+  | 'bodeguero'
+  | 'visualizador_firemat';
 
 export interface Usuario {
   id: string;
@@ -152,6 +161,7 @@ export interface AuthResponse {
     nombre: string;
     email: string;
     rol: RolUsuario;
+    empresaDefault: 'beck' | 'firemat';
   };
 }
 

@@ -86,6 +86,19 @@ type AsignarUsuariosObraBody = {
 
 export const listarObras = async (req: Request, res: Response): Promise<void> => {
   try {
+    const rol = req.userRole;
+
+    // Terreno y jefeobra siempre ven solo obras activas, sin filtro manual
+    if (rol === 'terreno' || rol === 'jefeobra') {
+      const obras = await prisma.obra.findMany({
+        where: { estado: EstadoObra.activa },
+        include: obraUsuariosInclude,
+        orderBy: { createdAt: 'desc' },
+      });
+      res.json(obras.map(formatObraResponse));
+      return;
+    }
+
     const estado =
       typeof req.query.estado === 'string' ? req.query.estado : undefined;
     const activa =
@@ -547,6 +560,17 @@ export const listarUsuariosObra = async (req: Request, res: Response): Promise<v
 export const misObras = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.userId ?? '';
+    const rol = req.userRole;
+
+    // Terreno y jefeobra ven todas las obras activas sin depender de usuarios_obras
+    if (rol === 'terreno' || rol === 'jefeobra') {
+      const obras = await prisma.obra.findMany({
+        where: { estado: EstadoObra.activa },
+        orderBy: { createdAt: 'desc' },
+      });
+      res.json(obras);
+      return;
+    }
 
     const asignaciones = await prisma.usuarios_obras.findMany({
       where: { usuario_id: userId },
