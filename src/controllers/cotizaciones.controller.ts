@@ -197,9 +197,12 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
 
     const b = req.body as Record<string, unknown>;
 
+    const clienteBeckId = optStr(b.clienteBeckId ?? b.cliente_beck_id);
+    const contactoBeckId = optStr(b.contactoBeckId ?? b.contacto_beck_id);
+
     const clienteNombre = optStr(b.clienteNombre);
-    if (!clienteNombre) {
-      res.status(400).json({ success: false, error: 'clienteNombre es obligatorio' });
+    if (!clienteNombre && !clienteBeckId) {
+      res.status(400).json({ success: false, error: 'clienteNombre es obligatorio (o proporcionar clienteBeckId)' });
       return;
     }
 
@@ -231,6 +234,8 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
         clienteNombre,
         obraId: optStr(b.obraId),
         funnelBeckId: optStr(b.funnelBeckId),
+        clienteBeckId,
+        contactoBeckId,
         descuento,
         aplicaImpuesto,
         vigencia,
@@ -320,6 +325,11 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
     }
     const has = (key: string) => Object.prototype.hasOwnProperty.call(b, key);
 
+    const hasClienteBeckId = has('clienteBeckId') || has('cliente_beck_id');
+    const rawClienteBeckId = has('clienteBeckId') ? b.clienteBeckId : b.cliente_beck_id;
+    const hasContactoBeckId = has('contactoBeckId') || has('contacto_beck_id');
+    const rawContactoBeckId = has('contactoBeckId') ? b.contactoBeckId : b.contacto_beck_id;
+
     if (has('clienteNombre') && !optStr(b.clienteNombre)) {
       res.status(400).json({ success: false, error: 'clienteNombre no puede estar vacío' });
       return;
@@ -361,6 +371,8 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
         ...(has('clienteNombre') && { clienteNombre: optStr(b.clienteNombre)! }),
         ...(has('obraId') && { obraId: optStr(b.obraId) }),
         ...(has('funnelBeckId') && { funnelBeckId: optStr(b.funnelBeckId) }),
+        ...(hasClienteBeckId && { clienteBeckId: optStr(rawClienteBeckId) }),
+        ...(hasContactoBeckId && { contactoBeckId: optStr(rawContactoBeckId) }),
         ...(estado !== undefined && { estado }),
         ...(descuento !== undefined && { descuento }),
         ...(aplicaImpuesto !== undefined && { aplicaImpuesto }),

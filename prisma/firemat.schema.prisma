@@ -91,14 +91,34 @@ model user {
 }
 
 model Cliente {
-  id          Int           @id @default(autoincrement())
-  nombre      String
-  rut         String?       @unique
-  email       String?
-  telefono    String?
-  direccion   String?
-  createdAt   DateTime      @default(now())
-  Oportunidad Oportunidad[]
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  rut            String?  @unique
+  email          String?
+  telefono       String?
+  direccion      String?
+
+  razonSocial    String?  @map("razon_social")
+  nombreEmpresa  String?  @map("nombre_empresa")
+  region         String?
+  comuna         String?
+  tipoCliente    TipoClienteFiremat?
+  canalVenta     CanalVentaFiremat? @map("canal_venta")
+  activo         Boolean  @default(true)
+  observaciones  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  contactos      ContactoClienteFiremat[]
+  Oportunidad    Oportunidad[]
+
+  @@index([rut])
+  @@index([nombre])
+  @@index([razonSocial])
+  @@index([activo])
+  @@index([tipoCliente])
+  @@index([canalVenta])
 }
 
 model Oportunidad {
@@ -195,4 +215,46 @@ model FunnelFirematOpportunity {
   probabilidad         Int?               @default(50)
   cotizacion           CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
   producto             Producto?          @relation(fields: [productoId], references: [id])
+}
+
+model ContactoClienteFiremat {
+  id            Int      @id @default(autoincrement())
+  clienteId     Int
+  nombre        String
+  cargo         String?
+  telefono      String?
+  correo        String?
+  principal     Boolean  @default(false)
+  activo        Boolean  @default(true)
+  observaciones String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  cliente       Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@index([clienteId])
+  @@index([correo])
+  @@index([activo])
+  @@map("contactos_cliente_firemat")
+}
+
+enum TipoClienteFiremat {
+  cliente_final
+  ferreteria
+  broker
+  redistribuidor
+  instalador
+  constructora
+  otro
+}
+
+enum CanalVentaFiremat {
+  venta_directa
+  broker
+  ferreteria
+  redistribuidor
+  instalador
+  recompra
+  otro
 }

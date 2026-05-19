@@ -54,6 +54,14 @@ function optStr(value: unknown): string | null {
   return s || null;
 }
 
+// Returns undefined (not sent), null (explicitly cleared), or the string value
+function optNullableId(a: unknown, b: unknown): string | null | undefined {
+  const val = a !== undefined ? a : b;
+  if (val === undefined) return undefined;
+  if (val === null || val === "") return null;
+  return String(val);
+}
+
 function toNumber(value: number | string): number {
   const parsed = Number(value);
   if (Number.isNaN(parsed)) {
@@ -77,34 +85,33 @@ function validarProbabilidad(value: unknown): number | null {
   return n;
 }
 
-function validarRutChileno(rutLimpio: string): boolean {
-  if (rutLimpio.length < 2) return false;
-  const dv = rutLimpio.slice(-1).toUpperCase();
-  const digits = rutLimpio.slice(0, -1);
-  if (!/^\d+$/.test(digits)) return false;
-  if (!/^[\dK]$/.test(dv)) return false;
-  const num = parseInt(digits, 10);
-  if (num < 1_000_000) return false;
-  let suma = 0;
-  let factor = 2;
-  let n = num;
-  while (n > 0) {
-    suma += (n % 10) * factor;
-    n = Math.floor(n / 10);
-    factor = factor === 7 ? 2 : factor + 1;
-  }
-  const dvEsp = 11 - (suma % 11);
-  const dvCalc = dvEsp === 11 ? "0" : dvEsp === 10 ? "K" : String(dvEsp);
-  return dv === dvCalc;
-}
-
 function procesarRut(value: unknown): string | null {
   const raw = normalizeString(value);
   if (!raw) return null;
+
+  if (!/^[\dKk.\-]+$/.test(raw)) {
+    throw new Error("RUT inválido. Ingresa un RUT con formato válido.");
+  }
+  if (/--/.test(raw)) {
+    throw new Error("RUT inválido. Ingresa un RUT con formato válido.");
+  }
+  if (raw.includes(".") && !raw.includes("-")) {
+    throw new Error("RUT inválido. Ingresa un RUT con formato válido.");
+  }
+
   const limpio = raw.replace(/[.\-]/g, "").toUpperCase();
-  if (!validarRutChileno(limpio)) throw new Error("RUT empresa inválido");
+
+  if (limpio.length < 8) {
+    throw new Error("RUT inválido. Ingresa un RUT con formato válido.");
+  }
+
   const dv = limpio.slice(-1);
   const digits = limpio.slice(0, -1);
+
+  if (!/^\d+$/.test(digits) || !/^[\dK]$/.test(dv)) {
+    throw new Error("RUT inválido. Ingresa un RUT con formato válido.");
+  }
+
   const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   return `${formatted}-${dv}`;
 }
@@ -184,6 +191,9 @@ function extractInput(raw: Record<string, unknown>) {
     // Cierre ganado
     documentoRespaldo:   (raw.documentoRespaldo    ?? raw.documento_respaldo)    as string | undefined,
     flujoPosterior:      (raw.flujoPosterior       ?? raw.flujo_posterior)       as string | undefined,
+    // Clientes Beck
+    clienteBeckId:       optNullableId(raw.clienteBeckId,  raw.cliente_beck_id),
+    contactoBeckId:      optNullableId(raw.contactoBeckId, raw.contacto_beck_id),
   };
 }
 
@@ -246,6 +256,25 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
   const monedaOriginal = data.monedaOriginal!;
   const { valorClp, valorUf } = calcularValores(valorOriginal, monedaOriginal);
 
+  if (data.clienteBeckId) {
+    const cliente = await prisma.clienteBeck.findUnique({
+      where: { id: data.clienteBeckId },
+      select: { id: true },
+    });
+    if (!cliente) throw new Error("El cliente indicado no existe.");
+  }
+
+  if (data.contactoBeckId) {
+    const contacto = await prisma.contactoClienteBeck.findUnique({
+      where: { id: data.contactoBeckId },
+      select: { id: true, clienteId: true },
+    });
+    if (!contacto) throw new Error("El contacto indicado no existe.");
+    if (data.clienteBeckId && contacto.clienteId !== data.clienteBeckId) {
+      throw new Error("El contacto no pertenece al cliente indicado.");
+    }
+  }
+
   const oportunidad = await prisma.operadorBeck.create({
     data: {
       nombreProyecto:      normalizeString(data.nombreProyecto),
@@ -291,6 +320,9 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       // Cierre ganado
       documentoRespaldo:   optStr(data.documentoRespaldo),
       flujoPosterior:      optStr(data.flujoPosterior),
+      // Clientes Beck
+      clienteBeckId:       data.clienteBeckId  ?? null,
+      contactoBeckId:      data.contactoBeckId ?? null,
     },
   });
 
@@ -310,15 +342,45 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
   return oportunidad;
 }
 
+const CLIENTE_BECK_SELECT = {
+  id: true,
+  rut: true,
+  razonSocial: true,
+  nombreEmpresa: true,
+  telefono: true,
+  correo: true,
+  region: true,
+  comuna: true,
+  activo: true,
+} as const;
+
+const CONTACTO_BECK_SELECT = {
+  id: true,
+  nombre: true,
+  cargo: true,
+  telefono: true,
+  correo: true,
+  principal: true,
+  activo: true,
+} as const;
+
 export async function getAllFunnelBeck() {
   return prisma.operadorBeck.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      clienteBeck:  { select: CLIENTE_BECK_SELECT },
+      contactoBeck: { select: CONTACTO_BECK_SELECT },
+    },
   });
 }
 
 export async function getFunnelBeckById(id: string) {
   const oportunidad = await prisma.operadorBeck.findUnique({
     where: { id },
+    include: {
+      clienteBeck:  { select: CLIENTE_BECK_SELECT },
+      contactoBeck: { select: CONTACTO_BECK_SELECT },
+    },
   });
 
   if (!oportunidad) throw new Error("Oportunidad no encontrada.");
@@ -331,6 +393,33 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
   if (!existente) throw new Error("Oportunidad no encontrada.");
 
   const data = extractInput(rawData);
+
+  // Resolve final clienteBeckId / contactoBeckId
+  const newClienteBeckId  = data.clienteBeckId  !== undefined ? data.clienteBeckId  : existente.clienteBeckId;
+  const newContactoBeckId = data.contactoBeckId !== undefined ? data.contactoBeckId : existente.contactoBeckId;
+
+  if (newClienteBeckId === null && newContactoBeckId !== null) {
+    throw new Error("Para limpiar el cliente debes también limpiar el contacto.");
+  }
+
+  if (newClienteBeckId) {
+    const cliente = await prisma.clienteBeck.findUnique({
+      where: { id: newClienteBeckId },
+      select: { id: true },
+    });
+    if (!cliente) throw new Error("El cliente indicado no existe.");
+  }
+
+  if (newContactoBeckId) {
+    const contacto = await prisma.contactoClienteBeck.findUnique({
+      where: { id: newContactoBeckId },
+      select: { id: true, clienteId: true },
+    });
+    if (!contacto) throw new Error("El contacto indicado no existe.");
+    if (newClienteBeckId && contacto.clienteId !== newClienteBeckId) {
+      throw new Error("El contacto no pertenece al cliente indicado.");
+    }
+  }
 
   const nombreProyecto = data.nombreProyecto !== undefined
     ? normalizeString(data.nombreProyecto) : existente.nombreProyecto;
@@ -418,6 +507,9 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       // Cierre ganado
       ...(data.documentoRespaldo  !== undefined && { documentoRespaldo:  optStr(data.documentoRespaldo) }),
       ...(data.flujoPosterior     !== undefined && { flujoPosterior:     optStr(data.flujoPosterior) }),
+      // Clientes Beck
+      ...(data.clienteBeckId  !== undefined && { clienteBeckId:  data.clienteBeckId }),
+      ...(data.contactoBeckId !== undefined && { contactoBeckId: data.contactoBeckId }),
     },
   });
 

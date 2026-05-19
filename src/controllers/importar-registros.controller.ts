@@ -6,6 +6,7 @@ import path from 'path';
 import { query as dbQuery } from '../config/database';
 import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
+import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -250,13 +251,16 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
     }
 
     // 3. Cargar todas las obras para resolver por nombre (case-insensitive, normalizado)
-    const obrasRes = await dbQuery<{ id: string; nombre: string }>('SELECT id, nombre FROM obras');
-    const obrasByName = new Map<string, string>();
+    const obrasRes = await dbQuery<{ id: string; nombre: string; codigo: string | null }>('SELECT id, nombre, codigo FROM obras');
+    const obrasByName = new Map<string, { id: string; codigo: string | null }>();
+    const obrasById = new Map<string, { id: string; codigo: string | null }>();
     for (const o of obrasRes.rows) {
-      obrasByName.set(normalize(o.nombre), o.id);
+      const obraRef = { id: o.id, codigo: o.codigo };
+      obrasByName.set(normalize(o.nombre), obraRef);
+      obrasById.set(o.id, obraRef);
     }
     const resolveObraIdByName = (nombre: string): string | null =>
-      obrasByName.get(normalize(nombre)) ?? null;
+      obrasByName.get(normalize(nombre))?.id ?? null;
 
     // 4. Cargar workbook con ExcelJS (soporta imágenes embebidas)
     const workbook = new ExcelJS.Workbook();
@@ -264,8 +268,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
 
     if (DEV) console.log('[importar] hojas detectadas:', workbook.worksheets.map(w => w.name));
 
-    const resultados: { hoja: string; insertados: number; errores: string[] }[] = [];
+    const resultados: { hoja: string; insertados: number; duplicadosOmitidos: number; errores: string[]; advertencias: string[] }[] = [];
     let totalInsertados = 0;
+    let totalDuplicados = 0;
 
     for (const worksheet of workbook.worksheets) {
       const sheetName = worksheet.name;
@@ -343,7 +348,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       }
 
       const errores: string[] = [];
+      const advertencias: string[] = [];
       let insertados = 0;
+      let duplicados = 0;
 
       const lastRowNum = worksheet.lastRow?.number ?? 1;
       if (DEV) console.log(`[importar] hoja "${sheetName}": filas de datos = ${Math.max(0, lastRowNum - headerRowNum)}`);
@@ -489,9 +496,31 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             continue;
           }
 
-          // 1) Crear primero el registro vía Prisma (necesitamos registro.id
-          //    para asociar las fotos en la tabla `fotos_registro`).
           const metrosFinal = toFloatOrNull(metros_lineales);
+
+          // Verificar duplicado antes de crear
+          const existente = await prisma.registroTerreno.findFirst({
+            where: {
+              obraId: rowObraId,
+              tipoRegistro,
+              fecha,
+              piso: truncate(piso || 'Sin piso', 50),
+              ejeAlfabetico: truncate(eje_alfabetico || 'N/A', 10),
+              ejeNumerico: truncate(eje_numerico, 50),
+              numeroSello: truncate(numero_sello, 100),
+              descripcionMaterial: truncate(descripcion_material, 500),
+              ...(tipoRegistro === 'junta_lineal_espuma' && metrosFinal !== null
+                ? { metrosLineales: metrosFinal }
+                : {}),
+            },
+            select: { id: true },
+          });
+          if (existente) {
+            advertencias.push(`Registro duplicado omitido fila ${rowIdx}`);
+            duplicados++;
+            continue;
+          }
+
           const registro = await prisma.registroTerreno.create({
             data: {
               obraId: rowObraId,
@@ -520,6 +549,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           //    `fotos_registro`. Si falla una imagen, NO romper la importación.
           const nativeRow = rowIdx - 1;
           const imageIds = imagesByNativeRow.get(nativeRow) ?? [];
+          const folder = buildCloudinaryFolder(
+            obrasById.get(rowObraId)?.codigo || rowObraId,
+            new Date(registro.fecha),
+            registro.piso,
+            registro.nombreSellador,
+          );
 
           for (const imageId of imageIds) {
             try {
@@ -547,7 +582,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
                 continue;
               }
 
-              const uploaded = await uploadImageDetailed(bytes, 'beck/registros');
+              const uploaded = await uploadImageDetailed(bytes, folder);
 
               await prisma.fotos_registro.create({
                 data: {
@@ -573,13 +608,15 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
         }
       }
 
-      resultados.push({ hoja: sheetName, insertados, errores });
+      resultados.push({ hoja: sheetName, insertados, duplicadosOmitidos: duplicados, errores, advertencias });
       totalInsertados += insertados;
+      totalDuplicados += duplicados;
     }
 
     res.status(201).json({
-      message: `Importación completada. ${totalInsertados} registro(s) insertado(s).`,
+      message: `Importación completada. ${totalInsertados} registro(s) insertado(s). ${totalDuplicados} duplicado(s) omitido(s).`,
       totalInsertados,
+      totalDuplicados,
       resultados,
     });
   } catch (error) {

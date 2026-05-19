@@ -317,6 +317,40 @@ const validateFunnelBeck = async (funnelBeckId: string | null): Promise<void> =>
   }
 };
 
+type ClienteBeckBasic = { razonSocial: string; nombreEmpresa: string | null };
+
+const validateClienteBeckRelacion = async (
+  clienteBeckId: string | null | undefined,
+  contactoBeckId: string | null | undefined,
+): Promise<ClienteBeckBasic | null> => {
+  let cliente: ClienteBeckBasic | null = null;
+
+  if (clienteBeckId) {
+    const found = await prisma.clienteBeck.findUnique({
+      where: { id: clienteBeckId },
+      select: { razonSocial: true, nombreEmpresa: true },
+    });
+    if (!found) throw new CotizacionError('El cliente Beck indicado no existe', 400);
+    cliente = found;
+  }
+
+  if (contactoBeckId) {
+    if (!clienteBeckId) {
+      throw new CotizacionError('contactoBeckId requiere clienteBeckId', 400);
+    }
+    const contacto = await prisma.contactoClienteBeck.findUnique({
+      where: { id: contactoBeckId },
+      select: { clienteId: true },
+    });
+    if (!contacto) throw new CotizacionError('El contacto Beck indicado no existe', 400);
+    if (contacto.clienteId !== clienteBeckId) {
+      throw new CotizacionError('El contacto no pertenece al cliente Beck indicado', 400);
+    }
+  }
+
+  return cliente;
+};
+
 const lineasCreateData = (cotizacionId: string, lineas: LineaInput[]) =>
   lineas.map((l) => ({
     cotizacionId,
@@ -336,6 +370,30 @@ const INCLUDE_FULL = {
   lineas: { orderBy: { orden: 'asc' as const } },
   obra: true,
   funnelBeck: true,
+  clienteBeck: {
+    select: {
+      id: true,
+      rut: true,
+      razonSocial: true,
+      nombreEmpresa: true,
+      telefono: true,
+      correo: true,
+      region: true,
+      comuna: true,
+      activo: true,
+    },
+  },
+  contactoBeck: {
+    select: {
+      id: true,
+      nombre: true,
+      cargo: true,
+      telefono: true,
+      correo: true,
+      principal: true,
+      activo: true,
+    },
+  },
 } as const;
 
 const ESTADO_TIPO_MAP: Partial<Record<EstadoCotizacion, TipoMovimientoCRM>> = {
@@ -350,6 +408,16 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
   await validateObra(input.obraId);
   await validateFunnelBeck(input.funnelBeckId);
   validateDescuentoPct(input.descuento);
+
+  const clienteBeckId = input.clienteBeckId ?? null;
+  const contactoBeckId = input.contactoBeckId ?? null;
+  const cliente = await validateClienteBeckRelacion(clienteBeckId, contactoBeckId);
+
+  const clienteNombre = input.clienteNombre
+    || (cliente ? (cliente.razonSocial || cliente.nombreEmpresa || '') : '');
+  if (!clienteNombre) {
+    throw new CotizacionError('clienteNombre es obligatorio', 400);
+  }
 
   const numeroCotizacion = await resolveNumeroCotizacion(input.numero);
   const oportunidad = await findOportunidadCotizacion(input.funnelBeckId);
@@ -367,9 +435,11 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
     const cot = await tx.cotizacion.create({
       data: {
         numero: numeroCotizacion,
-        clienteNombre: input.clienteNombre,
+        clienteNombre,
         obraId: input.obraId,
         funnelBeckId: input.funnelBeckId ?? null,
+        clienteBeckId,
+        contactoBeckId,
         estado: EstadoCotizacion.BORRADOR,
         subtotal: toDecimal(subtotal),
         descuento: toDecimal(input.descuento),
@@ -471,6 +541,30 @@ export const getCotizacionVersiones = async (id: string) => {
       },
       obra: true,
       funnelBeck: true,
+      clienteBeck: {
+        select: {
+          id: true,
+          rut: true,
+          razonSocial: true,
+          nombreEmpresa: true,
+          telefono: true,
+          correo: true,
+          region: true,
+          comuna: true,
+          activo: true,
+        },
+      },
+      contactoBeck: {
+        select: {
+          id: true,
+          nombre: true,
+          cargo: true,
+          telefono: true,
+          correo: true,
+          principal: true,
+          activo: true,
+        },
+      },
     },
   });
 };
@@ -514,6 +608,24 @@ export const updateCotizacion = async (
 
   const funnelBeckIdFinal =
     input.funnelBeckId !== undefined ? input.funnelBeckId : existing.funnelBeckId;
+
+  const clienteBeckIdFinal =
+    input.clienteBeckId !== undefined ? input.clienteBeckId : existing.clienteBeckId;
+  const contactoBeckIdFinal =
+    input.contactoBeckId !== undefined ? input.contactoBeckId : existing.contactoBeckId;
+
+  if (!clienteBeckIdFinal && contactoBeckIdFinal) {
+    throw new CotizacionError('No se puede quitar clienteBeckId mientras contactoBeckId está asignado', 400);
+  }
+  const clienteBeckData = await validateClienteBeckRelacion(clienteBeckIdFinal, contactoBeckIdFinal);
+
+  const clienteNombreFinal: string =
+    input.clienteNombre !== undefined
+      ? input.clienteNombre
+      : input.clienteBeckId !== undefined && clienteBeckIdFinal && clienteBeckData
+      ? (clienteBeckData.razonSocial || clienteBeckData.nombreEmpresa || existing.clienteNombre)
+      : existing.clienteNombre;
+
   const oportunidad = await findOportunidadCotizacion(funnelBeckIdFinal);
   const cambioFunnelBeck = existing.funnelBeckId !== funnelBeckIdFinal;
   const oportunidadAnterior =
@@ -575,13 +687,12 @@ export const updateCotizacion = async (
         esActual: true,
         cotizacionBaseId,
 
-        clienteNombre:
-          input.clienteNombre !== undefined
-            ? input.clienteNombre
-            : existing.clienteNombre,
+        clienteNombre: clienteNombreFinal,
 
         obraId: input.obraId !== undefined ? input.obraId : existing.obraId,
         funnelBeckId: funnelBeckIdFinal,
+        clienteBeckId: clienteBeckIdFinal,
+        contactoBeckId: contactoBeckIdFinal,
 
         estado: input.estado !== undefined ? input.estado : existing.estado,
 

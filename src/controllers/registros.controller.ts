@@ -9,6 +9,7 @@ import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
+import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -89,17 +90,25 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     }
 
     // Validar que la obra exista
-    const obraCheck = await dbQuery('SELECT id FROM obras WHERE id = $1', [obra_id]);
+    const obraCheck = await dbQuery<{ id: string; codigo: string | null }>('SELECT id, codigo FROM obras WHERE id = $1', [obra_id]);
     if (obraCheck.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
 
+    const fecha = new Date();
+    const folder = buildCloudinaryFolder(
+      obraCheck.rows[0].codigo || obra_id,
+      new Date(fecha),
+      piso,
+      nombre_sellador,
+    );
+
     // Subir fotos a Cloudinary
     const fotosUrls: string[] = [];
     for (const file of files) {
       try {
-        const url = await uploadImage(file.buffer, 'beck/registros');
+        const url = await uploadImage(file.buffer, folder);
         fotosUrls.push(url);
       } catch (uploadError) {
         console.error('Error al subir foto a Cloudinary:', uploadError);
@@ -109,7 +118,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     }
 
     // Calcular día de semana
-    const fecha = new Date();
     const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dia_semana = dias[fecha.getDay()];
     const eje_numerico_norm = parseEjeNumericoTexto(eje_numerico);

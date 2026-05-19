@@ -26,9 +26,11 @@ export type CotizacionTotals = {
 
 export type CreateCotizacionInput = {
   numero: string | null;
-  clienteNombre: string;
+  clienteNombre: string | null;
   obraId: string | null;
   funnelBeckId: string | null;
+  clienteBeckId?: string | null;
+  contactoBeckId?: string | null;
   descuento: number;
   aplicaImpuesto: boolean;
   vigencia: Date;
@@ -42,6 +44,8 @@ export type UpdateCotizacionInput = {
   clienteNombre?: string;
   obraId?: string | null;
   funnelBeckId?: string | null;
+  clienteBeckId?: string | null;
+  contactoBeckId?: string | null;
   estado?: EstadoCotizacion;
   descuento?: number;
   aplicaImpuesto?: boolean;

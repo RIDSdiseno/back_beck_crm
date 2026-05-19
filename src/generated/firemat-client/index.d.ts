@@ -68,6 +68,50 @@ export type CotizacionFirematDetalle = $Result.DefaultSelection<Prisma.$Cotizaci
  * 
  */
 export type FunnelFirematOpportunity = $Result.DefaultSelection<Prisma.$FunnelFirematOpportunityPayload>
+/**
+ * Model ContactoClienteFiremat
+ * 
+ */
+export type ContactoClienteFiremat = $Result.DefaultSelection<Prisma.$ContactoClienteFirematPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const TipoClienteFiremat: {
+  cliente_final: 'cliente_final',
+  ferreteria: 'ferreteria',
+  broker: 'broker',
+  redistribuidor: 'redistribuidor',
+  instalador: 'instalador',
+  constructora: 'constructora',
+  otro: 'otro'
+};
+
+export type TipoClienteFiremat = (typeof TipoClienteFiremat)[keyof typeof TipoClienteFiremat]
+
+
+export const CanalVentaFiremat: {
+  venta_directa: 'venta_directa',
+  broker: 'broker',
+  ferreteria: 'ferreteria',
+  redistribuidor: 'redistribuidor',
+  instalador: 'instalador',
+  recompra: 'recompra',
+  otro: 'otro'
+};
+
+export type CanalVentaFiremat = (typeof CanalVentaFiremat)[keyof typeof CanalVentaFiremat]
+
+}
+
+export type TipoClienteFiremat = $Enums.TipoClienteFiremat
+
+export const TipoClienteFiremat: typeof $Enums.TipoClienteFiremat
+
+export type CanalVentaFiremat = $Enums.CanalVentaFiremat
+
+export const CanalVentaFiremat: typeof $Enums.CanalVentaFiremat
 
 /**
  * ##  Prisma Client ʲˢ
@@ -299,6 +343,16 @@ export class PrismaClient<
     * ```
     */
   get funnelFirematOpportunity(): Prisma.FunnelFirematOpportunityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactoClienteFiremat`: Exposes CRUD operations for the **ContactoClienteFiremat** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactoClienteFiremats
+    * const contactoClienteFiremats = await prisma.contactoClienteFiremat.findMany()
+    * ```
+    */
+  get contactoClienteFiremat(): Prisma.ContactoClienteFirematDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -743,7 +797,8 @@ export namespace Prisma {
     Oportunidad: 'Oportunidad',
     CotizacionFiremat: 'CotizacionFiremat',
     CotizacionFirematDetalle: 'CotizacionFirematDetalle',
-    FunnelFirematOpportunity: 'FunnelFirematOpportunity'
+    FunnelFirematOpportunity: 'FunnelFirematOpportunity',
+    ContactoClienteFiremat: 'ContactoClienteFiremat'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -759,7 +814,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity"
+      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1577,6 +1632,80 @@ export namespace Prisma {
           }
         }
       }
+      ContactoClienteFiremat: {
+        payload: Prisma.$ContactoClienteFirematPayload<ExtArgs>
+        fields: Prisma.ContactoClienteFirematFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactoClienteFirematFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactoClienteFirematFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          findFirst: {
+            args: Prisma.ContactoClienteFirematFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactoClienteFirematFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          findMany: {
+            args: Prisma.ContactoClienteFirematFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>[]
+          }
+          create: {
+            args: Prisma.ContactoClienteFirematCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          createMany: {
+            args: Prisma.ContactoClienteFirematCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactoClienteFirematCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>[]
+          }
+          delete: {
+            args: Prisma.ContactoClienteFirematDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          update: {
+            args: Prisma.ContactoClienteFirematUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactoClienteFirematDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactoClienteFirematUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactoClienteFirematUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactoClienteFirematUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteFirematPayload>
+          }
+          aggregate: {
+            args: Prisma.ContactoClienteFirematAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactoClienteFiremat>
+          }
+          groupBy: {
+            args: Prisma.ContactoClienteFirematGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactoClienteFirematGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactoClienteFirematCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactoClienteFirematCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1696,6 +1825,7 @@ export namespace Prisma {
     cotizacionFiremat?: CotizacionFirematOmit
     cotizacionFirematDetalle?: CotizacionFirematDetalleOmit
     funnelFirematOpportunity?: FunnelFirematOpportunityOmit
+    contactoClienteFiremat?: ContactoClienteFirematOmit
   }
 
   /* Types for Logging */
@@ -1914,10 +2044,12 @@ export namespace Prisma {
    */
 
   export type ClienteCountOutputType = {
+    contactos: number
     Oportunidad: number
   }
 
   export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactos?: boolean | ClienteCountOutputTypeCountContactosArgs
     Oportunidad?: boolean | ClienteCountOutputTypeCountOportunidadArgs
   }
 
@@ -1930,6 +2062,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the ClienteCountOutputType
      */
     select?: ClienteCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeCountContactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactoClienteFirematWhereInput
   }
 
   /**
@@ -9082,7 +9221,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: $Enums.TipoClienteFiremat | null
+    canalVenta: $Enums.CanalVentaFiremat | null
+    activo: boolean | null
+    observaciones: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -9092,7 +9240,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: $Enums.TipoClienteFiremat | null
+    canalVenta: $Enums.CanalVentaFiremat | null
+    activo: boolean | null
+    observaciones: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -9102,7 +9259,16 @@ export namespace Prisma {
     email: number
     telefono: number
     direccion: number
+    razonSocial: number
+    nombreEmpresa: number
+    region: number
+    comuna: number
+    tipoCliente: number
+    canalVenta: number
+    activo: number
+    observaciones: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -9122,7 +9288,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    activo?: true
+    observaciones?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -9132,7 +9307,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    activo?: true
+    observaciones?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -9142,7 +9326,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    activo?: true
+    observaciones?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -9239,7 +9432,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: $Enums.TipoClienteFiremat | null
+    canalVenta: $Enums.CanalVentaFiremat | null
+    activo: boolean
+    observaciones: string | null
     createdAt: Date
+    updatedAt: Date
     _count: ClienteCountAggregateOutputType | null
     _avg: ClienteAvgAggregateOutputType | null
     _sum: ClienteSumAggregateOutputType | null
@@ -9268,7 +9470,17 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    activo?: boolean
+    observaciones?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
     Oportunidad?: boolean | Cliente$OportunidadArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
@@ -9280,7 +9492,16 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    activo?: boolean
+    observaciones?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9290,7 +9511,16 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    activo?: boolean
+    observaciones?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectScalar = {
@@ -9300,11 +9530,21 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    activo?: boolean
+    observaciones?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "createdAt", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "razonSocial" | "nombreEmpresa" | "region" | "comuna" | "tipoCliente" | "canalVenta" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
     Oportunidad?: boolean | Cliente$OportunidadArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -9314,6 +9554,7 @@ export namespace Prisma {
   export type $ClientePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Cliente"
     objects: {
+      contactos: Prisma.$ContactoClienteFirematPayload<ExtArgs>[]
       Oportunidad: Prisma.$OportunidadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -9323,7 +9564,16 @@ export namespace Prisma {
       email: string | null
       telefono: string | null
       direccion: string | null
+      razonSocial: string | null
+      nombreEmpresa: string | null
+      region: string | null
+      comuna: string | null
+      tipoCliente: $Enums.TipoClienteFiremat | null
+      canalVenta: $Enums.CanalVentaFiremat | null
+      activo: boolean
+      observaciones: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -9718,6 +9968,7 @@ export namespace Prisma {
    */
   export interface Prisma__ClienteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    contactos<T extends Cliente$contactosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$contactosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Oportunidad<T extends Cliente$OportunidadArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$OportunidadArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OportunidadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9754,7 +10005,16 @@ export namespace Prisma {
     readonly email: FieldRef<"Cliente", 'String'>
     readonly telefono: FieldRef<"Cliente", 'String'>
     readonly direccion: FieldRef<"Cliente", 'String'>
+    readonly razonSocial: FieldRef<"Cliente", 'String'>
+    readonly nombreEmpresa: FieldRef<"Cliente", 'String'>
+    readonly region: FieldRef<"Cliente", 'String'>
+    readonly comuna: FieldRef<"Cliente", 'String'>
+    readonly tipoCliente: FieldRef<"Cliente", 'TipoClienteFiremat'>
+    readonly canalVenta: FieldRef<"Cliente", 'CanalVentaFiremat'>
+    readonly activo: FieldRef<"Cliente", 'Boolean'>
+    readonly observaciones: FieldRef<"Cliente", 'String'>
     readonly createdAt: FieldRef<"Cliente", 'DateTime'>
+    readonly updatedAt: FieldRef<"Cliente", 'DateTime'>
   }
     
 
@@ -10145,6 +10405,30 @@ export namespace Prisma {
      * Limit how many Clientes to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Cliente.contactos
+   */
+  export type Cliente$contactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    where?: ContactoClienteFirematWhereInput
+    orderBy?: ContactoClienteFirematOrderByWithRelationInput | ContactoClienteFirematOrderByWithRelationInput[]
+    cursor?: ContactoClienteFirematWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
   }
 
   /**
@@ -15524,6 +15808,1185 @@ export namespace Prisma {
 
 
   /**
+   * Model ContactoClienteFiremat
+   */
+
+  export type AggregateContactoClienteFiremat = {
+    _count: ContactoClienteFirematCountAggregateOutputType | null
+    _avg: ContactoClienteFirematAvgAggregateOutputType | null
+    _sum: ContactoClienteFirematSumAggregateOutputType | null
+    _min: ContactoClienteFirematMinAggregateOutputType | null
+    _max: ContactoClienteFirematMaxAggregateOutputType | null
+  }
+
+  export type ContactoClienteFirematAvgAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+  }
+
+  export type ContactoClienteFirematSumAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+  }
+
+  export type ContactoClienteFirematMinAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+    nombre: string | null
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean | null
+    activo: boolean | null
+    observaciones: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContactoClienteFirematMaxAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+    nombre: string | null
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean | null
+    activo: boolean | null
+    observaciones: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContactoClienteFirematCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    nombre: number
+    cargo: number
+    telefono: number
+    correo: number
+    principal: number
+    activo: number
+    observaciones: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ContactoClienteFirematAvgAggregateInputType = {
+    id?: true
+    clienteId?: true
+  }
+
+  export type ContactoClienteFirematSumAggregateInputType = {
+    id?: true
+    clienteId?: true
+  }
+
+  export type ContactoClienteFirematMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContactoClienteFirematMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContactoClienteFirematCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ContactoClienteFirematAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactoClienteFiremat to aggregate.
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteFiremats to fetch.
+     */
+    orderBy?: ContactoClienteFirematOrderByWithRelationInput | ContactoClienteFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactoClienteFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactoClienteFiremats
+    **/
+    _count?: true | ContactoClienteFirematCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContactoClienteFirematAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContactoClienteFirematSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactoClienteFirematMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactoClienteFirematMaxAggregateInputType
+  }
+
+  export type GetContactoClienteFirematAggregateType<T extends ContactoClienteFirematAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactoClienteFiremat]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactoClienteFiremat[P]>
+      : GetScalarType<T[P], AggregateContactoClienteFiremat[P]>
+  }
+
+
+
+
+  export type ContactoClienteFirematGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactoClienteFirematWhereInput
+    orderBy?: ContactoClienteFirematOrderByWithAggregationInput | ContactoClienteFirematOrderByWithAggregationInput[]
+    by: ContactoClienteFirematScalarFieldEnum[] | ContactoClienteFirematScalarFieldEnum
+    having?: ContactoClienteFirematScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactoClienteFirematCountAggregateInputType | true
+    _avg?: ContactoClienteFirematAvgAggregateInputType
+    _sum?: ContactoClienteFirematSumAggregateInputType
+    _min?: ContactoClienteFirematMinAggregateInputType
+    _max?: ContactoClienteFirematMaxAggregateInputType
+  }
+
+  export type ContactoClienteFirematGroupByOutputType = {
+    id: number
+    clienteId: number
+    nombre: string
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean
+    activo: boolean
+    observaciones: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ContactoClienteFirematCountAggregateOutputType | null
+    _avg: ContactoClienteFirematAvgAggregateOutputType | null
+    _sum: ContactoClienteFirematSumAggregateOutputType | null
+    _min: ContactoClienteFirematMinAggregateOutputType | null
+    _max: ContactoClienteFirematMaxAggregateOutputType | null
+  }
+
+  type GetContactoClienteFirematGroupByPayload<T extends ContactoClienteFirematGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactoClienteFirematGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactoClienteFirematGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactoClienteFirematGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactoClienteFirematGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactoClienteFirematSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteFiremat"]>
+
+  export type ContactoClienteFirematSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteFiremat"]>
+
+  export type ContactoClienteFirematSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteFiremat"]>
+
+  export type ContactoClienteFirematSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ContactoClienteFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "nombre" | "cargo" | "telefono" | "correo" | "principal" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["contactoClienteFiremat"]>
+  export type ContactoClienteFirematInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type ContactoClienteFirematIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type ContactoClienteFirematIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+
+  export type $ContactoClienteFirematPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactoClienteFiremat"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      clienteId: number
+      nombre: string
+      cargo: string | null
+      telefono: string | null
+      correo: string | null
+      principal: boolean
+      activo: boolean
+      observaciones: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["contactoClienteFiremat"]>
+    composites: {}
+  }
+
+  type ContactoClienteFirematGetPayload<S extends boolean | null | undefined | ContactoClienteFirematDefaultArgs> = $Result.GetResult<Prisma.$ContactoClienteFirematPayload, S>
+
+  type ContactoClienteFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactoClienteFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactoClienteFirematCountAggregateInputType | true
+    }
+
+  export interface ContactoClienteFirematDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactoClienteFiremat'], meta: { name: 'ContactoClienteFiremat' } }
+    /**
+     * Find zero or one ContactoClienteFiremat that matches the filter.
+     * @param {ContactoClienteFirematFindUniqueArgs} args - Arguments to find a ContactoClienteFiremat
+     * @example
+     * // Get one ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactoClienteFirematFindUniqueArgs>(args: SelectSubset<T, ContactoClienteFirematFindUniqueArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactoClienteFiremat that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactoClienteFirematFindUniqueOrThrowArgs} args - Arguments to find a ContactoClienteFiremat
+     * @example
+     * // Get one ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactoClienteFirematFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactoClienteFirematFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactoClienteFiremat that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematFindFirstArgs} args - Arguments to find a ContactoClienteFiremat
+     * @example
+     * // Get one ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactoClienteFirematFindFirstArgs>(args?: SelectSubset<T, ContactoClienteFirematFindFirstArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactoClienteFiremat that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematFindFirstOrThrowArgs} args - Arguments to find a ContactoClienteFiremat
+     * @example
+     * // Get one ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactoClienteFirematFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactoClienteFirematFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactoClienteFiremats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactoClienteFiremats
+     * const contactoClienteFiremats = await prisma.contactoClienteFiremat.findMany()
+     * 
+     * // Get first 10 ContactoClienteFiremats
+     * const contactoClienteFiremats = await prisma.contactoClienteFiremat.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactoClienteFirematWithIdOnly = await prisma.contactoClienteFiremat.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactoClienteFirematFindManyArgs>(args?: SelectSubset<T, ContactoClienteFirematFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactoClienteFiremat.
+     * @param {ContactoClienteFirematCreateArgs} args - Arguments to create a ContactoClienteFiremat.
+     * @example
+     * // Create one ContactoClienteFiremat
+     * const ContactoClienteFiremat = await prisma.contactoClienteFiremat.create({
+     *   data: {
+     *     // ... data to create a ContactoClienteFiremat
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactoClienteFirematCreateArgs>(args: SelectSubset<T, ContactoClienteFirematCreateArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactoClienteFiremats.
+     * @param {ContactoClienteFirematCreateManyArgs} args - Arguments to create many ContactoClienteFiremats.
+     * @example
+     * // Create many ContactoClienteFiremats
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactoClienteFirematCreateManyArgs>(args?: SelectSubset<T, ContactoClienteFirematCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactoClienteFiremats and returns the data saved in the database.
+     * @param {ContactoClienteFirematCreateManyAndReturnArgs} args - Arguments to create many ContactoClienteFiremats.
+     * @example
+     * // Create many ContactoClienteFiremats
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactoClienteFiremats and only return the `id`
+     * const contactoClienteFirematWithIdOnly = await prisma.contactoClienteFiremat.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactoClienteFirematCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactoClienteFirematCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactoClienteFiremat.
+     * @param {ContactoClienteFirematDeleteArgs} args - Arguments to delete one ContactoClienteFiremat.
+     * @example
+     * // Delete one ContactoClienteFiremat
+     * const ContactoClienteFiremat = await prisma.contactoClienteFiremat.delete({
+     *   where: {
+     *     // ... filter to delete one ContactoClienteFiremat
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactoClienteFirematDeleteArgs>(args: SelectSubset<T, ContactoClienteFirematDeleteArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactoClienteFiremat.
+     * @param {ContactoClienteFirematUpdateArgs} args - Arguments to update one ContactoClienteFiremat.
+     * @example
+     * // Update one ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactoClienteFirematUpdateArgs>(args: SelectSubset<T, ContactoClienteFirematUpdateArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactoClienteFiremats.
+     * @param {ContactoClienteFirematDeleteManyArgs} args - Arguments to filter ContactoClienteFiremats to delete.
+     * @example
+     * // Delete a few ContactoClienteFiremats
+     * const { count } = await prisma.contactoClienteFiremat.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactoClienteFirematDeleteManyArgs>(args?: SelectSubset<T, ContactoClienteFirematDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactoClienteFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactoClienteFiremats
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactoClienteFirematUpdateManyArgs>(args: SelectSubset<T, ContactoClienteFirematUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactoClienteFiremats and returns the data updated in the database.
+     * @param {ContactoClienteFirematUpdateManyAndReturnArgs} args - Arguments to update many ContactoClienteFiremats.
+     * @example
+     * // Update many ContactoClienteFiremats
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactoClienteFiremats and only return the `id`
+     * const contactoClienteFirematWithIdOnly = await prisma.contactoClienteFiremat.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactoClienteFirematUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactoClienteFirematUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactoClienteFiremat.
+     * @param {ContactoClienteFirematUpsertArgs} args - Arguments to update or create a ContactoClienteFiremat.
+     * @example
+     * // Update or create a ContactoClienteFiremat
+     * const contactoClienteFiremat = await prisma.contactoClienteFiremat.upsert({
+     *   create: {
+     *     // ... data to create a ContactoClienteFiremat
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactoClienteFiremat we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactoClienteFirematUpsertArgs>(args: SelectSubset<T, ContactoClienteFirematUpsertArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactoClienteFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematCountArgs} args - Arguments to filter ContactoClienteFiremats to count.
+     * @example
+     * // Count the number of ContactoClienteFiremats
+     * const count = await prisma.contactoClienteFiremat.count({
+     *   where: {
+     *     // ... the filter for the ContactoClienteFiremats we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactoClienteFirematCountArgs>(
+      args?: Subset<T, ContactoClienteFirematCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactoClienteFirematCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactoClienteFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactoClienteFirematAggregateArgs>(args: Subset<T, ContactoClienteFirematAggregateArgs>): Prisma.PrismaPromise<GetContactoClienteFirematAggregateType<T>>
+
+    /**
+     * Group by ContactoClienteFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteFirematGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactoClienteFirematGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactoClienteFirematGroupByArgs['orderBy'] }
+        : { orderBy?: ContactoClienteFirematGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactoClienteFirematGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactoClienteFirematGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactoClienteFiremat model
+   */
+  readonly fields: ContactoClienteFirematFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactoClienteFiremat.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactoClienteFirematClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactoClienteFiremat model
+   */
+  interface ContactoClienteFirematFieldRefs {
+    readonly id: FieldRef<"ContactoClienteFiremat", 'Int'>
+    readonly clienteId: FieldRef<"ContactoClienteFiremat", 'Int'>
+    readonly nombre: FieldRef<"ContactoClienteFiremat", 'String'>
+    readonly cargo: FieldRef<"ContactoClienteFiremat", 'String'>
+    readonly telefono: FieldRef<"ContactoClienteFiremat", 'String'>
+    readonly correo: FieldRef<"ContactoClienteFiremat", 'String'>
+    readonly principal: FieldRef<"ContactoClienteFiremat", 'Boolean'>
+    readonly activo: FieldRef<"ContactoClienteFiremat", 'Boolean'>
+    readonly observaciones: FieldRef<"ContactoClienteFiremat", 'String'>
+    readonly createdAt: FieldRef<"ContactoClienteFiremat", 'DateTime'>
+    readonly updatedAt: FieldRef<"ContactoClienteFiremat", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactoClienteFiremat findUnique
+   */
+  export type ContactoClienteFirematFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteFiremat to fetch.
+     */
+    where: ContactoClienteFirematWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteFiremat findUniqueOrThrow
+   */
+  export type ContactoClienteFirematFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteFiremat to fetch.
+     */
+    where: ContactoClienteFirematWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteFiremat findFirst
+   */
+  export type ContactoClienteFirematFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteFiremat to fetch.
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteFiremats to fetch.
+     */
+    orderBy?: ContactoClienteFirematOrderByWithRelationInput | ContactoClienteFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactoClienteFiremats.
+     */
+    cursor?: ContactoClienteFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteFiremats.
+     */
+    distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteFiremat findFirstOrThrow
+   */
+  export type ContactoClienteFirematFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteFiremat to fetch.
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteFiremats to fetch.
+     */
+    orderBy?: ContactoClienteFirematOrderByWithRelationInput | ContactoClienteFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactoClienteFiremats.
+     */
+    cursor?: ContactoClienteFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteFiremats.
+     */
+    distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteFiremat findMany
+   */
+  export type ContactoClienteFirematFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteFiremats to fetch.
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteFiremats to fetch.
+     */
+    orderBy?: ContactoClienteFirematOrderByWithRelationInput | ContactoClienteFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactoClienteFiremats.
+     */
+    cursor?: ContactoClienteFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteFiremats.
+     */
+    distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteFiremat create
+   */
+  export type ContactoClienteFirematCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactoClienteFiremat.
+     */
+    data: XOR<ContactoClienteFirematCreateInput, ContactoClienteFirematUncheckedCreateInput>
+  }
+
+  /**
+   * ContactoClienteFiremat createMany
+   */
+  export type ContactoClienteFirematCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactoClienteFiremats.
+     */
+    data: ContactoClienteFirematCreateManyInput | ContactoClienteFirematCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactoClienteFiremat createManyAndReturn
+   */
+  export type ContactoClienteFirematCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactoClienteFiremats.
+     */
+    data: ContactoClienteFirematCreateManyInput | ContactoClienteFirematCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteFiremat update
+   */
+  export type ContactoClienteFirematUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactoClienteFiremat.
+     */
+    data: XOR<ContactoClienteFirematUpdateInput, ContactoClienteFirematUncheckedUpdateInput>
+    /**
+     * Choose, which ContactoClienteFiremat to update.
+     */
+    where: ContactoClienteFirematWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteFiremat updateMany
+   */
+  export type ContactoClienteFirematUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactoClienteFiremats.
+     */
+    data: XOR<ContactoClienteFirematUpdateManyMutationInput, ContactoClienteFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactoClienteFiremats to update
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * Limit how many ContactoClienteFiremats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactoClienteFiremat updateManyAndReturn
+   */
+  export type ContactoClienteFirematUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactoClienteFiremats.
+     */
+    data: XOR<ContactoClienteFirematUpdateManyMutationInput, ContactoClienteFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactoClienteFiremats to update
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * Limit how many ContactoClienteFiremats to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteFiremat upsert
+   */
+  export type ContactoClienteFirematUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactoClienteFiremat to update in case it exists.
+     */
+    where: ContactoClienteFirematWhereUniqueInput
+    /**
+     * In case the ContactoClienteFiremat found by the `where` argument doesn't exist, create a new ContactoClienteFiremat with this data.
+     */
+    create: XOR<ContactoClienteFirematCreateInput, ContactoClienteFirematUncheckedCreateInput>
+    /**
+     * In case the ContactoClienteFiremat was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactoClienteFirematUpdateInput, ContactoClienteFirematUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactoClienteFiremat delete
+   */
+  export type ContactoClienteFirematDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    /**
+     * Filter which ContactoClienteFiremat to delete.
+     */
+    where: ContactoClienteFirematWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteFiremat deleteMany
+   */
+  export type ContactoClienteFirematDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactoClienteFiremats to delete
+     */
+    where?: ContactoClienteFirematWhereInput
+    /**
+     * Limit how many ContactoClienteFiremats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactoClienteFiremat without action
+   */
+  export type ContactoClienteFirematDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15632,7 +17095,16 @@ export namespace Prisma {
     email: 'email',
     telefono: 'telefono',
     direccion: 'direccion',
-    createdAt: 'createdAt'
+    razonSocial: 'razonSocial',
+    nombreEmpresa: 'nombreEmpresa',
+    region: 'region',
+    comuna: 'comuna',
+    tipoCliente: 'tipoCliente',
+    canalVenta: 'canalVenta',
+    activo: 'activo',
+    observaciones: 'observaciones',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -15738,6 +17210,23 @@ export namespace Prisma {
   export type FunnelFirematOpportunityScalarFieldEnum = (typeof FunnelFirematOpportunityScalarFieldEnum)[keyof typeof FunnelFirematOpportunityScalarFieldEnum]
 
 
+  export const ContactoClienteFirematScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    nombre: 'nombre',
+    cargo: 'cargo',
+    telefono: 'telefono',
+    correo: 'correo',
+    principal: 'principal',
+    activo: 'activo',
+    observaciones: 'observaciones',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ContactoClienteFirematScalarFieldEnum = (typeof ContactoClienteFirematScalarFieldEnum)[keyof typeof ContactoClienteFirematScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -15827,6 +17316,34 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'TipoClienteFiremat'
+   */
+  export type EnumTipoClienteFirematFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoClienteFiremat'>
+    
+
+
+  /**
+   * Reference to a field of type 'TipoClienteFiremat[]'
+   */
+  export type ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoClienteFiremat[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CanalVentaFiremat'
+   */
+  export type EnumCanalVentaFirematFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CanalVentaFiremat'>
+    
+
+
+  /**
+   * Reference to a field of type 'CanalVentaFiremat[]'
+   */
+  export type ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CanalVentaFiremat[]'>
     
   /**
    * Deep Input Types
@@ -16314,7 +17831,17 @@ export namespace Prisma {
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
+    region?: StringNullableFilter<"Cliente"> | string | null
+    comuna?: StringNullableFilter<"Cliente"> | string | null
+    tipoCliente?: EnumTipoClienteFirematNullableFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
+    canalVenta?: EnumCanalVentaFirematNullableFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
+    activo?: BoolFilter<"Cliente"> | boolean
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
+    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
+    contactos?: ContactoClienteFirematListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
   }
 
@@ -16325,7 +17852,17 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
+    razonSocial?: SortOrderInput | SortOrder
+    nombreEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    tipoCliente?: SortOrderInput | SortOrder
+    canalVenta?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    contactos?: ContactoClienteFirematOrderByRelationAggregateInput
     Oportunidad?: OportunidadOrderByRelationAggregateInput
   }
 
@@ -16339,7 +17876,17 @@ export namespace Prisma {
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
+    region?: StringNullableFilter<"Cliente"> | string | null
+    comuna?: StringNullableFilter<"Cliente"> | string | null
+    tipoCliente?: EnumTipoClienteFirematNullableFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
+    canalVenta?: EnumCanalVentaFirematNullableFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
+    activo?: BoolFilter<"Cliente"> | boolean
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
+    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
+    contactos?: ContactoClienteFirematListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
   }, "id" | "rut">
 
@@ -16350,7 +17897,16 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
+    razonSocial?: SortOrderInput | SortOrder
+    nombreEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    tipoCliente?: SortOrderInput | SortOrder
+    canalVenta?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _avg?: ClienteAvgOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
@@ -16368,7 +17924,16 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     direccion?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    region?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    comuna?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    tipoCliente?: EnumTipoClienteFirematNullableWithAggregatesFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
+    canalVenta?: EnumCanalVentaFirematNullableWithAggregatesFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
+    activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
+    observaciones?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
   }
 
   export type OportunidadWhereInput = {
@@ -16891,6 +18456,93 @@ export namespace Prisma {
     probabilidad?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
   }
 
+  export type ContactoClienteFirematWhereInput = {
+    AND?: ContactoClienteFirematWhereInput | ContactoClienteFirematWhereInput[]
+    OR?: ContactoClienteFirematWhereInput[]
+    NOT?: ContactoClienteFirematWhereInput | ContactoClienteFirematWhereInput[]
+    id?: IntFilter<"ContactoClienteFiremat"> | number
+    clienteId?: IntFilter<"ContactoClienteFiremat"> | number
+    nombre?: StringFilter<"ContactoClienteFiremat"> | string
+    cargo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    principal?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    activo?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }
+
+  export type ContactoClienteFirematOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+  }
+
+  export type ContactoClienteFirematWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ContactoClienteFirematWhereInput | ContactoClienteFirematWhereInput[]
+    OR?: ContactoClienteFirematWhereInput[]
+    NOT?: ContactoClienteFirematWhereInput | ContactoClienteFirematWhereInput[]
+    clienteId?: IntFilter<"ContactoClienteFiremat"> | number
+    nombre?: StringFilter<"ContactoClienteFiremat"> | string
+    cargo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    principal?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    activo?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }, "id">
+
+  export type ContactoClienteFirematOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ContactoClienteFirematCountOrderByAggregateInput
+    _avg?: ContactoClienteFirematAvgOrderByAggregateInput
+    _max?: ContactoClienteFirematMaxOrderByAggregateInput
+    _min?: ContactoClienteFirematMinOrderByAggregateInput
+    _sum?: ContactoClienteFirematSumOrderByAggregateInput
+  }
+
+  export type ContactoClienteFirematScalarWhereWithAggregatesInput = {
+    AND?: ContactoClienteFirematScalarWhereWithAggregatesInput | ContactoClienteFirematScalarWhereWithAggregatesInput[]
+    OR?: ContactoClienteFirematScalarWhereWithAggregatesInput[]
+    NOT?: ContactoClienteFirematScalarWhereWithAggregatesInput | ContactoClienteFirematScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ContactoClienteFiremat"> | number
+    clienteId?: IntWithAggregatesFilter<"ContactoClienteFiremat"> | number
+    nombre?: StringWithAggregatesFilter<"ContactoClienteFiremat"> | string
+    cargo?: StringNullableWithAggregatesFilter<"ContactoClienteFiremat"> | string | null
+    telefono?: StringNullableWithAggregatesFilter<"ContactoClienteFiremat"> | string | null
+    correo?: StringNullableWithAggregatesFilter<"ContactoClienteFiremat"> | string | null
+    principal?: BoolWithAggregatesFilter<"ContactoClienteFiremat"> | boolean
+    activo?: BoolWithAggregatesFilter<"ContactoClienteFiremat"> | boolean
+    observaciones?: StringNullableWithAggregatesFilter<"ContactoClienteFiremat"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ContactoClienteFiremat"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ContactoClienteFiremat"> | Date | string
+  }
+
   export type CategoriaCreateInput = {
     nombre: string
     Producto?: ProductoCreateNestedManyWithoutCategoriaInput
@@ -17399,7 +19051,17 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
     Oportunidad?: OportunidadCreateNestedManyWithoutClienteInput
   }
 
@@ -17410,7 +19072,17 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -17420,7 +19092,17 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutClienteNestedInput
   }
 
@@ -17431,7 +19113,17 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -17442,7 +19134,16 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -17451,7 +19152,16 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -17461,7 +19171,16 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OportunidadCreateInput = {
@@ -18068,6 +19787,100 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ContactoClienteFirematCreateInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContactosInput
+  }
+
+  export type ContactoClienteFirematUncheckedCreateInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteFirematUpdateInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteFirematCreateManyInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteFirematUpdateManyMutationInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -18687,6 +20500,30 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumTipoClienteFirematNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TipoClienteFiremat | EnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel> | $Enums.TipoClienteFiremat | null
+  }
+
+  export type EnumCanalVentaFirematNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CanalVentaFiremat | EnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel> | $Enums.CanalVentaFiremat | null
+  }
+
+  export type ContactoClienteFirematListRelationFilter = {
+    every?: ContactoClienteFirematWhereInput
+    some?: ContactoClienteFirematWhereInput
+    none?: ContactoClienteFirematWhereInput
+  }
+
+  export type ContactoClienteFirematOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ClienteCountOrderByAggregateInput = {
     id?: SortOrder
     nombre?: SortOrder
@@ -18694,7 +20531,16 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ClienteAvgOrderByAggregateInput = {
@@ -18708,7 +20554,16 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -18718,11 +20573,40 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ClienteSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type EnumTipoClienteFirematNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TipoClienteFiremat | EnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTipoClienteFirematNullableWithAggregatesFilter<$PrismaModel> | $Enums.TipoClienteFiremat | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel>
+    _max?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel>
+  }
+
+  export type EnumCanalVentaFirematNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CanalVentaFiremat | EnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCanalVentaFirematNullableWithAggregatesFilter<$PrismaModel> | $Enums.CanalVentaFiremat | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel>
+    _max?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel>
   }
 
   export type ClienteScalarRelationFilter = {
@@ -19087,6 +20971,58 @@ export namespace Prisma {
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+  }
+
+  export type ContactoClienteFirematCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteFirematAvgOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+  }
+
+  export type ContactoClienteFirematMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteFirematMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteFirematSumOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
   }
 
   export type ProductoCreateNestedManyWithoutCategoriaInput = {
@@ -19547,6 +21483,13 @@ export namespace Prisma {
     update?: XOR<XOR<VentaUpdateToOneWithWhereWithoutVentaDetalleInput, VentaUpdateWithoutVentaDetalleInput>, VentaUncheckedUpdateWithoutVentaDetalleInput>
   }
 
+  export type ContactoClienteFirematCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput> | ContactoClienteFirematCreateWithoutClienteInput[] | ContactoClienteFirematUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutClienteInput | ContactoClienteFirematCreateOrConnectWithoutClienteInput[]
+    createMany?: ContactoClienteFirematCreateManyClienteInputEnvelope
+    connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+  }
+
   export type OportunidadCreateNestedManyWithoutClienteInput = {
     create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
@@ -19554,11 +21497,40 @@ export namespace Prisma {
     connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
   }
 
+  export type ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput> | ContactoClienteFirematCreateWithoutClienteInput[] | ContactoClienteFirematUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutClienteInput | ContactoClienteFirematCreateOrConnectWithoutClienteInput[]
+    createMany?: ContactoClienteFirematCreateManyClienteInputEnvelope
+    connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+  }
+
   export type OportunidadUncheckedCreateNestedManyWithoutClienteInput = {
     create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
     createMany?: OportunidadCreateManyClienteInputEnvelope
     connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+  }
+
+  export type NullableEnumTipoClienteFirematFieldUpdateOperationsInput = {
+    set?: $Enums.TipoClienteFiremat | null
+  }
+
+  export type NullableEnumCanalVentaFirematFieldUpdateOperationsInput = {
+    set?: $Enums.CanalVentaFiremat | null
+  }
+
+  export type ContactoClienteFirematUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput> | ContactoClienteFirematCreateWithoutClienteInput[] | ContactoClienteFirematUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutClienteInput | ContactoClienteFirematCreateOrConnectWithoutClienteInput[]
+    upsert?: ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput | ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ContactoClienteFirematCreateManyClienteInputEnvelope
+    set?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    disconnect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    delete?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    update?: ContactoClienteFirematUpdateWithWhereUniqueWithoutClienteInput | ContactoClienteFirematUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ContactoClienteFirematUpdateManyWithWhereWithoutClienteInput | ContactoClienteFirematUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
   }
 
   export type OportunidadUpdateManyWithoutClienteNestedInput = {
@@ -19573,6 +21545,20 @@ export namespace Prisma {
     update?: OportunidadUpdateWithWhereUniqueWithoutClienteInput | OportunidadUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: OportunidadUpdateManyWithWhereWithoutClienteInput | OportunidadUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: OportunidadScalarWhereInput | OportunidadScalarWhereInput[]
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput> | ContactoClienteFirematCreateWithoutClienteInput[] | ContactoClienteFirematUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutClienteInput | ContactoClienteFirematCreateOrConnectWithoutClienteInput[]
+    upsert?: ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput | ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ContactoClienteFirematCreateManyClienteInputEnvelope
+    set?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    disconnect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    delete?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
+    update?: ContactoClienteFirematUpdateWithWhereUniqueWithoutClienteInput | ContactoClienteFirematUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ContactoClienteFirematUpdateManyWithWhereWithoutClienteInput | ContactoClienteFirematUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
   }
 
   export type OportunidadUncheckedUpdateManyWithoutClienteNestedInput = {
@@ -19761,6 +21747,20 @@ export namespace Prisma {
     delete?: ProductoWhereInput | boolean
     connect?: ProductoWhereUniqueInput
     update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutFunnelFirematOpportunityInput, ProductoUpdateWithoutFunnelFirematOpportunityInput>, ProductoUncheckedUpdateWithoutFunnelFirematOpportunityInput>
+  }
+
+  export type ClienteCreateNestedOneWithoutContactosInput = {
+    create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ClienteUpdateOneRequiredWithoutContactosNestedInput = {
+    create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
+    upsert?: ClienteUpsertWithoutContactosInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContactosInput, ClienteUpdateWithoutContactosInput>, ClienteUncheckedUpdateWithoutContactosInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -19994,6 +21994,40 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTipoClienteFirematNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TipoClienteFiremat | EnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel> | $Enums.TipoClienteFiremat | null
+  }
+
+  export type NestedEnumCanalVentaFirematNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CanalVentaFiremat | EnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel> | $Enums.CanalVentaFiremat | null
+  }
+
+  export type NestedEnumTipoClienteFirematNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TipoClienteFiremat | EnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.TipoClienteFiremat[] | ListEnumTipoClienteFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumTipoClienteFirematNullableWithAggregatesFilter<$PrismaModel> | $Enums.TipoClienteFiremat | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel>
+    _max?: NestedEnumTipoClienteFirematNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCanalVentaFirematNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CanalVentaFiremat | EnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CanalVentaFiremat[] | ListEnumCanalVentaFirematFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCanalVentaFirematNullableWithAggregatesFilter<$PrismaModel> | $Enums.CanalVentaFiremat | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel>
+    _max?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel>
   }
 
   export type ProductoCreateWithoutCategoriaInput = {
@@ -21001,6 +23035,41 @@ export namespace Prisma {
     proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ContactoClienteFirematCreateWithoutClienteInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteFirematUncheckedCreateWithoutClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteFirematCreateOrConnectWithoutClienteInput = {
+    where: ContactoClienteFirematWhereUniqueInput
+    create: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ContactoClienteFirematCreateManyClienteInputEnvelope = {
+    data: ContactoClienteFirematCreateManyClienteInput | ContactoClienteFirematCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OportunidadCreateWithoutClienteInput = {
     titulo: string
     descripcion?: string | null
@@ -21040,6 +23109,39 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput = {
+    where: ContactoClienteFirematWhereUniqueInput
+    update: XOR<ContactoClienteFirematUpdateWithoutClienteInput, ContactoClienteFirematUncheckedUpdateWithoutClienteInput>
+    create: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ContactoClienteFirematUpdateWithWhereUniqueWithoutClienteInput = {
+    where: ContactoClienteFirematWhereUniqueInput
+    data: XOR<ContactoClienteFirematUpdateWithoutClienteInput, ContactoClienteFirematUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type ContactoClienteFirematUpdateManyWithWhereWithoutClienteInput = {
+    where: ContactoClienteFirematScalarWhereInput
+    data: XOR<ContactoClienteFirematUpdateManyMutationInput, ContactoClienteFirematUncheckedUpdateManyWithoutClienteInput>
+  }
+
+  export type ContactoClienteFirematScalarWhereInput = {
+    AND?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
+    OR?: ContactoClienteFirematScalarWhereInput[]
+    NOT?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
+    id?: IntFilter<"ContactoClienteFiremat"> | number
+    clienteId?: IntFilter<"ContactoClienteFiremat"> | number
+    nombre?: StringFilter<"ContactoClienteFiremat"> | string
+    cargo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    principal?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    activo?: BoolFilter<"ContactoClienteFiremat"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteFiremat"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
+  }
+
   export type OportunidadUpsertWithWhereUniqueWithoutClienteInput = {
     where: OportunidadWhereUniqueInput
     update: XOR<OportunidadUpdateWithoutClienteInput, OportunidadUncheckedUpdateWithoutClienteInput>
@@ -21062,7 +23164,17 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutOportunidadInput = {
@@ -21072,7 +23184,17 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutOportunidadInput = {
@@ -21145,7 +23267,17 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutOportunidadInput = {
@@ -21155,7 +23287,17 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ProductoUpsertWithoutOportunidadInput = {
@@ -21828,6 +23970,100 @@ export namespace Prisma {
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
+  export type ClienteCreateWithoutContactosInput = {
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Oportunidad?: OportunidadCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutContactosInput = {
+    id?: number
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutContactosInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+  }
+
+  export type ClienteUpsertWithoutContactosInput = {
+    update: XOR<ClienteUpdateWithoutContactosInput, ClienteUncheckedUpdateWithoutContactosInput>
+    create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutContactosInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutContactosInput, ClienteUncheckedUpdateWithoutContactosInput>
+  }
+
+  export type ClienteUpdateWithoutContactosInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Oportunidad?: OportunidadUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutContactosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
   export type ProductoCreateManyCategoriaInput = {
     id?: number
     nombre: string
@@ -22294,6 +24530,19 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
+  export type ContactoClienteFirematCreateManyClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type OportunidadCreateManyClienteInput = {
     id?: number
     titulo: string
@@ -22307,6 +24556,44 @@ export namespace Prisma {
     probabilidad?: number | null
     createdAt?: Date | string
     productoId?: number | null
+  }
+
+  export type ContactoClienteFirematUpdateWithoutClienteInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateManyWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OportunidadUpdateWithoutClienteInput = {

@@ -197,7 +197,16 @@ exports.Prisma.ClienteScalarFieldEnum = {
   email: 'email',
   telefono: 'telefono',
   direccion: 'direccion',
-  createdAt: 'createdAt'
+  razonSocial: 'razonSocial',
+  nombreEmpresa: 'nombreEmpresa',
+  region: 'region',
+  comuna: 'comuna',
+  tipoCliente: 'tipoCliente',
+  canalVenta: 'canalVenta',
+  activo: 'activo',
+  observaciones: 'observaciones',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.OportunidadScalarFieldEnum = {
@@ -288,6 +297,20 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   probabilidad: 'probabilidad'
 };
 
+exports.Prisma.ContactoClienteFirematScalarFieldEnum = {
+  id: 'id',
+  clienteId: 'clienteId',
+  nombre: 'nombre',
+  cargo: 'cargo',
+  telefono: 'telefono',
+  correo: 'correo',
+  principal: 'principal',
+  activo: 'activo',
+  observaciones: 'observaciones',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -302,7 +325,25 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.TipoClienteFiremat = exports.$Enums.TipoClienteFiremat = {
+  cliente_final: 'cliente_final',
+  ferreteria: 'ferreteria',
+  broker: 'broker',
+  redistribuidor: 'redistribuidor',
+  instalador: 'instalador',
+  constructora: 'constructora',
+  otro: 'otro'
+};
 
+exports.CanalVentaFiremat = exports.$Enums.CanalVentaFiremat = {
+  venta_directa: 'venta_directa',
+  broker: 'broker',
+  ferreteria: 'ferreteria',
+  redistribuidor: 'redistribuidor',
+  instalador: 'instalador',
+  recompra: 'recompra',
+  otro: 'otro'
+};
 
 exports.Prisma.ModelName = {
   Categoria: 'Categoria',
@@ -315,7 +356,8 @@ exports.Prisma.ModelName = {
   Oportunidad: 'Oportunidad',
   CotizacionFiremat: 'CotizacionFiremat',
   CotizacionFirematDetalle: 'CotizacionFirematDetalle',
-  FunnelFirematOpportunity: 'FunnelFirematOpportunity'
+  FunnelFirematOpportunity: 'FunnelFirematOpportunity',
+  ContactoClienteFiremat: 'ContactoClienteFiremat'
 };
 
 /**

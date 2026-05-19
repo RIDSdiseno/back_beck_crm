@@ -205,6 +205,10 @@ model Cotizacion {
   funnelBeck       OperadorBeck?     @relation(fields: [funnelBeckId], references: [id])
   obra             Obra?             @relation(fields: [obraId], references: [id])
   lineas           LineaCotizacion[]
+  clienteBeckId    String?              @map("cliente_beck_id") @db.Uuid
+  contactoBeckId   String?              @map("contacto_beck_id") @db.Uuid
+  clienteBeck      ClienteBeck?         @relation(fields: [clienteBeckId], references: [id])
+  contactoBeck     ContactoClienteBeck? @relation(fields: [contactoBeckId], references: [id])
 
   @@unique([numero, version])
   @@index([clienteNombre])
@@ -216,6 +220,8 @@ model Cotizacion {
   @@index([version])
   @@index([esActual])
   @@index([cotizacionBaseId])
+  @@index([clienteBeckId])
+  @@index([contactoBeckId])
   @@map("cotizaciones")
 }
 
@@ -285,6 +291,11 @@ model OperadorBeck {
   tipoContacto        String?             @map("tipo_contacto") @db.VarChar(100)
   tipoOportunidad     String?             @map("tipo_oportunidad") @db.VarChar(100)
   cotizaciones        Cotizacion[]
+  clienteBeckId  String? @map("cliente_beck_id") @db.Uuid
+contactoBeckId String? @map("contacto_beck_id") @db.Uuid
+
+clienteBeck  ClienteBeck?         @relation(fields: [clienteBeckId], references: [id])
+contactoBeck ContactoClienteBeck? @relation(fields: [contactoBeckId], references: [id])
 
   @@index([etapa])
   @@index([estadoCierre])
@@ -293,6 +304,8 @@ model OperadorBeck {
   @@index([vendedor])
   @@index([region])
   @@index([comuna])
+  @@index([clienteBeckId])
+  @@index([contactoBeckId])
   @@map("funnel_beck")
 }
 
@@ -354,6 +367,58 @@ model fotos_registro {
 
   @@index([registro_id], map: "idx_fotos_registro_registro_id")
   @@index([subido_por_id], map: "idx_fotos_registro_subido_por_id")
+}
+
+model ClienteBeck {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  rut            String   @unique @db.VarChar(20)
+  razonSocial    String   @map("razon_social") @db.VarChar(255)
+  nombreEmpresa  String?  @map("nombre_empresa") @db.VarChar(255)
+  direccion      String?
+  telefono       String?  @db.VarChar(50)
+  correo         String?  @db.VarChar(255)
+  region         String?  @db.VarChar(150)
+  comuna         String?  @db.VarChar(150)
+  tipoCliente    String?  @map("tipo_cliente") @db.VarChar(100)
+  origen         String?  @db.VarChar(100)
+  activo         Boolean  @default(true)
+  observaciones  String?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  contactos    ContactoClienteBeck[]
+  oportunidades OperadorBeck[]
+  cotizaciones  Cotizacion[]
+
+  @@index([rut])
+  @@index([razonSocial])
+  @@index([activo])
+  @@map("clientes_beck")
+}
+
+model ContactoClienteBeck {
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  clienteId   String  @map("cliente_id") @db.Uuid
+  nombre      String  @db.VarChar(255)
+  cargo       String? @db.VarChar(120)
+  telefono    String? @db.VarChar(50)
+  correo      String? @db.VarChar(255)
+  principal   Boolean @default(false)
+  activo      Boolean @default(true)
+  observaciones String?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  cliente       ClienteBeck  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  oportunidades OperadorBeck[]
+  cotizaciones  Cotizacion[]
+
+  @@index([clienteId])
+  @@index([correo])
+  @@index([activo])
+  @@map("contactos_cliente_beck")
 }
 
 enum RolUsuario {

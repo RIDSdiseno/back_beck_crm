@@ -7,6 +7,7 @@ import notificacionesRoutes from './routes/notificaciones.routes';
 import obrasRoutes from './routes/obras.routes';
 import itemizadosRoutes from './routes/itemizados.routes';
 import statsRoutes from './routes/stats.routes';
+import dashboardBeckRoutes from './routes/dashboard-beck.routes';
 import funnelBeckRoutes from './routes/funnelBeck.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
 import usuariosRoutes from './routes/usuarios.routes';
@@ -21,7 +22,8 @@ import firematCategoriasRoutes from './routes/firemat/categorias.routes';
 import beckUsuariosParametrosRoutes from './routes/beck/usuarios-parametros.routes';
 import firematUsuariosParametrosRoutes from './routes/firemat/usuarios-parametros.routes';
 import { authenticate, denyRoles } from './middlewares/auth';
-
+import clientesBeckRoutes from './routes/clientes-beck.routes';
+import firematClientesRoutes from './routes/firemat/clientes-firemat.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -97,11 +99,12 @@ app.use('/api/notificaciones', blockBeckRoutes, notificacionesRoutes);
 app.use('/api/obras', blockBeckRoutes, obrasRoutes);
 app.use('/api/itemizados', blockBeckRoutes, itemizadosRoutes);
 app.use('/api/stats', blockBeckRoutes, statsRoutes);
+app.use('/api/dashboard/beck', blockBeckRoutes, dashboardBeckRoutes);
 app.use('/api/funnel-beck', blockBeckRoutes, funnelBeckRoutes);
 app.use('/api/usuarios', blockBeckRoutes, usuariosRoutes);
 app.use('/api/cotizaciones', blockBeckRoutes, cotizacionesRoutes);
 app.use('/api/movimientos-crm', blockBeckRoutes, movimientosCrmRoutes);
-
+app.use('/api/clientes-beck', blockBeckRoutes, clientesBeckRoutes);
 // Rutas parametros de usuarios por empresa
 app.use('/api/beck/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
 app.use('/api/firemat/usuarios-parametros', authenticate, firematUsuariosParametrosRoutes);
@@ -113,6 +116,7 @@ app.use('/api/firemat/inventario', authenticate, firematInventarioRoutes);
 app.use('/api/firemat/ventas', authenticate, firematVentasRoutes);
 app.use('/api/firemat/funnel', authenticate, funnelFirematRoutes);
 app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
+app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {
