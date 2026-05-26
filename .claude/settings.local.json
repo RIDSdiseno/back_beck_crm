@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npm run *)",
       "Bash(npx tsc *)",
-      "Bash(node -e \"const s = require\\('fs'\\).readFileSync\\('src/controllers/obras.controller.ts','utf8'\\); const line = s.split\\('\\\\n'\\).find\\(l => l.includes\\('replace'\\)\\); console.log\\(JSON.stringify\\(line\\)\\);\")"
+      "Bash(node -e \"const s = require\\('fs'\\).readFileSync\\('src/controllers/obras.controller.ts','utf8'\\); const line = s.split\\('\\\\n'\\).find\\(l => l.includes\\('replace'\\)\\); console.log\\(JSON.stringify\\(line\\)\\);\")",
+      "Bash(Find \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" -type f -name \"*registros*\" -o -name \"*registro*\")",
+      "Bash(dir \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" /b)",
+      "Bash(findstr /i registros)",
+      "Bash(Get-ChildItem \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" -Name)"
     ]
   }
 }

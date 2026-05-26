@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../config/prisma";
+import type { RawFilaCliente } from "../utils/importClientes";
 
 function normalizeString(value: unknown): string {
   return String(value ?? "").trim();
@@ -330,6 +331,145 @@ export async function cambiarEstadoContactoClienteBeck(
     where: { id: contactoId },
     data: { activo },
   });
+}
+
+// ─── Importación masiva ────────────────────────────────────────────────────
+
+type MappedCliente = {
+  rut: string | null;
+  razonSocial: string | null;
+  nombreEmpresa: string | null;
+  telefono: string | null;
+  correo: string | null;
+  region: string | null;
+  comuna: string | null;
+  direccion: string | null;
+  tipoCliente: string | null;
+};
+
+type ErrorFila = { fila: number; rut?: string; error: string };
+type DuplicadoFila = { fila: number; rut: string; razonSocial: string; motivo: string };
+type CreadoFila = { id: string; rut: string; razonSocial: string };
+
+export type ImportResult = {
+  totalProcesados: number;
+  totalCreados: number;
+  totalDuplicados: number;
+  totalErrores: number;
+  creados: CreadoFila[];
+  duplicadosOmitidos: DuplicadoFila[];
+  errores: ErrorFila[];
+  advertencias: string[];
+};
+
+function normalizarClave(k: string): string {
+  return k
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Mn}/gu, "")
+    .replace(/[\s_]+/g, " ")
+    .trim();
+}
+
+const COLUMNAS: Record<string, keyof MappedCliente> = {
+  rut: "rut",
+  "razon social": "razonSocial",
+  "nombre empresa": "nombreEmpresa",
+  telefono: "telefono",
+  fono: "telefono",
+  correo: "correo",
+  email: "correo",
+  region: "region",
+  comuna: "comuna",
+  direccion: "direccion",
+  "tipo cliente": "tipoCliente",
+};
+
+function mapearFila(raw: RawFilaCliente): MappedCliente {
+  const result: MappedCliente = {
+    rut: null, razonSocial: null, nombreEmpresa: null,
+    telefono: null, correo: null, region: null,
+    comuna: null, direccion: null, tipoCliente: null,
+  };
+  for (const [k, v] of Object.entries(raw)) {
+    const campo = COLUMNAS[normalizarClave(k)];
+    if (campo && v) result[campo] = v;
+  }
+  return result;
+}
+
+export async function importarClientesBeck(filas: RawFilaCliente[]): Promise<ImportResult> {
+  const creados: CreadoFila[] = [];
+  const duplicadosOmitidos: DuplicadoFila[] = [];
+  const errores: ErrorFila[] = [];
+  const advertencias: string[] = [];
+  let procesados = 0;
+
+  for (let i = 0; i < filas.length; i++) {
+    const numFila = i + 2;
+    const mapped = mapearFila(filas[i]);
+
+    if (!mapped.rut && !mapped.razonSocial) continue;
+
+    procesados++;
+
+    try {
+      if (!mapped.rut) throw new Error("El RUT es obligatorio.");
+      if (!mapped.razonSocial) throw new Error("La Razon Social es obligatoria.");
+
+      const rut = procesarRut(mapped.rut);
+
+      const existente = await prisma.clienteBeck.findUnique({
+        where: { rut },
+        select: { id: true },
+      });
+
+      if (existente) {
+        duplicadosOmitidos.push({
+          fila: numFila,
+          rut,
+          razonSocial: mapped.razonSocial,
+          motivo: "RUT ya existe",
+        });
+        continue;
+      }
+
+      const cliente = await prisma.clienteBeck.create({
+        data: {
+          rut,
+          razonSocial: mapped.razonSocial.trim(),
+          nombreEmpresa: mapped.nombreEmpresa?.trim() || null,
+          telefono: procesarTelefono(mapped.telefono),
+          correo: procesarCorreo(mapped.correo),
+          region: mapped.region || null,
+          comuna: mapped.comuna || null,
+          direccion: mapped.direccion || null,
+          tipoCliente: mapped.tipoCliente || null,
+          activo: true,
+        },
+        select: { id: true, rut: true, razonSocial: true },
+      });
+
+      creados.push(cliente);
+    } catch (err) {
+      errores.push({
+        fila: numFila,
+        ...(mapped.rut ? { rut: mapped.rut } : {}),
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
+  return {
+    totalProcesados: procesados,
+    totalCreados: creados.length,
+    totalDuplicados: duplicadosOmitidos.length,
+    totalErrores: errores.length,
+    creados,
+    duplicadosOmitidos,
+    errores,
+    advertencias,
+  };
 }
 
 export async function obtenerOportunidadesClienteBeck(clienteId: string) {

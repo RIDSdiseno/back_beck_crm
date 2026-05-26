@@ -6,6 +6,7 @@ import procesamientoRoutes from './routes/procesamiento.routes';
 import notificacionesRoutes from './routes/notificaciones.routes';
 import obrasRoutes from './routes/obras.routes';
 import itemizadosRoutes from './routes/itemizados.routes';
+import itemizadosMandanteRoutes from './routes/itemizadosMandante.routes';
 import statsRoutes from './routes/stats.routes';
 import dashboardBeckRoutes from './routes/dashboard-beck.routes';
 import funnelBeckRoutes from './routes/funnelBeck.routes';
@@ -24,6 +25,9 @@ import firematUsuariosParametrosRoutes from './routes/firemat/usuarios-parametro
 import { authenticate, denyRoles } from './middlewares/auth';
 import clientesBeckRoutes from './routes/clientes-beck.routes';
 import firematClientesRoutes from './routes/firemat/clientes-firemat.routes';
+import oficinaTecnicaPreventaRoutes from './routes/oficinaTecnicaPreventa.routes';
+import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegistro.routes';
+import registrosCampoRoutes from './routes/registros-campo.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -98,9 +102,11 @@ app.use('/api/procesamiento', blockBeckRoutes, procesamientoRoutes);
 app.use('/api/notificaciones', blockBeckRoutes, notificacionesRoutes);
 app.use('/api/obras', blockBeckRoutes, obrasRoutes);
 app.use('/api/itemizados', blockBeckRoutes, itemizadosRoutes);
+app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);
 app.use('/api/stats', blockBeckRoutes, statsRoutes);
 app.use('/api/dashboard/beck', blockBeckRoutes, dashboardBeckRoutes);
 app.use('/api/funnel-beck', blockBeckRoutes, funnelBeckRoutes);
+app.use('/api/oficina-tecnica-preventa', oficinaTecnicaPreventaRoutes);
 app.use('/api/usuarios', blockBeckRoutes, usuariosRoutes);
 app.use('/api/cotizaciones', blockBeckRoutes, cotizacionesRoutes);
 app.use('/api/movimientos-crm', blockBeckRoutes, movimientosCrmRoutes);
@@ -117,6 +123,13 @@ app.use('/api/firemat/ventas', authenticate, firematVentasRoutes);
 app.use('/api/firemat/funnel', authenticate, funnelFirematRoutes);
 app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
 app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
+
+// Configuración de visibilidad de campos por rol (accesible a todos los roles autenticados)
+app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);
+
+// Registros con sanitización por rol — accesibles para terreno, jefeobra y roles Beck
+// NO usa blockBeckRoutes para permitir terreno/jefeobra
+app.use('/api/registros-campo', registrosCampoRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

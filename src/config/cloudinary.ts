@@ -19,6 +19,13 @@ export type UploadedImageDetails = {
   original_filename: string | null;
 };
 
+export type UploadedFileDetails = {
+  secure_url: string;
+  public_id: string;
+  bytes: number | null;
+  original_filename: string | null;
+};
+
 /**
  * Sube una imagen a Cloudinary y devuelve los metadatos completos
  * (incluyendo public_id, requerido para persistir en `fotos_registro`).
@@ -69,9 +76,52 @@ export const uploadImage = async (fileBuffer: Uint8Array, folder: string = 'beck
 };
 
 /**
+ * Sube un archivo genérico a Cloudinary usando detección automática del tipo.
+ */
+export const uploadFileDetailed = async (
+  fileBuffer: Uint8Array,
+  folder: string
+): Promise<UploadedFileDetails> => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: 'auto',
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else if (result) {
+          resolve({
+            secure_url: result.secure_url,
+            public_id: result.public_id,
+            bytes: typeof result.bytes === 'number' ? result.bytes : null,
+            original_filename: result.original_filename ?? null,
+          });
+        } else {
+          reject(new Error('No se pudo subir el archivo'));
+        }
+      }
+    ).end(fileBuffer);
+  });
+};
+
+/**
  * Elimina una imagen de Cloudinary
  * @param publicId Public ID de la imagen en Cloudinary
  */
 export const deleteImage = async (publicId: string): Promise<void> => {
   await cloudinary.uploader.destroy(publicId);
+};
+
+/**
+ * Elimina un archivo genérico de Cloudinary.
+ */
+export const deleteFile = async (publicId: string): Promise<void> => {
+  const resourceTypes = ['image', 'raw', 'video'] as const;
+
+  for (const resource_type of resourceTypes) {
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type });
+    if (result?.result === 'ok' || result?.result === 'not found') return;
+  }
 };

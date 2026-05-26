@@ -11,7 +11,9 @@ import {
   actualizarContactoClienteBeck,
   cambiarEstadoContactoClienteBeck,
   obtenerOportunidadesClienteBeck,
+  importarClientesBeck,
 } from '../services/clientes-beck.service';
+import { parseFileToRows } from '../utils/importClientes';
 
 function handleError(res: Response, error: unknown, contexto: string): void {
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -202,5 +204,28 @@ export const obtenerOportunidadesCliente = async (req: Request, res: Response): 
     res.json(oportunidades);
   } catch (error) {
     handleError(res, error, 'obtener oportunidades del cliente');
+  }
+};
+
+export const importarClientes = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const file = req.file as Express.Multer.File | undefined;
+
+    if (!file) {
+      res.status(400).json({ error: 'Debe subir un archivo (.xlsx, .xls o .csv).' });
+      return;
+    }
+
+    const filas = parseFileToRows(file.buffer, file.originalname);
+
+    if (filas.length === 0) {
+      res.status(400).json({ error: 'El archivo no contiene filas de datos.' });
+      return;
+    }
+
+    const resultado = await importarClientesBeck(filas);
+    res.status(200).json(resultado);
+  } catch (error) {
+    handleError(res, error, 'importar clientes');
   }
 };

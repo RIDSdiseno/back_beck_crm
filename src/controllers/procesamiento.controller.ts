@@ -120,12 +120,16 @@ export const listarProcesamientos = async (req: Request, res: Response): Promise
         p.*,
         u.nombre as usuario_nombre,
         i.descripcion as itemizado_descripcion,
+        rt.codigo_beck,
+        rt.itemizado_mandante_id,
+        im.nombre as itemizado_mandante_nombre,
         rt.numero_sello,
         rt.descripcion_material
       FROM procesamiento_ingenieria p
       LEFT JOIN usuarios u ON p.usuario_id = u.id
       LEFT JOIN itemizados i ON p.itemizado_id = i.id
       LEFT JOIN registros_terreno rt ON p.registro_terreno_id = rt.id
+      LEFT JOIN itemizados_mandante im ON rt.itemizado_mandante_id = im.id
       WHERE 1=1
     `;
 
@@ -159,6 +163,9 @@ export const obtenerProcesamiento = async (req: Request, res: Response): Promise
         p.*,
         u.nombre as usuario_nombre,
         i.descripcion as itemizado_descripcion,
+        rt.codigo_beck,
+        rt.itemizado_mandante_id,
+        im.nombre as itemizado_mandante_nombre,
         rt.numero_sello,
         rt.descripcion_material,
         rt.cantidad_sellos,
@@ -168,6 +175,7 @@ export const obtenerProcesamiento = async (req: Request, res: Response): Promise
       LEFT JOIN usuarios u ON p.usuario_id = u.id
       LEFT JOIN itemizados i ON p.itemizado_id = i.id
       LEFT JOIN registros_terreno rt ON p.registro_terreno_id = rt.id
+      LEFT JOIN itemizados_mandante im ON rt.itemizado_mandante_id = im.id
       WHERE p.id = $1`,
       [id]
     );

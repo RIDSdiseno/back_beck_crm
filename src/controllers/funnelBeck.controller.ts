@@ -4,8 +4,10 @@ import {
   deleteFunnelBeck,
   getAllFunnelBeck,
   getFunnelBeckById,
+  getGanadasSinObraFunnelBeck,
   updateEtapaFunnelBeck,
   updateFunnelBeck,
+  updateObraFunnelBeck,
 } from "../services/funnelBeck.service";
 import {
   CotizacionError,
@@ -13,6 +15,11 @@ import {
 import {
   listCotizacionesByFunnelBeck,
 } from "../services/cotizaciones.service";
+import {
+  createFunnelBeckArchivos,
+  deleteFunnelBeckArchivo,
+  listFunnelBeckArchivos,
+} from "../services/funnelBeckArchivos.service";
 import { maskCotizacionGanancia } from "./cotizaciones.controller";
 
 export async function createFunnelBeckController(req: Request, res: Response) {
@@ -62,6 +69,21 @@ export async function getFunnelBeckByIdController(req: Request, res: Response) {
   }
 }
 
+export async function getGanadasSinObraFunnelBeckController(_req: Request, res: Response) {
+  try {
+    const oportunidades = await getGanadasSinObraFunnelBeck();
+    return res.status(200).json({
+      success: true,
+      data: oportunidades,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Error al obtener oportunidades ganadas sin obra.",
+    });
+  }
+}
+
 export async function getCotizacionesByFunnelBeckController(req: Request, res: Response) {
   try {
     const id = String(req.params.id || "").trim();
@@ -89,6 +111,65 @@ export async function getCotizacionesByFunnelBeckController(req: Request, res: R
     return res.status(400).json({
       success: false,
       error: error instanceof Error ? error.message : "Error al obtener cotizaciones de la oportunidad.",
+    });
+  }
+}
+
+export async function createFunnelBeckArchivosController(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id || "").trim();
+    const files = req.files as Express.Multer.File[] | undefined;
+    const archivos = await createFunnelBeckArchivos(id, req.body?.tipo, files);
+
+    return res.status(201).json({
+      success: true,
+      data: archivos,
+      message: "Archivos subidos correctamente.",
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al subir archivos.";
+    const statusCode = message === "Oportunidad no encontrada." ? 404 : 400;
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
+    });
+  }
+}
+
+export async function getFunnelBeckArchivosController(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id || "").trim();
+    const archivos = await listFunnelBeckArchivos(id);
+
+    return res.status(200).json({
+      success: true,
+      data: archivos,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al obtener archivos.";
+    const statusCode = message === "Oportunidad no encontrada." ? 404 : 400;
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
+    });
+  }
+}
+
+export async function deleteFunnelBeckArchivoController(req: Request, res: Response) {
+  try {
+    const archivoId = String(req.params.archivoId || "").trim();
+    const result = await deleteFunnelBeckArchivo(archivoId);
+
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al eliminar archivo.";
+    const statusCode = message === "Archivo no encontrado." ? 404 : 400;
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
     });
   }
 }
@@ -123,6 +204,38 @@ export async function updateEtapaFunnelBeckController(req: Request, res: Respons
     return res.status(400).json({
       success: false,
       error: error instanceof Error ? error.message : "Error al actualizar etapa.",
+    });
+  }
+}
+
+export async function updateObraFunnelBeckController(req: Request, res: Response) {
+  try {
+    const id = req.params.id as string;
+    const obraId = typeof req.body?.obraId === "string" ? req.body.obraId.trim() : "";
+
+    if (!obraId) {
+      return res.status(400).json({
+        success: false,
+        error: "La obra no existe.",
+      });
+    }
+
+    const oportunidad = await updateObraFunnelBeck(id, obraId);
+    return res.status(200).json({
+      success: true,
+      data: oportunidad,
+      message: "Obra vinculada correctamente.",
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al vincular la obra.";
+    const statusCode =
+      message === "La oportunidad no existe." || message === "La obra no existe."
+        ? 404
+        : 400;
+
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
     });
   }
 }

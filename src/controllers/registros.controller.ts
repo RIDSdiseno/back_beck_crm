@@ -10,6 +10,13 @@ import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
+import {
+  adjuntarCodigosBeck,
+  adjuntarItemizadosMandante,
+  obtenerItemizadoMandanteActivo,
+  sanitizarRegistroPorRol,
+  sanitizarRegistrosPorRol,
+} from '../services/configuracionCamposRegistro.service';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -17,11 +24,6 @@ function parseEjeNumericoTexto(value: unknown): string {
   return raw.replace(/\s+/g, '').replace(/[–—]/g, '-');
 }
 
-/**
- * Crear un nuevo registro de terreno con fotos
- * POST /api/registros-terreno
- * Requiere autenticación y rol 'terreno' o 'administrador'
- */
 export const crearRegistro = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -39,6 +41,23 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       observaciones,
       tipo_registro,
     } = req.body;
+    const codigoBeck =
+      req.body.codigoBeck != null ? String(req.body.codigoBeck) || null
+      : req.body.codigo_beck != null ? String(req.body.codigo_beck) || null
+      : null;
+    const itemizadoMandanteIdRaw = req.body.itemizadoMandanteId ?? req.body.itemizado_mandante_id;
+    let itemizadoMandanteId: string | null = null;
+    let codigoBeckFinal = codigoBeck;
+
+    if (itemizadoMandanteIdRaw != null && String(itemizadoMandanteIdRaw).trim()) {
+      const itemizadoMandante = await obtenerItemizadoMandanteActivo(String(itemizadoMandanteIdRaw).trim());
+      if (!itemizadoMandante) {
+        res.status(400).json({ error: 'Itemizado Mandante inválido o inactivo' });
+        return;
+      }
+      itemizadoMandanteId = itemizadoMandante.id;
+      codigoBeckFinal = itemizadoMandante.codigoBeck;
+    }
 
     // Aceptar snake_case y camelCase
     const metros_lineales: number | null =
@@ -129,36 +148,60 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         : Number(cantidad_sellos);
 
     // Insertar en BD
-    const result = await dbQuery<RegistroTerreno>(
-      `INSERT INTO registros_terreno (
-        obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
-        piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
-        nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-        metros_lineales, itemizado_sacyr
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
-      RETURNING *`,
-      [
-        obra_id,
-        usuario_id,
-        fecha.toISOString(),
-        dia_semana,
-        descripcion_material,
-        modulo,
-        piso,
-        eje_numerico_norm,
-        eje_alfabetico,
-        numero_sello,
-        cantidadSellosNorm,
-        nombre_sellador,
-        holgura,
-        accesibilidad,
-        observaciones || null,
-        fotosUrls,
-        tipoRegistroFinal,
-        metros_lineales,
-        itemizadoSacyr,
-      ]
-    );
+    const insertValues = [
+      obra_id,
+      usuario_id,
+      fecha.toISOString(),
+      dia_semana,
+      descripcion_material,
+      modulo,
+      piso,
+      eje_numerico_norm,
+      eje_alfabetico,
+      numero_sello,
+      cantidadSellosNorm,
+      nombre_sellador,
+      holgura,
+      accesibilidad,
+      observaciones || null,
+      fotosUrls,
+      tipoRegistroFinal,
+      metros_lineales,
+      itemizadoSacyr,
+    ];
+
+    const result = itemizadoMandanteId
+      ? await dbQuery<RegistroTerreno>(
+        `INSERT INTO registros_terreno (
+          obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
+          piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
+          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_sacyr, itemizado_mandante_id, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+        RETURNING *`,
+        [...insertValues, itemizadoMandanteId, codigoBeckFinal],
+      )
+      : codigoBeckFinal
+      ? await dbQuery<RegistroTerreno>(
+        `INSERT INTO registros_terreno (
+          obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
+          piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
+          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_sacyr, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+        RETURNING *`,
+        [...insertValues, codigoBeckFinal],
+      )
+      : await dbQuery<RegistroTerreno>(
+        `INSERT INTO registros_terreno (
+          obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
+          piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
+          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_sacyr
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+        RETURNING *`,
+        insertValues,
+      );
 
     const registro = result.rows[0];
 
@@ -201,7 +244,9 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       ]
     );
 
-    res.status(201).json(registro);
+    const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [registroConItemizado] = await adjuntarItemizadosMandante([registroConCodigo]);
+    res.status(201).json(registroConItemizado);
   } catch (error) {
     console.error('Error al crear registro:', error);
     res.status(500).json({ error: 'Error al crear registro' });
@@ -264,7 +309,7 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
       ],
     });
 
-    const result = registros.map(({ fotos_registro, ...reg }) => {
+    const resultBase = registros.map(({ fotos_registro, ...reg }) => {
       const urls = fotos_registro.map((f) => f.url);
       return {
         ...reg,
@@ -272,6 +317,12 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
         fotoUrl: urls[0] ?? null,
       };
     });
+
+    const resultConCodigo = await adjuntarCodigosBeck(resultBase as Record<string, unknown>[]);
+    const resultConItemizado = await adjuntarItemizadosMandante(resultConCodigo);
+    const result = user_rol === 'terreno'
+      ? await sanitizarRegistrosPorRol(resultConItemizado, 'trabajador')
+      : resultConItemizado;
 
     res.json(result);
   } catch (error) {
@@ -306,14 +357,18 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
         res.status(404).json({ error: 'Registro no encontrado' });
         return;
       }
-      res.json(result.rows[0]);
+      const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
+      const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
+      res.json(await sanitizarRegistroPorRol(registro, 'trabajador'));
     } else {
       const result = await dbQuery(query, [id]);
       if (result.rows.length === 0) {
         res.status(404).json({ error: 'Registro no encontrado' });
         return;
       }
-      res.json(result.rows[0]);
+      const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
+      const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
+      res.json(registro);
     }
   } catch (error) {
     console.error('Error al obtener registro:', error);
@@ -334,11 +389,13 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
 export const actualizarEstadoRegistro = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const { estado, notas, codigo, itemizado_id } = req.body as {
+    const { estado, notas, codigo, itemizado_id, codigoBeck, codigo_beck } = req.body as {
       estado?: string;
       notas?: string;
       codigo?: string;
       itemizado_id?: string;
+      codigoBeck?: string | null;
+      codigo_beck?: string | null;
     };
     const usuario_id = req.userId;
 
@@ -358,6 +415,14 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
     if (!existente) {
       res.status(404).json({ error: 'Registro no encontrado' });
       return;
+    }
+
+    const codigoBeckRaw = codigoBeck ?? codigo_beck;
+    if (codigoBeckRaw !== undefined) {
+      await dbQuery(
+        'UPDATE registros_terreno SET codigo_beck = $1 WHERE id = $2',
+        [codigoBeckRaw === null ? null : String(codigoBeckRaw) || null, id],
+      );
     }
 
     // 1. Actualizar estado en registros_terreno (fuente de verdad)
@@ -410,7 +475,9 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       );
     }
 
-    res.json(registro);
+    const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [registroConItemizado] = await adjuntarItemizadosMandante([registroConCodigo]);
+    res.json(registroConItemizado);
   } catch (error) {
     console.error('Error al actualizar estado:', error);
     res.status(500).json({ error: 'Error al actualizar estado del registro' });
@@ -436,6 +503,10 @@ interface ActualizarRegistroTerrenoBody {
   estado?: unknown;
   itemizadoSacyr?: unknown;
   itemizado_sacyr?: unknown;
+  codigoBeck?: unknown;
+  codigo_beck?: unknown;
+  itemizadoMandanteId?: unknown;
+  itemizado_mandante_id?: unknown;
 }
 
 const estadosEditables: EstadoRegistroTerreno[] = [
@@ -470,6 +541,27 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     const data: Prisma.RegistroTerrenoUpdateInput = {};
+    const codigoBeckRaw = body.codigoBeck ?? body.codigo_beck;
+    const itemizadoMandanteIdRaw = body.itemizadoMandanteId ?? body.itemizado_mandante_id;
+    let itemizadoMandanteIdFinal: string | null | undefined;
+    let codigoBeckFinal: string | null | undefined =
+      codigoBeckRaw === undefined
+        ? undefined
+        : codigoBeckRaw === null ? null : String(codigoBeckRaw) || null;
+
+    if (itemizadoMandanteIdRaw !== undefined) {
+      if (itemizadoMandanteIdRaw === null || String(itemizadoMandanteIdRaw).trim() === '') {
+        itemizadoMandanteIdFinal = null;
+      } else {
+        const itemizadoMandante = await obtenerItemizadoMandanteActivo(String(itemizadoMandanteIdRaw).trim());
+        if (!itemizadoMandante) {
+          res.status(400).json({ error: 'Itemizado Mandante inválido o inactivo' });
+          return;
+        }
+        itemizadoMandanteIdFinal = itemizadoMandante.id;
+        codigoBeckFinal = itemizadoMandante.codigoBeck;
+      }
+    }
 
     if (body.descripcion_material !== undefined) {
       data.descripcionMaterial = String(body.descripcion_material);
@@ -534,7 +626,25 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
       },
     });
 
-    res.json(registro);
+    if (itemizadoMandanteIdFinal !== undefined || codigoBeckFinal !== undefined) {
+      await dbQuery(
+        `UPDATE registros_terreno
+         SET itemizado_mandante_id = CASE WHEN $1::boolean THEN $2::uuid ELSE itemizado_mandante_id END,
+             codigo_beck = CASE WHEN $3::boolean THEN $4 ELSE codigo_beck END
+         WHERE id = $5`,
+        [
+          itemizadoMandanteIdFinal !== undefined,
+          itemizadoMandanteIdFinal,
+          codigoBeckFinal !== undefined,
+          codigoBeckFinal,
+          id,
+        ],
+      );
+    }
+
+    const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [registroConItemizado] = await adjuntarItemizadosMandante([registroConCodigo]);
+    res.json(registroConItemizado);
   } catch (error) {
     console.error('Error al actualizar registro:', error);
     res.status(500).json({ error: 'Error al actualizar registro' });
@@ -644,6 +754,11 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
       return;
     }
 
+    const [registroExcel] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const codigoBeckPdf = typeof registroExcel.codigoBeck === 'string' && registroExcel.codigoBeck
+      ? registroExcel.codigoBeck
+      : null;
+
     // URLs reales: prioridad fotos_registro, fallback fotosUrls de columna
     const fotoUrls: string[] =
       registro.fotos_registro.length > 0
@@ -660,7 +775,7 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
 
     // Campos dinámicos por tipo
     const esTipo = registro.tipoRegistro;
-    const codigoRegistro = `REG-${registro.id.slice(0, 6).toUpperCase()}`;
+    const codigoRegistro = codigoBeckPdf ?? `REG-${registro.id.slice(0, 6).toUpperCase()}`;
     const tituloTipo =
       esTipo === 'junta_lineal_espuma'
         ? 'Registro de Junta Lineal Espuma'
@@ -749,6 +864,7 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     // ══════════════════════════════════════════════════════════════
 
     pdfSectionHeader(doc, 'INFORMACIÓN GENERAL');
+    pdfFieldRow(doc, 'Código BECK:', codigoRegistro);
     pdfFieldRow(doc, 'Obra:', `${registro.obra.nombre}${registro.obra.codigo ? ` (${registro.obra.codigo})` : ''}`);
     pdfFieldRow(doc, 'Ejecutado por:', `${registro.usuario.nombre} — ${registro.usuario.email}`);
     pdfFieldRow(doc, 'Día semana:', registro.diaSemana);

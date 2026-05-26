@@ -28,6 +28,43 @@ export const upload = multer({
   },
 });
 
+const uploadFunnelArchivos = multer({
+  storage,
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+    files: MAX_FILES,
+  },
+});
+
+export const uploadFunnelBeckFiles = (req: Request, res: Response, next: NextFunction): void => {
+  uploadFunnelArchivos.array('files', MAX_FILES)(req, res, (err: unknown) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        res.status(400).json({ success: false, error: "Campo de archivo inválido. Use 'files'." });
+        return;
+      }
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({
+          success: false,
+          error: `El archivo excede el tamaño máximo de ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+        });
+        return;
+      }
+      if (err.code === 'LIMIT_FILE_COUNT') {
+        res.status(400).json({ success: false, error: `Solo se permiten hasta ${MAX_FILES} archivos` });
+        return;
+      }
+      res.status(400).json({ success: false, error: err.message });
+      return;
+    }
+    if (err) {
+      res.status(400).json({ success: false, error: (err as Error).message });
+      return;
+    }
+    next();
+  });
+};
+
 // Filtro para aceptar solo archivos Excel
 const excelFileFilter = (
   _req: Request,
@@ -74,6 +111,55 @@ export const uploadExcelFile = (req: Request, res: Response, next: NextFunction)
           success: false,
           error: 'El archivo Excel excede el tamaño máximo de 20MB',
         });
+        return;
+      }
+      res.status(400).json({ success: false, error: err.message });
+      return;
+    }
+    if (err) {
+      res.status(400).json({ success: false, error: (err as Error).message });
+      return;
+    }
+    next();
+  });
+};
+
+// Filtro para aceptar Excel y CSV
+const excelCsvFileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  const allowedMimes = [
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+    'application/octet-stream',
+    'text/csv',
+    'text/plain',
+    'application/csv',
+  ];
+  if (allowedMimes.includes(file.mimetype) || /\.(xlsx|xls|csv)$/i.test(file.originalname)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Solo se aceptan archivos Excel (.xlsx, .xls) o CSV (.csv)'));
+  }
+};
+
+export const uploadExcelOrCsv = multer({
+  storage,
+  fileFilter: excelCsvFileFilter,
+  limits: { fileSize: 20 * 1024 * 1024, files: 1 },
+});
+
+export const uploadExcelOrCsvFile = (req: Request, res: Response, next: NextFunction): void => {
+  uploadExcelOrCsv.single('file')(req, res, (err: unknown) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        res.status(400).json({ success: false, error: "Campo de archivo inválido. Use 'file'." });
+        return;
+      }
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({ success: false, error: 'El archivo excede el tamaño máximo de 20MB' });
         return;
       }
       res.status(400).json({ success: false, error: err.message });

@@ -7,6 +7,7 @@ import { query as dbQuery } from '../config/database';
 import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
+import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -378,8 +379,14 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let metros_lineales: number | null = null;
           let observaciones: string | null = null;
           let itemizadoSacyr: string | null = null;
+          let codigoBeck: string | null = null;
+          let itemizadoMandanteId: string | null = null;
 
           if (tipoRegistro === 'sello_cortafuego') {
+            codigoBeck =
+              getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
+            itemizadoMandanteId =
+              getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
             descripcion_material =
               getCell(rowObj, 'Itemizado BECK', 'Itemizado Beck', 'ITEMIZADO BECK', 'Itemizado') ?? '';
             itemizadoSacyr =
@@ -400,6 +407,10 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             nombre_sellador =
               getCell(rowObj, 'Nombre sellador', 'Nombre Sellador', 'NOMBRE SELLADOR', 'Sellador') ?? '';
           } else {
+            codigoBeck =
+              getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
+            itemizadoMandanteId =
+              getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
             // tipo_registro = "junta_lineal_espuma" — estructura exacta:
             //   Descripción, Fecha ejecucion sello, Día, Piso, Eje Alfabético,
             //   Eje Numérico, Nombre sellador, Foto, Recinto, Longitud (m),
@@ -497,6 +508,18 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           }
 
           const metrosFinal = toFloatOrNull(metros_lineales);
+          let itemizadoMandanteIdFinal: string | null = null;
+          let codigoBeckFinal = codigoBeck && codigoBeck.trim() ? codigoBeck.trim() : null;
+
+          if (itemizadoMandanteId && itemizadoMandanteId.trim()) {
+            const itemizadoMandante = await obtenerItemizadoMandanteActivo(itemizadoMandanteId.trim());
+            if (!itemizadoMandante) {
+              errores.push(`Fila ${rowIdx}: Itemizado Mandante inválido o inactivo`);
+              continue;
+            }
+            itemizadoMandanteIdFinal = itemizadoMandante.id;
+            codigoBeckFinal = itemizadoMandante.codigoBeck;
+          }
 
           // Verificar duplicado antes de crear
           const existente = await prisma.registroTerreno.findFirst({
@@ -547,6 +570,20 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
 
           // 2) Subir las imágenes embebidas de la fila y persistirlas en
           //    `fotos_registro`. Si falla una imagen, NO romper la importación.
+          if (itemizadoMandanteIdFinal || codigoBeckFinal) {
+            await dbQuery(
+              `UPDATE registros_terreno
+               SET itemizado_mandante_id = $1,
+                   codigo_beck = $2
+               WHERE id = $3`,
+              [
+                itemizadoMandanteIdFinal,
+                codigoBeckFinal ? truncate(codigoBeckFinal, 255) : null,
+                registro.id,
+              ],
+            );
+          }
+
           const nativeRow = rowIdx - 1;
           const imageIds = imagesByNativeRow.get(nativeRow) ?? [];
           const folder = buildCloudinaryFolder(

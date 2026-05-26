@@ -1,5 +1,6 @@
 import { TipoClienteFiremat, CanalVentaFiremat } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
+import { RawFilaCliente } from '../../utils/importClientes';
 
 // ────────────────────────────────────────────────
 // Helpers
@@ -63,26 +64,63 @@ function procesarCorreoContacto(value: unknown): string | null {
   return normalizarCorreo(value);
 }
 
+function normalizarValorEnum(value: unknown): string | null {
+  const raw = String(value ?? '').trim();
+  if (!raw) return null;
+
+  return raw
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Mn}/gu, '')
+    .replace(/[\s_]+/g, '_');
+}
+
+const TIPO_CLIENTE_IMPORT_MAP: Record<string, TipoClienteFiremat> = {
+  cliente_final: TipoClienteFiremat.cliente_final,
+  ferreteria: TipoClienteFiremat.ferreteria,
+  broker: TipoClienteFiremat.broker,
+  redistribuidor: TipoClienteFiremat.redistribuidor,
+  instalador: TipoClienteFiremat.instalador,
+  constructora: TipoClienteFiremat.constructora,
+  otro: TipoClienteFiremat.otro,
+};
+
+const CANAL_VENTA_IMPORT_MAP: Record<string, CanalVentaFiremat> = {
+  venta_directa: CanalVentaFiremat.venta_directa,
+  broker: CanalVentaFiremat.broker,
+  ferreteria: CanalVentaFiremat.ferreteria,
+  redistribuidor: CanalVentaFiremat.redistribuidor,
+  instalador: CanalVentaFiremat.instalador,
+  recompra: CanalVentaFiremat.recompra,
+  otro: CanalVentaFiremat.otro,
+};
+
 function parseTipoCliente(value: unknown): TipoClienteFiremat | null {
-  if (value === null || value === undefined || value === '') return null;
-  const s = String(value).trim();
-  if (!s) return null;
-  const vals = Object.values(TipoClienteFiremat) as string[];
-  if (!vals.includes(s)) {
-    throw new Error(`tipoCliente inválido. Valores permitidos: ${vals.join(', ')}`);
+  const key = normalizarValorEnum(value);
+  if (!key) return null;
+
+  const parsed = TIPO_CLIENTE_IMPORT_MAP[key];
+  if (!parsed) {
+    throw new Error(
+      'tipoCliente inválido. Valores permitidos: Cliente final, Ferretería, Broker, Redistribuidor, Instalador, Constructora, Otro'
+    );
   }
-  return s as TipoClienteFiremat;
+
+  return parsed;
 }
 
 function parseCanalVenta(value: unknown): CanalVentaFiremat | null {
-  if (value === null || value === undefined || value === '') return null;
-  const s = String(value).trim();
-  if (!s) return null;
-  const vals = Object.values(CanalVentaFiremat) as string[];
-  if (!vals.includes(s)) {
-    throw new Error(`canalVenta inválido. Valores permitidos: ${vals.join(', ')}`);
+  const key = normalizarValorEnum(value);
+  if (!key) return null;
+
+  const parsed = CANAL_VENTA_IMPORT_MAP[key];
+  if (!parsed) {
+    throw new Error(
+      'canalVenta inválido. Valores permitidos: Venta directa, Broker, Ferretería, Redistribuidor, Instalador, Recompra, Otro'
+    );
   }
-  return s as CanalVentaFiremat;
+
+  return parsed;
 }
 
 // ────────────────────────────────────────────────
@@ -130,6 +168,40 @@ type ContactoInput = {
   principal?: unknown;
   activo?: unknown;
   observaciones?: unknown;
+};
+
+type MappedClienteImport = {
+  rut: string | null;
+  nombre: string | null;
+  razonSocial: string | null;
+  nombreEmpresa: string | null;
+  telefono: string | null;
+  email: string | null;
+  region: string | null;
+  comuna: string | null;
+  direccion: string | null;
+  tipoCliente: string | null;
+  canalVenta: string | null;
+};
+
+type ErrorFilaImport = { fila: number; rut?: string; error: string };
+type DuplicadoFilaImport = { fila: number; rut: string; razonSocial: string; motivo: string };
+type CreadoFilaImport = {
+  id: number;
+  rut: string | null;
+  nombre: string;
+  razonSocial: string | null;
+};
+
+export type ImportClientesFirematResult = {
+  totalProcesados: number;
+  totalCreados: number;
+  totalDuplicados: number;
+  totalErrores: number;
+  creados: CreadoFilaImport[];
+  duplicadosOmitidos: DuplicadoFilaImport[];
+  errores: ErrorFilaImport[];
+  advertencias: string[];
 };
 
 // ────────────────────────────────────────────────
@@ -184,6 +256,58 @@ function buildContactoData(raw: ContactoInput, isUpdate = false) {
     ...(raw.activo !== undefined && { activo: Boolean(raw.activo) }),
     ...(raw.observaciones !== undefined && { observaciones: optStr(raw.observaciones) }),
   };
+}
+
+function normalizarClaveImport(k: string): string {
+  return k
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Mn}/gu, '')
+    .replace(/[\s_]+/g, ' ')
+    .trim();
+}
+
+const COLUMNAS_IMPORT: Record<string, keyof MappedClienteImport> = {
+  rut: 'rut',
+  nombre: 'nombre',
+  'razon social': 'razonSocial',
+  'nombre empresa': 'nombreEmpresa',
+  telefono: 'telefono',
+  fono: 'telefono',
+  email: 'email',
+  correo: 'email',
+  region: 'region',
+  comuna: 'comuna',
+  direccion: 'direccion',
+  'tipo cliente': 'tipoCliente',
+  'canal venta': 'canalVenta',
+};
+
+function mapearFilaImport(raw: RawFilaCliente): MappedClienteImport {
+  const result: MappedClienteImport = {
+    rut: null,
+    nombre: null,
+    razonSocial: null,
+    nombreEmpresa: null,
+    telefono: null,
+    email: null,
+    region: null,
+    comuna: null,
+    direccion: null,
+    tipoCliente: null,
+    canalVenta: null,
+  };
+
+  for (const [k, v] of Object.entries(raw)) {
+    const campo = COLUMNAS_IMPORT[normalizarClaveImport(k)];
+    if (campo && v) result[campo] = v;
+  }
+
+  return result;
+}
+
+function filaImportVacia(mapped: MappedClienteImport): boolean {
+  return Object.values(mapped).every(value => !value);
 }
 
 // ────────────────────────────────────────────────
@@ -277,6 +401,100 @@ export async function cambiarEstadoClienteFiremat(id: number, activo: boolean) {
     data: { activo },
     include: clienteInclude,
   });
+}
+
+export async function importarClientesFiremat(
+  filas: RawFilaCliente[]
+): Promise<ImportClientesFirematResult> {
+  const creados: CreadoFilaImport[] = [];
+  const duplicadosOmitidos: DuplicadoFilaImport[] = [];
+  const errores: ErrorFilaImport[] = [];
+  const advertencias: string[] = [];
+  let procesados = 0;
+
+  for (let i = 0; i < filas.length; i++) {
+    const fila = i + 2;
+    const mapped = mapearFilaImport(filas[i]);
+
+    if (filaImportVacia(mapped)) continue;
+
+    procesados++;
+
+    try {
+      if (!mapped.rut) throw new Error('El RUT es obligatorio.');
+      if (!mapped.nombre) throw new Error('El nombre es obligatorio.');
+
+      const rut = procesarRut(mapped.rut);
+      if (!rut) throw new Error('El RUT es obligatorio.');
+
+      const existente = await firematPrisma.cliente.findUnique({
+        where: { rut },
+        select: { id: true },
+      });
+
+      if (existente) {
+        duplicadosOmitidos.push({
+          fila,
+          rut,
+          razonSocial: mapped.razonSocial || mapped.nombre,
+          motivo: 'RUT ya existe',
+        });
+        continue;
+      }
+
+      const data = buildClienteData(
+        {
+          rut,
+          nombre: mapped.nombre,
+          razonSocial: mapped.razonSocial,
+          nombreEmpresa: mapped.nombreEmpresa,
+          telefono: mapped.telefono,
+          email: mapped.email,
+          region: mapped.region,
+          comuna: mapped.comuna,
+          direccion: mapped.direccion,
+          tipoCliente: mapped.tipoCliente,
+          canalVenta: mapped.canalVenta,
+          activo: true,
+        },
+        false
+      );
+
+      const cliente = await firematPrisma.cliente.create({
+        data: {
+          ...data,
+          nombre: data.nombre!,
+          rut,
+          activo: true,
+        },
+        select: {
+          id: true,
+          rut: true,
+          nombre: true,
+          razonSocial: true,
+        },
+      });
+
+      creados.push(cliente);
+    } catch (err) {
+      errores.push({
+        fila,
+        ...(mapped.rut ? { rut: mapped.rut } : {}),
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
+  return {
+    totalProcesados: procesados,
+    totalCreados: creados.length,
+    totalDuplicados: duplicadosOmitidos.length,
+    totalErrores: errores.length,
+    creados,
+    duplicadosOmitidos,
+    errores,
+    advertencias,
+  };
 }
 
 export async function agregarContactoClienteFiremat(clienteId: number, raw: ContactoInput) {

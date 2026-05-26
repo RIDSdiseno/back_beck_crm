@@ -25,6 +25,16 @@ const obraUsuariosInclude = {
       },
     },
   },
+  oportunidades: {
+    select: {
+      id: true,
+      nombreProyecto: true,
+      empresa: true,
+      estadoCierre: true,
+      montoFinalGanado: true,
+      fechaCierre: true,
+    },
+  },
 } satisfies Prisma.ObraInclude;
 
 type ObraConUsuarios = Prisma.ObraGetPayload<{
@@ -65,6 +75,7 @@ type CrearObraBody = {
   direccion?: unknown;
   cliente?: unknown;
   estado?: unknown;
+  funnelBeckId?: unknown;
 };
 
 type ActualizarObraBody = {
@@ -73,6 +84,7 @@ type ActualizarObraBody = {
   direccion?: unknown;
   cliente?: unknown;
   estado?: unknown;
+  funnelBeckId?: unknown;
 };
 
 type CambiarEstadoObraBody = {
@@ -82,6 +94,31 @@ type CambiarEstadoObraBody = {
 type AsignarUsuariosObraBody = {
   usuariosIds?: unknown;
   usuarioIds?: unknown;
+};
+
+const getFunnelBeckId = (value: unknown): string | null => {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed || null;
+};
+
+const sendFunnelBeckLinkError = (res: Response, error: unknown): boolean => {
+  if (!(error instanceof Error)) return false;
+
+  if (error.message === 'La oportunidad no existe.') {
+    res.status(404).json({ error: error.message });
+    return true;
+  }
+
+  if (
+    error.message === 'Solo se pueden vincular obras a oportunidades ganadas.' ||
+    error.message === 'La oportunidad ya está vinculada a otra obra.'
+  ) {
+    res.status(400).json({ error: error.message });
+    return true;
+  }
+
+  return false;
 };
 
 export const listarObras = async (req: Request, res: Response): Promise<void> => {
@@ -154,7 +191,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
 
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigo, nombre, descripcion, direccion, cliente, estado } =
+    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId } =
       req.body as CrearObraBody;
 
     if (typeof nombre !== 'string' || !nombre.trim()) {
@@ -170,18 +207,47 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 
     const codigoFinal =
       typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null;
+    const oportunidadId = getFunnelBeckId(funnelBeckId);
 
-    const obra = await prisma.obra.create({
-      data: {
-        nombre: nombre.trim(),
-        codigo: codigoFinal,
-        descripcion: typeof descripcion === 'string' ? descripcion : undefined,
-        direccion: typeof direccion === 'string' ? direccion : undefined,
-        cliente: typeof cliente === 'string' ? cliente : undefined,
-        estado: estadoObra,
-        creadoPorId: req.userId ?? '',
-      },
-      include: obraUsuariosInclude,
+    const obra = await prisma.$transaction(async (tx) => {
+      if (oportunidadId) {
+        const oportunidad = await tx.operadorBeck.findUnique({
+          where: { id: oportunidadId },
+          select: { id: true, estadoCierre: true, obraId: true },
+        });
+
+        if (!oportunidad) throw new Error('La oportunidad no existe.');
+        if (oportunidad.estadoCierre !== 'ganada') {
+          throw new Error('Solo se pueden vincular obras a oportunidades ganadas.');
+        }
+        if (oportunidad.obraId) {
+          throw new Error('La oportunidad ya está vinculada a otra obra.');
+        }
+      }
+
+      const obraCreada = await tx.obra.create({
+        data: {
+          nombre: nombre.trim(),
+          codigo: codigoFinal,
+          descripcion: typeof descripcion === 'string' ? descripcion : undefined,
+          direccion: typeof direccion === 'string' ? direccion : undefined,
+          cliente: typeof cliente === 'string' ? cliente : undefined,
+          estado: estadoObra,
+          creadoPorId: req.userId ?? '',
+        },
+      });
+
+      if (oportunidadId) {
+        await tx.operadorBeck.update({
+          where: { id: oportunidadId },
+          data: { obraId: obraCreada.id },
+        });
+      }
+
+      return tx.obra.findUniqueOrThrow({
+        where: { id: obraCreada.id },
+        include: obraUsuariosInclude,
+      });
     });
 
     await registrarMovimientoCRM({
@@ -195,6 +261,8 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json(formatObraResponse(obra));
   } catch (error) {
     console.error('Error al crear obra:', error);
+
+    if (sendFunnelBeckLinkError(res, error)) return;
 
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -211,7 +279,7 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const { nombre, codigo, direccion, cliente, estado } = req.body as ActualizarObraBody;
+    const { nombre, codigo, direccion, cliente, estado, funnelBeckId } = req.body as ActualizarObraBody;
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'ID de obra invalido' });
@@ -230,18 +298,48 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const obra = await prisma.obra.update({
-      where: { id },
-      data: {
-        ...(typeof nombre === 'string' && { nombre: nombre.trim() }),
-        ...(codigo !== undefined && {
-          codigo: typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null,
-        }),
-        ...(typeof direccion === 'string' && { direccion }),
-        ...(typeof cliente === 'string' && { cliente }),
-        ...(estadoObra !== undefined && { estado: estadoObra }),
-      },
-      include: obraUsuariosInclude,
+    const oportunidadId = getFunnelBeckId(funnelBeckId);
+
+    const obra = await prisma.$transaction(async (tx) => {
+      if (oportunidadId) {
+        const oportunidad = await tx.operadorBeck.findUnique({
+          where: { id: oportunidadId },
+          select: { id: true, estadoCierre: true, obraId: true },
+        });
+
+        if (!oportunidad) throw new Error('La oportunidad no existe.');
+        if (oportunidad.estadoCierre !== 'ganada') {
+          throw new Error('Solo se pueden vincular obras a oportunidades ganadas.');
+        }
+        if (oportunidad.obraId && oportunidad.obraId !== id) {
+          throw new Error('La oportunidad ya está vinculada a otra obra.');
+        }
+      }
+
+      const obraActualizada = await tx.obra.update({
+        where: { id },
+        data: {
+          ...(typeof nombre === 'string' && { nombre: nombre.trim() }),
+          ...(codigo !== undefined && {
+            codigo: typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null,
+          }),
+          ...(typeof direccion === 'string' && { direccion }),
+          ...(typeof cliente === 'string' && { cliente }),
+          ...(estadoObra !== undefined && { estado: estadoObra }),
+        },
+      });
+
+      if (oportunidadId) {
+        await tx.operadorBeck.update({
+          where: { id: oportunidadId },
+          data: { obraId: id },
+        });
+      }
+
+      return tx.obra.findUniqueOrThrow({
+        where: { id: obraActualizada.id },
+        include: obraUsuariosInclude,
+      });
     });
 
     const cambios: string[] = [];
@@ -306,6 +404,8 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
     res.json(formatObraResponse(obra));
   } catch (error) {
     console.error('Error al actualizar obra:', error);
+
+    if (sendFunnelBeckLinkError(res, error)) return;
 
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

@@ -52,6 +52,8 @@ export type TipoRegistroTerreno = 'sello_cortafuego' | 'junta_lineal_espuma';
 
 export interface RegistroTerreno {
   id: string;
+  codigo_beck?: string | null;
+  itemizado_mandante_id?: string | null;
   obra_id: string;
   usuario_id: string;
   fecha: Date;
@@ -167,6 +169,8 @@ export interface AuthResponse {
 
 export interface CreateRegistroTerrenoDTO {
   obra_id: string;
+  codigo_beck?: string | null;
+  itemizadoMandanteId?: string | null;
   fecha?: string;
   descripcion_material: string;
   modulo: string;

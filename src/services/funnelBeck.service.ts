@@ -17,6 +17,7 @@ const ETAPA_LABELS: Record<string, string> = {
   cotizacion_elaborada: "Cotización Elaborada",
   cotizacion_enviada: "Cotización Enviada",
   en_negociacion: "En Negociación",
+  documentacion_venta: "Documentación de Venta",
   cerrada: "Cerrada",
 };
 
@@ -63,6 +64,14 @@ function optNullableId(a: unknown, b: unknown): string | null | undefined {
 }
 
 function toNumber(value: number | string): number {
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) {
+    throw new Error("El valor ingresado no es numérico.");
+  }
+  return parsed;
+}
+function toOptionalNumber(value: unknown): number | null {
+  if (value === undefined || value === null || value === "") return null;
   const parsed = Number(value);
   if (Number.isNaN(parsed)) {
     throw new Error("El valor ingresado no es numérico.");
@@ -184,11 +193,62 @@ function extractInput(raw: Record<string, unknown>) {
     objeciones:           raw.objeciones                                          as string | undefined,
     contrapropuestas:     raw.contrapropuestas                                    as string | undefined,
     ajustesSolicitados:  (raw.ajustesSolicitados   ?? raw.ajustes_solicitados)   as string | undefined,
+    // Visita / levantamiento tecnico
+    fechaVisita:         (raw.fechaVisita           ?? raw.fecha_visita)           as string | undefined,
+    responsableTecnico:  (raw.responsableTecnico    ?? raw.responsable_tecnico)    as string | undefined,
+    asistentes:           raw.asistentes                                           as string | undefined,
+    lugarVisita:         (raw.lugarVisita           ?? raw.lugar_visita)           as string | undefined,
+    antecedentesLevantados: (raw.antecedentesLevantados ?? raw.antecedentes_levantados) as string | undefined,
+    documentosRecibidos: (raw.documentosRecibidos   ?? raw.documentos_recibidos)   as string | undefined,
+    planos:               raw.planos                                               as string | undefined,
+    basesTecnicas:       (raw.basesTecnicas         ?? raw.bases_tecnicas)         as string | undefined,
+    especificaciones:     raw.especificaciones                                     as string | undefined,
+    fotografias:          raw.fotografias                                          as string | undefined,
+    observacionesTecnicas: (raw.observacionesTecnicas ?? raw.observaciones_tecnicas) as string | undefined,
+    necesidadOficinaTecnica: (raw.necesidadOficinaTecnica ?? raw.necesidad_oficina_tecnica) as boolean | undefined,
+    proximosPasos:       (raw.proximosPasos         ?? raw.proximos_pasos)         as string | undefined,
+    // Desarrollo de propuesta
+    estadoDesarrolloPropuesta: (raw.estadoDesarrolloPropuesta ?? raw.estado_desarrollo_propuesta) as string | undefined,
+    informacionPendiente: (raw.informacionPendiente ?? raw.informacion_pendiente)  as string | undefined,
+    documentosRequeridos: (raw.documentosRequeridos ?? raw.documentos_requeridos)  as string | undefined,
+    riesgoTecnico:       (raw.riesgoTecnico         ?? raw.riesgo_tecnico)         as string | undefined,
+    condicionesEspeciales: (raw.condicionesEspeciales ?? raw.condiciones_especiales) as string | undefined,
+    necesidadValidacionGerencial: (raw.necesidadValidacionGerencial ?? raw.necesidad_validacion_gerencial) as boolean | undefined,
+    fechaComprometidaEnvio: (raw.fechaComprometidaEnvio ?? raw.fecha_comprometida_envio) as string | undefined,
+    comentariosInternos: (raw.comentariosInternos   ?? raw.comentarios_internos)   as string | undefined,
+    // Propuesta enviada / negociacion
+    fechaEnvioPropuesta: (raw.fechaEnvioPropuesta   ?? raw.fecha_envio_propuesta)  as string | undefined,
+    versionPropuesta:    (raw.versionPropuesta      ?? raw.version_propuesta)      as string | undefined,
+    numeroPropuesta:     (raw.numeroPropuesta       ?? raw.numero_propuesta)       as string | undefined,
+    montoPropuesto:      (raw.montoPropuesto        ?? raw.monto_propuesto)        as number | string | undefined,
+    fechaVencimientoPropuesta: (raw.fechaVencimientoPropuesta ?? raw.fecha_vencimiento_propuesta) as string | undefined,
+    comentariosCliente:  (raw.comentariosCliente    ?? raw.comentarios_cliente)    as string | undefined,
+    // Documentacion de venta
+    ordenCompra:         (raw.ordenCompra           ?? raw.orden_compra)           as string | undefined,
+    contrato:             raw.contrato                                             as string | undefined,
+    correoAceptacion:    (raw.correoAceptacion      ?? raw.correo_aceptacion)      as string | undefined,
+    anticipo:             raw.anticipo                                             as string | undefined,
+    aprobacionInternaCliente: (raw.aprobacionInternaCliente ?? raw.aprobacion_interna_cliente) as string | undefined,
+    condicionesPago:     (raw.condicionesPago       ?? raw.condiciones_pago)       as string | undefined,
+    documentosAdministrativosPendientes: (raw.documentosAdministrativosPendientes ?? raw.documentos_administrativos_pendientes) as string | undefined,
+    responsableAdministrativo: (raw.responsableAdministrativo ?? raw.responsable_administrativo) as string | undefined,
+    fechaFirma:          (raw.fechaFirma            ?? raw.fecha_firma)            as string | undefined,
+    fechaInicioProyecto: (raw.fechaInicioProyecto   ?? raw.fecha_inicio_proyecto)  as string | undefined,
+    traspasadoOperaciones: (raw.traspasadoOperaciones ?? raw.traspasado_operaciones) as boolean | undefined,
+    fechaTraspasoOperaciones: (raw.fechaTraspasoOperaciones ?? raw.fecha_traspaso_operaciones) as string | undefined,
+    responsableTraspasoOperaciones: (raw.responsableTraspasoOperaciones ?? raw.responsable_traspaso_operaciones) as string | undefined,
+    observacionesTraspasoOperaciones: (raw.observacionesTraspasoOperaciones ?? raw.observaciones_traspaso_operaciones) as string | undefined,
+    traspasadoAdministracion: (raw.traspasadoAdministracion ?? raw.traspasado_administracion) as boolean | undefined,
+    fechaTraspasoAdministracion: (raw.fechaTraspasoAdministracion ?? raw.fecha_traspaso_administracion) as string | undefined,
+    responsableTraspasoAdministracion: (raw.responsableTraspasoAdministracion ?? raw.responsable_traspaso_administracion) as string | undefined,
+    observacionesTraspasoAdministracion: (raw.observacionesTraspasoAdministracion ?? raw.observaciones_traspaso_administracion) as string | undefined,
     // Cierre perdido / postergado
     etapaPerdida:        (raw.etapaPerdida         ?? raw.etapa_perdida)         as string | undefined,
     motivoPostergacion:  (raw.motivoPostergacion   ?? raw.motivo_postergacion)   as string | undefined,
     fechaReactivacion:   (raw.fechaReactivacion    ?? raw.fecha_reactivacion)    as string | undefined,
     // Cierre ganado
+    montoFinalGanado:    (raw.montoFinalGanado      ?? raw.monto_final_ganado)      as number | string | undefined,
+    fechaCierre:         (raw.fechaCierre           ?? raw.fecha_cierre)           as string | undefined,
     documentoRespaldo:   (raw.documentoRespaldo    ?? raw.documento_respaldo)    as string | undefined,
     flujoPosterior:      (raw.flujoPosterior       ?? raw.flujo_posterior)       as string | undefined,
     // Clientes Beck
@@ -205,11 +265,40 @@ function validarEtapaYCierre(params: {
   motivoPerdida?: string;
   motivoPostergacion?: string;
   fechaReactivacion?: string;
+  montoFinalGanado?: unknown;
+  fechaCierre?: string;
+  documentoRespaldo?: string;
+  flujoPosterior?: string;
 }) {
-  const { etapa, estadoCierre, motivoPerdida, motivoPostergacion, fechaReactivacion } = params;
+  const {
+    etapa,
+    estadoCierre,
+    motivoPerdida,
+    motivoPostergacion,
+    fechaReactivacion,
+    montoFinalGanado,
+    fechaCierre,
+    documentoRespaldo,
+    flujoPosterior,
+  } = params;
 
   if (etapa === "cerrada" && !estadoCierre) {
     throw new Error("Si la etapa es cerrada, debes indicar si fue ganada, perdida o postergada.");
+  }
+
+  if (estadoCierre === "ganada") {
+    if (toOptionalNumber(montoFinalGanado) === null) {
+      throw new Error("Debes indicar el monto final ganado.");
+    }
+    if (!fechaCierre) {
+      throw new Error("Debes indicar la fecha de cierre.");
+    }
+    if (!normalizeString(documentoRespaldo)) {
+      throw new Error("Debes indicar el documento de respaldo.");
+    }
+    if (!normalizeString(flujoPosterior)) {
+      throw new Error("Debes indicar el flujo posterior.");
+    }
   }
 
   if (estadoCierre === "perdida" && !normalizeString(motivoPerdida)) {
@@ -245,6 +334,10 @@ function validarCamposObligatorios(data: NormalizedInput) {
     motivoPerdida: data.motivoPerdida,
     motivoPostergacion: data.motivoPostergacion,
     fechaReactivacion: data.fechaReactivacion,
+    montoFinalGanado: data.montoFinalGanado,
+    fechaCierre: data.fechaCierre,
+    documentoRespaldo: data.documentoRespaldo,
+    flujoPosterior: data.flujoPosterior,
   });
 }
 
@@ -313,17 +406,69 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       objeciones:          optStr(data.objeciones),
       contrapropuestas:    optStr(data.contrapropuestas),
       ajustesSolicitados:  optStr(data.ajustesSolicitados),
+      // Visita / levantamiento tecnico
+      fechaVisita:         parseOptionalDate(data.fechaVisita),
+      responsableTecnico:  optStr(data.responsableTecnico),
+      asistentes:          optStr(data.asistentes),
+      lugarVisita:         optStr(data.lugarVisita),
+      antecedentesLevantados: optStr(data.antecedentesLevantados),
+      documentosRecibidos: optStr(data.documentosRecibidos),
+      planos:              optStr(data.planos),
+      basesTecnicas:       optStr(data.basesTecnicas),
+      especificaciones:    optStr(data.especificaciones),
+      fotografias:         optStr(data.fotografias),
+      observacionesTecnicas: optStr(data.observacionesTecnicas),
+      necesidadOficinaTecnica: data.necesidadOficinaTecnica ?? null,
+      proximosPasos:       optStr(data.proximosPasos),
+      // Desarrollo de propuesta
+      estadoDesarrolloPropuesta: optStr(data.estadoDesarrolloPropuesta),
+      informacionPendiente: optStr(data.informacionPendiente),
+      documentosRequeridos: optStr(data.documentosRequeridos),
+      riesgoTecnico:       optStr(data.riesgoTecnico),
+      condicionesEspeciales: optStr(data.condicionesEspeciales),
+      necesidadValidacionGerencial: data.necesidadValidacionGerencial ?? null,
+      fechaComprometidaEnvio: parseOptionalDate(data.fechaComprometidaEnvio),
+      comentariosInternos: optStr(data.comentariosInternos),
+      // Propuesta enviada / negociacion
+      fechaEnvioPropuesta: parseOptionalDate(data.fechaEnvioPropuesta),
+      versionPropuesta:    optStr(data.versionPropuesta),
+      numeroPropuesta:     optStr(data.numeroPropuesta),
+      montoPropuesto:      toOptionalNumber(data.montoPropuesto),
+      fechaVencimientoPropuesta: parseOptionalDate(data.fechaVencimientoPropuesta),
+      comentariosCliente:  optStr(data.comentariosCliente),
+      // Documentacion de venta
+      ordenCompra:         optStr(data.ordenCompra),
+      contrato:            optStr(data.contrato),
+      correoAceptacion:    optStr(data.correoAceptacion),
+      anticipo:            optStr(data.anticipo),
+      aprobacionInternaCliente: optStr(data.aprobacionInternaCliente),
+      condicionesPago:     optStr(data.condicionesPago),
+      documentosAdministrativosPendientes: optStr(data.documentosAdministrativosPendientes),
+      responsableAdministrativo: optStr(data.responsableAdministrativo),
+      fechaFirma:          parseOptionalDate(data.fechaFirma),
+      fechaInicioProyecto: parseOptionalDate(data.fechaInicioProyecto),
+      traspasadoOperaciones: data.traspasadoOperaciones ?? null,
+      fechaTraspasoOperaciones: parseOptionalDate(data.fechaTraspasoOperaciones),
+      responsableTraspasoOperaciones: optStr(data.responsableTraspasoOperaciones),
+      observacionesTraspasoOperaciones: optStr(data.observacionesTraspasoOperaciones),
+      traspasadoAdministracion: data.traspasadoAdministracion ?? null,
+      fechaTraspasoAdministracion: parseOptionalDate(data.fechaTraspasoAdministracion),
+      responsableTraspasoAdministracion: optStr(data.responsableTraspasoAdministracion),
+      observacionesTraspasoAdministracion: optStr(data.observacionesTraspasoAdministracion),
       // Cierre perdido / postergado
       etapaPerdida:        optStr(data.etapaPerdida),
       motivoPostergacion:  optStr(data.motivoPostergacion),
       fechaReactivacion:   parseOptionalDate(data.fechaReactivacion),
       // Cierre ganado
+      montoFinalGanado:    toOptionalNumber(data.montoFinalGanado),
+      fechaCierre:         parseOptionalDate(data.fechaCierre),
       documentoRespaldo:   optStr(data.documentoRespaldo),
       flujoPosterior:      optStr(data.flujoPosterior),
       // Clientes Beck
       clienteBeckId:       data.clienteBeckId  ?? null,
       contactoBeckId:      data.contactoBeckId ?? null,
     },
+    include: FUNNEL_BECK_INCLUDE,
   });
 
   await registrarMovimientoCRM({
@@ -364,28 +509,126 @@ const CONTACTO_BECK_SELECT = {
   activo: true,
 } as const;
 
+const OBRA_SELECT = {
+  id: true,
+  nombre: true,
+  codigo: true,
+  estado: true,
+  cliente: true,
+  direccion: true,
+} as const;
+
+const FUNNEL_BECK_INCLUDE = {
+  clienteBeck:  { select: CLIENTE_BECK_SELECT },
+  contactoBeck: { select: CONTACTO_BECK_SELECT },
+  obra:         { select: OBRA_SELECT },
+} as const;
+
+const FUNNEL_BECK_INCLUDE_WITH_ARCHIVOS = {
+  ...FUNNEL_BECK_INCLUDE,
+  archivos: { orderBy: { createdAt: "desc" } },
+  solicitudesOficinaTecnica: {
+    orderBy: { createdAt: "desc" },
+    take: 3,
+  },
+} as const;
+
 export async function getAllFunnelBeck() {
   return prisma.operadorBeck.findMany({
     orderBy: { createdAt: "desc" },
-    include: {
-      clienteBeck:  { select: CLIENTE_BECK_SELECT },
-      contactoBeck: { select: CONTACTO_BECK_SELECT },
-    },
+    include: FUNNEL_BECK_INCLUDE,
   });
 }
 
 export async function getFunnelBeckById(id: string) {
   const oportunidad = await prisma.operadorBeck.findUnique({
     where: { id },
-    include: {
-      clienteBeck:  { select: CLIENTE_BECK_SELECT },
-      contactoBeck: { select: CONTACTO_BECK_SELECT },
-    },
+    include: FUNNEL_BECK_INCLUDE_WITH_ARCHIVOS,
   });
 
   if (!oportunidad) throw new Error("Oportunidad no encontrada.");
 
   return oportunidad;
+}
+
+export async function getGanadasSinObraFunnelBeck() {
+  return prisma.operadorBeck.findMany({
+    where: {
+      estadoCierre: "ganada",
+      obraId: null,
+    },
+    orderBy: [
+      { fechaCierre: "desc" },
+      { createdAt: "desc" },
+    ],
+    select: {
+      id: true,
+      nombreProyecto: true,
+      empresa: true,
+      rutEmpresa: true,
+      montoFinalGanado: true,
+      fechaCierre: true,
+      documentoRespaldo: true,
+      flujoPosterior: true,
+      clienteBeckId: true,
+      contactoBeckId: true,
+      clienteBeck: {
+        select: {
+          id: true,
+          rut: true,
+          razonSocial: true,
+          nombreEmpresa: true,
+          direccion: true,
+          telefono: true,
+          correo: true,
+          region: true,
+          comuna: true,
+        },
+      },
+      contactoBeck: {
+        select: {
+          id: true,
+          nombre: true,
+          cargo: true,
+          telefono: true,
+          correo: true,
+        },
+      },
+    },
+  });
+}
+
+export async function updateObraFunnelBeck(id: string, obraId: string) {
+  const oportunidad = await prisma.operadorBeck.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      estadoCierre: true,
+      obraId: true,
+    },
+  });
+
+  if (!oportunidad) throw new Error("La oportunidad no existe.");
+  if (oportunidad.estadoCierre !== "ganada") {
+    throw new Error("Solo se pueden vincular obras a oportunidades ganadas.");
+  }
+
+  const obra = await prisma.obra.findUnique({
+    where: { id: obraId },
+    select: { id: true },
+  });
+
+  if (!obra) throw new Error("La obra no existe.");
+
+  if (oportunidad.obraId && oportunidad.obraId !== obraId) {
+    throw new Error("La oportunidad ya está vinculada a otra obra.");
+  }
+
+  return prisma.operadorBeck.update({
+    where: { id },
+    data: { obraId },
+    include: FUNNEL_BECK_INCLUDE,
+  });
 }
 
 export async function updateFunnelBeck(id: string, rawData: Record<string, unknown>, userId: string) {
@@ -458,6 +701,18 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     motivoPerdida: motivoPerdida ?? undefined,
     motivoPostergacion: motivoPostergacion ?? undefined,
     fechaReactivacion: fechaReactivacion ? fechaReactivacion.toISOString() : undefined,
+    montoFinalGanado: data.montoFinalGanado !== undefined ? data.montoFinalGanado : existente.montoFinalGanado,
+    fechaCierre: data.fechaCierre !== undefined
+      ? String(data.fechaCierre)
+      : existente.fechaCierre
+        ? existente.fechaCierre.toISOString()
+        : undefined,
+    documentoRespaldo: data.documentoRespaldo !== undefined
+      ? data.documentoRespaldo
+      : existente.documentoRespaldo ?? undefined,
+    flujoPosterior: data.flujoPosterior !== undefined
+      ? data.flujoPosterior
+      : existente.flujoPosterior ?? undefined,
   });
 
   const oportunidad = await prisma.operadorBeck.update({
@@ -500,17 +755,69 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.objeciones         !== undefined && { objeciones:         optStr(data.objeciones) }),
       ...(data.contrapropuestas   !== undefined && { contrapropuestas:   optStr(data.contrapropuestas) }),
       ...(data.ajustesSolicitados !== undefined && { ajustesSolicitados: optStr(data.ajustesSolicitados) }),
+      // Visita / levantamiento tecnico
+      ...(data.fechaVisita        !== undefined && { fechaVisita:        parseOptionalDate(data.fechaVisita) }),
+      ...(data.responsableTecnico !== undefined && { responsableTecnico: optStr(data.responsableTecnico) }),
+      ...(data.asistentes         !== undefined && { asistentes:         optStr(data.asistentes) }),
+      ...(data.lugarVisita        !== undefined && { lugarVisita:        optStr(data.lugarVisita) }),
+      ...(data.antecedentesLevantados !== undefined && { antecedentesLevantados: optStr(data.antecedentesLevantados) }),
+      ...(data.documentosRecibidos !== undefined && { documentosRecibidos: optStr(data.documentosRecibidos) }),
+      ...(data.planos             !== undefined && { planos:             optStr(data.planos) }),
+      ...(data.basesTecnicas      !== undefined && { basesTecnicas:      optStr(data.basesTecnicas) }),
+      ...(data.especificaciones   !== undefined && { especificaciones:   optStr(data.especificaciones) }),
+      ...(data.fotografias        !== undefined && { fotografias:        optStr(data.fotografias) }),
+      ...(data.observacionesTecnicas !== undefined && { observacionesTecnicas: optStr(data.observacionesTecnicas) }),
+      ...(data.necesidadOficinaTecnica !== undefined && { necesidadOficinaTecnica: data.necesidadOficinaTecnica ?? null }),
+      ...(data.proximosPasos      !== undefined && { proximosPasos:      optStr(data.proximosPasos) }),
+      // Desarrollo de propuesta
+      ...(data.estadoDesarrolloPropuesta !== undefined && { estadoDesarrolloPropuesta: optStr(data.estadoDesarrolloPropuesta) }),
+      ...(data.informacionPendiente !== undefined && { informacionPendiente: optStr(data.informacionPendiente) }),
+      ...(data.documentosRequeridos !== undefined && { documentosRequeridos: optStr(data.documentosRequeridos) }),
+      ...(data.riesgoTecnico      !== undefined && { riesgoTecnico:      optStr(data.riesgoTecnico) }),
+      ...(data.condicionesEspeciales !== undefined && { condicionesEspeciales: optStr(data.condicionesEspeciales) }),
+      ...(data.necesidadValidacionGerencial !== undefined && { necesidadValidacionGerencial: data.necesidadValidacionGerencial ?? null }),
+      ...(data.fechaComprometidaEnvio !== undefined && { fechaComprometidaEnvio: parseOptionalDate(data.fechaComprometidaEnvio) }),
+      ...(data.comentariosInternos !== undefined && { comentariosInternos: optStr(data.comentariosInternos) }),
+      // Propuesta enviada / negociacion
+      ...(data.fechaEnvioPropuesta !== undefined && { fechaEnvioPropuesta: parseOptionalDate(data.fechaEnvioPropuesta) }),
+      ...(data.versionPropuesta   !== undefined && { versionPropuesta:   optStr(data.versionPropuesta) }),
+      ...(data.numeroPropuesta    !== undefined && { numeroPropuesta:    optStr(data.numeroPropuesta) }),
+      ...(data.montoPropuesto     !== undefined && { montoPropuesto:     toOptionalNumber(data.montoPropuesto) }),
+      ...(data.fechaVencimientoPropuesta !== undefined && { fechaVencimientoPropuesta: parseOptionalDate(data.fechaVencimientoPropuesta) }),
+      ...(data.comentariosCliente !== undefined && { comentariosCliente: optStr(data.comentariosCliente) }),
+      // Documentacion de venta
+      ...(data.ordenCompra        !== undefined && { ordenCompra:        optStr(data.ordenCompra) }),
+      ...(data.contrato           !== undefined && { contrato:           optStr(data.contrato) }),
+      ...(data.correoAceptacion   !== undefined && { correoAceptacion:   optStr(data.correoAceptacion) }),
+      ...(data.anticipo           !== undefined && { anticipo:           optStr(data.anticipo) }),
+      ...(data.aprobacionInternaCliente !== undefined && { aprobacionInternaCliente: optStr(data.aprobacionInternaCliente) }),
+      ...(data.condicionesPago    !== undefined && { condicionesPago:    optStr(data.condicionesPago) }),
+      ...(data.documentosAdministrativosPendientes !== undefined && { documentosAdministrativosPendientes: optStr(data.documentosAdministrativosPendientes) }),
+      ...(data.responsableAdministrativo !== undefined && { responsableAdministrativo: optStr(data.responsableAdministrativo) }),
+      ...(data.fechaFirma         !== undefined && { fechaFirma:         parseOptionalDate(data.fechaFirma) }),
+      ...(data.fechaInicioProyecto !== undefined && { fechaInicioProyecto: parseOptionalDate(data.fechaInicioProyecto) }),
+      ...(data.traspasadoOperaciones !== undefined && { traspasadoOperaciones: data.traspasadoOperaciones ?? null }),
+      ...(data.fechaTraspasoOperaciones !== undefined && { fechaTraspasoOperaciones: parseOptionalDate(data.fechaTraspasoOperaciones) }),
+      ...(data.responsableTraspasoOperaciones !== undefined && { responsableTraspasoOperaciones: optStr(data.responsableTraspasoOperaciones) }),
+      ...(data.observacionesTraspasoOperaciones !== undefined && { observacionesTraspasoOperaciones: optStr(data.observacionesTraspasoOperaciones) }),
+      ...(data.traspasadoAdministracion !== undefined && { traspasadoAdministracion: data.traspasadoAdministracion ?? null }),
+      ...(data.fechaTraspasoAdministracion !== undefined && { fechaTraspasoAdministracion: parseOptionalDate(data.fechaTraspasoAdministracion) }),
+      ...(data.responsableTraspasoAdministracion !== undefined && { responsableTraspasoAdministracion: optStr(data.responsableTraspasoAdministracion) }),
+      ...(data.observacionesTraspasoAdministracion !== undefined && { observacionesTraspasoAdministracion: optStr(data.observacionesTraspasoAdministracion) }),
       // Cierre perdido / postergado
       ...(data.etapaPerdida       !== undefined && { etapaPerdida:       optStr(data.etapaPerdida) }),
       motivoPostergacion,
       fechaReactivacion,
       // Cierre ganado
+      ...(data.montoFinalGanado   !== undefined && { montoFinalGanado:   toOptionalNumber(data.montoFinalGanado) }),
+      ...(data.fechaCierre        !== undefined && { fechaCierre:        parseOptionalDate(data.fechaCierre) }),
       ...(data.documentoRespaldo  !== undefined && { documentoRespaldo:  optStr(data.documentoRespaldo) }),
       ...(data.flujoPosterior     !== undefined && { flujoPosterior:     optStr(data.flujoPosterior) }),
       // Clientes Beck
       ...(data.clienteBeckId  !== undefined && { clienteBeckId:  data.clienteBeckId }),
       ...(data.contactoBeckId !== undefined && { contactoBeckId: data.contactoBeckId }),
     },
+    include: FUNNEL_BECK_INCLUDE,
   });
 
   const cambios: string[] = [];
@@ -577,6 +884,18 @@ export async function updateEtapaFunnelBeck(
     motivoPerdida: payload.motivoPerdida,
     motivoPostergacion: payload.motivoPostergacion,
     fechaReactivacion: payload.fechaReactivacion,
+    montoFinalGanado: payload.montoFinalGanado !== undefined ? payload.montoFinalGanado : existente.montoFinalGanado,
+    fechaCierre: payload.fechaCierre !== undefined
+      ? payload.fechaCierre
+      : existente.fechaCierre
+        ? existente.fechaCierre.toISOString()
+        : undefined,
+    documentoRespaldo: payload.documentoRespaldo !== undefined
+      ? payload.documentoRespaldo
+      : existente.documentoRespaldo ?? undefined,
+    flujoPosterior: payload.flujoPosterior !== undefined
+      ? payload.flujoPosterior
+      : existente.flujoPosterior ?? undefined,
   });
 
   const oportunidad = await prisma.operadorBeck.update({
@@ -591,9 +910,20 @@ export async function updateEtapaFunnelBeck(
       // Campos de cierre perdido
       ...(payload.etapaPerdida       !== undefined && { etapaPerdida:       optStr(payload.etapaPerdida) }),
       // Campos de cierre ganado
+      ...(payload.montoFinalGanado  !== undefined && { montoFinalGanado:  toOptionalNumber(payload.montoFinalGanado) }),
+      ...(payload.fechaCierre       !== undefined && { fechaCierre:       parseOptionalDate(payload.fechaCierre) }),
       ...(payload.documentoRespaldo  !== undefined && { documentoRespaldo:  optStr(payload.documentoRespaldo) }),
       ...(payload.flujoPosterior     !== undefined && { flujoPosterior:     optStr(payload.flujoPosterior) }),
+      ...(payload.traspasadoOperaciones !== undefined && { traspasadoOperaciones: payload.traspasadoOperaciones ?? null }),
+      ...(payload.fechaTraspasoOperaciones !== undefined && { fechaTraspasoOperaciones: parseOptionalDate(payload.fechaTraspasoOperaciones) }),
+      ...(payload.responsableTraspasoOperaciones !== undefined && { responsableTraspasoOperaciones: optStr(payload.responsableTraspasoOperaciones) }),
+      ...(payload.observacionesTraspasoOperaciones !== undefined && { observacionesTraspasoOperaciones: optStr(payload.observacionesTraspasoOperaciones) }),
+      ...(payload.traspasadoAdministracion !== undefined && { traspasadoAdministracion: payload.traspasadoAdministracion ?? null }),
+      ...(payload.fechaTraspasoAdministracion !== undefined && { fechaTraspasoAdministracion: parseOptionalDate(payload.fechaTraspasoAdministracion) }),
+      ...(payload.responsableTraspasoAdministracion !== undefined && { responsableTraspasoAdministracion: optStr(payload.responsableTraspasoAdministracion) }),
+      ...(payload.observacionesTraspasoAdministracion !== undefined && { observacionesTraspasoAdministracion: optStr(payload.observacionesTraspasoAdministracion) }),
     },
+    include: FUNNEL_BECK_INCLUDE,
   });
 
   if (payload.etapa !== existente.etapa) {

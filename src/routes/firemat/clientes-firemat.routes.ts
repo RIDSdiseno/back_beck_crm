@@ -10,8 +10,10 @@ import {
   actualizarContacto,
   cambiarEstadoContacto,
   obtenerOportunidadesCliente,
+  importarClientes,
 } from '../../controllers/firemat/clientes-firemat.controller';
 import { authorize } from '../../middlewares/auth';
+import { uploadExcelOrCsvFile } from '../../middlewares/upload';
 
 const router = Router();
 
@@ -21,9 +23,11 @@ const canRead = authorize(
   'vendedor_firemat', 'visualizador_firemat', 'bodeguero'
 );
 const canWrite = authorize('administrador', 'vendedor', 'vendedor_firemat');
+const canImport = authorize('administrador', 'vendedor_firemat');
 
 // Rutas estáticas antes de /:id para evitar colisión con el parámetro dinámico
 router.get('/buscar', canRead, buscarClientes);
+router.post('/importar', canImport, uploadExcelOrCsvFile, importarClientes);
 
 router.put('/contactos/:contactoId', canWrite, actualizarContacto);
 router.patch('/contactos/:contactoId/estado', canWrite, cambiarEstadoContacto);

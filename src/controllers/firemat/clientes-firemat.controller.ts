@@ -11,7 +11,9 @@ import {
   actualizarContactoClienteFiremat,
   cambiarEstadoContactoFiremat,
   obtenerOportunidadesClienteFiremat,
+  importarClientesFiremat,
 } from '../../services/firemat/clientes-firemat.service';
+import { parseFileToRows } from '../../utils/importClientes';
 
 const parseId = (value: string | string[] | undefined): number | null => {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -138,6 +140,29 @@ export const cambiarEstadoCliente = async (req: Request, res: Response): Promise
     res.json({ success: true, data: cliente, message: 'Estado actualizado' });
   } catch (error) {
     handleError(res, error, 'cambiar estado de cliente');
+  }
+};
+
+export const importarClientes = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const file = req.file as Express.Multer.File | undefined;
+
+    if (!file) {
+      res.status(400).json({ error: 'Debe subir un archivo (.xlsx, .xls o .csv).' });
+      return;
+    }
+
+    const filas = parseFileToRows(file.buffer, file.originalname);
+
+    if (filas.length === 0) {
+      res.status(400).json({ error: 'El archivo no contiene filas de datos.' });
+      return;
+    }
+
+    const resultado = await importarClientesFiremat(filas);
+    res.status(200).json(resultado);
+  } catch (error) {
+    handleError(res, error, 'importar clientes');
   }
 };
 

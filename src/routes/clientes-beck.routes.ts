@@ -10,8 +10,10 @@ import {
   actualizarContacto,
   cambiarEstadoContacto,
   obtenerOportunidadesCliente,
+  importarClientes,
 } from '../controllers/clientes-beck.controller';
 import { authenticate, authorize } from '../middlewares/auth';
+import { uploadExcelOrCsvFile } from '../middlewares/upload';
 
 const router = Router();
 
@@ -19,6 +21,8 @@ const canReadClientes = authorize('administrador', 'vendedor', 'ingenieria', 'vi
 const canWriteClientes = authorize('administrador', 'vendedor');
 
 // Rutas estáticas antes de /:id para evitar colisión con parámetro
+router.post('/importar', authenticate, canWriteClientes, uploadExcelOrCsvFile, importarClientes);
+
 router.get('/buscar', authenticate, canReadClientes, buscarClientes);
 
 router.get('/', authenticate, canReadClientes, listarClientes);

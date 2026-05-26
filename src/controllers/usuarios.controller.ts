@@ -16,8 +16,10 @@ const esRolValido = (rol: string): rol is RolUsuario => {
  */
 export const listarUsuarios = async (req: Request, res: Response): Promise<void> => {
   try {
-    const isIngenieria = req.userRole === 'ingenieria';
+    const isAdmin = req.userRole === 'administrador';
     const empresa = req.query.empresa as string | undefined;
+    const rol = typeof req.query.rol === 'string' ? req.query.rol.trim() : '';
+    const activoRaw = typeof req.query.activo === 'string' ? req.query.activo.trim().toLowerCase() : '';
 
     let rolesFilter: RolUsuario[] | undefined;
     if (empresa === 'beck') {
@@ -26,17 +28,35 @@ export const listarUsuarios = async (req: Request, res: Response): Promise<void>
       rolesFilter = ROLES_FIREMAT;
     }
 
+    if (rol) {
+      if (!esRolValido(rol)) {
+        res.status(400).json({ error: 'Rol no valido' });
+        return;
+      }
+
+      rolesFilter = rolesFilter
+        ? rolesFilter.filter((role) => role === rol)
+        : [rol as RolUsuario];
+    }
+
+    let activo: boolean | undefined;
+    if (activoRaw) {
+      if (!['true', 'false'].includes(activoRaw)) {
+        res.status(400).json({ error: 'Filtro activo invalido' });
+        return;
+      }
+      activo = activoRaw === 'true';
+    }
+
+    const where = {
+      ...(rolesFilter && { rol: { in: rolesFilter } }),
+      ...(activo !== undefined && { activo }),
+    };
+
     const usuarios = await prisma.usuario.findMany({
-      where: rolesFilter ? { rol: { in: rolesFilter } } : {},
-      select: isIngenieria
+      where,
+      select: isAdmin
         ? {
-            id: true,
-            nombre: true,
-            email: true,
-            rol: true,
-            activo: true,
-          }
-        : {
             id: true,
             nombre: true,
             email: true,
@@ -44,6 +64,13 @@ export const listarUsuarios = async (req: Request, res: Response): Promise<void>
             activo: true,
             azureId: true,
             createdAt: true,
+          }
+        : {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+            activo: true,
           },
       orderBy: {
         createdAt: 'desc',
