@@ -34,22 +34,22 @@ model Usuario {
 }
 
 model Obra {
-  id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre           String            @db.VarChar(255)
-  codigo           String?           @unique @db.VarChar(100)
-  descripcion      String?
-  estado           EstadoObra        @default(activa)
-  creadoPorId      String            @map("creado_por_id") @db.Uuid
-  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  cliente          String?           @db.VarChar(255)
-  direccion        String?
-  cotizaciones     Cotizacion[]
-  creadoPor        Usuario           @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  id                            String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                        String                        @db.VarChar(255)
+  codigo                        String?                       @unique @db.VarChar(100)
+  descripcion                   String?
+  estado                        EstadoObra                    @default(activa)
+  creadoPorId                   String                        @map("creado_por_id") @db.Uuid
+  createdAt                     DateTime                      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                     DateTime                      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  cliente                       String?                       @db.VarChar(255)
+  direccion                     String?
   configuracionesCamposRegistro ConfiguracionCamposRegistro[]
-  registrosTerreno RegistroTerreno[]
-  usuarios_obras   usuarios_obras[]
-  oportunidades    OperadorBeck[]
+  cotizaciones                  Cotizacion[]
+  oportunidades                 OperadorBeck[]
+  creadoPor                     Usuario                       @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  registrosTerreno              RegistroTerreno[]
+  usuarios_obras                usuarios_obras[]
 
   @@index([codigo])
   @@index([estado])
@@ -75,50 +75,62 @@ model Itemizado {
 }
 
 model ItemizadoMandante {
-  id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoBeck  String?            @map("codigo_beck") @db.VarChar(100)
-  nombre      String             @db.VarChar(255)
-  descripcion String?            @db.VarChar(500)
-  activo      Boolean            @default(true)
-  createdAt   DateTime           @default(now()) @map("created_at")
-  updatedAt   DateTime           @updatedAt @map("updated_at")
+  id          String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoBeck  String?           @map("codigo_beck") @db.VarChar(100)
+  nombre      String            @db.VarChar(255)
+  descripcion String?           @db.VarChar(500)
+  activo      Boolean           @default(true)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
   registros   RegistroTerreno[]
 
   @@map("itemizados_mandante")
 }
 
 model RegistroTerreno {
-  id                  String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoBeck          String?                  @map("codigo_beck")
-  itemizadoMandanteId String?                  @map("itemizado_mandante_id") @db.Uuid
-  obraId              String                   @map("obra_id") @db.Uuid
-  usuarioId           String                   @map("usuario_id") @db.Uuid
-  fecha               DateTime                 @db.Date
-  diaSemana           String                   @map("dia_semana") @db.VarChar(20)
-  descripcionMaterial String                   @map("descripcion_material") @db.VarChar(500)
-  modulo              String                   @db.VarChar(100)
-  piso                String                   @db.VarChar(50)
-  ejeNumerico         String                   @map("eje_numerico") @db.VarChar(50)
-  ejeAlfabetico       String                   @map("eje_alfabetico") @db.VarChar(10)
-  numeroSello         String                   @map("numero_sello") @db.VarChar(100)
-  cantidadSellos      Int                      @map("cantidad_sellos")
-  nombreSellador      String                   @map("nombre_sellador") @db.VarChar(255)
-  holgura             Decimal                  @db.Decimal(3, 1)
-  accesibilidad       Int
-  observaciones       String?
-  fotosUrls           String[]                 @map("fotos_urls")
-  createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  estado              EstadoRegistroTerreno    @default(pendiente)
-  metrosLineales      Float?                   @map("metros_lineales")
-  tipoRegistro        String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
-  itemizadoSacyr      String?                  @map("itemizado_sacyr") @db.VarChar(255)
-  devuelto_a_tecnico  Boolean                  @default(false)
-  fotos_registro      fotos_registro[]
-  procesamiento       ProcesamientoIngenieria?
-  itemizadoMandante   ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
-  obra                Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
-  usuario             Usuario                  @relation(fields: [usuarioId], references: [id])
+  id                        String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId                    String                   @map("obra_id") @db.Uuid
+  usuarioId                 String                   @map("usuario_id") @db.Uuid
+  fecha                     DateTime                 @db.Date
+  diaSemana                 String                   @map("dia_semana") @db.VarChar(20)
+  descripcionMaterial       String                   @map("descripcion_material") @db.VarChar(500)
+  modulo                    String                   @db.VarChar(100)
+  piso                      String                   @db.VarChar(50)
+  ejeNumerico               String                   @map("eje_numerico") @db.VarChar(50)
+  ejeAlfabetico             String                   @map("eje_alfabetico") @db.VarChar(10)
+  numeroSello               String                   @map("numero_sello") @db.VarChar(100)
+  cantidadSellos            Int                      @map("cantidad_sellos")
+  nombreSellador            String                   @map("nombre_sellador") @db.VarChar(255)
+  holgura                   Decimal                  @db.Decimal(3, 1)
+  accesibilidad             Int
+  observaciones             String?
+  fotosUrls                 String[]                 @map("fotos_urls")
+  createdAt                 DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  estado                    EstadoRegistroTerreno    @default(pendiente)
+  metrosLineales            Float?                   @map("metros_lineales")
+  tipoRegistro              String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
+  itemizadoSacyr            String?                  @map("itemizado_sacyr") @db.VarChar(255)
+  devuelto_a_tecnico        Boolean                  @default(false)
+  codigoBeck                String?                  @map("codigo_beck")
+  itemizadoMandanteId       String?                  @map("itemizado_mandante_id") @db.Uuid
+  itemizadoBeck             String?                  @map("itemizado_beck") @db.VarChar(500)
+  itemizadoMandanteTexto    String?                  @map("itemizado_mandante") @db.VarChar(255)
+  fotoUrl                   String?                  @map("foto_url")
+  recinto                   String?                  @db.VarChar(100)
+  factorPorHolguras         Decimal?                 @map("factor_por_holguras") @db.Decimal(6, 2)
+  cieloModular              Int?                     @map("cielo_modular")
+  cantidadSellosConFactores Decimal?                 @map("cantidad_sellos_con_factores") @db.Decimal(12, 2)
+  aislacion                 Decimal?                 @db.Decimal(6, 2)
+  cantidadSellosAislacion   Decimal?                 @map("cantidad_sellos_aislacion") @db.Decimal(12, 2)
+  reparacionTabique         Decimal?                 @map("reparacion_tabique") @db.Decimal(6, 2)
+  cantidadFinal             Decimal?                 @map("cantidad_final") @db.Decimal(12, 2)
+  folio                     String?                  @db.VarChar(100)
+  fotos_registro            fotos_registro[]
+  procesamiento             ProcesamientoIngenieria?
+  itemizadoMandante         ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
+  obra                      Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  usuario                   Usuario                  @relation(fields: [usuarioId], references: [id])
 
   @@index([obraId])
   @@index([itemizadoMandanteId])
@@ -268,116 +280,105 @@ model LineaCotizacion {
 }
 
 model OperadorBeck {
-  id                  String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombreProyecto      String               @map("nombre_proyecto") @db.VarChar(255)
-  empresa             String               @db.VarChar(255)
-  valorOriginal       Decimal              @map("valor_original") @db.Decimal(14, 2)
-  monedaOriginal      MonedaFunnel         @map("moneda_original")
-  valorClp            Decimal              @map("valor_clp") @db.Decimal(14, 2)
-  valorUf             Decimal              @map("valor_uf") @db.Decimal(14, 4)
-  fechaProbableCierre DateTime             @map("fecha_probable_cierre") @db.Date
-  vendedor            String               @db.VarChar(255)
-  region              String               @db.VarChar(150)
-  comuna              String               @db.VarChar(150)
-  fuenteLead          FuenteLeadFunnel?
-  etapa               EtapaFunnelBeck      @default(prospecto_identificado)
-  estadoCierre        EstadoCierreFunnel?
-  motivoPerdida       String?              @map("motivo_perdida")
-  createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt           DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  dolarValor          Decimal?             @map("dolar_valor") @db.Decimal(12, 4)
-  fechaTipoCambio     DateTime?            @map("fecha_tipo_cambio") @db.Timestamp(6)
-  ufValor             Decimal?             @map("uf_valor") @db.Decimal(12, 4)
-  ajustesSolicitados  String?              @map("ajustes_solicitados")
-  cargoContacto       String?              @map("cargo_contacto") @db.VarChar(120)
-  contrapropuestas    String?
-  correoContacto      String?              @map("correo_contacto") @db.VarChar(255)
-  documentoRespaldo   String?              @map("documento_respaldo")
-  etapaPerdida        String?              @map("etapa_perdida") @db.VarChar(100)
-  fechaPrimerContacto DateTime?            @map("fecha_primer_contacto") @db.Date
-  fechaProximaAccion  DateTime?            @map("fecha_proxima_accion") @db.Date
-  fechaReactivacion   DateTime?            @map("fecha_reactivacion") @db.Date
-  flujoPosterior      String?              @map("flujo_posterior")
-  motivoPostergacion  String?              @map("motivo_postergacion")
-  necesidadDetectada  String?              @map("necesidad_detectada")
-  nivelInteres        String?              @map("nivel_interes") @db.VarChar(50)
-  nombreContacto      String?              @map("nombre_contacto") @db.VarChar(255)
-  objeciones          String?
-  probabilidadCierre  Int?                 @map("probabilidad_cierre")
-  proximaAccion       String?              @map("proxima_accion")
-  rutEmpresa          String?              @map("rut_empresa") @db.VarChar(20)
-  telefonoContacto    String?              @map("telefono_contacto") @db.VarChar(50)
-  timingEstimado      String?              @map("timing_estimado") @db.VarChar(100)
-  tipoCliente         String?              @map("tipo_cliente") @db.VarChar(100)
-  tipoContacto        String?              @map("tipo_contacto") @db.VarChar(100)
-  tipoOportunidad     String?              @map("tipo_oportunidad") @db.VarChar(100)
-  // Visita / levantamiento técnico
-  fechaVisita               DateTime? @map("fecha_visita") @db.Date
-  responsableTecnico        String?   @map("responsable_tecnico") @db.VarChar(255)
-  asistentes                String?
-  lugarVisita               String?   @map("lugar_visita")
-  antecedentesLevantados    String?   @map("antecedentes_levantados")
-  documentosRecibidos       String?   @map("documentos_recibidos")
-  planos                    String?
-  basesTecnicas             String?   @map("bases_tecnicas")
-  especificaciones          String?
-  fotografias               String?
-  observacionesTecnicas     String?   @map("observaciones_tecnicas")
-  necesidadOficinaTecnica   Boolean?  @map("necesidad_oficina_tecnica")
-  proximosPasos             String?   @map("proximos_pasos")
-
-  // Desarrollo de propuesta
-  estadoDesarrolloPropuesta     String?   @map("estado_desarrollo_propuesta")
-  informacionPendiente          String?   @map("informacion_pendiente")
-  documentosRequeridos          String?   @map("documentos_requeridos")
-  riesgoTecnico                 String?   @map("riesgo_tecnico") @db.VarChar(50)
-  condicionesEspeciales         String?   @map("condiciones_especiales")
-  necesidadValidacionGerencial  Boolean?  @map("necesidad_validacion_gerencial")
-  fechaComprometidaEnvio        DateTime? @map("fecha_comprometida_envio") @db.Date
-  comentariosInternos           String?   @map("comentarios_internos")
-
-  // Propuesta enviada / negociación
-  fechaEnvioPropuesta        DateTime? @map("fecha_envio_propuesta") @db.Date
-  versionPropuesta           String?   @map("version_propuesta") @db.VarChar(50)
-  numeroPropuesta            String?   @map("numero_propuesta") @db.VarChar(100)
-  montoPropuesto             Decimal?  @map("monto_propuesto") @db.Decimal(14, 2)
-  fechaVencimientoPropuesta  DateTime? @map("fecha_vencimiento_propuesta") @db.Date
-  comentariosCliente         String?   @map("comentarios_cliente")
-
-  // Documentación de venta
-  ordenCompra                           String?   @map("orden_compra")
-  contrato                              String?
-  correoAceptacion                      String?   @map("correo_aceptacion")
-  anticipo                              String?
-  aprobacionInternaCliente              String?   @map("aprobacion_interna_cliente")
-  condicionesPago                       String?   @map("condiciones_pago")
-  documentosAdministrativosPendientes   String?   @map("documentos_administrativos_pendientes")
-  responsableAdministrativo             String?   @map("responsable_administrativo") @db.VarChar(255)
-  fechaFirma                            DateTime? @map("fecha_firma") @db.Date
-  fechaInicioProyecto                   DateTime? @map("fecha_inicio_proyecto") @db.Date
-  traspasadoOperaciones                 Boolean?  @map("traspasado_operaciones")
-  fechaTraspasoOperaciones              DateTime? @map("fecha_traspaso_operaciones") @db.Date
-  responsableTraspasoOperaciones        String?   @map("responsable_traspaso_operaciones") @db.VarChar(255)
-  observacionesTraspasoOperaciones      String?   @map("observaciones_traspaso_operaciones")
-  traspasadoAdministracion              Boolean?  @map("traspasado_administracion")
-  fechaTraspasoAdministracion           DateTime? @map("fecha_traspaso_administracion") @db.Date
-  responsableTraspasoAdministracion     String?   @map("responsable_traspaso_administracion") @db.VarChar(255)
-  observacionesTraspasoAdministracion   String?   @map("observaciones_traspaso_administracion")
-
-  // Cierre ganado
-  montoFinalGanado  Decimal?  @map("monto_final_ganado") @db.Decimal(14, 2)
-  fechaCierre       DateTime? @map("fecha_cierre") @db.Date
-  clienteBeckId       String?              @map("cliente_beck_id") @db.Uuid
-  contactoBeckId      String?              @map("contacto_beck_id") @db.Uuid
-  cotizaciones        Cotizacion[]
-  clienteBeck         ClienteBeck?         @relation(fields: [clienteBeckId], references: [id])
-  contactoBeck        ContactoClienteBeck? @relation(fields: [contactoBeckId], references: [id])
-  obraId              String?              @map("obra_id") @db.Uuid
-  obra                Obra?                @relation(fields: [obraId], references: [id])
-
-  archivos FunnelBeckArchivo[]
-  solicitudesOficinaTecnica SolicitudOficinaTecnica[]
-
+  id                                  String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombreProyecto                      String                    @map("nombre_proyecto") @db.VarChar(255)
+  empresa                             String                    @db.VarChar(255)
+  valorOriginal                       Decimal                   @map("valor_original") @db.Decimal(14, 2)
+  monedaOriginal                      MonedaFunnel              @map("moneda_original")
+  valorClp                            Decimal                   @map("valor_clp") @db.Decimal(14, 2)
+  valorUf                             Decimal                   @map("valor_uf") @db.Decimal(14, 4)
+  fechaProbableCierre                 DateTime                  @map("fecha_probable_cierre") @db.Date
+  vendedor                            String                    @db.VarChar(255)
+  region                              String                    @db.VarChar(150)
+  comuna                              String                    @db.VarChar(150)
+  fuenteLead                          FuenteLeadFunnel?
+  etapa                               EtapaFunnelBeck           @default(prospecto_identificado)
+  estadoCierre                        EstadoCierreFunnel?
+  motivoPerdida                       String?                   @map("motivo_perdida")
+  createdAt                           DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                           DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  dolarValor                          Decimal?                  @map("dolar_valor") @db.Decimal(12, 4)
+  fechaTipoCambio                     DateTime?                 @map("fecha_tipo_cambio") @db.Timestamp(6)
+  ufValor                             Decimal?                  @map("uf_valor") @db.Decimal(12, 4)
+  ajustesSolicitados                  String?                   @map("ajustes_solicitados")
+  cargoContacto                       String?                   @map("cargo_contacto") @db.VarChar(120)
+  contrapropuestas                    String?
+  correoContacto                      String?                   @map("correo_contacto") @db.VarChar(255)
+  documentoRespaldo                   String?                   @map("documento_respaldo")
+  etapaPerdida                        String?                   @map("etapa_perdida") @db.VarChar(100)
+  fechaPrimerContacto                 DateTime?                 @map("fecha_primer_contacto") @db.Date
+  fechaProximaAccion                  DateTime?                 @map("fecha_proxima_accion") @db.Date
+  fechaReactivacion                   DateTime?                 @map("fecha_reactivacion") @db.Date
+  flujoPosterior                      String?                   @map("flujo_posterior")
+  motivoPostergacion                  String?                   @map("motivo_postergacion")
+  necesidadDetectada                  String?                   @map("necesidad_detectada")
+  nivelInteres                        String?                   @map("nivel_interes") @db.VarChar(50)
+  nombreContacto                      String?                   @map("nombre_contacto") @db.VarChar(255)
+  objeciones                          String?
+  probabilidadCierre                  Int?                      @map("probabilidad_cierre")
+  proximaAccion                       String?                   @map("proxima_accion")
+  rutEmpresa                          String?                   @map("rut_empresa") @db.VarChar(20)
+  telefonoContacto                    String?                   @map("telefono_contacto") @db.VarChar(50)
+  timingEstimado                      String?                   @map("timing_estimado") @db.VarChar(100)
+  tipoCliente                         String?                   @map("tipo_cliente") @db.VarChar(100)
+  tipoContacto                        String?                   @map("tipo_contacto") @db.VarChar(100)
+  tipoOportunidad                     String?                   @map("tipo_oportunidad") @db.VarChar(100)
+  clienteBeckId                       String?                   @map("cliente_beck_id") @db.Uuid
+  contactoBeckId                      String?                   @map("contacto_beck_id") @db.Uuid
+  antecedentesLevantados              String?                   @map("antecedentes_levantados")
+  anticipo                            String?
+  aprobacionInternaCliente            String?                   @map("aprobacion_interna_cliente")
+  asistentes                          String?
+  basesTecnicas                       String?                   @map("bases_tecnicas")
+  comentariosCliente                  String?                   @map("comentarios_cliente")
+  comentariosInternos                 String?                   @map("comentarios_internos")
+  condicionesEspeciales               String?                   @map("condiciones_especiales")
+  condicionesPago                     String?                   @map("condiciones_pago")
+  contrato                            String?
+  correoAceptacion                    String?                   @map("correo_aceptacion")
+  documentosAdministrativosPendientes String?                   @map("documentos_administrativos_pendientes")
+  documentosRecibidos                 String?                   @map("documentos_recibidos")
+  documentosRequeridos                String?                   @map("documentos_requeridos")
+  especificaciones                    String?
+  estadoDesarrolloPropuesta           String?                   @map("estado_desarrollo_propuesta")
+  fechaCierre                         DateTime?                 @map("fecha_cierre") @db.Date
+  fechaComprometidaEnvio              DateTime?                 @map("fecha_comprometida_envio") @db.Date
+  fechaEnvioPropuesta                 DateTime?                 @map("fecha_envio_propuesta") @db.Date
+  fechaFirma                          DateTime?                 @map("fecha_firma") @db.Date
+  fechaInicioProyecto                 DateTime?                 @map("fecha_inicio_proyecto") @db.Date
+  fechaVencimientoPropuesta           DateTime?                 @map("fecha_vencimiento_propuesta") @db.Date
+  fechaVisita                         DateTime?                 @map("fecha_visita") @db.Date
+  fotografias                         String?
+  informacionPendiente                String?                   @map("informacion_pendiente")
+  lugarVisita                         String?                   @map("lugar_visita")
+  montoFinalGanado                    Decimal?                  @map("monto_final_ganado") @db.Decimal(14, 2)
+  montoPropuesto                      Decimal?                  @map("monto_propuesto") @db.Decimal(14, 2)
+  necesidadOficinaTecnica             Boolean?                  @map("necesidad_oficina_tecnica")
+  necesidadValidacionGerencial        Boolean?                  @map("necesidad_validacion_gerencial")
+  numeroPropuesta                     String?                   @map("numero_propuesta") @db.VarChar(100)
+  observacionesTecnicas               String?                   @map("observaciones_tecnicas")
+  ordenCompra                         String?                   @map("orden_compra")
+  planos                              String?
+  proximosPasos                       String?                   @map("proximos_pasos")
+  responsableAdministrativo           String?                   @map("responsable_administrativo") @db.VarChar(255)
+  responsableTecnico                  String?                   @map("responsable_tecnico") @db.VarChar(255)
+  riesgoTecnico                       String?                   @map("riesgo_tecnico") @db.VarChar(50)
+  versionPropuesta                    String?                   @map("version_propuesta") @db.VarChar(50)
+  obraId                              String?                   @map("obra_id") @db.Uuid
+  fechaTraspasoAdministracion         DateTime?                 @map("fecha_traspaso_administracion") @db.Date
+  fechaTraspasoOperaciones            DateTime?                 @map("fecha_traspaso_operaciones") @db.Date
+  observacionesTraspasoAdministracion String?                   @map("observaciones_traspaso_administracion")
+  observacionesTraspasoOperaciones    String?                   @map("observaciones_traspaso_operaciones")
+  responsableTraspasoAdministracion   String?                   @map("responsable_traspaso_administracion") @db.VarChar(255)
+  responsableTraspasoOperaciones      String?                   @map("responsable_traspaso_operaciones") @db.VarChar(255)
+  traspasadoAdministracion            Boolean?                  @map("traspasado_administracion")
+  traspasadoOperaciones               Boolean?                  @map("traspasado_operaciones")
+  cotizaciones                        Cotizacion[]
+  clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
+  contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])
+  obra                                Obra?                     @relation(fields: [obraId], references: [id])
+  archivos                            FunnelBeckArchivo[]
+  solicitudesOficinaTecnica           SolicitudOficinaTecnica[]
 
   @@index([etapa])
   @@index([estadoCierre])
@@ -510,7 +511,6 @@ model FunnelBeckArchivo {
   mimeType      String?           @map("mime_type")
   bytes         Int?
   createdAt     DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
-
   oportunidad   OperadorBeck      @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
 
   @@index([oportunidadId])
@@ -519,26 +519,21 @@ model FunnelBeckArchivo {
 }
 
 model SolicitudOficinaTecnica {
-  id                    String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  oportunidadId          String                       @map("oportunidad_id") @db.Uuid
-
-  estado                EstadoSolicitudOficinaTecnica @default(pendiente)
-  responsableComercial  String?                      @map("responsable_comercial") @db.VarChar(255)
-  responsableTecnico    String?                      @map("responsable_tecnico") @db.VarChar(255)
-
-  antecedentesLevantados String?                     @map("antecedentes_levantados")
-  basesTecnicas          String?                     @map("bases_tecnicas")
+  id                     String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  oportunidadId          String                        @map("oportunidad_id") @db.Uuid
+  estado                 EstadoSolicitudOficinaTecnica @default(pendiente)
+  responsableComercial   String?                       @map("responsable_comercial") @db.VarChar(255)
+  responsableTecnico     String?                       @map("responsable_tecnico") @db.VarChar(255)
+  antecedentesLevantados String?                       @map("antecedentes_levantados")
+  basesTecnicas          String?                       @map("bases_tecnicas")
   especificaciones       String?
-  observacionesTecnicas  String?                     @map("observaciones_tecnicas")
-  comentariosRevision    String?                     @map("comentarios_revision")
-
-  fechaSolicitud         DateTime                    @default(now()) @map("fecha_solicitud") @db.Timestamp(6)
-  fechaRevision          DateTime?                   @map("fecha_revision") @db.Timestamp(6)
-
-  createdAt              DateTime                    @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt              DateTime                    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-
-  oportunidad            OperadorBeck                @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+  observacionesTecnicas  String?                       @map("observaciones_tecnicas")
+  comentariosRevision    String?                       @map("comentarios_revision")
+  fechaSolicitud         DateTime                      @default(now()) @map("fecha_solicitud") @db.Timestamp(6)
+  fechaRevision          DateTime?                     @map("fecha_revision") @db.Timestamp(6)
+  createdAt              DateTime                      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt              DateTime                      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  oportunidad            OperadorBeck                  @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
 
   @@index([oportunidadId])
   @@index([estado])
@@ -548,14 +543,14 @@ model SolicitudOficinaTecnica {
 }
 
 model ConfiguracionCamposRegistro {
-  id               Int      @id @default(autoincrement())
-  obraId           String   @map("obra_id") @db.Uuid
-  campo            String
-  rol              String
-  visible          Boolean  @default(true)
-  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
-  updatedByUserId  String?  @map("updated_by_user_id") @db.Uuid
-  obra             Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  id              Int      @id @default(autoincrement())
+  campo           String
+  rol             String
+  visible         Boolean  @default(true)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  updatedByUserId String?  @map("updated_by_user_id") @db.Uuid
+  obraId          String   @map("obra_id") @db.Uuid
+  obra            Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
 
   @@unique([obraId, rol, campo])
   @@index([obraId])
@@ -642,8 +637,8 @@ enum EtapaFunnelBeck {
   cotizacion_elaborada
   cotizacion_enviada
   en_negociacion
-  documentacion_venta
   cerrada
+  documentacion_venta
 }
 
 enum EstadoCierreFunnel {

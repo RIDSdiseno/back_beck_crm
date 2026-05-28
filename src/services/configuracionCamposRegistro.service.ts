@@ -210,7 +210,9 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
   const itemizadoMandante = asRecord(registro.itemizadoMandante);
   const cantidadSellos = toNumber(getValue(registro, 'cantidadSellos', 'cantidad_sellos'));
   const holgura = toNumber(getValue(registro, 'holgura'));
-  const factorHolguras = toNumber(getValue(registro, 'factorHolguras', 'factor_holguras'));
+  const factorHolguras = toNumber(
+    getValue(registro, 'factorHolguras', 'factor_holguras', 'factor_por_holguras')
+  );
   const cantidadSellosConFactores = cantidadSellos !== null && factorHolguras !== null
     ? cantidadSellos * factorHolguras
     : getValue(registro, 'cantidadSellosConFactores', 'cantidad_sellos_con_factores');
@@ -247,7 +249,7 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
     nombreSellador: getValue(registro, 'nombreSellador', 'nombre_sellador'),
     foto: getFoto(registro),
     recinto: getValue(registro, 'recinto', 'modulo'),
-    moduloEdificio: getValue(registro, 'moduloEdificio', 'modulo_edificio'),
+    moduloEdificio: getValue(registro, 'moduloEdificio', 'modulo_edificio', 'modulo'),
     numeroSello: getValue(registro, 'numeroSello', 'numero_sello'),
     cantidadSellos,
     holgura,
