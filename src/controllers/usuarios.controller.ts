@@ -9,6 +9,42 @@ const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
 };
 
+const ROLES_ASIGNABLES_INGENIERIA: RolUsuario[] = [
+  RolUsuario.terreno,
+  RolUsuario.ingenieria,
+  RolUsuario.visualizador,
+  RolUsuario.vendedor,
+  RolUsuario.jefeobra,
+];
+
+const esIngenieria = (req: Request): boolean => req.userRole === RolUsuario.ingenieria;
+
+function validarGestionIngenieria(
+  req: Request,
+  res: Response,
+  usuarioObjetivo?: { rol: RolUsuario },
+  rolNuevo?: RolUsuario,
+): boolean {
+  if (!esIngenieria(req)) return true;
+
+  if (usuarioObjetivo?.rol === RolUsuario.administrador) {
+    res.status(403).json({ error: 'No tienes permiso para gestionar administradores.' });
+    return false;
+  }
+
+  if (rolNuevo === RolUsuario.administrador) {
+    res.status(403).json({ error: 'Ingeniería no puede asignar rol administrador.' });
+    return false;
+  }
+
+  if (rolNuevo && !ROLES_ASIGNABLES_INGENIERIA.includes(rolNuevo)) {
+    res.status(403).json({ error: 'Ingeniería solo puede asignar roles Beck permitidos.' });
+    return false;
+  }
+
+  return true;
+}
+
 /**
  * GET /api/usuarios
  * Soporta ?empresa=beck|firemat para filtrar por contexto de empresa.
@@ -110,6 +146,11 @@ export const crearUsuario = async (req: Request, res: Response): Promise <void> 
       res.status(400).json({ error: "Rol no válido"});
       return;
     }
+    const rolFinal = rol as RolUsuario;
+
+    if (!validarGestionIngenieria(req, res, undefined, rolFinal)) {
+      return;
+    }
 
     const normalizedEmail = email.toLowerCase().trim();
 
@@ -131,7 +172,7 @@ export const crearUsuario = async (req: Request, res: Response): Promise <void> 
         nombre: nombre.trim(),
         email: normalizedEmail,
         passwordHash,
-        rol: rol as RolUsuario,
+        rol: rolFinal,
         activo: activo?? true,
         azureId: null,
       },
@@ -162,7 +203,7 @@ export const crearUsuario = async (req: Request, res: Response): Promise <void> 
 
 /**
  * PUT /api/usuarios/:id
- * Solo admin
+ * Solo administrador e ingenieria
  */
 export const actualizarUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -189,6 +230,7 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
       rol?: RolUsuario;
       activo?: boolean;
     } = {};
+    let rolFinal: RolUsuario | undefined;
 
     if (typeof nombre === 'string' && nombre.trim()) {
       data.nombre = nombre.trim();
@@ -215,10 +257,22 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
         return;
       }
 
-      data.rol = rol;
+      rolFinal = rol;
+    }
+
+    if (!validarGestionIngenieria(req, res, usuarioExistente, rolFinal)) {
+      return;
+    }
+
+    if (rolFinal !== undefined) {
+      data.rol = rolFinal;
     }
 
     if (typeof activo === 'boolean') {
+      if (esIngenieria(req) && !activo && id === req.userId) {
+        res.status(403).json({ error: 'No puedes desactivarte a ti mismo.' });
+        return;
+      }
       data.activo = activo;
     }
 
@@ -269,7 +323,7 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
 /**
  * DELETE /api/usuarios/:id
  * Soft delete: desactiva usuario
- * Solo admin
+ * Solo administrador e ingenieria
  */
 export const eliminarUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -281,6 +335,15 @@ export const eliminarUsuario = async (req: Request, res: Response): Promise<void
 
     if (!usuarioExistente) {
       res.status(404).json({ error: 'Usuario no encontrado' });
+      return;
+    }
+
+    if (!validarGestionIngenieria(req, res, usuarioExistente)) {
+      return;
+    }
+
+    if (esIngenieria(req) && id === req.userId) {
+      res.status(403).json({ error: 'No puedes desactivarte a ti mismo.' });
       return;
     }
 

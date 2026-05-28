@@ -112,6 +112,7 @@ app.use('/api/cotizaciones', blockBeckRoutes, cotizacionesRoutes);
 app.use('/api/movimientos-crm', blockBeckRoutes, movimientosCrmRoutes);
 app.use('/api/clientes-beck', blockBeckRoutes, clientesBeckRoutes);
 // Rutas parametros de usuarios por empresa
+app.use('/api/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
 app.use('/api/beck/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
 app.use('/api/firemat/usuarios-parametros', authenticate, firematUsuariosParametrosRoutes);
 

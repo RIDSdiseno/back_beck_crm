@@ -381,6 +381,13 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let itemizadoSacyr: string | null = null;
           let codigoBeck: string | null = null;
           let itemizadoMandanteId: string | null = null;
+          let factor_por_holguras: number | null = null;
+          let cielo_modular: number | null = null;
+          let cantidad_sellos_con_factores: number | null = null;
+          let aislacion: number | null = null;
+          let cantidad_sellos_aislacion: number | null = null;
+          let reparacion_tabique: number | null = null;
+          let cantidad_final: number | null = null;
 
           if (tipoRegistro === 'sello_cortafuego') {
             codigoBeck =
@@ -479,6 +486,15 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Observaciones', 'OBSERVACIONES', 'observaciones', 'Obs') ?? null;
           }
 
+          factor_por_holguras = parseDecimal(getCell(rowObj, 'Factor por holguras', 'Factor Holguras', 'factor_por_holguras', 'factorPorHolguras'));
+          const cieloModularParsed = parseDecimal(getCell(rowObj, 'Cielo modular', 'cielo_modular', 'cieloModular'));
+          cielo_modular = cieloModularParsed === null ? null : Math.trunc(cieloModularParsed);
+          cantidad_sellos_con_factores = parseDecimal(getCell(rowObj, 'Cantidad sellos con factores', 'Cantidad de sellos con factores', 'Cantidad sellos con factores sin reparaciones', 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
+          aislacion = parseDecimal(getCell(rowObj, 'Aislación', 'Aislacion', 'aislacion'));
+          cantidad_sellos_aislacion = parseDecimal(getCell(rowObj, 'Cantidad sellos aislación', 'Cantidad sellos aislacion', 'Cantidad de Sellos Aislación', 'Cantidad de Sellos Aislacion', 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
+          reparacion_tabique = parseDecimal(getCell(rowObj, 'Reparación tabique', 'Reparacion tabique', 'Reparación de tabique', 'Reparacion de tabique', 'reparacion_tabique', 'reparacionTabique'));
+          cantidad_final = parseDecimal(getCell(rowObj, 'Cantidad final', 'cantidad_final', 'cantidadFinal'));
+
           // Saltar filas completamente vacías
           if (!descripcion_material && !nombre_sellador) continue;
 
@@ -565,6 +581,13 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               tipoRegistro: truncate(tipoRegistro, 50),
               itemizadoSacyr: itemizadoSacyr ? truncate(itemizadoSacyr, 255) : null,
               ...(metrosFinal !== null ? { metrosLineales: metrosFinal } : {}),
+              factorPorHolguras: factor_por_holguras,
+              cieloModular: cielo_modular,
+              cantidadSellosConFactores: cantidad_sellos_con_factores,
+              aislacion,
+              cantidadSellosAislacion: cantidad_sellos_aislacion,
+              reparacionTabique: reparacion_tabique,
+              cantidadFinal: cantidad_final,
             },
           });
 

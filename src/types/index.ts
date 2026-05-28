@@ -73,6 +73,13 @@ export interface RegistroTerreno {
   tipo_registro: TipoRegistroTerreno;
   metros_lineales?: number | null;
   itemizado_sacyr?: string | null;
+  factor_por_holguras?: number | null;
+  cielo_modular?: number | null;
+  cantidad_sellos_con_factores?: number | null;
+  aislacion?: number | null;
+  cantidad_sellos_aislacion?: number | null;
+  reparacion_tabique?: number | null;
+  cantidad_final?: number | null;
   estado: EstadoRegistroTerreno;
   created_at: Date;
   updated_at?: Date;
@@ -185,6 +192,19 @@ export interface CreateRegistroTerrenoDTO {
   observaciones?: string;
   tipo_registro?: TipoRegistroTerreno;
   metros_lineales?: number | null;
+  factor_por_holguras?: number | null;
+  factorPorHolguras?: number | string | null;
+  cielo_modular?: number | null;
+  cieloModular?: number | string | null;
+  cantidad_sellos_con_factores?: number | null;
+  cantidadSellosConFactores?: number | string | null;
+  aislacion?: number | string | null;
+  cantidad_sellos_aislacion?: number | null;
+  cantidadSellosAislacion?: number | string | null;
+  reparacion_tabique?: number | null;
+  reparacionTabique?: number | string | null;
+  cantidad_final?: number | null;
+  cantidadFinal?: number | string | null;
   // fotos se suben como multipart/form-data
 }
 

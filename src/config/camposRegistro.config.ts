@@ -8,9 +8,9 @@ export interface DefinicionCampo {
 }
 
 const CAMPOS_AZULES = new Set([
-  'cieloModular',
+  'cielo_modular',
   'aislacion',
-  'reparacionTabique',
+  'reparacion_tabique',
 ]);
 
 export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
@@ -29,13 +29,13 @@ export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
   { campo: 'numeroSello', label: 'N° DEL SELLO', color: 'verde' },
   { campo: 'cantidadSellos', label: 'Cantidad de Sellos', color: 'verde' },
   { campo: 'holgura', label: 'Holgura (cm)', color: 'verde' },
-  { campo: 'factorHolguras', label: 'Factor por Holguras', color: 'verde' },
-  { campo: 'cieloModular', label: 'Cielo modular', color: 'azul' },
-  { campo: 'cantidadSellosConFactores', label: 'Cantidad de sellos con factores sin reparaciones', color: 'verde' },
+  { campo: 'factor_por_holguras', label: 'Factor por holguras', color: 'verde' },
+  { campo: 'cielo_modular', label: 'Cielo modular', color: 'azul' },
+  { campo: 'cantidad_sellos_con_factores', label: 'Cantidad sellos con factores', color: 'verde' },
   { campo: 'aislacion', label: 'Aislación', color: 'azul' },
-  { campo: 'cantidadSellosAislacion', label: 'Cantidad de Sellos Aislación', color: 'verde' },
-  { campo: 'reparacionTabique', label: 'Reparación de tabique', color: 'azul' },
-  { campo: 'cantidadFinal', label: 'Cantidad final', color: 'verde' },
+  { campo: 'cantidad_sellos_aislacion', label: 'Cantidad sellos aislación', color: 'verde' },
+  { campo: 'reparacion_tabique', label: 'Reparación tabique', color: 'azul' },
+  { campo: 'cantidad_final', label: 'Cantidad final', color: 'verde' },
   { campo: 'observaciones', label: 'Observaciones', color: 'verde' },
   { campo: 'folio', label: 'FOLIO', color: 'verde' },
 ];
@@ -56,13 +56,13 @@ export const CAMPOS_TRABAJADOR: DefinicionCampo[] = [
   { campo: 'numeroSello', label: 'N° DEL SELLO', color: 'verde' },
   { campo: 'cantidadSellos', label: 'Cantidad de Sellos', color: 'verde' },
   { campo: 'holgura', label: 'Holgura (cm)', color: 'verde' },
-  { campo: 'factorHolguras', label: 'Factor por Holguras', color: 'rojo' },
-  { campo: 'cieloModular', label: 'Cielo modular', color: 'azul' },
-  { campo: 'cantidadSellosConFactores', label: 'Cantidad de sellos con factores sin reparaciones', color: 'rojo' },
+  { campo: 'factor_por_holguras', label: 'Factor por holguras', color: 'rojo' },
+  { campo: 'cielo_modular', label: 'Cielo modular', color: 'azul' },
+  { campo: 'cantidad_sellos_con_factores', label: 'Cantidad sellos con factores', color: 'rojo' },
   { campo: 'aislacion', label: 'Aislación', color: 'azul' },
-  { campo: 'cantidadSellosAislacion', label: 'Cantidad de Sellos Aislación', color: 'rojo' },
-  { campo: 'reparacionTabique', label: 'Reparación de tabique', color: 'azul' },
-  { campo: 'cantidadFinal', label: 'Cantidad final', color: 'rojo' },
+  { campo: 'cantidad_sellos_aislacion', label: 'Cantidad sellos aislación', color: 'rojo' },
+  { campo: 'reparacion_tabique', label: 'Reparación tabique', color: 'azul' },
+  { campo: 'cantidad_final', label: 'Cantidad final', color: 'rojo' },
   { campo: 'observaciones', label: 'Observaciones', color: 'verde' },
   { campo: 'folio', label: 'FOLIO', color: 'rojo' },
 ];

@@ -24,6 +24,39 @@ function parseEjeNumericoTexto(value: unknown): string {
   return raw.replace(/\s+/g, '').replace(/[–—]/g, '-');
 }
 
+function parseDecimalOrNull(value: unknown): number | null {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+
+  const raw = String(value).trim();
+  if (!raw) return null;
+
+  const hasDot = raw.includes('.');
+  const hasComma = raw.includes(',');
+  let normalized = raw;
+
+  if (hasDot && hasComma) {
+    normalized = raw.lastIndexOf(',') > raw.lastIndexOf('.')
+      ? raw.replace(/\./g, '').replace(',', '.')
+      : raw.replace(/,/g, '');
+  } else if (hasComma) {
+    normalized = raw.replace(',', '.');
+  }
+
+  const parsed = Number(normalized.replace(/\s/g, ''));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function parseIntegerOrNull(value: unknown): number | null {
+  const parsed = parseDecimalOrNull(value);
+  return parsed === null ? null : Math.trunc(parsed);
+}
+
+function getBodyValue(body: Record<string, unknown>, snake: string, camel: string): unknown {
+  if (body[snake] !== undefined) return body[snake];
+  return body[camel];
+}
+
 export const crearRegistro = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -69,6 +102,13 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       req.body.itemizadoSacyr != null ? String(req.body.itemizadoSacyr) || null
       : req.body.itemizado_sacyr != null ? String(req.body.itemizado_sacyr) || null
       : null;
+    const factor_por_holguras = parseDecimalOrNull(getBodyValue(req.body, 'factor_por_holguras', 'factorPorHolguras'));
+    const cielo_modular = parseIntegerOrNull(getBodyValue(req.body, 'cielo_modular', 'cieloModular'));
+    const cantidad_sellos_con_factores = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
+    const aislacion = parseDecimalOrNull(getBodyValue(req.body, 'aislacion', 'aislacion'));
+    const cantidad_sellos_aislacion = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
+    const reparacion_tabique = parseDecimalOrNull(getBodyValue(req.body, 'reparacion_tabique', 'reparacionTabique'));
+    const cantidad_final = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_final', 'cantidadFinal'));
 
     const usuario_id = req.userId; // Del middleware auth
 
@@ -168,6 +208,13 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       tipoRegistroFinal,
       metros_lineales,
       itemizadoSacyr,
+      factor_por_holguras,
+      cielo_modular,
+      cantidad_sellos_con_factores,
+      aislacion,
+      cantidad_sellos_aislacion,
+      reparacion_tabique,
+      cantidad_final,
     ];
 
     const result = itemizadoMandanteId
@@ -176,8 +223,10 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
           nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr, itemizado_mandante_id, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
+          reparacion_tabique, cantidad_final, itemizado_mandante_id, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
         RETURNING *`,
         [...insertValues, itemizadoMandanteId, codigoBeckFinal],
       )
@@ -187,8 +236,10 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
           nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
+          reparacion_tabique, cantidad_final, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
         RETURNING *`,
         [...insertValues, codigoBeckFinal],
       )
@@ -197,8 +248,10 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
           nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
+          reparacion_tabique, cantidad_final
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
         RETURNING *`,
         insertValues,
       );
@@ -503,6 +556,19 @@ interface ActualizarRegistroTerrenoBody {
   estado?: unknown;
   itemizadoSacyr?: unknown;
   itemizado_sacyr?: unknown;
+  factor_por_holguras?: unknown;
+  factorPorHolguras?: unknown;
+  cielo_modular?: unknown;
+  cieloModular?: unknown;
+  cantidad_sellos_con_factores?: unknown;
+  cantidadSellosConFactores?: unknown;
+  aislacion?: unknown;
+  cantidad_sellos_aislacion?: unknown;
+  cantidadSellosAislacion?: unknown;
+  reparacion_tabique?: unknown;
+  reparacionTabique?: unknown;
+  cantidad_final?: unknown;
+  cantidadFinal?: unknown;
   codigoBeck?: unknown;
   codigo_beck?: unknown;
   itemizadoMandanteId?: unknown;
@@ -602,6 +668,24 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     const sacyrRaw = body.itemizadoSacyr ?? body.itemizado_sacyr;
     if (sacyrRaw !== undefined) {
       data.itemizadoSacyr = sacyrRaw === null ? null : String(sacyrRaw) || null;
+    }
+    const optionalDecimalFields = [
+      ['factor_por_holguras', 'factorPorHolguras', 'factorPorHolguras'],
+      ['cantidad_sellos_con_factores', 'cantidadSellosConFactores', 'cantidadSellosConFactores'],
+      ['aislacion', 'aislacion', 'aislacion'],
+      ['cantidad_sellos_aislacion', 'cantidadSellosAislacion', 'cantidadSellosAislacion'],
+      ['reparacion_tabique', 'reparacionTabique', 'reparacionTabique'],
+      ['cantidad_final', 'cantidadFinal', 'cantidadFinal'],
+    ] as const;
+    for (const [snake, camel, prismaField] of optionalDecimalFields) {
+      const value = getBodyValue(body as Record<string, unknown>, snake, camel);
+      if (value !== undefined) {
+        data[prismaField] = value === null || value === '' ? null : parseDecimalOrNull(value);
+      }
+    }
+    const cieloModularRaw = getBodyValue(body as Record<string, unknown>, 'cielo_modular', 'cieloModular');
+    if (cieloModularRaw !== undefined) {
+      data.cieloModular = cieloModularRaw === null || cieloModularRaw === '' ? null : parseIntegerOrNull(cieloModularRaw);
     }
 
     const registro = await prisma.registroTerreno.update({
@@ -888,6 +972,13 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     pdfFieldRow(doc, 'Sellador:',             registro.nombreSellador);
     pdfFieldRow(doc, 'Holgura:',              registro.holgura.toString());
     pdfFieldRow(doc, 'Accesibilidad:',        registro.accesibilidad);
+    pdfFieldRow(doc, 'Factor por holguras:',  regRaw['factor_por_holguras'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Cielo modular:',        regRaw['cielo_modular'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Cantidad sellos con factores:', regRaw['cantidad_sellos_con_factores'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Aislacion:',            regRaw['aislacion'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Cantidad sellos aislacion:', regRaw['cantidad_sellos_aislacion'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Reparacion tabique:',   regRaw['reparacion_tabique'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Cantidad final:',       regRaw['cantidad_final'] as string | number | null | undefined);
 
     pdfHRule(doc);
 

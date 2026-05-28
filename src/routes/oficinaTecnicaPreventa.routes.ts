@@ -9,7 +9,7 @@ import { authenticate, authorize } from "../middlewares/auth";
 
 const router = Router();
 
-const canReadOficinaTecnicaPreventa = authorize("administrador", "ingenieria", "jefeobra", "vendedor");
+const canReadOficinaTecnicaPreventa = authorize("administrador", "ingenieria", "jefeobra", "vendedor", "visualizador");
 const canCreateOficinaTecnicaPreventa = authorize("administrador", "ingenieria", "jefeobra");
 const canReviewOficinaTecnicaPreventa = authorize("administrador", "ingenieria");
 

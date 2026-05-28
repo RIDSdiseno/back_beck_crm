@@ -206,7 +206,6 @@ function getFoto(registro: Record<string, unknown>): unknown {
 }
 
 function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string, unknown> {
-  const procesamiento = asRecord(registro.procesamiento);
   const itemizadoMandante = asRecord(registro.itemizadoMandante);
   const cantidadSellos = toNumber(getValue(registro, 'cantidadSellos', 'cantidad_sellos'));
   const holgura = toNumber(getValue(registro, 'holgura'));
@@ -218,9 +217,9 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
     : getValue(registro, 'cantidadSellosConFactores', 'cantidad_sellos_con_factores');
   const cantidadFinal = getValue(
     registro,
-    'cantidadFinal',
     'cantidad_final',
-  ) ?? procesamiento?.totalSellosCalculado ?? procesamiento?.total_sellos_calculado ?? null;
+    'cantidadFinal',
+  );
   const itemizadoBeck = getValue(
     registro,
     'itemizadoBeck',
@@ -253,13 +252,13 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
     numeroSello: getValue(registro, 'numeroSello', 'numero_sello'),
     cantidadSellos,
     holgura,
-    factorHolguras,
-    cieloModular: getValue(registro, 'cieloModular', 'cielo_modular'),
-    cantidadSellosConFactores,
+    factor_por_holguras: factorHolguras,
+    cielo_modular: getValue(registro, 'cielo_modular', 'cieloModular'),
+    cantidad_sellos_con_factores: cantidadSellosConFactores,
     aislacion: getValue(registro, 'aislacion'),
-    cantidadSellosAislacion: getValue(registro, 'cantidadSellosAislacion', 'cantidad_sellos_aislacion'),
-    reparacionTabique: getValue(registro, 'reparacionTabique', 'reparacion_tabique'),
-    cantidadFinal,
+    cantidad_sellos_aislacion: getValue(registro, 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'),
+    reparacion_tabique: getValue(registro, 'reparacion_tabique', 'reparacionTabique'),
+    cantidad_final: cantidadFinal,
     observaciones: getValue(registro, 'observaciones'),
     folio: getValue(registro, 'folio'),
   };

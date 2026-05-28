@@ -12,8 +12,8 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', authorize('administrador', 'ingenieria', 'vendedor'), listarUsuarios);
-router.post('/', authorize('administrador'), crearUsuario);
-router.put('/:id', authorize('administrador'), actualizarUsuario);
-router.delete('/:id', authorize('administrador'), eliminarUsuario);
+router.post('/', authorize('administrador', 'ingenieria'), crearUsuario);
+router.put('/:id', authorize('administrador', 'ingenieria'), actualizarUsuario);
+router.delete('/:id', authorize('administrador', 'ingenieria'), eliminarUsuario);
 
 export default router;
