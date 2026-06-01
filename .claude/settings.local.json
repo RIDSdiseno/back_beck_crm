@@ -7,7 +7,12 @@
       "Bash(Find \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" -type f -name \"*registros*\" -o -name \"*registro*\")",
       "Bash(dir \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" /b)",
       "Bash(findstr /i registros)",
-      "Bash(Get-ChildItem \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" -Name)"
+      "Bash(Get-ChildItem \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\\\\src\\\\services\" -Name)",
+      "Read(//c/Users/RIDS/Desktop/**)",
+      "Bash(xargs grep -l \"SELECT.*registros_terreno\\\\|SELECT.*fotos_registro\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\RIDS\\Desktop\\beck-crm\\src\\pages\\firemat"
     ]
   }
 }

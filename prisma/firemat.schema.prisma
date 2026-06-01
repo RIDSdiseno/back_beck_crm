@@ -187,34 +187,65 @@ model CotizacionFirematDetalle {
 }
 
 model FunnelFirematOpportunity {
-  id                   Int                @id @default(autoincrement())
-  cliente              String
-  contacto             String?
-  telefono             String?
-  correo               String?
-  tipoCliente          String?
-  productoId           Int?
-  cantidadEstimada     Int?
-  responsable          String?
-  etapa                String             @default("PROSPECTO")
-  montoEstimado        Float              @default(0)
-  probabilidadCierre   Int?
-  proximaAccion        String?
-  fechaProximaAccion   DateTime?
-  observaciones        String?
-  origen               String?
-  estadoStock          String?
-  cotizacionId         Int?
-  motivoPerdida        String?
-  motivoPostergacion   String?
-  fechaReactivacion    DateTime?
-  documentoRespaldo    String?
-  fechaCierre          DateTime?
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  probabilidad         Int?               @default(50)
-  cotizacion           CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
-  producto             Producto?          @relation(fields: [productoId], references: [id])
+  id                       Int                @id @default(autoincrement())
+  cliente                  String
+  contacto                 String?
+  telefono                 String?
+  correo                   String?
+  tipoCliente              String?
+  rutEmpresa               String?
+  region                   String?
+  comuna                   String?
+  unidadNegocio            String?
+  productoId               Int?
+  cantidadEstimada         Int?
+  urgencia                 String?
+  tipoUso                  String?
+  necesidadSoporteTecnico  Boolean?
+  alternativaProducto     String?
+  comision                Float?
+  margenEstimado          Float?
+  fechaComprometidaEnvio  DateTime?
+  versionCotizacion       String?
+  comentariosCliente      String?
+  objeciones              String?
+  ordenCompra                 String?
+  correoAceptacion            String?
+  condicionesComerciales      String?
+  coordinacionAdministrativa  String?
+  estadoDocumentacion         String?
+  traspasoAdministracion      Boolean?
+  traspasoERP                 Boolean?
+  coordinacionDespacho        String?
+  estadoComercialOrden        String?
+  estadoDocumentacionVenta    String?
+  responsable              String?
+  etapa                    String             @default("PROSPECTO")
+  montoEstimado            Float              @default(0)
+  probabilidadCierre       Int?
+  proximaAccion            String?
+  fechaProximaAccion       DateTime?
+  observaciones            String?
+  origen                   String?
+  estadoStock              String?
+  cotizacionId             Int?
+  motivoPerdida            String?
+  motivoPostergacion       String?
+  fechaReactivacion        DateTime?
+  documentoRespaldo        String?
+  fechaCierre              DateTime?
+  createdAt                DateTime           @default(now())
+  updatedAt                DateTime           @updatedAt
+  probabilidad             Int?               @default(50)
+  flujoPosterior              String?
+  motivoDescarte              String?
+  tipoBroker                  String?
+  fechaEstimadaDespacho       DateTime?
+  fechaSeguimientoPostventa   DateTime?
+
+  cotizacion               CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
+  producto                 Producto?          @relation(fields: [productoId], references: [id])
+  archivos FunnelFirematArchivo[]
 }
 
 model ContactoClienteFiremat {
@@ -237,6 +268,27 @@ model ContactoClienteFiremat {
   @@index([correo])
   @@index([activo])
   @@map("contactos_cliente_firemat")
+}
+
+model FunnelFirematArchivo {
+  id             Int      @id @default(autoincrement())
+  oportunidadId Int
+  tipo           String
+  url            String
+  publicId       String
+  nombreArchivo  String?
+  mimeType       String?
+  bytes          Int?
+  etapa          String?
+  observaciones  String?
+  createdAt      DateTime @default(now())
+
+  oportunidad FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+
+  @@index([oportunidadId])
+  @@index([tipo])
+  @@index([etapa])
+  @@map("funnel_firemat_archivos")
 }
 
 enum TipoClienteFiremat {

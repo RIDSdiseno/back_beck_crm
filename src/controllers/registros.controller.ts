@@ -355,6 +355,12 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
           select: { url: true },
           orderBy: { created_at: 'asc' },
         },
+        rechazadoPor: {
+          select: { id: true, nombre: true, email: true, rol: true },
+        },
+        registroOrigen: {
+          select: { id: true, numeroSello: true, descripcionMaterial: true, estado: true },
+        },
       },
       orderBy: [
         { fecha: 'desc' },
@@ -450,6 +456,10 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       codigoBeck?: string | null;
       codigo_beck?: string | null;
     };
+    const motivoRechazo: string | undefined =
+      typeof req.body.motivoRechazo === 'string' ? req.body.motivoRechazo
+      : typeof req.body.motivo_rechazo === 'string' ? req.body.motivo_rechazo
+      : undefined;
     const usuario_id = req.userId;
 
     const estadosValidos: EstadoRegistroTerreno[] = [
@@ -478,6 +488,104 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       );
     }
 
+    // ── Rechazo: transacción atómica + copia corregible ─────────────────────
+    if (estado === EstadoRegistroTerreno.rechazado) {
+      if (existente.estado !== EstadoRegistroTerreno.en_revision) {
+        res.status(400).json({ error: 'Solo se puede rechazar un registro en estado en_revision' });
+        return;
+      }
+      if (!motivoRechazo || !motivoRechazo.trim()) {
+        res.status(400).json({ error: 'motivoRechazo es obligatorio al rechazar un registro' });
+        return;
+      }
+
+      const { rechazado, copia } = await prisma.$transaction(async (tx) => {
+        const rechazado = await tx.registroTerreno.update({
+          where: { id },
+          data: {
+            estado:          EstadoRegistroTerreno.rechazado,
+            motivoRechazo:   motivoRechazo.trim(),
+            fechaRechazo:    new Date(),
+            rechazadoPorId:  usuario_id ?? null,
+          },
+        });
+
+        const copia = await tx.registroTerreno.create({
+          data: {
+            obraId:                    existente.obraId,
+            usuarioId:                 existente.usuarioId,
+            fecha:                     existente.fecha,
+            diaSemana:                 existente.diaSemana,
+            descripcionMaterial:       existente.descripcionMaterial,
+            modulo:                    existente.modulo,
+            piso:                      existente.piso,
+            ejeNumerico:               existente.ejeNumerico,
+            ejeAlfabetico:             existente.ejeAlfabetico,
+            numeroSello:               existente.numeroSello,
+            cantidadSellos:            existente.cantidadSellos,
+            nombreSellador:            existente.nombreSellador,
+            holgura:                   existente.holgura,
+            accesibilidad:             existente.accesibilidad,
+            observaciones:             existente.observaciones,
+            fotosUrls:                 existente.fotosUrls,
+            metrosLineales:            existente.metrosLineales,
+            tipoRegistro:              existente.tipoRegistro,
+            itemizadoSacyr:            existente.itemizadoSacyr,
+            codigoBeck:                existente.codigoBeck,
+            itemizadoMandanteId:       existente.itemizadoMandanteId,
+            itemizadoBeck:             existente.itemizadoBeck,
+            itemizadoMandanteTexto:    existente.itemizadoMandanteTexto,
+            fotoUrl:                   existente.fotoUrl,
+            recinto:                   existente.recinto,
+            factorPorHolguras:         existente.factorPorHolguras,
+            cieloModular:              existente.cieloModular,
+            cantidadSellosConFactores: existente.cantidadSellosConFactores,
+            aislacion:                 existente.aislacion,
+            cantidadSellosAislacion:   existente.cantidadSellosAislacion,
+            reparacionTabique:         existente.reparacionTabique,
+            cantidadFinal:             existente.cantidadFinal,
+            folio:                     existente.folio,
+            estado:                    EstadoRegistroTerreno.pendiente,
+            devuelto_a_tecnico:        true,
+            esCorreccion:              true,
+            registroOrigenId:          id,
+          },
+        });
+
+        const fotos = await tx.fotos_registro.findMany({ where: { registro_id: id } });
+        if (fotos.length > 0) {
+          await tx.fotos_registro.createMany({
+            data: fotos.map((f) => ({
+              registro_id:    copia.id,
+              url:            f.url,
+              public_id:      f.public_id,
+              formato:        f.formato,
+              bytes:          f.bytes,
+              nombre_archivo: f.nombre_archivo,
+              subido_por_id:  f.subido_por_id,
+            })),
+          });
+        }
+
+        return { rechazado, copia };
+      });
+
+      await dbQuery(
+        `INSERT INTO procesamiento_ingenieria (registro_terreno_id, usuario_id, notas, procesado_at)
+         VALUES ($1, $2, $3, NOW())
+         ON CONFLICT (registro_terreno_id) DO UPDATE SET
+           usuario_id   = EXCLUDED.usuario_id,
+           notas        = COALESCE(EXCLUDED.notas, procesamiento_ingenieria.notas),
+           procesado_at = EXCLUDED.procesado_at`,
+        [id, usuario_id, notas ?? null],
+      );
+
+      const [withCodigo] = await adjuntarCodigosBeck([rechazado as unknown as Record<string, unknown>]);
+      const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
+      res.json({ ...withItemizado, correccionId: copia.id });
+      return;
+    }
+
     // 1. Actualizar estado en registros_terreno (fuente de verdad)
     const registro = await prisma.registroTerreno.update({
       where: { id },
@@ -497,6 +605,10 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
         [id, usuario_id]
       );
     } else if (estado === EstadoRegistroTerreno.validado) {
+      if (existente.estado !== EstadoRegistroTerreno.en_revision) {
+        res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
+        return;
+      }
       // Calcular total técnico: cantidad_sellos × holgura × accesibilidad
       const total_sellos_calculado =
         Number(existente.cantidadSellos) *
@@ -515,16 +627,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
            notas                  = COALESCE(EXCLUDED.notas,         procesamiento_ingenieria.notas),
            procesado_at           = EXCLUDED.procesado_at`,
         [id, usuario_id, codigo ?? null, itemizado_id ?? null, total_sellos_calculado, notas ?? null]
-      );
-    } else if (estado === EstadoRegistroTerreno.rechazado) {
-      await dbQuery(
-        `INSERT INTO procesamiento_ingenieria (registro_terreno_id, usuario_id, notas, procesado_at)
-         VALUES ($1, $2, $3, NOW())
-         ON CONFLICT (registro_terreno_id) DO UPDATE SET
-           usuario_id   = EXCLUDED.usuario_id,
-           notas        = COALESCE(EXCLUDED.notas, procesamiento_ingenieria.notas),
-           procesado_at = EXCLUDED.procesado_at`,
-        [id, usuario_id, notas ?? null]
       );
     }
 
@@ -1047,6 +1149,71 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
   }
 };
 
+/**
+ * PATCH /api/registros/:id/reenviar-revision
+ * Envía una corrección (o registro pendiente) de vuelta a revisión de Ingeniería.
+ * Solo registros en estado "pendiente" (incluye correcciones devueltas al técnico).
+ */
+export const reenviarRevision = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario_id = req.userId;
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (existente.estado === EstadoRegistroTerreno.validado) {
+      res.status(400).json({ error: 'No se puede reenviar a revisión un registro ya validado' });
+      return;
+    }
+    if (existente.estado === EstadoRegistroTerreno.rechazado) {
+      res.status(400).json({
+        error: 'Un registro rechazado no puede reenviarse directamente. Use la corrección generada automáticamente',
+      });
+      return;
+    }
+    if (existente.estado === EstadoRegistroTerreno.en_revision) {
+      res.status(400).json({ error: 'El registro ya está en revisión' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: {
+        estado:              EstadoRegistroTerreno.en_revision,
+        corregidoAt:         new Date(),
+        reenviadoRevisionAt: new Date(),
+        devuelto_a_tecnico:  false,
+      },
+    });
+
+    await dbQuery(
+      `INSERT INTO procesamiento_ingenieria (registro_terreno_id, usuario_id, procesado_at)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (registro_terreno_id) DO UPDATE SET
+         usuario_id   = EXCLUDED.usuario_id,
+         procesado_at = EXCLUDED.procesado_at`,
+      [id, usuario_id],
+    );
+
+    const [withCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
+    res.json(withItemizado);
+  } catch (error) {
+    console.error('Error al reenviar a revisión:', error);
+    res.status(500).json({ error: 'Error al reenviar registro a revisión' });
+  }
+};
+
+/**
+ * GET /api/registros/pendientes
+ * Lista registros en estado "pendiente" o "en_revision" para que Ingeniería los procese.
+ * - pendiente: acción disponible → "Iniciar revisión"
+ * - en_revision: acciones disponibles → "Validar" / "Rechazar"
+ */
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery(
@@ -1054,7 +1221,7 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
-       WHERE rt.estado = 'pendiente'
+       WHERE rt.estado IN ('pendiente', 'en_revision')
        ORDER BY rt.created_at ASC`
     );
 
@@ -1062,5 +1229,56 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
   } catch (error) {
     console.error('Error al listar pendientes:', error);
     res.status(500).json({ error: 'Error al listar pendientes' });
+  }
+};
+
+/**
+ * PATCH /api/registros/:id/iniciar-revision
+ * Ingeniería inicia la revisión de un registro pendiente.
+ * - Valida que el estado actual sea "pendiente"
+ * - Actualiza estado → en_revision, devuelto_a_tecnico = false
+ * - Crea/actualiza entrada en procesamiento_ingenieria
+ */
+export const iniciarRevision = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario_id = req.userId;
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (existente.estado !== EstadoRegistroTerreno.pendiente) {
+      res.status(400).json({
+        error: `Solo se puede iniciar revisión de un registro en estado pendiente. Estado actual: ${existente.estado}`,
+      });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: {
+        estado:             EstadoRegistroTerreno.en_revision,
+        devuelto_a_tecnico: false,
+      },
+    });
+
+    await dbQuery(
+      `INSERT INTO procesamiento_ingenieria (registro_terreno_id, usuario_id, procesado_at)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (registro_terreno_id) DO UPDATE SET
+         usuario_id   = EXCLUDED.usuario_id,
+         procesado_at = EXCLUDED.procesado_at`,
+      [id, usuario_id],
+    );
+
+    const [withCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
+    res.json(withItemizado);
+  } catch (error) {
+    console.error('Error al iniciar revisión:', error);
+    res.status(500).json({ error: 'Error al iniciar revisión del registro' });
   }
 };

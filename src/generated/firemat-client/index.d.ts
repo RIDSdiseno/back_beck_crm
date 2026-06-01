@@ -73,6 +73,11 @@ export type FunnelFirematOpportunity = $Result.DefaultSelection<Prisma.$FunnelFi
  * 
  */
 export type ContactoClienteFiremat = $Result.DefaultSelection<Prisma.$ContactoClienteFirematPayload>
+/**
+ * Model FunnelFirematArchivo
+ * 
+ */
+export type FunnelFirematArchivo = $Result.DefaultSelection<Prisma.$FunnelFirematArchivoPayload>
 
 /**
  * Enums
@@ -353,6 +358,16 @@ export class PrismaClient<
     * ```
     */
   get contactoClienteFiremat(): Prisma.ContactoClienteFirematDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.funnelFirematArchivo`: Exposes CRUD operations for the **FunnelFirematArchivo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FunnelFirematArchivos
+    * const funnelFirematArchivos = await prisma.funnelFirematArchivo.findMany()
+    * ```
+    */
+  get funnelFirematArchivo(): Prisma.FunnelFirematArchivoDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -798,7 +813,8 @@ export namespace Prisma {
     CotizacionFiremat: 'CotizacionFiremat',
     CotizacionFirematDetalle: 'CotizacionFirematDetalle',
     FunnelFirematOpportunity: 'FunnelFirematOpportunity',
-    ContactoClienteFiremat: 'ContactoClienteFiremat'
+    ContactoClienteFiremat: 'ContactoClienteFiremat',
+    FunnelFirematArchivo: 'FunnelFirematArchivo'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -814,7 +830,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat"
+      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat" | "funnelFirematArchivo"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1706,6 +1722,80 @@ export namespace Prisma {
           }
         }
       }
+      FunnelFirematArchivo: {
+        payload: Prisma.$FunnelFirematArchivoPayload<ExtArgs>
+        fields: Prisma.FunnelFirematArchivoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FunnelFirematArchivoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FunnelFirematArchivoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          findFirst: {
+            args: Prisma.FunnelFirematArchivoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FunnelFirematArchivoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          findMany: {
+            args: Prisma.FunnelFirematArchivoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>[]
+          }
+          create: {
+            args: Prisma.FunnelFirematArchivoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          createMany: {
+            args: Prisma.FunnelFirematArchivoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FunnelFirematArchivoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>[]
+          }
+          delete: {
+            args: Prisma.FunnelFirematArchivoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          update: {
+            args: Prisma.FunnelFirematArchivoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          deleteMany: {
+            args: Prisma.FunnelFirematArchivoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FunnelFirematArchivoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FunnelFirematArchivoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>[]
+          }
+          upsert: {
+            args: Prisma.FunnelFirematArchivoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FunnelFirematArchivoPayload>
+          }
+          aggregate: {
+            args: Prisma.FunnelFirematArchivoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFunnelFirematArchivo>
+          }
+          groupBy: {
+            args: Prisma.FunnelFirematArchivoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FunnelFirematArchivoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FunnelFirematArchivoCountArgs<ExtArgs>
+            result: $Utils.Optional<FunnelFirematArchivoCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1826,6 +1916,7 @@ export namespace Prisma {
     cotizacionFirematDetalle?: CotizacionFirematDetalleOmit
     funnelFirematOpportunity?: FunnelFirematOpportunityOmit
     contactoClienteFiremat?: ContactoClienteFirematOmit
+    funnelFirematArchivo?: FunnelFirematArchivoOmit
   }
 
   /* Types for Logging */
@@ -2116,6 +2207,37 @@ export namespace Prisma {
    */
   export type CotizacionFirematCountOutputTypeCountFunnelFirematOpportunityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FunnelFirematOpportunityWhereInput
+  }
+
+
+  /**
+   * Count Type FunnelFirematOpportunityCountOutputType
+   */
+
+  export type FunnelFirematOpportunityCountOutputType = {
+    archivos: number
+  }
+
+  export type FunnelFirematOpportunityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    archivos?: boolean | FunnelFirematOpportunityCountOutputTypeCountArchivosArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FunnelFirematOpportunityCountOutputType without action
+   */
+  export type FunnelFirematOpportunityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematOpportunityCountOutputType
+     */
+    select?: FunnelFirematOpportunityCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FunnelFirematOpportunityCountOutputType without action
+   */
+  export type FunnelFirematOpportunityCountOutputTypeCountArchivosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FunnelFirematArchivoWhereInput
   }
 
 
@@ -14383,6 +14505,8 @@ export namespace Prisma {
     id: number | null
     productoId: number | null
     cantidadEstimada: number | null
+    comision: number | null
+    margenEstimado: number | null
     montoEstimado: number | null
     probabilidadCierre: number | null
     cotizacionId: number | null
@@ -14393,6 +14517,8 @@ export namespace Prisma {
     id: number | null
     productoId: number | null
     cantidadEstimada: number | null
+    comision: number | null
+    margenEstimado: number | null
     montoEstimado: number | null
     probabilidadCierre: number | null
     cotizacionId: number | null
@@ -14406,8 +14532,32 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
+    rutEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
+    urgencia: string | null
+    tipoUso: string | null
+    necesidadSoporteTecnico: boolean | null
+    alternativaProducto: string | null
+    comision: number | null
+    margenEstimado: number | null
+    fechaComprometidaEnvio: Date | null
+    versionCotizacion: string | null
+    comentariosCliente: string | null
+    objeciones: string | null
+    ordenCompra: string | null
+    correoAceptacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    estadoDocumentacion: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    coordinacionDespacho: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string | null
     montoEstimado: number | null
@@ -14426,6 +14576,11 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     probabilidad: number | null
+    flujoPosterior: string | null
+    motivoDescarte: string | null
+    tipoBroker: string | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
   }
 
   export type FunnelFirematOpportunityMaxAggregateOutputType = {
@@ -14435,8 +14590,32 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
+    rutEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
+    urgencia: string | null
+    tipoUso: string | null
+    necesidadSoporteTecnico: boolean | null
+    alternativaProducto: string | null
+    comision: number | null
+    margenEstimado: number | null
+    fechaComprometidaEnvio: Date | null
+    versionCotizacion: string | null
+    comentariosCliente: string | null
+    objeciones: string | null
+    ordenCompra: string | null
+    correoAceptacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    estadoDocumentacion: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    coordinacionDespacho: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string | null
     montoEstimado: number | null
@@ -14455,6 +14634,11 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     probabilidad: number | null
+    flujoPosterior: string | null
+    motivoDescarte: string | null
+    tipoBroker: string | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
   }
 
   export type FunnelFirematOpportunityCountAggregateOutputType = {
@@ -14464,8 +14648,32 @@ export namespace Prisma {
     telefono: number
     correo: number
     tipoCliente: number
+    rutEmpresa: number
+    region: number
+    comuna: number
+    unidadNegocio: number
     productoId: number
     cantidadEstimada: number
+    urgencia: number
+    tipoUso: number
+    necesidadSoporteTecnico: number
+    alternativaProducto: number
+    comision: number
+    margenEstimado: number
+    fechaComprometidaEnvio: number
+    versionCotizacion: number
+    comentariosCliente: number
+    objeciones: number
+    ordenCompra: number
+    correoAceptacion: number
+    condicionesComerciales: number
+    coordinacionAdministrativa: number
+    estadoDocumentacion: number
+    traspasoAdministracion: number
+    traspasoERP: number
+    coordinacionDespacho: number
+    estadoComercialOrden: number
+    estadoDocumentacionVenta: number
     responsable: number
     etapa: number
     montoEstimado: number
@@ -14484,6 +14692,11 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     probabilidad: number
+    flujoPosterior: number
+    motivoDescarte: number
+    tipoBroker: number
+    fechaEstimadaDespacho: number
+    fechaSeguimientoPostventa: number
     _all: number
   }
 
@@ -14492,6 +14705,8 @@ export namespace Prisma {
     id?: true
     productoId?: true
     cantidadEstimada?: true
+    comision?: true
+    margenEstimado?: true
     montoEstimado?: true
     probabilidadCierre?: true
     cotizacionId?: true
@@ -14502,6 +14717,8 @@ export namespace Prisma {
     id?: true
     productoId?: true
     cantidadEstimada?: true
+    comision?: true
+    margenEstimado?: true
     montoEstimado?: true
     probabilidadCierre?: true
     cotizacionId?: true
@@ -14515,8 +14732,32 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
+    rutEmpresa?: true
+    region?: true
+    comuna?: true
+    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
+    urgencia?: true
+    tipoUso?: true
+    necesidadSoporteTecnico?: true
+    alternativaProducto?: true
+    comision?: true
+    margenEstimado?: true
+    fechaComprometidaEnvio?: true
+    versionCotizacion?: true
+    comentariosCliente?: true
+    objeciones?: true
+    ordenCompra?: true
+    correoAceptacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    estadoDocumentacion?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    coordinacionDespacho?: true
+    estadoComercialOrden?: true
+    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -14535,6 +14776,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     probabilidad?: true
+    flujoPosterior?: true
+    motivoDescarte?: true
+    tipoBroker?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
   }
 
   export type FunnelFirematOpportunityMaxAggregateInputType = {
@@ -14544,8 +14790,32 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
+    rutEmpresa?: true
+    region?: true
+    comuna?: true
+    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
+    urgencia?: true
+    tipoUso?: true
+    necesidadSoporteTecnico?: true
+    alternativaProducto?: true
+    comision?: true
+    margenEstimado?: true
+    fechaComprometidaEnvio?: true
+    versionCotizacion?: true
+    comentariosCliente?: true
+    objeciones?: true
+    ordenCompra?: true
+    correoAceptacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    estadoDocumentacion?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    coordinacionDespacho?: true
+    estadoComercialOrden?: true
+    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -14564,6 +14834,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     probabilidad?: true
+    flujoPosterior?: true
+    motivoDescarte?: true
+    tipoBroker?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
   }
 
   export type FunnelFirematOpportunityCountAggregateInputType = {
@@ -14573,8 +14848,32 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
+    rutEmpresa?: true
+    region?: true
+    comuna?: true
+    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
+    urgencia?: true
+    tipoUso?: true
+    necesidadSoporteTecnico?: true
+    alternativaProducto?: true
+    comision?: true
+    margenEstimado?: true
+    fechaComprometidaEnvio?: true
+    versionCotizacion?: true
+    comentariosCliente?: true
+    objeciones?: true
+    ordenCompra?: true
+    correoAceptacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    estadoDocumentacion?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    coordinacionDespacho?: true
+    estadoComercialOrden?: true
+    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -14593,6 +14892,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     probabilidad?: true
+    flujoPosterior?: true
+    motivoDescarte?: true
+    tipoBroker?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
     _all?: true
   }
 
@@ -14689,8 +14993,32 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
+    rutEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
+    urgencia: string | null
+    tipoUso: string | null
+    necesidadSoporteTecnico: boolean | null
+    alternativaProducto: string | null
+    comision: number | null
+    margenEstimado: number | null
+    fechaComprometidaEnvio: Date | null
+    versionCotizacion: string | null
+    comentariosCliente: string | null
+    objeciones: string | null
+    ordenCompra: string | null
+    correoAceptacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    estadoDocumentacion: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    coordinacionDespacho: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string
     montoEstimado: number
@@ -14709,6 +15037,11 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     probabilidad: number | null
+    flujoPosterior: string | null
+    motivoDescarte: string | null
+    tipoBroker: string | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
     _count: FunnelFirematOpportunityCountAggregateOutputType | null
     _avg: FunnelFirematOpportunityAvgAggregateOutputType | null
     _sum: FunnelFirematOpportunitySumAggregateOutputType | null
@@ -14737,8 +15070,32 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
+    rutEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
+    urgencia?: boolean
+    tipoUso?: boolean
+    necesidadSoporteTecnico?: boolean
+    alternativaProducto?: boolean
+    comision?: boolean
+    margenEstimado?: boolean
+    fechaComprometidaEnvio?: boolean
+    versionCotizacion?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
+    ordenCompra?: boolean
+    correoAceptacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    estadoDocumentacion?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    coordinacionDespacho?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -14757,8 +15114,15 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     probabilidad?: boolean
+    flujoPosterior?: boolean
+    motivoDescarte?: boolean
+    tipoBroker?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
+    archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
+    _count?: boolean | FunnelFirematOpportunityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
 
   export type FunnelFirematOpportunitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -14768,8 +15132,32 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
+    rutEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
+    urgencia?: boolean
+    tipoUso?: boolean
+    necesidadSoporteTecnico?: boolean
+    alternativaProducto?: boolean
+    comision?: boolean
+    margenEstimado?: boolean
+    fechaComprometidaEnvio?: boolean
+    versionCotizacion?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
+    ordenCompra?: boolean
+    correoAceptacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    estadoDocumentacion?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    coordinacionDespacho?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -14788,6 +15176,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     probabilidad?: boolean
+    flujoPosterior?: boolean
+    motivoDescarte?: boolean
+    tipoBroker?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -14799,8 +15192,32 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
+    rutEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
+    urgencia?: boolean
+    tipoUso?: boolean
+    necesidadSoporteTecnico?: boolean
+    alternativaProducto?: boolean
+    comision?: boolean
+    margenEstimado?: boolean
+    fechaComprometidaEnvio?: boolean
+    versionCotizacion?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
+    ordenCompra?: boolean
+    correoAceptacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    estadoDocumentacion?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    coordinacionDespacho?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -14819,6 +15236,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     probabilidad?: boolean
+    flujoPosterior?: boolean
+    motivoDescarte?: boolean
+    tipoBroker?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -14830,8 +15252,32 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
+    rutEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
+    urgencia?: boolean
+    tipoUso?: boolean
+    necesidadSoporteTecnico?: boolean
+    alternativaProducto?: boolean
+    comision?: boolean
+    margenEstimado?: boolean
+    fechaComprometidaEnvio?: boolean
+    versionCotizacion?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
+    ordenCompra?: boolean
+    correoAceptacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    estadoDocumentacion?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    coordinacionDespacho?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -14850,12 +15296,19 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     probabilidad?: boolean
+    flujoPosterior?: boolean
+    motivoDescarte?: boolean
+    tipoBroker?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
   }
 
-  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "productoId" | "cantidadEstimada" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad", ExtArgs["result"]["funnelFirematOpportunity"]>
+  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa", ExtArgs["result"]["funnelFirematOpportunity"]>
   export type FunnelFirematOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
+    archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
+    _count?: boolean | FunnelFirematOpportunityCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FunnelFirematOpportunityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
@@ -14871,6 +15324,7 @@ export namespace Prisma {
     objects: {
       cotizacion: Prisma.$CotizacionFirematPayload<ExtArgs> | null
       producto: Prisma.$ProductoPayload<ExtArgs> | null
+      archivos: Prisma.$FunnelFirematArchivoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -14879,8 +15333,32 @@ export namespace Prisma {
       telefono: string | null
       correo: string | null
       tipoCliente: string | null
+      rutEmpresa: string | null
+      region: string | null
+      comuna: string | null
+      unidadNegocio: string | null
       productoId: number | null
       cantidadEstimada: number | null
+      urgencia: string | null
+      tipoUso: string | null
+      necesidadSoporteTecnico: boolean | null
+      alternativaProducto: string | null
+      comision: number | null
+      margenEstimado: number | null
+      fechaComprometidaEnvio: Date | null
+      versionCotizacion: string | null
+      comentariosCliente: string | null
+      objeciones: string | null
+      ordenCompra: string | null
+      correoAceptacion: string | null
+      condicionesComerciales: string | null
+      coordinacionAdministrativa: string | null
+      estadoDocumentacion: string | null
+      traspasoAdministracion: boolean | null
+      traspasoERP: boolean | null
+      coordinacionDespacho: string | null
+      estadoComercialOrden: string | null
+      estadoDocumentacionVenta: string | null
       responsable: string | null
       etapa: string
       montoEstimado: number
@@ -14899,6 +15377,11 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       probabilidad: number | null
+      flujoPosterior: string | null
+      motivoDescarte: string | null
+      tipoBroker: string | null
+      fechaEstimadaDespacho: Date | null
+      fechaSeguimientoPostventa: Date | null
     }, ExtArgs["result"]["funnelFirematOpportunity"]>
     composites: {}
   }
@@ -15295,6 +15778,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cotizacion<T extends FunnelFirematOpportunity$cotizacionArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$cotizacionArgs<ExtArgs>>): Prisma__CotizacionFirematClient<$Result.GetResult<Prisma.$CotizacionFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     producto<T extends FunnelFirematOpportunity$productoArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$productoArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    archivos<T extends FunnelFirematOpportunity$archivosArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$archivosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15330,8 +15814,32 @@ export namespace Prisma {
     readonly telefono: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly correo: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly tipoCliente: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly rutEmpresa: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly region: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comuna: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly unidadNegocio: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly productoId: FieldRef<"FunnelFirematOpportunity", 'Int'>
     readonly cantidadEstimada: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly urgencia: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly tipoUso: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly necesidadSoporteTecnico: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly alternativaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comision: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly margenEstimado: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly fechaComprometidaEnvio: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly versionCotizacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comentariosCliente: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly objeciones: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly ordenCompra: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly correoAceptacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly condicionesComerciales: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly coordinacionAdministrativa: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoDocumentacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly traspasoAdministracion: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly traspasoERP: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly coordinacionDespacho: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoComercialOrden: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoDocumentacionVenta: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly responsable: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly etapa: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly montoEstimado: FieldRef<"FunnelFirematOpportunity", 'Float'>
@@ -15350,6 +15858,11 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly updatedAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly probabilidad: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly flujoPosterior: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly motivoDescarte: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly tipoBroker: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly fechaEstimadaDespacho: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly fechaSeguimientoPostventa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
   }
     
 
@@ -15786,6 +16299,30 @@ export namespace Prisma {
      */
     include?: ProductoInclude<ExtArgs> | null
     where?: ProductoWhereInput
+  }
+
+  /**
+   * FunnelFirematOpportunity.archivos
+   */
+  export type FunnelFirematOpportunity$archivosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    where?: FunnelFirematArchivoWhereInput
+    orderBy?: FunnelFirematArchivoOrderByWithRelationInput | FunnelFirematArchivoOrderByWithRelationInput[]
+    cursor?: FunnelFirematArchivoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
   }
 
   /**
@@ -16987,6 +17524,1189 @@ export namespace Prisma {
 
 
   /**
+   * Model FunnelFirematArchivo
+   */
+
+  export type AggregateFunnelFirematArchivo = {
+    _count: FunnelFirematArchivoCountAggregateOutputType | null
+    _avg: FunnelFirematArchivoAvgAggregateOutputType | null
+    _sum: FunnelFirematArchivoSumAggregateOutputType | null
+    _min: FunnelFirematArchivoMinAggregateOutputType | null
+    _max: FunnelFirematArchivoMaxAggregateOutputType | null
+  }
+
+  export type FunnelFirematArchivoAvgAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    bytes: number | null
+  }
+
+  export type FunnelFirematArchivoSumAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    bytes: number | null
+  }
+
+  export type FunnelFirematArchivoMinAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    tipo: string | null
+    url: string | null
+    publicId: string | null
+    nombreArchivo: string | null
+    mimeType: string | null
+    bytes: number | null
+    etapa: string | null
+    observaciones: string | null
+    createdAt: Date | null
+  }
+
+  export type FunnelFirematArchivoMaxAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    tipo: string | null
+    url: string | null
+    publicId: string | null
+    nombreArchivo: string | null
+    mimeType: string | null
+    bytes: number | null
+    etapa: string | null
+    observaciones: string | null
+    createdAt: Date | null
+  }
+
+  export type FunnelFirematArchivoCountAggregateOutputType = {
+    id: number
+    oportunidadId: number
+    tipo: number
+    url: number
+    publicId: number
+    nombreArchivo: number
+    mimeType: number
+    bytes: number
+    etapa: number
+    observaciones: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FunnelFirematArchivoAvgAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    bytes?: true
+  }
+
+  export type FunnelFirematArchivoSumAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    bytes?: true
+  }
+
+  export type FunnelFirematArchivoMinAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    tipo?: true
+    url?: true
+    publicId?: true
+    nombreArchivo?: true
+    mimeType?: true
+    bytes?: true
+    etapa?: true
+    observaciones?: true
+    createdAt?: true
+  }
+
+  export type FunnelFirematArchivoMaxAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    tipo?: true
+    url?: true
+    publicId?: true
+    nombreArchivo?: true
+    mimeType?: true
+    bytes?: true
+    etapa?: true
+    observaciones?: true
+    createdAt?: true
+  }
+
+  export type FunnelFirematArchivoCountAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    tipo?: true
+    url?: true
+    publicId?: true
+    nombreArchivo?: true
+    mimeType?: true
+    bytes?: true
+    etapa?: true
+    observaciones?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FunnelFirematArchivoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FunnelFirematArchivo to aggregate.
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FunnelFirematArchivos to fetch.
+     */
+    orderBy?: FunnelFirematArchivoOrderByWithRelationInput | FunnelFirematArchivoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FunnelFirematArchivoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FunnelFirematArchivos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FunnelFirematArchivos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FunnelFirematArchivos
+    **/
+    _count?: true | FunnelFirematArchivoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FunnelFirematArchivoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FunnelFirematArchivoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FunnelFirematArchivoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FunnelFirematArchivoMaxAggregateInputType
+  }
+
+  export type GetFunnelFirematArchivoAggregateType<T extends FunnelFirematArchivoAggregateArgs> = {
+        [P in keyof T & keyof AggregateFunnelFirematArchivo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFunnelFirematArchivo[P]>
+      : GetScalarType<T[P], AggregateFunnelFirematArchivo[P]>
+  }
+
+
+
+
+  export type FunnelFirematArchivoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FunnelFirematArchivoWhereInput
+    orderBy?: FunnelFirematArchivoOrderByWithAggregationInput | FunnelFirematArchivoOrderByWithAggregationInput[]
+    by: FunnelFirematArchivoScalarFieldEnum[] | FunnelFirematArchivoScalarFieldEnum
+    having?: FunnelFirematArchivoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FunnelFirematArchivoCountAggregateInputType | true
+    _avg?: FunnelFirematArchivoAvgAggregateInputType
+    _sum?: FunnelFirematArchivoSumAggregateInputType
+    _min?: FunnelFirematArchivoMinAggregateInputType
+    _max?: FunnelFirematArchivoMaxAggregateInputType
+  }
+
+  export type FunnelFirematArchivoGroupByOutputType = {
+    id: number
+    oportunidadId: number
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo: string | null
+    mimeType: string | null
+    bytes: number | null
+    etapa: string | null
+    observaciones: string | null
+    createdAt: Date
+    _count: FunnelFirematArchivoCountAggregateOutputType | null
+    _avg: FunnelFirematArchivoAvgAggregateOutputType | null
+    _sum: FunnelFirematArchivoSumAggregateOutputType | null
+    _min: FunnelFirematArchivoMinAggregateOutputType | null
+    _max: FunnelFirematArchivoMaxAggregateOutputType | null
+  }
+
+  type GetFunnelFirematArchivoGroupByPayload<T extends FunnelFirematArchivoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FunnelFirematArchivoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FunnelFirematArchivoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FunnelFirematArchivoGroupByOutputType[P]>
+            : GetScalarType<T[P], FunnelFirematArchivoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FunnelFirematArchivoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    tipo?: boolean
+    url?: boolean
+    publicId?: boolean
+    nombreArchivo?: boolean
+    mimeType?: boolean
+    bytes?: boolean
+    etapa?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["funnelFirematArchivo"]>
+
+  export type FunnelFirematArchivoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    tipo?: boolean
+    url?: boolean
+    publicId?: boolean
+    nombreArchivo?: boolean
+    mimeType?: boolean
+    bytes?: boolean
+    etapa?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["funnelFirematArchivo"]>
+
+  export type FunnelFirematArchivoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    tipo?: boolean
+    url?: boolean
+    publicId?: boolean
+    nombreArchivo?: boolean
+    mimeType?: boolean
+    bytes?: boolean
+    etapa?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["funnelFirematArchivo"]>
+
+  export type FunnelFirematArchivoSelectScalar = {
+    id?: boolean
+    oportunidadId?: boolean
+    tipo?: boolean
+    url?: boolean
+    publicId?: boolean
+    nombreArchivo?: boolean
+    mimeType?: boolean
+    bytes?: boolean
+    etapa?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+  }
+
+  export type FunnelFirematArchivoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "oportunidadId" | "tipo" | "url" | "publicId" | "nombreArchivo" | "mimeType" | "bytes" | "etapa" | "observaciones" | "createdAt", ExtArgs["result"]["funnelFirematArchivo"]>
+  export type FunnelFirematArchivoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+  export type FunnelFirematArchivoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+  export type FunnelFirematArchivoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+
+  export type $FunnelFirematArchivoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FunnelFirematArchivo"
+    objects: {
+      oportunidad: Prisma.$FunnelFirematOpportunityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      oportunidadId: number
+      tipo: string
+      url: string
+      publicId: string
+      nombreArchivo: string | null
+      mimeType: string | null
+      bytes: number | null
+      etapa: string | null
+      observaciones: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["funnelFirematArchivo"]>
+    composites: {}
+  }
+
+  type FunnelFirematArchivoGetPayload<S extends boolean | null | undefined | FunnelFirematArchivoDefaultArgs> = $Result.GetResult<Prisma.$FunnelFirematArchivoPayload, S>
+
+  type FunnelFirematArchivoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FunnelFirematArchivoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FunnelFirematArchivoCountAggregateInputType | true
+    }
+
+  export interface FunnelFirematArchivoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FunnelFirematArchivo'], meta: { name: 'FunnelFirematArchivo' } }
+    /**
+     * Find zero or one FunnelFirematArchivo that matches the filter.
+     * @param {FunnelFirematArchivoFindUniqueArgs} args - Arguments to find a FunnelFirematArchivo
+     * @example
+     * // Get one FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FunnelFirematArchivoFindUniqueArgs>(args: SelectSubset<T, FunnelFirematArchivoFindUniqueArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FunnelFirematArchivo that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FunnelFirematArchivoFindUniqueOrThrowArgs} args - Arguments to find a FunnelFirematArchivo
+     * @example
+     * // Get one FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FunnelFirematArchivoFindUniqueOrThrowArgs>(args: SelectSubset<T, FunnelFirematArchivoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FunnelFirematArchivo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoFindFirstArgs} args - Arguments to find a FunnelFirematArchivo
+     * @example
+     * // Get one FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FunnelFirematArchivoFindFirstArgs>(args?: SelectSubset<T, FunnelFirematArchivoFindFirstArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FunnelFirematArchivo that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoFindFirstOrThrowArgs} args - Arguments to find a FunnelFirematArchivo
+     * @example
+     * // Get one FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FunnelFirematArchivoFindFirstOrThrowArgs>(args?: SelectSubset<T, FunnelFirematArchivoFindFirstOrThrowArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FunnelFirematArchivos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FunnelFirematArchivos
+     * const funnelFirematArchivos = await prisma.funnelFirematArchivo.findMany()
+     * 
+     * // Get first 10 FunnelFirematArchivos
+     * const funnelFirematArchivos = await prisma.funnelFirematArchivo.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const funnelFirematArchivoWithIdOnly = await prisma.funnelFirematArchivo.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FunnelFirematArchivoFindManyArgs>(args?: SelectSubset<T, FunnelFirematArchivoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FunnelFirematArchivo.
+     * @param {FunnelFirematArchivoCreateArgs} args - Arguments to create a FunnelFirematArchivo.
+     * @example
+     * // Create one FunnelFirematArchivo
+     * const FunnelFirematArchivo = await prisma.funnelFirematArchivo.create({
+     *   data: {
+     *     // ... data to create a FunnelFirematArchivo
+     *   }
+     * })
+     * 
+     */
+    create<T extends FunnelFirematArchivoCreateArgs>(args: SelectSubset<T, FunnelFirematArchivoCreateArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FunnelFirematArchivos.
+     * @param {FunnelFirematArchivoCreateManyArgs} args - Arguments to create many FunnelFirematArchivos.
+     * @example
+     * // Create many FunnelFirematArchivos
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FunnelFirematArchivoCreateManyArgs>(args?: SelectSubset<T, FunnelFirematArchivoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FunnelFirematArchivos and returns the data saved in the database.
+     * @param {FunnelFirematArchivoCreateManyAndReturnArgs} args - Arguments to create many FunnelFirematArchivos.
+     * @example
+     * // Create many FunnelFirematArchivos
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FunnelFirematArchivos and only return the `id`
+     * const funnelFirematArchivoWithIdOnly = await prisma.funnelFirematArchivo.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FunnelFirematArchivoCreateManyAndReturnArgs>(args?: SelectSubset<T, FunnelFirematArchivoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FunnelFirematArchivo.
+     * @param {FunnelFirematArchivoDeleteArgs} args - Arguments to delete one FunnelFirematArchivo.
+     * @example
+     * // Delete one FunnelFirematArchivo
+     * const FunnelFirematArchivo = await prisma.funnelFirematArchivo.delete({
+     *   where: {
+     *     // ... filter to delete one FunnelFirematArchivo
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FunnelFirematArchivoDeleteArgs>(args: SelectSubset<T, FunnelFirematArchivoDeleteArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FunnelFirematArchivo.
+     * @param {FunnelFirematArchivoUpdateArgs} args - Arguments to update one FunnelFirematArchivo.
+     * @example
+     * // Update one FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FunnelFirematArchivoUpdateArgs>(args: SelectSubset<T, FunnelFirematArchivoUpdateArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FunnelFirematArchivos.
+     * @param {FunnelFirematArchivoDeleteManyArgs} args - Arguments to filter FunnelFirematArchivos to delete.
+     * @example
+     * // Delete a few FunnelFirematArchivos
+     * const { count } = await prisma.funnelFirematArchivo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FunnelFirematArchivoDeleteManyArgs>(args?: SelectSubset<T, FunnelFirematArchivoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FunnelFirematArchivos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FunnelFirematArchivos
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FunnelFirematArchivoUpdateManyArgs>(args: SelectSubset<T, FunnelFirematArchivoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FunnelFirematArchivos and returns the data updated in the database.
+     * @param {FunnelFirematArchivoUpdateManyAndReturnArgs} args - Arguments to update many FunnelFirematArchivos.
+     * @example
+     * // Update many FunnelFirematArchivos
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FunnelFirematArchivos and only return the `id`
+     * const funnelFirematArchivoWithIdOnly = await prisma.funnelFirematArchivo.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FunnelFirematArchivoUpdateManyAndReturnArgs>(args: SelectSubset<T, FunnelFirematArchivoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FunnelFirematArchivo.
+     * @param {FunnelFirematArchivoUpsertArgs} args - Arguments to update or create a FunnelFirematArchivo.
+     * @example
+     * // Update or create a FunnelFirematArchivo
+     * const funnelFirematArchivo = await prisma.funnelFirematArchivo.upsert({
+     *   create: {
+     *     // ... data to create a FunnelFirematArchivo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FunnelFirematArchivo we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FunnelFirematArchivoUpsertArgs>(args: SelectSubset<T, FunnelFirematArchivoUpsertArgs<ExtArgs>>): Prisma__FunnelFirematArchivoClient<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FunnelFirematArchivos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoCountArgs} args - Arguments to filter FunnelFirematArchivos to count.
+     * @example
+     * // Count the number of FunnelFirematArchivos
+     * const count = await prisma.funnelFirematArchivo.count({
+     *   where: {
+     *     // ... the filter for the FunnelFirematArchivos we want to count
+     *   }
+     * })
+    **/
+    count<T extends FunnelFirematArchivoCountArgs>(
+      args?: Subset<T, FunnelFirematArchivoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FunnelFirematArchivoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FunnelFirematArchivo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FunnelFirematArchivoAggregateArgs>(args: Subset<T, FunnelFirematArchivoAggregateArgs>): Prisma.PrismaPromise<GetFunnelFirematArchivoAggregateType<T>>
+
+    /**
+     * Group by FunnelFirematArchivo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FunnelFirematArchivoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FunnelFirematArchivoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FunnelFirematArchivoGroupByArgs['orderBy'] }
+        : { orderBy?: FunnelFirematArchivoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FunnelFirematArchivoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFunnelFirematArchivoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FunnelFirematArchivo model
+   */
+  readonly fields: FunnelFirematArchivoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FunnelFirematArchivo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FunnelFirematArchivoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    oportunidad<T extends FunnelFirematOpportunityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunityDefaultArgs<ExtArgs>>): Prisma__FunnelFirematOpportunityClient<$Result.GetResult<Prisma.$FunnelFirematOpportunityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FunnelFirematArchivo model
+   */
+  interface FunnelFirematArchivoFieldRefs {
+    readonly id: FieldRef<"FunnelFirematArchivo", 'Int'>
+    readonly oportunidadId: FieldRef<"FunnelFirematArchivo", 'Int'>
+    readonly tipo: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly url: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly publicId: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly nombreArchivo: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly mimeType: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly bytes: FieldRef<"FunnelFirematArchivo", 'Int'>
+    readonly etapa: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly observaciones: FieldRef<"FunnelFirematArchivo", 'String'>
+    readonly createdAt: FieldRef<"FunnelFirematArchivo", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FunnelFirematArchivo findUnique
+   */
+  export type FunnelFirematArchivoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter, which FunnelFirematArchivo to fetch.
+     */
+    where: FunnelFirematArchivoWhereUniqueInput
+  }
+
+  /**
+   * FunnelFirematArchivo findUniqueOrThrow
+   */
+  export type FunnelFirematArchivoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter, which FunnelFirematArchivo to fetch.
+     */
+    where: FunnelFirematArchivoWhereUniqueInput
+  }
+
+  /**
+   * FunnelFirematArchivo findFirst
+   */
+  export type FunnelFirematArchivoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter, which FunnelFirematArchivo to fetch.
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FunnelFirematArchivos to fetch.
+     */
+    orderBy?: FunnelFirematArchivoOrderByWithRelationInput | FunnelFirematArchivoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FunnelFirematArchivos.
+     */
+    cursor?: FunnelFirematArchivoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FunnelFirematArchivos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FunnelFirematArchivos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FunnelFirematArchivos.
+     */
+    distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+  }
+
+  /**
+   * FunnelFirematArchivo findFirstOrThrow
+   */
+  export type FunnelFirematArchivoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter, which FunnelFirematArchivo to fetch.
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FunnelFirematArchivos to fetch.
+     */
+    orderBy?: FunnelFirematArchivoOrderByWithRelationInput | FunnelFirematArchivoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FunnelFirematArchivos.
+     */
+    cursor?: FunnelFirematArchivoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FunnelFirematArchivos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FunnelFirematArchivos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FunnelFirematArchivos.
+     */
+    distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+  }
+
+  /**
+   * FunnelFirematArchivo findMany
+   */
+  export type FunnelFirematArchivoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter, which FunnelFirematArchivos to fetch.
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FunnelFirematArchivos to fetch.
+     */
+    orderBy?: FunnelFirematArchivoOrderByWithRelationInput | FunnelFirematArchivoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FunnelFirematArchivos.
+     */
+    cursor?: FunnelFirematArchivoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FunnelFirematArchivos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FunnelFirematArchivos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FunnelFirematArchivos.
+     */
+    distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+  }
+
+  /**
+   * FunnelFirematArchivo create
+   */
+  export type FunnelFirematArchivoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FunnelFirematArchivo.
+     */
+    data: XOR<FunnelFirematArchivoCreateInput, FunnelFirematArchivoUncheckedCreateInput>
+  }
+
+  /**
+   * FunnelFirematArchivo createMany
+   */
+  export type FunnelFirematArchivoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FunnelFirematArchivos.
+     */
+    data: FunnelFirematArchivoCreateManyInput | FunnelFirematArchivoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FunnelFirematArchivo createManyAndReturn
+   */
+  export type FunnelFirematArchivoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * The data used to create many FunnelFirematArchivos.
+     */
+    data: FunnelFirematArchivoCreateManyInput | FunnelFirematArchivoCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FunnelFirematArchivo update
+   */
+  export type FunnelFirematArchivoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FunnelFirematArchivo.
+     */
+    data: XOR<FunnelFirematArchivoUpdateInput, FunnelFirematArchivoUncheckedUpdateInput>
+    /**
+     * Choose, which FunnelFirematArchivo to update.
+     */
+    where: FunnelFirematArchivoWhereUniqueInput
+  }
+
+  /**
+   * FunnelFirematArchivo updateMany
+   */
+  export type FunnelFirematArchivoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FunnelFirematArchivos.
+     */
+    data: XOR<FunnelFirematArchivoUpdateManyMutationInput, FunnelFirematArchivoUncheckedUpdateManyInput>
+    /**
+     * Filter which FunnelFirematArchivos to update
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * Limit how many FunnelFirematArchivos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FunnelFirematArchivo updateManyAndReturn
+   */
+  export type FunnelFirematArchivoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * The data used to update FunnelFirematArchivos.
+     */
+    data: XOR<FunnelFirematArchivoUpdateManyMutationInput, FunnelFirematArchivoUncheckedUpdateManyInput>
+    /**
+     * Filter which FunnelFirematArchivos to update
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * Limit how many FunnelFirematArchivos to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FunnelFirematArchivo upsert
+   */
+  export type FunnelFirematArchivoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FunnelFirematArchivo to update in case it exists.
+     */
+    where: FunnelFirematArchivoWhereUniqueInput
+    /**
+     * In case the FunnelFirematArchivo found by the `where` argument doesn't exist, create a new FunnelFirematArchivo with this data.
+     */
+    create: XOR<FunnelFirematArchivoCreateInput, FunnelFirematArchivoUncheckedCreateInput>
+    /**
+     * In case the FunnelFirematArchivo was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FunnelFirematArchivoUpdateInput, FunnelFirematArchivoUncheckedUpdateInput>
+  }
+
+  /**
+   * FunnelFirematArchivo delete
+   */
+  export type FunnelFirematArchivoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+    /**
+     * Filter which FunnelFirematArchivo to delete.
+     */
+    where: FunnelFirematArchivoWhereUniqueInput
+  }
+
+  /**
+   * FunnelFirematArchivo deleteMany
+   */
+  export type FunnelFirematArchivoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FunnelFirematArchivos to delete
+     */
+    where?: FunnelFirematArchivoWhereInput
+    /**
+     * Limit how many FunnelFirematArchivos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FunnelFirematArchivo without action
+   */
+  export type FunnelFirematArchivoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelFirematArchivo
+     */
+    select?: FunnelFirematArchivoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelFirematArchivo
+     */
+    omit?: FunnelFirematArchivoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelFirematArchivoInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17185,8 +18905,32 @@ export namespace Prisma {
     telefono: 'telefono',
     correo: 'correo',
     tipoCliente: 'tipoCliente',
+    rutEmpresa: 'rutEmpresa',
+    region: 'region',
+    comuna: 'comuna',
+    unidadNegocio: 'unidadNegocio',
     productoId: 'productoId',
     cantidadEstimada: 'cantidadEstimada',
+    urgencia: 'urgencia',
+    tipoUso: 'tipoUso',
+    necesidadSoporteTecnico: 'necesidadSoporteTecnico',
+    alternativaProducto: 'alternativaProducto',
+    comision: 'comision',
+    margenEstimado: 'margenEstimado',
+    fechaComprometidaEnvio: 'fechaComprometidaEnvio',
+    versionCotizacion: 'versionCotizacion',
+    comentariosCliente: 'comentariosCliente',
+    objeciones: 'objeciones',
+    ordenCompra: 'ordenCompra',
+    correoAceptacion: 'correoAceptacion',
+    condicionesComerciales: 'condicionesComerciales',
+    coordinacionAdministrativa: 'coordinacionAdministrativa',
+    estadoDocumentacion: 'estadoDocumentacion',
+    traspasoAdministracion: 'traspasoAdministracion',
+    traspasoERP: 'traspasoERP',
+    coordinacionDespacho: 'coordinacionDespacho',
+    estadoComercialOrden: 'estadoComercialOrden',
+    estadoDocumentacionVenta: 'estadoDocumentacionVenta',
     responsable: 'responsable',
     etapa: 'etapa',
     montoEstimado: 'montoEstimado',
@@ -17204,7 +18948,12 @@ export namespace Prisma {
     fechaCierre: 'fechaCierre',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    probabilidad: 'probabilidad'
+    probabilidad: 'probabilidad',
+    flujoPosterior: 'flujoPosterior',
+    motivoDescarte: 'motivoDescarte',
+    tipoBroker: 'tipoBroker',
+    fechaEstimadaDespacho: 'fechaEstimadaDespacho',
+    fechaSeguimientoPostventa: 'fechaSeguimientoPostventa'
   };
 
   export type FunnelFirematOpportunityScalarFieldEnum = (typeof FunnelFirematOpportunityScalarFieldEnum)[keyof typeof FunnelFirematOpportunityScalarFieldEnum]
@@ -17225,6 +18974,23 @@ export namespace Prisma {
   };
 
   export type ContactoClienteFirematScalarFieldEnum = (typeof ContactoClienteFirematScalarFieldEnum)[keyof typeof ContactoClienteFirematScalarFieldEnum]
+
+
+  export const FunnelFirematArchivoScalarFieldEnum: {
+    id: 'id',
+    oportunidadId: 'oportunidadId',
+    tipo: 'tipo',
+    url: 'url',
+    publicId: 'publicId',
+    nombreArchivo: 'nombreArchivo',
+    mimeType: 'mimeType',
+    bytes: 'bytes',
+    etapa: 'etapa',
+    observaciones: 'observaciones',
+    createdAt: 'createdAt'
+  };
+
+  export type FunnelFirematArchivoScalarFieldEnum = (typeof FunnelFirematArchivoScalarFieldEnum)[keyof typeof FunnelFirematArchivoScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -18301,8 +20067,32 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -18321,8 +20111,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
+    archivos?: FunnelFirematArchivoListRelationFilter
   }
 
   export type FunnelFirematOpportunityOrderByWithRelationInput = {
@@ -18332,8 +20128,32 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    rutEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    unidadNegocio?: SortOrderInput | SortOrder
     productoId?: SortOrderInput | SortOrder
     cantidadEstimada?: SortOrderInput | SortOrder
+    urgencia?: SortOrderInput | SortOrder
+    tipoUso?: SortOrderInput | SortOrder
+    necesidadSoporteTecnico?: SortOrderInput | SortOrder
+    alternativaProducto?: SortOrderInput | SortOrder
+    comision?: SortOrderInput | SortOrder
+    margenEstimado?: SortOrderInput | SortOrder
+    fechaComprometidaEnvio?: SortOrderInput | SortOrder
+    versionCotizacion?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
+    ordenCompra?: SortOrderInput | SortOrder
+    correoAceptacion?: SortOrderInput | SortOrder
+    condicionesComerciales?: SortOrderInput | SortOrder
+    coordinacionAdministrativa?: SortOrderInput | SortOrder
+    estadoDocumentacion?: SortOrderInput | SortOrder
+    traspasoAdministracion?: SortOrderInput | SortOrder
+    traspasoERP?: SortOrderInput | SortOrder
+    coordinacionDespacho?: SortOrderInput | SortOrder
+    estadoComercialOrden?: SortOrderInput | SortOrder
+    estadoDocumentacionVenta?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -18352,8 +20172,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     probabilidad?: SortOrderInput | SortOrder
+    flujoPosterior?: SortOrderInput | SortOrder
+    motivoDescarte?: SortOrderInput | SortOrder
+    tipoBroker?: SortOrderInput | SortOrder
+    fechaEstimadaDespacho?: SortOrderInput | SortOrder
+    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
     cotizacion?: CotizacionFirematOrderByWithRelationInput
     producto?: ProductoOrderByWithRelationInput
+    archivos?: FunnelFirematArchivoOrderByRelationAggregateInput
   }
 
   export type FunnelFirematOpportunityWhereUniqueInput = Prisma.AtLeast<{
@@ -18366,8 +20192,32 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -18386,8 +20236,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
+    archivos?: FunnelFirematArchivoListRelationFilter
   }, "id">
 
   export type FunnelFirematOpportunityOrderByWithAggregationInput = {
@@ -18397,8 +20253,32 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    rutEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    unidadNegocio?: SortOrderInput | SortOrder
     productoId?: SortOrderInput | SortOrder
     cantidadEstimada?: SortOrderInput | SortOrder
+    urgencia?: SortOrderInput | SortOrder
+    tipoUso?: SortOrderInput | SortOrder
+    necesidadSoporteTecnico?: SortOrderInput | SortOrder
+    alternativaProducto?: SortOrderInput | SortOrder
+    comision?: SortOrderInput | SortOrder
+    margenEstimado?: SortOrderInput | SortOrder
+    fechaComprometidaEnvio?: SortOrderInput | SortOrder
+    versionCotizacion?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
+    ordenCompra?: SortOrderInput | SortOrder
+    correoAceptacion?: SortOrderInput | SortOrder
+    condicionesComerciales?: SortOrderInput | SortOrder
+    coordinacionAdministrativa?: SortOrderInput | SortOrder
+    estadoDocumentacion?: SortOrderInput | SortOrder
+    traspasoAdministracion?: SortOrderInput | SortOrder
+    traspasoERP?: SortOrderInput | SortOrder
+    coordinacionDespacho?: SortOrderInput | SortOrder
+    estadoComercialOrden?: SortOrderInput | SortOrder
+    estadoDocumentacionVenta?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -18417,6 +20297,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     probabilidad?: SortOrderInput | SortOrder
+    flujoPosterior?: SortOrderInput | SortOrder
+    motivoDescarte?: SortOrderInput | SortOrder
+    tipoBroker?: SortOrderInput | SortOrder
+    fechaEstimadaDespacho?: SortOrderInput | SortOrder
+    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
     _count?: FunnelFirematOpportunityCountOrderByAggregateInput
     _avg?: FunnelFirematOpportunityAvgOrderByAggregateInput
     _max?: FunnelFirematOpportunityMaxOrderByAggregateInput
@@ -18434,8 +20319,32 @@ export namespace Prisma {
     telefono?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    region?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comuna?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    urgencia?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    alternativaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    margenEstimado?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    versionCotizacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    objeciones?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    coordinacionDespacho?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringWithAggregatesFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatWithAggregatesFilter<"FunnelFirematOpportunity"> | number
@@ -18454,6 +20363,11 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
     probabilidad?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    flujoPosterior?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    motivoDescarte?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    tipoBroker?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    fechaEstimadaDespacho?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
   }
 
   export type ContactoClienteFirematWhereInput = {
@@ -18541,6 +20455,93 @@ export namespace Prisma {
     observaciones?: StringNullableWithAggregatesFilter<"ContactoClienteFiremat"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ContactoClienteFiremat"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ContactoClienteFiremat"> | Date | string
+  }
+
+  export type FunnelFirematArchivoWhereInput = {
+    AND?: FunnelFirematArchivoWhereInput | FunnelFirematArchivoWhereInput[]
+    OR?: FunnelFirematArchivoWhereInput[]
+    NOT?: FunnelFirematArchivoWhereInput | FunnelFirematArchivoWhereInput[]
+    id?: IntFilter<"FunnelFirematArchivo"> | number
+    oportunidadId?: IntFilter<"FunnelFirematArchivo"> | number
+    tipo?: StringFilter<"FunnelFirematArchivo"> | string
+    url?: StringFilter<"FunnelFirematArchivo"> | string
+    publicId?: StringFilter<"FunnelFirematArchivo"> | string
+    nombreArchivo?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    mimeType?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    bytes?: IntNullableFilter<"FunnelFirematArchivo"> | number | null
+    etapa?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    observaciones?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    createdAt?: DateTimeFilter<"FunnelFirematArchivo"> | Date | string
+    oportunidad?: XOR<FunnelFirematOpportunityScalarRelationFilter, FunnelFirematOpportunityWhereInput>
+  }
+
+  export type FunnelFirematArchivoOrderByWithRelationInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    tipo?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    nombreArchivo?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    bytes?: SortOrderInput | SortOrder
+    etapa?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    oportunidad?: FunnelFirematOpportunityOrderByWithRelationInput
+  }
+
+  export type FunnelFirematArchivoWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: FunnelFirematArchivoWhereInput | FunnelFirematArchivoWhereInput[]
+    OR?: FunnelFirematArchivoWhereInput[]
+    NOT?: FunnelFirematArchivoWhereInput | FunnelFirematArchivoWhereInput[]
+    oportunidadId?: IntFilter<"FunnelFirematArchivo"> | number
+    tipo?: StringFilter<"FunnelFirematArchivo"> | string
+    url?: StringFilter<"FunnelFirematArchivo"> | string
+    publicId?: StringFilter<"FunnelFirematArchivo"> | string
+    nombreArchivo?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    mimeType?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    bytes?: IntNullableFilter<"FunnelFirematArchivo"> | number | null
+    etapa?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    observaciones?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    createdAt?: DateTimeFilter<"FunnelFirematArchivo"> | Date | string
+    oportunidad?: XOR<FunnelFirematOpportunityScalarRelationFilter, FunnelFirematOpportunityWhereInput>
+  }, "id">
+
+  export type FunnelFirematArchivoOrderByWithAggregationInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    tipo?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    nombreArchivo?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    bytes?: SortOrderInput | SortOrder
+    etapa?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: FunnelFirematArchivoCountOrderByAggregateInput
+    _avg?: FunnelFirematArchivoAvgOrderByAggregateInput
+    _max?: FunnelFirematArchivoMaxOrderByAggregateInput
+    _min?: FunnelFirematArchivoMinOrderByAggregateInput
+    _sum?: FunnelFirematArchivoSumOrderByAggregateInput
+  }
+
+  export type FunnelFirematArchivoScalarWhereWithAggregatesInput = {
+    AND?: FunnelFirematArchivoScalarWhereWithAggregatesInput | FunnelFirematArchivoScalarWhereWithAggregatesInput[]
+    OR?: FunnelFirematArchivoScalarWhereWithAggregatesInput[]
+    NOT?: FunnelFirematArchivoScalarWhereWithAggregatesInput | FunnelFirematArchivoScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FunnelFirematArchivo"> | number
+    oportunidadId?: IntWithAggregatesFilter<"FunnelFirematArchivo"> | number
+    tipo?: StringWithAggregatesFilter<"FunnelFirematArchivo"> | string
+    url?: StringWithAggregatesFilter<"FunnelFirematArchivo"> | string
+    publicId?: StringWithAggregatesFilter<"FunnelFirematArchivo"> | string
+    nombreArchivo?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
+    mimeType?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
+    bytes?: IntNullableWithAggregatesFilter<"FunnelFirematArchivo"> | number | null
+    etapa?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
+    observaciones?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FunnelFirematArchivo"> | Date | string
   }
 
   export type CategoriaCreateInput = {
@@ -19597,7 +21598,31 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -19615,8 +21640,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
+    archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateInput = {
@@ -19626,8 +21657,32 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -19646,6 +21701,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUpdateInput = {
@@ -19654,7 +21715,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -19672,8 +21757,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateInput = {
@@ -19683,8 +21774,32 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -19703,6 +21818,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityCreateManyInput = {
@@ -19712,8 +21833,32 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -19732,6 +21877,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
   }
 
   export type FunnelFirematOpportunityUpdateManyMutationInput = {
@@ -19740,7 +21890,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -19758,6 +21932,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyInput = {
@@ -19767,8 +21946,32 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -19787,6 +21990,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ContactoClienteFirematCreateInput = {
@@ -19881,6 +22089,100 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FunnelFirematArchivoCreateInput = {
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+    oportunidad: FunnelFirematOpportunityCreateNestedOneWithoutArchivosInput
+  }
+
+  export type FunnelFirematArchivoUncheckedCreateInput = {
+    id?: number
+    oportunidadId: number
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FunnelFirematArchivoUpdateInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    oportunidad?: FunnelFirematOpportunityUpdateOneRequiredWithoutArchivosNestedInput
+  }
+
+  export type FunnelFirematArchivoUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    oportunidadId?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FunnelFirematArchivoCreateManyInput = {
+    id?: number
+    oportunidadId: number
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FunnelFirematArchivoUpdateManyMutationInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FunnelFirematArchivoUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    oportunidadId?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -20861,9 +23163,24 @@ export namespace Prisma {
     stockDisponible?: SortOrder
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type CotizacionFirematNullableScalarRelationFilter = {
     is?: CotizacionFirematWhereInput | null
     isNot?: CotizacionFirematWhereInput | null
+  }
+
+  export type FunnelFirematArchivoListRelationFilter = {
+    every?: FunnelFirematArchivoWhereInput
+    some?: FunnelFirematArchivoWhereInput
+    none?: FunnelFirematArchivoWhereInput
+  }
+
+  export type FunnelFirematArchivoOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type FunnelFirematOpportunityCountOrderByAggregateInput = {
@@ -20873,8 +23190,32 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
+    rutEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
+    urgencia?: SortOrder
+    tipoUso?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    alternativaProducto?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    versionCotizacion?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
+    ordenCompra?: SortOrder
+    correoAceptacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    estadoDocumentacion?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    coordinacionDespacho?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -20893,12 +23234,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     probabilidad?: SortOrder
+    flujoPosterior?: SortOrder
+    motivoDescarte?: SortOrder
+    tipoBroker?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
   }
 
   export type FunnelFirematOpportunityAvgOrderByAggregateInput = {
     id?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
     montoEstimado?: SortOrder
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
@@ -20912,8 +23260,32 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
+    rutEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
+    urgencia?: SortOrder
+    tipoUso?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    alternativaProducto?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    versionCotizacion?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
+    ordenCompra?: SortOrder
+    correoAceptacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    estadoDocumentacion?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    coordinacionDespacho?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -20932,6 +23304,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     probabilidad?: SortOrder
+    flujoPosterior?: SortOrder
+    motivoDescarte?: SortOrder
+    tipoBroker?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
   }
 
   export type FunnelFirematOpportunityMinOrderByAggregateInput = {
@@ -20941,8 +23318,32 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
+    rutEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
+    urgencia?: SortOrder
+    tipoUso?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    alternativaProducto?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    versionCotizacion?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
+    ordenCompra?: SortOrder
+    correoAceptacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    estadoDocumentacion?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    coordinacionDespacho?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -20961,16 +23362,31 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     probabilidad?: SortOrder
+    flujoPosterior?: SortOrder
+    motivoDescarte?: SortOrder
+    tipoBroker?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
   }
 
   export type FunnelFirematOpportunitySumOrderByAggregateInput = {
     id?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
     montoEstimado?: SortOrder
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type ContactoClienteFirematCountOrderByAggregateInput = {
@@ -21023,6 +23439,65 @@ export namespace Prisma {
   export type ContactoClienteFirematSumOrderByAggregateInput = {
     id?: SortOrder
     clienteId?: SortOrder
+  }
+
+  export type FunnelFirematOpportunityScalarRelationFilter = {
+    is?: FunnelFirematOpportunityWhereInput
+    isNot?: FunnelFirematOpportunityWhereInput
+  }
+
+  export type FunnelFirematArchivoCountOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    tipo?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    nombreArchivo?: SortOrder
+    mimeType?: SortOrder
+    bytes?: SortOrder
+    etapa?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FunnelFirematArchivoAvgOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    bytes?: SortOrder
+  }
+
+  export type FunnelFirematArchivoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    tipo?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    nombreArchivo?: SortOrder
+    mimeType?: SortOrder
+    bytes?: SortOrder
+    etapa?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FunnelFirematArchivoMinOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    tipo?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    nombreArchivo?: SortOrder
+    mimeType?: SortOrder
+    bytes?: SortOrder
+    etapa?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FunnelFirematArchivoSumOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    bytes?: SortOrder
   }
 
   export type ProductoCreateNestedManyWithoutCategoriaInput = {
@@ -21729,6 +24204,24 @@ export namespace Prisma {
     connect?: ProductoWhereUniqueInput
   }
 
+  export type FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput = {
+    create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
+    createMany?: FunnelFirematArchivoCreateManyOportunidadInputEnvelope
+    connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+  }
+
+  export type FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput = {
+    create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
+    createMany?: FunnelFirematArchivoCreateManyOportunidadInputEnvelope
+    connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput = {
     create?: XOR<CotizacionFirematCreateWithoutFunnelFirematOpportunityInput, CotizacionFirematUncheckedCreateWithoutFunnelFirematOpportunityInput>
     connectOrCreate?: CotizacionFirematCreateOrConnectWithoutFunnelFirematOpportunityInput
@@ -21749,6 +24242,34 @@ export namespace Prisma {
     update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutFunnelFirematOpportunityInput, ProductoUpdateWithoutFunnelFirematOpportunityInput>, ProductoUncheckedUpdateWithoutFunnelFirematOpportunityInput>
   }
 
+  export type FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput = {
+    create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
+    upsert?: FunnelFirematArchivoUpsertWithWhereUniqueWithoutOportunidadInput | FunnelFirematArchivoUpsertWithWhereUniqueWithoutOportunidadInput[]
+    createMany?: FunnelFirematArchivoCreateManyOportunidadInputEnvelope
+    set?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    disconnect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    delete?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    update?: FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput | FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput[]
+    updateMany?: FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput | FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput[]
+    deleteMany?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
+  }
+
+  export type FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput = {
+    create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
+    upsert?: FunnelFirematArchivoUpsertWithWhereUniqueWithoutOportunidadInput | FunnelFirematArchivoUpsertWithWhereUniqueWithoutOportunidadInput[]
+    createMany?: FunnelFirematArchivoCreateManyOportunidadInputEnvelope
+    set?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    disconnect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    delete?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+    update?: FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput | FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput[]
+    updateMany?: FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput | FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput[]
+    deleteMany?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
+  }
+
   export type ClienteCreateNestedOneWithoutContactosInput = {
     create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
@@ -21761,6 +24282,20 @@ export namespace Prisma {
     upsert?: ClienteUpsertWithoutContactosInput
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContactosInput, ClienteUpdateWithoutContactosInput>, ClienteUncheckedUpdateWithoutContactosInput>
+  }
+
+  export type FunnelFirematOpportunityCreateNestedOneWithoutArchivosInput = {
+    create?: XOR<FunnelFirematOpportunityCreateWithoutArchivosInput, FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput>
+    connectOrCreate?: FunnelFirematOpportunityCreateOrConnectWithoutArchivosInput
+    connect?: FunnelFirematOpportunityWhereUniqueInput
+  }
+
+  export type FunnelFirematOpportunityUpdateOneRequiredWithoutArchivosNestedInput = {
+    create?: XOR<FunnelFirematOpportunityCreateWithoutArchivosInput, FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput>
+    connectOrCreate?: FunnelFirematOpportunityCreateOrConnectWithoutArchivosInput
+    upsert?: FunnelFirematOpportunityUpsertWithoutArchivosInput
+    connect?: FunnelFirematOpportunityWhereUniqueInput
+    update?: XOR<XOR<FunnelFirematOpportunityUpdateToOneWithWhereWithoutArchivosInput, FunnelFirematOpportunityUpdateWithoutArchivosInput>, FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -22030,6 +24565,19 @@ export namespace Prisma {
     _max?: NestedEnumCanalVentaFirematNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type ProductoCreateWithoutCategoriaInput = {
     nombre: string
     descripcion?: string | null
@@ -22258,7 +24806,31 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -22276,7 +24848,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
+    archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateWithoutProductoInput = {
@@ -22286,7 +24864,31 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -22305,6 +24907,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutProductoInput = {
@@ -22530,8 +25138,32 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -22550,6 +25182,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
     probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
   }
 
   export type MovimientoUpsertWithWhereUniqueWithoutProductoInput = {
@@ -23391,7 +26028,31 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -23409,7 +26070,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
+    archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateWithoutCotizacionInput = {
@@ -23419,8 +26086,32 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -23438,6 +26129,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutCotizacionInput = {
@@ -23842,6 +26539,41 @@ export namespace Prisma {
     create: XOR<ProductoCreateWithoutFunnelFirematOpportunityInput, ProductoUncheckedCreateWithoutFunnelFirematOpportunityInput>
   }
 
+  export type FunnelFirematArchivoCreateWithoutOportunidadInput = {
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput = {
+    id?: number
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput = {
+    where: FunnelFirematArchivoWhereUniqueInput
+    create: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput>
+  }
+
+  export type FunnelFirematArchivoCreateManyOportunidadInputEnvelope = {
+    data: FunnelFirematArchivoCreateManyOportunidadInput | FunnelFirematArchivoCreateManyOportunidadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CotizacionFirematUpsertWithoutFunnelFirematOpportunityInput = {
     update: XOR<CotizacionFirematUpdateWithoutFunnelFirematOpportunityInput, CotizacionFirematUncheckedUpdateWithoutFunnelFirematOpportunityInput>
     create: XOR<CotizacionFirematCreateWithoutFunnelFirematOpportunityInput, CotizacionFirematUncheckedCreateWithoutFunnelFirematOpportunityInput>
@@ -23970,6 +26702,39 @@ export namespace Prisma {
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
+  export type FunnelFirematArchivoUpsertWithWhereUniqueWithoutOportunidadInput = {
+    where: FunnelFirematArchivoWhereUniqueInput
+    update: XOR<FunnelFirematArchivoUpdateWithoutOportunidadInput, FunnelFirematArchivoUncheckedUpdateWithoutOportunidadInput>
+    create: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput>
+  }
+
+  export type FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput = {
+    where: FunnelFirematArchivoWhereUniqueInput
+    data: XOR<FunnelFirematArchivoUpdateWithoutOportunidadInput, FunnelFirematArchivoUncheckedUpdateWithoutOportunidadInput>
+  }
+
+  export type FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput = {
+    where: FunnelFirematArchivoScalarWhereInput
+    data: XOR<FunnelFirematArchivoUpdateManyMutationInput, FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadInput>
+  }
+
+  export type FunnelFirematArchivoScalarWhereInput = {
+    AND?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
+    OR?: FunnelFirematArchivoScalarWhereInput[]
+    NOT?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
+    id?: IntFilter<"FunnelFirematArchivo"> | number
+    oportunidadId?: IntFilter<"FunnelFirematArchivo"> | number
+    tipo?: StringFilter<"FunnelFirematArchivo"> | string
+    url?: StringFilter<"FunnelFirematArchivo"> | string
+    publicId?: StringFilter<"FunnelFirematArchivo"> | string
+    nombreArchivo?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    mimeType?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    bytes?: IntNullableFilter<"FunnelFirematArchivo"> | number | null
+    etapa?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    observaciones?: StringNullableFilter<"FunnelFirematArchivo"> | string | null
+    createdAt?: DateTimeFilter<"FunnelFirematArchivo"> | Date | string
+  }
+
   export type ClienteCreateWithoutContactosInput = {
     nombre: string
     rut?: string | null
@@ -24062,6 +26827,252 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type FunnelFirematOpportunityCreateWithoutArchivosInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
+    producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
+  }
+
+  export type FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    productoId?: number | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    cotizacionId?: number | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+  }
+
+  export type FunnelFirematOpportunityCreateOrConnectWithoutArchivosInput = {
+    where: FunnelFirematOpportunityWhereUniqueInput
+    create: XOR<FunnelFirematOpportunityCreateWithoutArchivosInput, FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput>
+  }
+
+  export type FunnelFirematOpportunityUpsertWithoutArchivosInput = {
+    update: XOR<FunnelFirematOpportunityUpdateWithoutArchivosInput, FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput>
+    create: XOR<FunnelFirematOpportunityCreateWithoutArchivosInput, FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput>
+    where?: FunnelFirematOpportunityWhereInput
+  }
+
+  export type FunnelFirematOpportunityUpdateToOneWithWhereWithoutArchivosInput = {
+    where?: FunnelFirematOpportunityWhereInput
+    data: XOR<FunnelFirematOpportunityUpdateWithoutArchivosInput, FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput>
+  }
+
+  export type FunnelFirematOpportunityUpdateWithoutArchivosInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
+  }
+
+  export type FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    productoId?: NullableIntFieldUpdateOperationsInput | number | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductoCreateManyCategoriaInput = {
@@ -24157,7 +27168,31 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -24176,6 +27211,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
   }
 
   export type MovimientoCreateManyProductoInput = {
@@ -24268,7 +27308,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24286,7 +27350,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateWithoutProductoInput = {
@@ -24296,7 +27366,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24315,6 +27409,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoInput = {
@@ -24324,7 +27424,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24343,6 +27467,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MovimientoUpdateWithoutProductoInput = {
@@ -24658,8 +27787,32 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -24677,6 +27830,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
   }
 
   export type CotizacionFirematDetalleUpdateWithoutCotizacionInput = {
@@ -24717,7 +27875,31 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24735,7 +27917,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateWithoutCotizacionInput = {
@@ -24745,8 +27933,32 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24764,6 +27976,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyWithoutCotizacionInput = {
@@ -24773,8 +27991,32 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24792,6 +28034,62 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type FunnelFirematArchivoCreateManyOportunidadInput = {
+    id?: number
+    tipo: string
+    url: string
+    publicId: string
+    nombreArchivo?: string | null
+    mimeType?: string | null
+    bytes?: number | null
+    etapa?: string | null
+    observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FunnelFirematArchivoUpdateWithoutOportunidadInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FunnelFirematArchivoUncheckedUpdateWithoutOportunidadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    nombreArchivo?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

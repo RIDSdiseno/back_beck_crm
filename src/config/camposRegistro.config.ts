@@ -24,6 +24,7 @@ const CAMPOS_AZULES = new Set([
 ]);
 
 export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
+  { campo: 'tipo_registro', label: 'Tipo de Registro', color: 'verde' },
   { campo: 'codigoBeck', label: 'Codigo BECK', color: 'verde' },
   { campo: 'itemizadoBeck', label: 'Itemizado BECK', color: 'verde' },
   { campo: 'itemizadoMandante', label: 'Itemizado Mandante', color: 'verde' },
@@ -38,6 +39,7 @@ export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
   { campo: 'modulo', label: 'Modulo o edificio', color: 'azul' },
   { campo: 'numeroSello', label: 'N DEL SELLO', color: 'verde' },
   { campo: 'cantidadSellos', label: 'Cantidad de Sellos', color: 'verde' },
+  { campo: 'metros_lineales', label: 'Metros Lineales', color: 'verde' },
   { campo: 'holgura', label: 'Holgura (cm)', color: 'azul' },
   { campo: 'factor_por_holguras', label: 'Factor por holguras', color: 'azul' },
   { campo: 'cielo_modular', label: 'Cielo modular', color: 'azul' },
@@ -51,6 +53,7 @@ export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
 ];
 
 export const CAMPOS_TRABAJADOR: DefinicionCampo[] = [
+  { campo: 'tipo_registro', label: 'Tipo de Registro', color: 'verde' },
   { campo: 'codigoBeck', label: 'Codigo BECK', color: 'rojo' },
   { campo: 'itemizadoBeck', label: 'Itemizado BECK', color: 'verde' },
   { campo: 'itemizadoMandante', label: 'Itemizado Mandante', color: 'rojo' },
@@ -65,6 +68,7 @@ export const CAMPOS_TRABAJADOR: DefinicionCampo[] = [
   { campo: 'modulo', label: 'Modulo o edificio', color: 'azul' },
   { campo: 'numeroSello', label: 'N DEL SELLO', color: 'verde' },
   { campo: 'cantidadSellos', label: 'Cantidad de Sellos', color: 'verde' },
+  { campo: 'metros_lineales', label: 'Metros Lineales', color: 'verde' },
   { campo: 'holgura', label: 'Holgura (cm)', color: 'azul' },
   { campo: 'factor_por_holguras', label: 'Factor por holguras', color: 'rojo' },
   { campo: 'cielo_modular', label: 'Cielo modular', color: 'azul' },

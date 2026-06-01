@@ -8,6 +8,8 @@ import {
   actualizarEstadoRegistro,
   actualizarRegistro,
   descargarRegistroPdf,
+  reenviarRevision,
+  iniciarRevision,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
@@ -86,6 +88,30 @@ router.patch(
   authenticate,
   authorize('administrador', 'ingenieria'),
   actualizarEstadoRegistro,
+);
+
+/**
+ * PATCH /api/registros/:id/iniciar-revision
+ * Ingeniería inicia revisión de un registro en estado pendiente
+ * Solo ingenieria y administrador
+ */
+router.patch(
+  '/:id/iniciar-revision',
+  authenticate,
+  authorize('ingenieria', 'administrador'),
+  iniciarRevision,
+);
+
+/**
+ * PATCH /api/registros/:id/reenviar-revision
+ * Reenviar corrección (o registro pendiente) a revisión de Ingeniería
+ * Terreno y administrador
+ */
+router.patch(
+  '/:id/reenviar-revision',
+  authenticate,
+  authorize('terreno', 'administrador'),
+  reenviarRevision,
 );
 
 /**

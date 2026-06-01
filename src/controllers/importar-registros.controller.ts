@@ -125,6 +125,11 @@ function parseEjeNumericoTexto(value: unknown): string {
     .replace(/[–—]/g, '-');
 }
 
+const NA_VALUE_RE = /^(no\s+aplica|n\/?a|-+)$/i;
+function nullIfNA(v: string | null): string | null {
+  return v !== null && NA_VALUE_RE.test(v.trim()) ? null : v;
+}
+
 /**
  * Parsea una fecha proveniente de una celda Excel (ya convertida a string
  * por `cellStr`). Acepta ISO ("2025-09-15T00:00:00.000Z"), "DD-MM-YYYY"
@@ -388,31 +393,72 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let cantidad_sellos_aislacion: number | null = null;
           let reparacion_tabique: number | null = null;
           let cantidad_final: number | null = null;
+          let recinto: string | null = null;
+          let itemizadoBeck: string | null = null;
+          let itemizadoMandanteTexto: string | null = null;
+          let folio: string | null = null;
+          let holgura: number = 1.0;
 
           if (tipoRegistro === 'sello_cortafuego') {
+            // --- Fecha + Día (nueva plantilla trae estos campos)
+            const fechaRaw = getCell(
+              rowObj,
+              'Fecha ejecucion sello', 'Fecha Ejecucion Sello', 'Fecha ejecución sello',
+              'FECHA EJECUCION SELLO', 'Fecha ejecucion', 'Fecha ejecución', 'Fecha',
+            );
+            const fechaParsed = parseFecha(fechaRaw);
+            if (fechaParsed) fecha = fechaParsed;
+            const diaRaw = getCell(rowObj, 'Día', 'Dia', 'DIA', 'DÍA');
+            dia_semana = diaRaw && diaRaw.trim() ? diaRaw.trim() : DIAS[fecha.getDay()];
+
+            // --- Itemizados
             codigoBeck =
               getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
-            itemizadoMandanteId =
-              getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
-            descripcion_material =
-              getCell(rowObj, 'Itemizado BECK', 'Itemizado Beck', 'ITEMIZADO BECK', 'Itemizado') ?? '';
+            itemizadoBeck =
+              getCell(rowObj, 'Itemizado BECK', 'Itemizado Beck', 'ITEMIZADO BECK', 'Itemizado') ?? null;
+            descripcion_material = itemizadoBeck ?? '';
             itemizadoSacyr =
               getCell(rowObj, 'Itemizado SACYR', 'Itemizado Sacyr', 'ITEMIZADO SACYR') ?? null;
-            modulo = getCell(rowObj, 'Recinto', 'RECINTO') ?? '';
+            // Nueva columna "Itemizado Mandante" (texto); fallback a Itemizado SACYR si ausente
+            const itemizadoMandanteTextoRaw =
+              getCell(rowObj, 'Itemizado Mandante', 'Itemizado mandante', 'ITEMIZADO MANDANTE') ?? null;
+            itemizadoMandanteTexto = itemizadoMandanteTextoRaw ?? itemizadoSacyr ?? null;
+            // Columna de ID para lookup (compatibilidad plantilla antigua)
+            itemizadoMandanteId =
+              getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
+
+            // --- Ubicación
+            recinto = nullIfNA(getCell(rowObj, 'Recinto', 'RECINTO'));
+            // "Módulo o edificio" es el campo modulo en la nueva plantilla; fallback a Recinto para plantillas antiguas
+            modulo =
+              nullIfNA(getCell(rowObj, 'Módulo o edificio', 'Modulo o edificio', 'MODULO O EDIFICIO')) ??
+              getCell(rowObj, 'Recinto', 'RECINTO') ??
+              '';
             piso = getCell(rowObj, 'Piso', 'PISO') ?? '';
             eje_alfabetico =
               getCell(rowObj, 'Eje Alfabético', 'Eje Alfabetico', 'EJE ALFABETICO', 'Eje alfabetico') ?? 'N/A';
             eje_numerico = parseEjeNumericoTexto(
-              getCell(rowObj, 'Eje Numérico', 'Eje Numerico', 'EJE NUMERICO', 'Eje numerico')
+              getCell(rowObj, 'Eje Numérico', 'Eje Numerico', 'EJE NUMERICO', 'Eje numerico'),
             );
+
+            // --- Sello
+            folio = nullIfNA(getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO'));
             numero_sello =
               getCell(rowObj, 'N° DEL SELLO', 'N DEL SELLO', 'N° del Sello', 'Numero Sello', 'NUMERO SELLO', 'Nro Sello') ??
+              folio ??
               `S-${rowIdx}`;
             cantidad_sellos = Number(
-              getCell(rowObj, 'Cantidad de Sellos', 'CANTIDAD DE SELLOS', 'Cantidad Sellos', 'Cantidad') ?? 0
+              getCell(rowObj, 'Cantidad de Sellos', 'CANTIDAD DE SELLOS', 'Cantidad Sellos', 'Cantidad') ?? 0,
             );
+            const holguraRaw =
+              getCell(rowObj, 'Holgura (cm)', 'Holgura', 'HOLGURA (CM)', 'HOLGURA');
+            holgura = parseDecimal(holguraRaw) ?? 1.0;
+
+            // --- Sellador + observaciones
             nombre_sellador =
               getCell(rowObj, 'Nombre sellador', 'Nombre Sellador', 'NOMBRE SELLADOR', 'Sellador') ?? '';
+            observaciones =
+              nullIfNA(getCell(rowObj, 'Observaciones', 'OBSERVACIONES', 'observaciones', 'Obs')) ?? null;
           } else {
             codigoBeck =
               getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
@@ -432,9 +478,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Eje Numérico', 'Eje Numerico', 'EJE NUMERICO', 'Eje numerico')
             );
 
-            // FOLIO → numero_sello
-            numero_sello =
-              getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO') ?? `JLE-${rowIdx}`;
+            // FOLIO → numero_sello + folio field
+            folio = nullIfNA(getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO'));
+            numero_sello = folio ?? `JLE-${rowIdx}`;
 
             // Fecha ejecucion sello → fecha; Día → dia_semana
             const fechaRaw = getCell(
@@ -568,18 +614,22 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               diaSemana: truncate(dia_semana ?? '', 20),
               descripcionMaterial: truncate(descripcion_material, 500),
               modulo: truncate(modulo || 'Sin recinto', 100),
+              recinto: recinto ? truncate(recinto, 100) : null,
               piso: truncate(piso || 'Sin piso', 50),
               ejeNumerico: truncate(eje_numerico, 50),
               ejeAlfabetico: truncate(eje_alfabetico || 'N/A', 10),
               numeroSello: truncate(numero_sello, 100),
               cantidadSellos: toInt(cantidad_sellos),
               nombreSellador: truncate(nombre_sellador, 255),
-              holgura: 1.0,
+              holgura: holgura,
               accesibilidad: 1,
               observaciones: observaciones && observaciones.trim() ? observaciones.trim() : null,
               fotosUrls: [],
               tipoRegistro: truncate(tipoRegistro, 50),
               itemizadoSacyr: itemizadoSacyr ? truncate(itemizadoSacyr, 255) : null,
+              itemizadoBeck: itemizadoBeck ? truncate(itemizadoBeck, 500) : null,
+              itemizadoMandanteTexto: itemizadoMandanteTexto ? truncate(itemizadoMandanteTexto, 255) : null,
+              folio: folio ? truncate(folio, 100) : null,
               ...(metrosFinal !== null ? { metrosLineales: metrosFinal } : {}),
               factorPorHolguras: factor_por_holguras,
               cieloModular: cielo_modular,

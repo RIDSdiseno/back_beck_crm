@@ -118,10 +118,21 @@ export const deleteImage = async (publicId: string): Promise<void> => {
  * Elimina un archivo genérico de Cloudinary.
  */
 export const deleteFile = async (publicId: string): Promise<void> => {
-  const resourceTypes = ['image', 'raw', 'video'] as const;
+  let lastError: unknown = null;
 
-  for (const resource_type of resourceTypes) {
-    const result = await cloudinary.uploader.destroy(publicId, { resource_type });
-    if (result?.result === 'ok' || result?.result === 'not found') return;
+  try {
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
+    if (result?.result === 'ok') return;
+  } catch (error) {
+    lastError = error;
   }
+
+  try {
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'raw' });
+    if (result?.result === 'ok' || result?.result === 'not found') return;
+  } catch (error) {
+    lastError = error;
+  }
+
+  if (lastError) throw lastError;
 };

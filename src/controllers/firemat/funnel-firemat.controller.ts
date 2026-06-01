@@ -11,11 +11,17 @@ const ETAPAS_PERMITIDAS = [
   'GANADA',
   'PERDIDA',
   'POSTERGADA',
+  'DESCARTADO',
 ] as const;
 
 type EtapaFunnelFiremat = (typeof ETAPAS_PERMITIDAS)[number];
 
-const ETAPAS_CERRADAS = new Set<string>(['GANADA', 'PERDIDA', 'POSTERGADA']);
+const ETAPAS_CERRADAS = new Set<string>([
+  'GANADA',
+  'PERDIDA',
+  'POSTERGADA',
+  'DESCARTADO',
+]);
 
 class ValidationError extends Error {
   constructor(message: string) {
@@ -84,6 +90,7 @@ const validateOpportunityState = (data: {
   documentoRespaldo: string | null;
   motivoPerdida: string | null;
   motivoPostergacion: string | null;
+  motivoDescarte: string | null;
   fechaReactivacion: Date | null;
   fechaProximaAccion: Date | null;
 }): void => {
@@ -122,6 +129,10 @@ const validateOpportunityState = (data: {
     if (!data.fechaReactivacion) {
       throw new ValidationError('fechaReactivacion es obligatoria para oportunidades postergadas');
     }
+  }
+
+  if (data.etapa === 'DESCARTADO' && !data.motivoDescarte) {
+    throw new ValidationError('motivoDescarte es obligatorio para oportunidades descartadas');
   }
 };
 
@@ -169,6 +180,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
   const documentoRespaldo = getNullableString(body.documentoRespaldo);
   const motivoPerdida = getNullableString(body.motivoPerdida);
   const motivoPostergacion = getNullableString(body.motivoPostergacion);
+  const motivoDescarte = getNullableString(body.motivoDescarte);
   const fechaReactivacion = getDate(body.fechaReactivacion);
   const fechaProximaAccion = getDate(body.fechaProximaAccion);
 
@@ -180,6 +192,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     documentoRespaldo,
     motivoPerdida,
     motivoPostergacion,
+    motivoDescarte,
     fechaReactivacion,
     fechaProximaAccion,
   });
@@ -190,8 +203,46 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     telefono: getNullableString(body.telefono),
     correo: getNullableString(body.correo),
     tipoCliente: getNullableString(body.tipoCliente),
+    rutEmpresa: getNullableString(body.rutEmpresa),
+    region: getNullableString(body.region),
+    comuna: getNullableString(body.comuna),
+    unidadNegocio: getNullableString(body.unidadNegocio),
     productoId: getInt(body.productoId),
     cantidadEstimada: getInt(body.cantidadEstimada),
+    urgencia: getNullableString(body.urgencia),
+    tipoUso: getNullableString(body.tipoUso),
+    necesidadSoporteTecnico:
+      typeof body.necesidadSoporteTecnico === 'boolean'
+        ? body.necesidadSoporteTecnico
+        : null,
+    alternativaProducto: getNullableString(body.alternativaProducto),
+    comision: getNumber(body.comision),
+    margenEstimado: getNumber(body.margenEstimado),
+    fechaComprometidaEnvio: getDate(body.fechaComprometidaEnvio),
+    versionCotizacion: getNullableString(body.versionCotizacion),
+    comentariosCliente: getNullableString(body.comentariosCliente),
+    objeciones: getNullableString(body.objeciones),
+    ordenCompra: getNullableString(body.ordenCompra),
+    correoAceptacion: getNullableString(body.correoAceptacion),
+    condicionesComerciales: getNullableString(body.condicionesComerciales),
+    coordinacionAdministrativa: getNullableString(body.coordinacionAdministrativa),
+    estadoDocumentacion: getNullableString(body.estadoDocumentacion),
+    traspasoAdministracion:
+      typeof body.traspasoAdministracion === 'boolean'
+        ? body.traspasoAdministracion
+        : null,
+    traspasoERP:
+      typeof body.traspasoERP === 'boolean'
+        ? body.traspasoERP
+        : null,
+    coordinacionDespacho: getNullableString(body.coordinacionDespacho),
+    estadoComercialOrden: getNullableString(body.estadoComercialOrden),
+    estadoDocumentacionVenta: getNullableString(body.estadoDocumentacionVenta),
+    flujoPosterior: getNullableString(body.flujoPosterior),
+    motivoDescarte,
+    tipoBroker: getNullableString(body.tipoBroker),
+    fechaEstimadaDespacho: getDate(body.fechaEstimadaDespacho),
+    fechaSeguimientoPostventa: getDate(body.fechaSeguimientoPostventa),
     responsable,
     etapa,
     montoEstimado,
@@ -235,6 +286,9 @@ const buildUpdateData = (
   const motivoPostergacion = hasOwn(body, 'motivoPostergacion')
     ? getNullableString(body.motivoPostergacion)
     : current.motivoPostergacion;
+  const motivoDescarte = hasOwn(body, 'motivoDescarte')
+    ? getNullableString(body.motivoDescarte)
+    : current.motivoDescarte;
   const fechaReactivacion = hasOwn(body, 'fechaReactivacion')
     ? getDate(body.fechaReactivacion)
     : current.fechaReactivacion;
@@ -250,6 +304,7 @@ const buildUpdateData = (
     documentoRespaldo,
     motivoPerdida,
     motivoPostergacion,
+    motivoDescarte,
     fechaReactivacion,
     fechaProximaAccion,
   });
@@ -261,8 +316,92 @@ const buildUpdateData = (
   if (hasOwn(body, 'telefono')) data.telefono = getNullableString(body.telefono);
   if (hasOwn(body, 'correo')) data.correo = getNullableString(body.correo);
   if (hasOwn(body, 'tipoCliente')) data.tipoCliente = getNullableString(body.tipoCliente);
+  if (hasOwn(body, 'rutEmpresa')) data.rutEmpresa = getNullableString(body.rutEmpresa);
+  if (hasOwn(body, 'region')) data.region = getNullableString(body.region);
+  if (hasOwn(body, 'comuna')) data.comuna = getNullableString(body.comuna);
+  if (hasOwn(body, 'unidadNegocio')) data.unidadNegocio = getNullableString(body.unidadNegocio);
   if (hasOwn(body, 'productoId')) data.productoId = getInt(body.productoId);
   if (hasOwn(body, 'cantidadEstimada')) data.cantidadEstimada = getInt(body.cantidadEstimada);
+  if (hasOwn(body, 'urgencia')) data.urgencia = getNullableString(body.urgencia);
+  if (hasOwn(body, 'tipoUso')) data.tipoUso = getNullableString(body.tipoUso);
+  if (hasOwn(body, 'necesidadSoporteTecnico')) {
+    data.necesidadSoporteTecnico =
+      typeof body.necesidadSoporteTecnico === 'boolean'
+        ? body.necesidadSoporteTecnico
+        : null;
+  }
+  if (hasOwn(body, 'alternativaProducto')) {
+    data.alternativaProducto = getNullableString(body.alternativaProducto);
+  }
+  if (hasOwn(body, 'comision')) {
+    data.comision = getNumber(body.comision);
+  }
+  if (hasOwn(body, 'margenEstimado')) {
+    data.margenEstimado = getNumber(body.margenEstimado);
+  }
+  if (hasOwn(body, 'fechaComprometidaEnvio')) {
+    data.fechaComprometidaEnvio = getDate(body.fechaComprometidaEnvio);
+  }
+  if (hasOwn(body, 'versionCotizacion')) {
+    data.versionCotizacion = getNullableString(body.versionCotizacion);
+  }
+  if (hasOwn(body, 'comentariosCliente')) {
+    data.comentariosCliente = getNullableString(body.comentariosCliente);
+  }
+  if (hasOwn(body, 'objeciones')) {
+    data.objeciones = getNullableString(body.objeciones);
+  }
+  if (hasOwn(body, 'ordenCompra')) {
+    data.ordenCompra = getNullableString(body.ordenCompra);
+  }
+  if (hasOwn(body, 'correoAceptacion')) {
+    data.correoAceptacion = getNullableString(body.correoAceptacion);
+  }
+  if (hasOwn(body, 'condicionesComerciales')) {
+    data.condicionesComerciales = getNullableString(body.condicionesComerciales);
+  }
+  if (hasOwn(body, 'coordinacionAdministrativa')) {
+    data.coordinacionAdministrativa = getNullableString(body.coordinacionAdministrativa);
+  }
+  if (hasOwn(body, 'estadoDocumentacion')) {
+    data.estadoDocumentacion = getNullableString(body.estadoDocumentacion);
+  }
+  if (hasOwn(body, 'traspasoAdministracion')) {
+    data.traspasoAdministracion =
+      typeof body.traspasoAdministracion === 'boolean'
+        ? body.traspasoAdministracion
+        : null;
+  }
+  if (hasOwn(body, 'traspasoERP')) {
+    data.traspasoERP =
+      typeof body.traspasoERP === 'boolean'
+        ? body.traspasoERP
+        : null;
+  }
+  if (hasOwn(body, 'coordinacionDespacho')) {
+    data.coordinacionDespacho = getNullableString(body.coordinacionDespacho);
+  }
+  if (hasOwn(body, 'estadoComercialOrden')) {
+    data.estadoComercialOrden = getNullableString(body.estadoComercialOrden);
+  }
+  if (hasOwn(body, 'estadoDocumentacionVenta')) {
+    data.estadoDocumentacionVenta = getNullableString(body.estadoDocumentacionVenta);
+  }
+  if (hasOwn(body, 'flujoPosterior')) {
+    data.flujoPosterior = getNullableString(body.flujoPosterior);
+  }
+  if (hasOwn(body, 'motivoDescarte')) {
+    data.motivoDescarte = motivoDescarte;
+  }
+  if (hasOwn(body, 'tipoBroker')) {
+    data.tipoBroker = getNullableString(body.tipoBroker);
+  }
+  if (hasOwn(body, 'fechaEstimadaDespacho')) {
+    data.fechaEstimadaDespacho = getDate(body.fechaEstimadaDespacho);
+  }
+  if (hasOwn(body, 'fechaSeguimientoPostventa')) {
+    data.fechaSeguimientoPostventa = getDate(body.fechaSeguimientoPostventa);
+  }
   if (hasOwn(body, 'responsable')) data.responsable = responsable;
   if (hasOwn(body, 'etapa')) data.etapa = etapa;
   if (hasOwn(body, 'montoEstimado')) data.montoEstimado = montoEstimado ?? 0;

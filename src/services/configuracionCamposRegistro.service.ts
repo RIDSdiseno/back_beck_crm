@@ -261,6 +261,8 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
     cantidad_final: cantidadFinal,
     observaciones: getValue(registro, 'observaciones'),
     folio: getValue(registro, 'folio'),
+    tipo_registro: getValue(registro, 'tipoRegistro', 'tipo_registro'),
+    metros_lineales: getValue(registro, 'metrosLineales', 'metros_lineales'),
   };
 }
 
@@ -271,9 +273,14 @@ function filtrarRegistroConConfig<T extends Record<string, unknown>>(
   const camposVisibles = new Set(config.filter(c => c.visible).map(c => c.campo));
   const registroExcel = mapearRegistroAExcel(registro);
 
-  return Object.fromEntries(
+  const filtered = Object.fromEntries(
     Object.entries(registroExcel).filter(([key]) => camposVisibles.has(key)),
-  ) as Partial<T>;
+  ) as Record<string, unknown>;
+
+  // id siempre se incluye para que el frontend pueda navegar al detalle del registro
+  if (registro.id !== undefined) filtered.id = registro.id;
+
+  return filtered as Partial<T>;
 }
 
 export async function sanitizarRegistroPorRol<T extends Record<string, unknown>>(

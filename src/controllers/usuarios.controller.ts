@@ -321,6 +321,73 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
 };
 
 /**
+ * PATCH /api/usuarios/:id/password
+ * Cambia la contraseña de un usuario local (sin azureId).
+ * Solo administrador e ingenieria.
+ */
+export const cambiarPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const { password, confirmPassword } = req.body as {
+      password?: string;
+      confirmPassword?: string;
+    };
+
+    if (!password || !password.trim()) {
+      res.status(400).json({ error: 'La nueva contraseña es obligatoria' });
+      return;
+    }
+    if (!confirmPassword || !confirmPassword.trim()) {
+      res.status(400).json({ error: 'La confirmación de contraseña es obligatoria' });
+      return;
+    }
+    if (password !== confirmPassword) {
+      res.status(400).json({ error: 'Las contraseñas no coinciden' });
+      return;
+    }
+    if (password.length < 8) {
+      res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+      return;
+    }
+
+    const usuario = await prisma.usuario.findUnique({ where: { id } });
+    if (!usuario) {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+      return;
+    }
+
+    if (usuario.azureId) {
+      res.status(400).json({ error: 'No se puede cambiar contraseña de usuarios Microsoft.' });
+      return;
+    }
+
+    if (!validarGestionIngenieria(req, res, usuario)) {
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    await prisma.usuario.update({
+      where: { id },
+      data: { passwordHash },
+    });
+
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'USUARIO',
+      tipo: 'PASSWORD_CAMBIADO',
+      entidadId: id,
+      descripcion: `Se cambió la contraseña del usuario ${usuario.nombre}`,
+    });
+
+    res.json({ success: true, message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error('Error al cambiar contraseña:', error);
+    res.status(500).json({ error: 'Error al cambiar contraseña' });
+  }
+};
+
+/**
  * DELETE /api/usuarios/:id
  * Soft delete: desactiva usuario
  * Solo administrador e ingenieria

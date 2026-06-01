@@ -26,6 +26,7 @@ model Usuario {
   procesamientos        ProcesamientoIngenieria[]
   registrosTerreno      RegistroTerreno[]
   usuarios_obras        usuarios_obras[]
+  registrosRechazados      RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
 
   @@index([email])
   @@index([rol])
@@ -126,12 +127,23 @@ model RegistroTerreno {
   reparacionTabique         Decimal?                 @map("reparacion_tabique") @db.Decimal(6, 2)
   cantidadFinal             Decimal?                 @map("cantidad_final") @db.Decimal(12, 2)
   folio                     String?                  @db.VarChar(100)
+  motivoRechazo            String?                  @map("motivo_rechazo")
+  fechaRechazo             DateTime?                @map("fecha_rechazo") @db.Timestamp(6)
+  rechazadoPorId           String?                  @map("rechazado_por_id") @db.Uuid
+  corregidoAt              DateTime?                @map("corregido_at") @db.Timestamp(6)
+  reenviadoRevisionAt      DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
+  registroOrigenId        String?                  @map("registro_origen_id") @db.Uuid
+  esCorreccion            Boolean                  @default(false) @map("es_correccion")
   fotos_registro            fotos_registro[]
   procesamiento             ProcesamientoIngenieria?
   itemizadoMandante         ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
   obra                      Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
   usuario                   Usuario                  @relation(fields: [usuarioId], references: [id])
+  rechazadoPor             Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
+  registroOrigen          RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
+  correcciones            RegistroTerreno[]        @relation("CorreccionesRegistro")
 
+  @@index([rechazadoPorId])
   @@index([obraId])
   @@index([itemizadoMandanteId])
   @@index([usuarioId])
@@ -140,6 +152,8 @@ model RegistroTerreno {
   @@index([tipoRegistro])
   @@index([devuelto_a_tecnico])
   @@map("registros_terreno")
+  @@index([registroOrigenId])
+  @@index([esCorreccion])
 }
 
 model ProcesamientoIngenieria {
@@ -690,6 +704,7 @@ enum TipoMovimientoCRM {
   USUARIO_ACTIVADO
   USUARIO_DESACTIVADO
   ROL_CAMBIADO
+  PASSWORD_CAMBIADO
   OBRA_CREADA
   OBRA_EDITADA
   OBRA_ELIMINADA

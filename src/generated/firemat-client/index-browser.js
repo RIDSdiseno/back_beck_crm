@@ -275,8 +275,32 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   telefono: 'telefono',
   correo: 'correo',
   tipoCliente: 'tipoCliente',
+  rutEmpresa: 'rutEmpresa',
+  region: 'region',
+  comuna: 'comuna',
+  unidadNegocio: 'unidadNegocio',
   productoId: 'productoId',
   cantidadEstimada: 'cantidadEstimada',
+  urgencia: 'urgencia',
+  tipoUso: 'tipoUso',
+  necesidadSoporteTecnico: 'necesidadSoporteTecnico',
+  alternativaProducto: 'alternativaProducto',
+  comision: 'comision',
+  margenEstimado: 'margenEstimado',
+  fechaComprometidaEnvio: 'fechaComprometidaEnvio',
+  versionCotizacion: 'versionCotizacion',
+  comentariosCliente: 'comentariosCliente',
+  objeciones: 'objeciones',
+  ordenCompra: 'ordenCompra',
+  correoAceptacion: 'correoAceptacion',
+  condicionesComerciales: 'condicionesComerciales',
+  coordinacionAdministrativa: 'coordinacionAdministrativa',
+  estadoDocumentacion: 'estadoDocumentacion',
+  traspasoAdministracion: 'traspasoAdministracion',
+  traspasoERP: 'traspasoERP',
+  coordinacionDespacho: 'coordinacionDespacho',
+  estadoComercialOrden: 'estadoComercialOrden',
+  estadoDocumentacionVenta: 'estadoDocumentacionVenta',
   responsable: 'responsable',
   etapa: 'etapa',
   montoEstimado: 'montoEstimado',
@@ -294,7 +318,12 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   fechaCierre: 'fechaCierre',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  probabilidad: 'probabilidad'
+  probabilidad: 'probabilidad',
+  flujoPosterior: 'flujoPosterior',
+  motivoDescarte: 'motivoDescarte',
+  tipoBroker: 'tipoBroker',
+  fechaEstimadaDespacho: 'fechaEstimadaDespacho',
+  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa'
 };
 
 exports.Prisma.ContactoClienteFirematScalarFieldEnum = {
@@ -309,6 +338,20 @@ exports.Prisma.ContactoClienteFirematScalarFieldEnum = {
   observaciones: 'observaciones',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FunnelFirematArchivoScalarFieldEnum = {
+  id: 'id',
+  oportunidadId: 'oportunidadId',
+  tipo: 'tipo',
+  url: 'url',
+  publicId: 'publicId',
+  nombreArchivo: 'nombreArchivo',
+  mimeType: 'mimeType',
+  bytes: 'bytes',
+  etapa: 'etapa',
+  observaciones: 'observaciones',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -357,7 +400,8 @@ exports.Prisma.ModelName = {
   CotizacionFiremat: 'CotizacionFiremat',
   CotizacionFirematDetalle: 'CotizacionFirematDetalle',
   FunnelFirematOpportunity: 'FunnelFirematOpportunity',
-  ContactoClienteFiremat: 'ContactoClienteFiremat'
+  ContactoClienteFiremat: 'ContactoClienteFiremat',
+  FunnelFirematArchivo: 'FunnelFirematArchivo'
 };
 
 /**
