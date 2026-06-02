@@ -323,7 +323,16 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   motivoDescarte: 'motivoDescarte',
   tipoBroker: 'tipoBroker',
   fechaEstimadaDespacho: 'fechaEstimadaDespacho',
-  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa'
+  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
+  nombreOportunidad: 'nombreOportunidad',
+  cargoContacto: 'cargoContacto',
+  direccionProyecto: 'direccionProyecto',
+  tipoOportunidad: 'tipoOportunidad',
+  fechaProbableCierre: 'fechaProbableCierre',
+  riesgoTecnico: 'riesgoTecnico',
+  comentariosInternos: 'comentariosInternos',
+  observacionesTecnicas: 'observacionesTecnicas',
+  observacionCamposFaltantes: 'observacionCamposFaltantes'
 };
 
 exports.Prisma.ContactoClienteFirematScalarFieldEnum = {

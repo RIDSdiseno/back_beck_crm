@@ -387,6 +387,11 @@ model OperadorBeck {
   responsableTraspasoOperaciones      String?                   @map("responsable_traspaso_operaciones") @db.VarChar(255)
   traspasadoAdministracion            Boolean?                  @map("traspasado_administracion")
   traspasadoOperaciones               Boolean?                  @map("traspasado_operaciones")
+  direccionProyecto String? @map("direccion_proyecto")
+  unidadNegocio String? @map("unidad_negocio") @db.VarChar(150)
+  observaciones String?
+  urgencia                   String? @db.VarChar(50)
+  observacionCamposFaltantes String? @map("observacion_campos_faltantes")
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])

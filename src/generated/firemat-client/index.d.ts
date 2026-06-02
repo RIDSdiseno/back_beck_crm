@@ -14581,6 +14581,15 @@ export namespace Prisma {
     tipoBroker: string | null
     fechaEstimadaDespacho: Date | null
     fechaSeguimientoPostventa: Date | null
+    nombreOportunidad: string | null
+    cargoContacto: string | null
+    direccionProyecto: string | null
+    tipoOportunidad: string | null
+    fechaProbableCierre: Date | null
+    riesgoTecnico: string | null
+    comentariosInternos: string | null
+    observacionesTecnicas: string | null
+    observacionCamposFaltantes: string | null
   }
 
   export type FunnelFirematOpportunityMaxAggregateOutputType = {
@@ -14639,6 +14648,15 @@ export namespace Prisma {
     tipoBroker: string | null
     fechaEstimadaDespacho: Date | null
     fechaSeguimientoPostventa: Date | null
+    nombreOportunidad: string | null
+    cargoContacto: string | null
+    direccionProyecto: string | null
+    tipoOportunidad: string | null
+    fechaProbableCierre: Date | null
+    riesgoTecnico: string | null
+    comentariosInternos: string | null
+    observacionesTecnicas: string | null
+    observacionCamposFaltantes: string | null
   }
 
   export type FunnelFirematOpportunityCountAggregateOutputType = {
@@ -14697,6 +14715,15 @@ export namespace Prisma {
     tipoBroker: number
     fechaEstimadaDespacho: number
     fechaSeguimientoPostventa: number
+    nombreOportunidad: number
+    cargoContacto: number
+    direccionProyecto: number
+    tipoOportunidad: number
+    fechaProbableCierre: number
+    riesgoTecnico: number
+    comentariosInternos: number
+    observacionesTecnicas: number
+    observacionCamposFaltantes: number
     _all: number
   }
 
@@ -14781,6 +14808,15 @@ export namespace Prisma {
     tipoBroker?: true
     fechaEstimadaDespacho?: true
     fechaSeguimientoPostventa?: true
+    nombreOportunidad?: true
+    cargoContacto?: true
+    direccionProyecto?: true
+    tipoOportunidad?: true
+    fechaProbableCierre?: true
+    riesgoTecnico?: true
+    comentariosInternos?: true
+    observacionesTecnicas?: true
+    observacionCamposFaltantes?: true
   }
 
   export type FunnelFirematOpportunityMaxAggregateInputType = {
@@ -14839,6 +14875,15 @@ export namespace Prisma {
     tipoBroker?: true
     fechaEstimadaDespacho?: true
     fechaSeguimientoPostventa?: true
+    nombreOportunidad?: true
+    cargoContacto?: true
+    direccionProyecto?: true
+    tipoOportunidad?: true
+    fechaProbableCierre?: true
+    riesgoTecnico?: true
+    comentariosInternos?: true
+    observacionesTecnicas?: true
+    observacionCamposFaltantes?: true
   }
 
   export type FunnelFirematOpportunityCountAggregateInputType = {
@@ -14897,6 +14942,15 @@ export namespace Prisma {
     tipoBroker?: true
     fechaEstimadaDespacho?: true
     fechaSeguimientoPostventa?: true
+    nombreOportunidad?: true
+    cargoContacto?: true
+    direccionProyecto?: true
+    tipoOportunidad?: true
+    fechaProbableCierre?: true
+    riesgoTecnico?: true
+    comentariosInternos?: true
+    observacionesTecnicas?: true
+    observacionCamposFaltantes?: true
     _all?: true
   }
 
@@ -15042,6 +15096,15 @@ export namespace Prisma {
     tipoBroker: string | null
     fechaEstimadaDespacho: Date | null
     fechaSeguimientoPostventa: Date | null
+    nombreOportunidad: string | null
+    cargoContacto: string | null
+    direccionProyecto: string | null
+    tipoOportunidad: string | null
+    fechaProbableCierre: Date | null
+    riesgoTecnico: string | null
+    comentariosInternos: string | null
+    observacionesTecnicas: string | null
+    observacionCamposFaltantes: string | null
     _count: FunnelFirematOpportunityCountAggregateOutputType | null
     _avg: FunnelFirematOpportunityAvgAggregateOutputType | null
     _sum: FunnelFirematOpportunitySumAggregateOutputType | null
@@ -15119,6 +15182,15 @@ export namespace Prisma {
     tipoBroker?: boolean
     fechaEstimadaDespacho?: boolean
     fechaSeguimientoPostventa?: boolean
+    nombreOportunidad?: boolean
+    cargoContacto?: boolean
+    direccionProyecto?: boolean
+    tipoOportunidad?: boolean
+    fechaProbableCierre?: boolean
+    riesgoTecnico?: boolean
+    comentariosInternos?: boolean
+    observacionesTecnicas?: boolean
+    observacionCamposFaltantes?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
@@ -15181,6 +15253,15 @@ export namespace Prisma {
     tipoBroker?: boolean
     fechaEstimadaDespacho?: boolean
     fechaSeguimientoPostventa?: boolean
+    nombreOportunidad?: boolean
+    cargoContacto?: boolean
+    direccionProyecto?: boolean
+    tipoOportunidad?: boolean
+    fechaProbableCierre?: boolean
+    riesgoTecnico?: boolean
+    comentariosInternos?: boolean
+    observacionesTecnicas?: boolean
+    observacionCamposFaltantes?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15241,6 +15322,15 @@ export namespace Prisma {
     tipoBroker?: boolean
     fechaEstimadaDespacho?: boolean
     fechaSeguimientoPostventa?: boolean
+    nombreOportunidad?: boolean
+    cargoContacto?: boolean
+    direccionProyecto?: boolean
+    tipoOportunidad?: boolean
+    fechaProbableCierre?: boolean
+    riesgoTecnico?: boolean
+    comentariosInternos?: boolean
+    observacionesTecnicas?: boolean
+    observacionCamposFaltantes?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15301,9 +15391,18 @@ export namespace Prisma {
     tipoBroker?: boolean
     fechaEstimadaDespacho?: boolean
     fechaSeguimientoPostventa?: boolean
+    nombreOportunidad?: boolean
+    cargoContacto?: boolean
+    direccionProyecto?: boolean
+    tipoOportunidad?: boolean
+    fechaProbableCierre?: boolean
+    riesgoTecnico?: boolean
+    comentariosInternos?: boolean
+    observacionesTecnicas?: boolean
+    observacionCamposFaltantes?: boolean
   }
 
-  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa", ExtArgs["result"]["funnelFirematOpportunity"]>
+  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes", ExtArgs["result"]["funnelFirematOpportunity"]>
   export type FunnelFirematOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
@@ -15382,6 +15481,15 @@ export namespace Prisma {
       tipoBroker: string | null
       fechaEstimadaDespacho: Date | null
       fechaSeguimientoPostventa: Date | null
+      nombreOportunidad: string | null
+      cargoContacto: string | null
+      direccionProyecto: string | null
+      tipoOportunidad: string | null
+      fechaProbableCierre: Date | null
+      riesgoTecnico: string | null
+      comentariosInternos: string | null
+      observacionesTecnicas: string | null
+      observacionCamposFaltantes: string | null
     }, ExtArgs["result"]["funnelFirematOpportunity"]>
     composites: {}
   }
@@ -15863,6 +15971,15 @@ export namespace Prisma {
     readonly tipoBroker: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly fechaEstimadaDespacho: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly fechaSeguimientoPostventa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly nombreOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly cargoContacto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly direccionProyecto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly tipoOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly fechaProbableCierre: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly riesgoTecnico: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comentariosInternos: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly observacionesTecnicas: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly observacionCamposFaltantes: FieldRef<"FunnelFirematOpportunity", 'String'>
   }
     
 
@@ -18953,7 +19070,16 @@ export namespace Prisma {
     motivoDescarte: 'motivoDescarte',
     tipoBroker: 'tipoBroker',
     fechaEstimadaDespacho: 'fechaEstimadaDespacho',
-    fechaSeguimientoPostventa: 'fechaSeguimientoPostventa'
+    fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
+    nombreOportunidad: 'nombreOportunidad',
+    cargoContacto: 'cargoContacto',
+    direccionProyecto: 'direccionProyecto',
+    tipoOportunidad: 'tipoOportunidad',
+    fechaProbableCierre: 'fechaProbableCierre',
+    riesgoTecnico: 'riesgoTecnico',
+    comentariosInternos: 'comentariosInternos',
+    observacionesTecnicas: 'observacionesTecnicas',
+    observacionCamposFaltantes: 'observacionCamposFaltantes'
   };
 
   export type FunnelFirematOpportunityScalarFieldEnum = (typeof FunnelFirematOpportunityScalarFieldEnum)[keyof typeof FunnelFirematOpportunityScalarFieldEnum]
@@ -20116,6 +20242,15 @@ export namespace Prisma {
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
@@ -20177,6 +20312,15 @@ export namespace Prisma {
     tipoBroker?: SortOrderInput | SortOrder
     fechaEstimadaDespacho?: SortOrderInput | SortOrder
     fechaSeguimientoPostventa?: SortOrderInput | SortOrder
+    nombreOportunidad?: SortOrderInput | SortOrder
+    cargoContacto?: SortOrderInput | SortOrder
+    direccionProyecto?: SortOrderInput | SortOrder
+    tipoOportunidad?: SortOrderInput | SortOrder
+    fechaProbableCierre?: SortOrderInput | SortOrder
+    riesgoTecnico?: SortOrderInput | SortOrder
+    comentariosInternos?: SortOrderInput | SortOrder
+    observacionesTecnicas?: SortOrderInput | SortOrder
+    observacionCamposFaltantes?: SortOrderInput | SortOrder
     cotizacion?: CotizacionFirematOrderByWithRelationInput
     producto?: ProductoOrderByWithRelationInput
     archivos?: FunnelFirematArchivoOrderByRelationAggregateInput
@@ -20241,6 +20385,15 @@ export namespace Prisma {
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
@@ -20302,6 +20455,15 @@ export namespace Prisma {
     tipoBroker?: SortOrderInput | SortOrder
     fechaEstimadaDespacho?: SortOrderInput | SortOrder
     fechaSeguimientoPostventa?: SortOrderInput | SortOrder
+    nombreOportunidad?: SortOrderInput | SortOrder
+    cargoContacto?: SortOrderInput | SortOrder
+    direccionProyecto?: SortOrderInput | SortOrder
+    tipoOportunidad?: SortOrderInput | SortOrder
+    fechaProbableCierre?: SortOrderInput | SortOrder
+    riesgoTecnico?: SortOrderInput | SortOrder
+    comentariosInternos?: SortOrderInput | SortOrder
+    observacionesTecnicas?: SortOrderInput | SortOrder
+    observacionCamposFaltantes?: SortOrderInput | SortOrder
     _count?: FunnelFirematOpportunityCountOrderByAggregateInput
     _avg?: FunnelFirematOpportunityAvgOrderByAggregateInput
     _max?: FunnelFirematOpportunityMaxOrderByAggregateInput
@@ -20368,6 +20530,15 @@ export namespace Prisma {
     tipoBroker?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     fechaEstimadaDespacho?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
     fechaSeguimientoPostventa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    nombreOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    cargoContacto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    direccionProyecto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    riesgoTecnico?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosInternos?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    observacionCamposFaltantes?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
   }
 
   export type ContactoClienteFirematWhereInput = {
@@ -21645,6 +21816,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
@@ -21706,6 +21886,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
@@ -21762,6 +21951,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
@@ -21823,6 +22021,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -21882,6 +22089,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
   }
 
   export type FunnelFirematOpportunityUpdateManyMutationInput = {
@@ -21937,6 +22153,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyInput = {
@@ -21995,6 +22220,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactoClienteFirematCreateInput = {
@@ -23239,6 +23473,15 @@ export namespace Prisma {
     tipoBroker?: SortOrder
     fechaEstimadaDespacho?: SortOrder
     fechaSeguimientoPostventa?: SortOrder
+    nombreOportunidad?: SortOrder
+    cargoContacto?: SortOrder
+    direccionProyecto?: SortOrder
+    tipoOportunidad?: SortOrder
+    fechaProbableCierre?: SortOrder
+    riesgoTecnico?: SortOrder
+    comentariosInternos?: SortOrder
+    observacionesTecnicas?: SortOrder
+    observacionCamposFaltantes?: SortOrder
   }
 
   export type FunnelFirematOpportunityAvgOrderByAggregateInput = {
@@ -23309,6 +23552,15 @@ export namespace Prisma {
     tipoBroker?: SortOrder
     fechaEstimadaDespacho?: SortOrder
     fechaSeguimientoPostventa?: SortOrder
+    nombreOportunidad?: SortOrder
+    cargoContacto?: SortOrder
+    direccionProyecto?: SortOrder
+    tipoOportunidad?: SortOrder
+    fechaProbableCierre?: SortOrder
+    riesgoTecnico?: SortOrder
+    comentariosInternos?: SortOrder
+    observacionesTecnicas?: SortOrder
+    observacionCamposFaltantes?: SortOrder
   }
 
   export type FunnelFirematOpportunityMinOrderByAggregateInput = {
@@ -23367,6 +23619,15 @@ export namespace Prisma {
     tipoBroker?: SortOrder
     fechaEstimadaDespacho?: SortOrder
     fechaSeguimientoPostventa?: SortOrder
+    nombreOportunidad?: SortOrder
+    cargoContacto?: SortOrder
+    direccionProyecto?: SortOrder
+    tipoOportunidad?: SortOrder
+    fechaProbableCierre?: SortOrder
+    riesgoTecnico?: SortOrder
+    comentariosInternos?: SortOrder
+    observacionesTecnicas?: SortOrder
+    observacionCamposFaltantes?: SortOrder
   }
 
   export type FunnelFirematOpportunitySumOrderByAggregateInput = {
@@ -24853,6 +25114,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
   }
@@ -24912,6 +25182,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
@@ -25187,6 +25466,15 @@ export namespace Prisma {
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
   }
 
   export type MovimientoUpsertWithWhereUniqueWithoutProductoInput = {
@@ -26075,6 +26363,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
   }
@@ -26134,6 +26431,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
@@ -26882,6 +27188,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
   }
@@ -26942,6 +27257,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutArchivosInput = {
@@ -27013,6 +27337,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
   }
@@ -27073,6 +27406,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductoCreateManyCategoriaInput = {
@@ -27216,6 +27558,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
   }
 
   export type MovimientoCreateManyProductoInput = {
@@ -27355,6 +27706,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
   }
@@ -27414,6 +27774,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -27472,6 +27841,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MovimientoUpdateWithoutProductoInput = {
@@ -27835,6 +28213,15 @@ export namespace Prisma {
     tipoBroker?: string | null
     fechaEstimadaDespacho?: Date | string | null
     fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
   }
 
   export type CotizacionFirematDetalleUpdateWithoutCotizacionInput = {
@@ -27922,6 +28309,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
   }
@@ -27981,6 +28377,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -28039,6 +28444,15 @@ export namespace Prisma {
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
     fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FunnelFirematArchivoCreateManyOportunidadInput = {

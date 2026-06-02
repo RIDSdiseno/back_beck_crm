@@ -1113,14 +1113,19 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
       let rowY    = doc.y + 4;
       let colIdx  = 0;
 
-      for (const buf of validImages) {
+      validImages.forEach((buf, imgIndex) => {
         // Nueva fila: verificar espacio en página
         if (colIdx === 0 && rowY + imgH > 800) {
           doc.addPage();
           rowY = PDF_MARGIN;
         }
 
-        const imgX = PDF_MARGIN + colIdx * (imgW + gap);
+        // Si la imagen está sola en su fila, centrarla horizontalmente
+        const isAloneInRow = colIdx === 0 && imgIndex === validImages.length - 1;
+        const imgX = isAloneInRow
+          ? PDF_MARGIN + (PDF_CONTENT_W - imgW) / 2
+          : PDF_MARGIN + colIdx * (imgW + gap);
+
         try {
           doc.image(buf, imgX, rowY, { fit: [imgW, imgH] });
         } catch {
@@ -1132,7 +1137,7 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
           colIdx = 0;
           rowY  += imgH + 10;
         }
-      }
+      });
 
       // Avanzar cursor después de las imágenes
       doc.y = rowY + (colIdx > 0 ? imgH : 0) + 12;

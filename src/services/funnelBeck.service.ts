@@ -254,6 +254,12 @@ function extractInput(raw: Record<string, unknown>) {
     // Clientes Beck
     clienteBeckId:       optNullableId(raw.clienteBeckId,  raw.cliente_beck_id),
     contactoBeckId:      optNullableId(raw.contactoBeckId, raw.contacto_beck_id),
+    // Campos adicionales
+    direccionProyecto:   (raw.direccionProyecto ?? raw.direccion_proyecto) as string | undefined,
+    unidadNegocio:       (raw.unidadNegocio     ?? raw.unidad_negocio)     as string | undefined,
+    observaciones:        raw.observaciones                                  as string | undefined,
+    urgencia:             raw.urgencia                                       as string | undefined,
+    observacionCamposFaltantes: (raw.observacionCamposFaltantes ?? raw.observacion_campos_faltantes) as string | undefined,
   };
 }
 
@@ -315,6 +321,64 @@ function validarEtapaYCierre(params: {
   }
 }
 
+function validarOportunidadActiva(params: {
+  etapa: EtapaFunnelBeck;
+  estadoCierre?: EstadoCierreFunnel | null;
+  proximaAccion?: string | null;
+  fechaProximaAccion?: Date | string | null;
+}) {
+  const { etapa, estadoCierre, proximaAccion, fechaProximaAccion } = params;
+  const estaActiva =
+    etapa !== "cerrada" &&
+    estadoCierre !== "ganada" &&
+    estadoCierre !== "perdida" &&
+    estadoCierre !== "postergada";
+
+  if (estaActiva && (!normalizeString(proximaAccion) || !fechaProximaAccion)) {
+    throw new Error(
+      "La próxima actividad y la fecha de próxima acción son obligatorias para oportunidades activas.",
+    );
+  }
+}
+
+export class AdvertenciaCamposCriticosError extends Error {
+  readonly faltantes: string[];
+  constructor(faltantes: string[]) {
+    super('Faltan campos críticos para avanzar de etapa.');
+    this.name = 'AdvertenciaCamposCriticosError';
+    this.faltantes = faltantes;
+  }
+}
+
+interface CamposCriticosBeckInput {
+  empresa: string | null;
+  rutEmpresa: string | null;
+  nombreProyecto: string | null;
+  nombreContacto: string | null;
+  telefonoContacto: string | null;
+  correoContacto: string | null;
+  vendedor: string | null;
+  unidadNegocio: string | null;
+  etapa: string;
+  proximaAccion: string | null;
+  fechaProximaAccion: Date | string | null;
+}
+
+function validarCamposCriticosBeck(o: CamposCriticosBeckInput): string[] {
+  const faltantes: string[] = [];
+  if (!o.empresa) faltantes.push('Empresa / cliente');
+  if (!o.rutEmpresa) faltantes.push('RUT empresa');
+  if (!o.nombreProyecto) faltantes.push('Nombre del proyecto u oportunidad');
+  if (!o.nombreContacto) faltantes.push('Nombre del contacto');
+  if (!o.telefonoContacto && !o.correoContacto) faltantes.push('Teléfono o correo del contacto');
+  if (!o.vendedor) faltantes.push('Responsable comercial');
+  if (!o.unidadNegocio) faltantes.push('Unidad de negocio');
+  if (!o.etapa) faltantes.push('Etapa del pipeline');
+  if (!o.proximaAccion) faltantes.push('Próxima acción');
+  if (!o.fechaProximaAccion) faltantes.push('Fecha de próxima acción');
+  return faltantes;
+}
+
 function validarCamposObligatorios(data: NormalizedInput) {
   if (!normalizeString(data.nombreProyecto)) throw new Error("El nombre del proyecto es obligatorio.");
   if (!normalizeString(data.empresa)) throw new Error("La empresa es obligatoria.");
@@ -338,6 +402,13 @@ function validarCamposObligatorios(data: NormalizedInput) {
     fechaCierre: data.fechaCierre,
     documentoRespaldo: data.documentoRespaldo,
     flujoPosterior: data.flujoPosterior,
+  });
+
+  validarOportunidadActiva({
+    etapa: data.etapa ?? "prospecto_identificado",
+    estadoCierre: data.estadoCierre,
+    proximaAccion: data.proximaAccion,
+    fechaProximaAccion: data.fechaProximaAccion,
   });
 }
 
@@ -467,6 +538,12 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       // Clientes Beck
       clienteBeckId:       data.clienteBeckId  ?? null,
       contactoBeckId:      data.contactoBeckId ?? null,
+      // Campos adicionales
+      direccionProyecto:   optStr(data.direccionProyecto),
+      unidadNegocio:       optStr(data.unidadNegocio),
+      observaciones:       optStr(data.observaciones),
+      urgencia:            optStr(data.urgencia),
+      observacionCamposFaltantes: optStr(data.observacionCamposFaltantes),
     },
     include: FUNNEL_BECK_INCLUDE,
   });
@@ -570,6 +647,8 @@ export async function getGanadasSinObraFunnelBeck() {
       fechaCierre: true,
       documentoRespaldo: true,
       flujoPosterior: true,
+      urgencia: true,
+      observacionCamposFaltantes: true,
       clienteBeckId: true,
       contactoBeckId: true,
       clienteBeck: {
@@ -715,6 +794,48 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       : existente.flujoPosterior ?? undefined,
   });
 
+  const proximaAccionFinal = data.proximaAccion !== undefined
+    ? data.proximaAccion
+    : existente.proximaAccion;
+  const fechaProximaAccionFinal = data.fechaProximaAccion !== undefined
+    ? parseOptionalDate(data.fechaProximaAccion)
+    : existente.fechaProximaAccion;
+
+  validarOportunidadActiva({
+    etapa,
+    estadoCierre,
+    proximaAccion: proximaAccionFinal,
+    fechaProximaAccion: fechaProximaAccionFinal,
+  });
+
+  const etapaCambio = etapa !== existente.etapa;
+  const cierreCambio = data.estadoCierre !== undefined && data.estadoCierre !== existente.estadoCierre;
+
+  if (etapaCambio || cierreCambio) {
+    const observacionFinal = data.observacionCamposFaltantes !== undefined
+      ? optStr(data.observacionCamposFaltantes)
+      : existente.observacionCamposFaltantes;
+
+    if (!observacionFinal) {
+      const faltantes = validarCamposCriticosBeck({
+        empresa,
+        rutEmpresa: data.rutEmpresa !== undefined ? procesarRut(data.rutEmpresa) : existente.rutEmpresa,
+        nombreProyecto,
+        nombreContacto: data.nombreContacto !== undefined ? optStr(data.nombreContacto) : existente.nombreContacto,
+        telefonoContacto: data.telefonoContacto !== undefined ? procesarTelefono(data.telefonoContacto) : existente.telefonoContacto,
+        correoContacto: data.correoContacto !== undefined ? procesarCorreo(data.correoContacto) : existente.correoContacto,
+        vendedor,
+        unidadNegocio: data.unidadNegocio !== undefined ? optStr(data.unidadNegocio) : existente.unidadNegocio,
+        etapa,
+        proximaAccion: proximaAccionFinal ?? null,
+        fechaProximaAccion: fechaProximaAccionFinal ?? null,
+      });
+      if (faltantes.length > 0) {
+        throw new AdvertenciaCamposCriticosError(faltantes);
+      }
+    }
+  }
+
   const oportunidad = await prisma.operadorBeck.update({
     where: { id },
     data: {
@@ -816,6 +937,12 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       // Clientes Beck
       ...(data.clienteBeckId  !== undefined && { clienteBeckId:  data.clienteBeckId }),
       ...(data.contactoBeckId !== undefined && { contactoBeckId: data.contactoBeckId }),
+      // Campos adicionales
+      ...(data.direccionProyecto !== undefined && { direccionProyecto: optStr(data.direccionProyecto) }),
+      ...(data.unidadNegocio     !== undefined && { unidadNegocio:     optStr(data.unidadNegocio) }),
+      ...(data.observaciones     !== undefined && { observaciones:     optStr(data.observaciones) }),
+      ...(data.urgencia          !== undefined && { urgencia:          optStr(data.urgencia) }),
+      ...(data.observacionCamposFaltantes !== undefined && { observacionCamposFaltantes: optStr(data.observacionCamposFaltantes) }),
     },
     include: FUNNEL_BECK_INCLUDE,
   });
@@ -898,6 +1025,34 @@ export async function updateEtapaFunnelBeck(
       : existente.flujoPosterior ?? undefined,
   });
 
+  const etapaCambio = payload.etapa !== existente.etapa;
+  const cierreCambio = payload.estadoCierre !== undefined && payload.estadoCierre !== existente.estadoCierre;
+
+  if (etapaCambio || cierreCambio) {
+    const observacionFinal = payload.observacionCamposFaltantes !== undefined
+      ? optStr(payload.observacionCamposFaltantes)
+      : existente.observacionCamposFaltantes;
+
+    if (!observacionFinal) {
+      const faltantes = validarCamposCriticosBeck({
+        empresa: existente.empresa,
+        rutEmpresa: existente.rutEmpresa,
+        nombreProyecto: existente.nombreProyecto,
+        nombreContacto: existente.nombreContacto,
+        telefonoContacto: existente.telefonoContacto,
+        correoContacto: existente.correoContacto,
+        vendedor: existente.vendedor,
+        unidadNegocio: existente.unidadNegocio,
+        etapa: payload.etapa,
+        proximaAccion: existente.proximaAccion,
+        fechaProximaAccion: existente.fechaProximaAccion,
+      });
+      if (faltantes.length > 0) {
+        throw new AdvertenciaCamposCriticosError(faltantes);
+      }
+    }
+  }
+
   const oportunidad = await prisma.operadorBeck.update({
     where: { id },
     data: {
@@ -922,6 +1077,7 @@ export async function updateEtapaFunnelBeck(
       ...(payload.fechaTraspasoAdministracion !== undefined && { fechaTraspasoAdministracion: parseOptionalDate(payload.fechaTraspasoAdministracion) }),
       ...(payload.responsableTraspasoAdministracion !== undefined && { responsableTraspasoAdministracion: optStr(payload.responsableTraspasoAdministracion) }),
       ...(payload.observacionesTraspasoAdministracion !== undefined && { observacionesTraspasoAdministracion: optStr(payload.observacionesTraspasoAdministracion) }),
+      ...(payload.observacionCamposFaltantes !== undefined && { observacionCamposFaltantes: optStr(payload.observacionCamposFaltantes) }),
     },
     include: FUNNEL_BECK_INCLUDE,
   });

@@ -242,6 +242,15 @@ model FunnelFirematOpportunity {
   tipoBroker                  String?
   fechaEstimadaDespacho       DateTime?
   fechaSeguimientoPostventa   DateTime?
+  nombreOportunidad String? @map("nombre_oportunidad")
+  cargoContacto     String? @map("cargo_contacto")
+  direccionProyecto String? @map("direccion_proyecto")
+  tipoOportunidad            String?   @map("tipo_oportunidad")
+  fechaProbableCierre        DateTime? @map("fecha_probable_cierre")
+  riesgoTecnico              String?   @map("riesgo_tecnico")
+  comentariosInternos        String?   @map("comentarios_internos")
+  observacionesTecnicas      String?   @map("observaciones_tecnicas")
+  observacionCamposFaltantes String?   @map("observacion_campos_faltantes")
 
   cotizacion               CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
   producto                 Producto?          @relation(fields: [productoId], references: [id])

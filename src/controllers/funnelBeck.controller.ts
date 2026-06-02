@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  AdvertenciaCamposCriticosError,
   createFunnelBeck,
   deleteFunnelBeck,
   getAllFunnelBeck,
@@ -184,6 +185,14 @@ export async function updateFunnelBeckController(req: Request, res: Response) {
       message: "Oportunidad actualizada correctamente.",
     });
   } catch (error) {
+    if (error instanceof AdvertenciaCamposCriticosError) {
+      return res.status(409).json({
+        success: false,
+        advertenciasCamposCriticos: error.faltantes,
+        requiereObservacionCamposFaltantes: true,
+        message: 'Faltan campos críticos para avanzar de etapa.',
+      });
+    }
     return res.status(400).json({
       success: false,
       error: error instanceof Error ? error.message : "Error al actualizar la oportunidad.",
@@ -201,6 +210,14 @@ export async function updateEtapaFunnelBeckController(req: Request, res: Respons
       message: "Etapa actualizada correctamente.",
     });
   } catch (error) {
+    if (error instanceof AdvertenciaCamposCriticosError) {
+      return res.status(409).json({
+        success: false,
+        advertenciasCamposCriticos: error.faltantes,
+        requiereObservacionCamposFaltantes: true,
+        message: 'Faltan campos críticos para avanzar de etapa.',
+      });
+    }
     return res.status(400).json({
       success: false,
       error: error instanceof Error ? error.message : "Error al actualizar etapa.",

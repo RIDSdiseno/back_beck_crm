@@ -82,6 +82,35 @@ const hasOwn = (body: Record<string, unknown>, key: string): boolean =>
 
 const isActiva = (etapa: string): boolean => !ETAPAS_CERRADAS.has(etapa);
 
+interface CamposCriticosInput {
+  cliente: string | null;
+  rutEmpresa: string | null;
+  nombreOportunidad: string | null;
+  contacto: string | null;
+  telefono: string | null;
+  correo: string | null;
+  responsable: string | null;
+  unidadNegocio: string | null;
+  etapa: string;
+  proximaAccion: string | null;
+  fechaProximaAccion: Date | null;
+}
+
+const validarCamposCriticosFiremat = (oportunidad: CamposCriticosInput): string[] => {
+  const faltantes: string[] = [];
+  if (!oportunidad.cliente) faltantes.push('Cliente / empresa');
+  if (!oportunidad.rutEmpresa) faltantes.push('RUT empresa');
+  if (!oportunidad.nombreOportunidad) faltantes.push('Nombre del proyecto u oportunidad');
+  if (!oportunidad.contacto) faltantes.push('Nombre del contacto');
+  if (!oportunidad.telefono && !oportunidad.correo) faltantes.push('Teléfono o correo del contacto');
+  if (!oportunidad.responsable) faltantes.push('Responsable comercial');
+  if (!oportunidad.unidadNegocio) faltantes.push('Unidad de negocio');
+  if (!oportunidad.etapa) faltantes.push('Etapa del pipeline');
+  if (!oportunidad.proximaAccion) faltantes.push('Próxima acción');
+  if (!oportunidad.fechaProximaAccion) faltantes.push('Fecha de próxima acción');
+  return faltantes;
+};
+
 const validateOpportunityState = (data: {
   cliente: string | null;
   etapa: string;
@@ -92,6 +121,7 @@ const validateOpportunityState = (data: {
   motivoPostergacion: string | null;
   motivoDescarte: string | null;
   fechaReactivacion: Date | null;
+  proximaAccion: string | null;
   fechaProximaAccion: Date | null;
 }): void => {
   if (!data.cliente) {
@@ -100,6 +130,10 @@ const validateOpportunityState = (data: {
 
   if (!ETAPAS_PERMITIDAS.includes(data.etapa as EtapaFunnelFiremat)) {
     throw new ValidationError(`etapa debe ser una de: ${ETAPAS_PERMITIDAS.join(', ')}`);
+  }
+
+  if (isActiva(data.etapa) && !data.proximaAccion) {
+    throw new ValidationError('proximaAccion es obligatoria para oportunidades activas');
   }
 
   if (isActiva(data.etapa) && !data.fechaProximaAccion) {
@@ -172,6 +206,34 @@ const assertLinkedRecordsExist = async (
   }
 };
 
+interface ClienteRegistradoSets {
+  ruts: Set<string>;
+  emails: Set<string>;
+  telefonos: Set<string>;
+}
+
+const cargarClientesParaMatch = async (): Promise<ClienteRegistradoSets> => {
+  const clientes = await firematPrisma.cliente.findMany({
+    where: { activo: true },
+    select: { rut: true, email: true, telefono: true },
+  });
+  return {
+    ruts: new Set(clientes.map(c => c.rut).filter((r): r is string => r !== null)),
+    emails: new Set(clientes.map(c => c.email?.toLowerCase()).filter((e): e is string => e !== null)),
+    telefonos: new Set(clientes.map(c => c.telefono).filter((t): t is string => t !== null)),
+  };
+};
+
+const esClienteRegistrado = (
+  o: { rutEmpresa: string | null; correo: string | null; telefono: string | null },
+  sets: ClienteRegistradoSets
+): boolean => {
+  if (o.rutEmpresa && sets.ruts.has(o.rutEmpresa)) return true;
+  if (o.correo && sets.emails.has(o.correo.toLowerCase())) return true;
+  if (o.telefono && sets.telefonos.has(o.telefono)) return true;
+  return false;
+};
+
 const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpportunityUncheckedCreateInput => {
   const etapa = parseEtapa(body.etapa) ?? 'PROSPECTO';
   const cliente = getString(body.cliente);
@@ -182,6 +244,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
   const motivoPostergacion = getNullableString(body.motivoPostergacion);
   const motivoDescarte = getNullableString(body.motivoDescarte);
   const fechaReactivacion = getDate(body.fechaReactivacion);
+  const proximaAccion = getNullableString(body.proximaAccion);
   const fechaProximaAccion = getDate(body.fechaProximaAccion);
 
   validateOpportunityState({
@@ -194,6 +257,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     motivoPostergacion,
     motivoDescarte,
     fechaReactivacion,
+    proximaAccion,
     fechaProximaAccion,
   });
 
@@ -247,7 +311,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     etapa,
     montoEstimado,
     probabilidadCierre: getInt(body.probabilidadCierre),
-    proximaAccion: getNullableString(body.proximaAccion),
+    proximaAccion,
     fechaProximaAccion,
     observaciones: getNullableString(body.observaciones),
     origen: getNullableString(body.origen),
@@ -258,6 +322,15 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     fechaReactivacion,
     documentoRespaldo,
     fechaCierre: etapa === 'GANADA' ? new Date() : getDate(body.fechaCierre),
+    nombreOportunidad: getNullableString(body.nombreOportunidad),
+    cargoContacto: getNullableString(body.cargoContacto),
+    direccionProyecto: getNullableString(body.direccionProyecto),
+    tipoOportunidad: getNullableString(body.tipoOportunidad),
+    fechaProbableCierre: getDate(body.fechaProbableCierre),
+    riesgoTecnico: getNullableString(body.riesgoTecnico),
+    comentariosInternos: getNullableString(body.comentariosInternos),
+    observacionesTecnicas: getNullableString(body.observacionesTecnicas),
+    observacionCamposFaltantes: getNullableString(body.observacionCamposFaltantes),
   };
 };
 
@@ -292,6 +365,9 @@ const buildUpdateData = (
   const fechaReactivacion = hasOwn(body, 'fechaReactivacion')
     ? getDate(body.fechaReactivacion)
     : current.fechaReactivacion;
+  const proximaAccion = hasOwn(body, 'proximaAccion')
+    ? getNullableString(body.proximaAccion)
+    : current.proximaAccion;
   const fechaProximaAccion = hasOwn(body, 'fechaProximaAccion')
     ? getDate(body.fechaProximaAccion)
     : current.fechaProximaAccion;
@@ -306,6 +382,7 @@ const buildUpdateData = (
     motivoPostergacion,
     motivoDescarte,
     fechaReactivacion,
+    proximaAccion,
     fechaProximaAccion,
   });
 
@@ -406,7 +483,7 @@ const buildUpdateData = (
   if (hasOwn(body, 'etapa')) data.etapa = etapa;
   if (hasOwn(body, 'montoEstimado')) data.montoEstimado = montoEstimado ?? 0;
   if (hasOwn(body, 'probabilidadCierre')) data.probabilidadCierre = getInt(body.probabilidadCierre);
-  if (hasOwn(body, 'proximaAccion')) data.proximaAccion = getNullableString(body.proximaAccion);
+  if (hasOwn(body, 'proximaAccion')) data.proximaAccion = proximaAccion;
   if (hasOwn(body, 'fechaProximaAccion')) data.fechaProximaAccion = fechaProximaAccion;
   if (hasOwn(body, 'observaciones')) data.observaciones = getNullableString(body.observaciones);
   if (hasOwn(body, 'origen')) data.origen = getNullableString(body.origen);
@@ -418,6 +495,15 @@ const buildUpdateData = (
   if (hasOwn(body, 'documentoRespaldo')) data.documentoRespaldo = documentoRespaldo;
   if (etapa === 'GANADA' && current.etapa !== 'GANADA') data.fechaCierre = new Date();
   if (hasOwn(body, 'fechaCierre')) data.fechaCierre = getDate(body.fechaCierre);
+  if (hasOwn(body, 'nombreOportunidad')) data.nombreOportunidad = getNullableString(body.nombreOportunidad);
+  if (hasOwn(body, 'cargoContacto')) data.cargoContacto = getNullableString(body.cargoContacto);
+  if (hasOwn(body, 'direccionProyecto')) data.direccionProyecto = getNullableString(body.direccionProyecto);
+  if (hasOwn(body, 'tipoOportunidad')) data.tipoOportunidad = getNullableString(body.tipoOportunidad);
+  if (hasOwn(body, 'fechaProbableCierre')) data.fechaProbableCierre = getDate(body.fechaProbableCierre);
+  if (hasOwn(body, 'riesgoTecnico')) data.riesgoTecnico = getNullableString(body.riesgoTecnico);
+  if (hasOwn(body, 'comentariosInternos')) data.comentariosInternos = getNullableString(body.comentariosInternos);
+  if (hasOwn(body, 'observacionesTecnicas')) data.observacionesTecnicas = getNullableString(body.observacionesTecnicas);
+  if (hasOwn(body, 'observacionCamposFaltantes')) data.observacionCamposFaltantes = getNullableString(body.observacionCamposFaltantes);
 
   return data;
 };
@@ -467,7 +553,9 @@ export const getFunnelFiremat = async (req: Request, res: Response): Promise<voi
       cotizacionesVinculadas: data.filter((o) => o.cotizacionId !== null).length,
     };
 
-    res.json({ success: true, data, resumen });
+    const clienteSets = await cargarClientesParaMatch();
+    const dataConFlag = data.map(o => ({ ...o, clienteRegistrado: esClienteRegistrado(o, clienteSets) }));
+    res.json({ success: true, data: dataConFlag, resumen });
   } catch (error) {
     handleError(res, error);
   }
@@ -491,7 +579,8 @@ export const getFunnelFirematById = async (req: Request, res: Response): Promise
       return;
     }
 
-    res.json({ success: true, data });
+    const clienteSets = await cargarClientesParaMatch();
+    res.json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) } });
   } catch (error) {
     handleError(res, error);
   }
@@ -512,7 +601,8 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
       include: funnelInclude,
     });
 
-    res.status(201).json({ success: true, data, message: 'Oportunidad Firemat creada' });
+    const clienteSets = await cargarClientesParaMatch();
+    res.status(201).json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Oportunidad Firemat creada' });
   } catch (error) {
     handleError(res, error);
   }
@@ -540,13 +630,45 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
       hasOwn(body, 'cotizacionId') ? getInt(body.cotizacionId) : null
     );
 
+    const nuevaEtapa = hasOwn(body, 'etapa') ? parseEtapa(body.etapa) : null;
+    if (nuevaEtapa !== null && nuevaEtapa !== current.etapa) {
+      const mergedObservacion = hasOwn(body, 'observacionCamposFaltantes')
+        ? getNullableString(body.observacionCamposFaltantes)
+        : current.observacionCamposFaltantes;
+
+      const faltantes = validarCamposCriticosFiremat({
+        cliente: hasOwn(body, 'cliente') ? getString(body.cliente) : current.cliente,
+        rutEmpresa: hasOwn(body, 'rutEmpresa') ? getNullableString(body.rutEmpresa) : current.rutEmpresa,
+        nombreOportunidad: hasOwn(body, 'nombreOportunidad') ? getNullableString(body.nombreOportunidad) : current.nombreOportunidad,
+        contacto: hasOwn(body, 'contacto') ? getNullableString(body.contacto) : current.contacto,
+        telefono: hasOwn(body, 'telefono') ? getNullableString(body.telefono) : current.telefono,
+        correo: hasOwn(body, 'correo') ? getNullableString(body.correo) : current.correo,
+        responsable: hasOwn(body, 'responsable') ? getNullableString(body.responsable) : current.responsable,
+        unidadNegocio: hasOwn(body, 'unidadNegocio') ? getNullableString(body.unidadNegocio) : current.unidadNegocio,
+        etapa: nuevaEtapa,
+        proximaAccion: hasOwn(body, 'proximaAccion') ? getNullableString(body.proximaAccion) : current.proximaAccion,
+        fechaProximaAccion: hasOwn(body, 'fechaProximaAccion') ? getDate(body.fechaProximaAccion) : current.fechaProximaAccion,
+      });
+
+      if (faltantes.length > 0 && !mergedObservacion) {
+        res.status(409).json({
+          success: false,
+          advertenciasCamposCriticos: faltantes,
+          requiereObservacionCamposFaltantes: true,
+          message: 'Faltan campos críticos para avanzar de etapa.',
+        });
+        return;
+      }
+    }
+
     const data = await firematPrisma.funnelFirematOpportunity.update({
       where: { id },
       data: dataInput,
       include: funnelInclude,
     });
 
-    res.json({ success: true, data, message: 'Oportunidad Firemat actualizada' });
+    const clienteSets = await cargarClientesParaMatch();
+    res.json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Oportunidad Firemat actualizada' });
   } catch (error) {
     handleError(res, error);
   }
@@ -572,8 +694,38 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
       return;
     }
 
-    const body = { ...(req.body as Record<string, unknown>), etapa };
+    const body: Record<string, unknown> = { ...(req.body as Record<string, unknown>), etapa };
     const dataInput = buildUpdateData(current, body);
+
+    if (etapa !== current.etapa) {
+      const mergedObservacion = hasOwn(body, 'observacionCamposFaltantes')
+        ? getNullableString(body.observacionCamposFaltantes)
+        : current.observacionCamposFaltantes;
+
+      const faltantes = validarCamposCriticosFiremat({
+        cliente: current.cliente,
+        rutEmpresa: current.rutEmpresa,
+        nombreOportunidad: current.nombreOportunidad,
+        contacto: current.contacto,
+        telefono: current.telefono,
+        correo: current.correo,
+        responsable: current.responsable,
+        unidadNegocio: current.unidadNegocio,
+        etapa,
+        proximaAccion: current.proximaAccion,
+        fechaProximaAccion: current.fechaProximaAccion,
+      });
+
+      if (faltantes.length > 0 && !mergedObservacion) {
+        res.status(409).json({
+          success: false,
+          advertenciasCamposCriticos: faltantes,
+          requiereObservacionCamposFaltantes: true,
+          message: 'Faltan campos críticos para avanzar de etapa.',
+        });
+        return;
+      }
+    }
 
     const data = await firematPrisma.funnelFirematOpportunity.update({
       where: { id },
@@ -581,7 +733,8 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
       include: funnelInclude,
     });
 
-    res.json({ success: true, data, message: 'Etapa actualizada' });
+    const clienteSets = await cargarClientesParaMatch();
+    res.json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Etapa actualizada' });
   } catch (error) {
     handleError(res, error);
   }

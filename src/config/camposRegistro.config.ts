@@ -27,7 +27,7 @@ export const CAMPOS_JEFEOBRA: DefinicionCampo[] = [
   { campo: 'tipo_registro', label: 'Tipo de Registro', color: 'verde' },
   { campo: 'codigoBeck', label: 'Codigo BECK', color: 'verde' },
   { campo: 'itemizadoBeck', label: 'Itemizado BECK', color: 'verde' },
-  { campo: 'itemizadoMandante', label: 'Itemizado Mandante', color: 'verde' },
+  { campo: 'itemizadoMandante', label: 'Itemizado Mandante', color: 'azul' },
   { campo: 'fechaEjecucionSello', label: 'Fecha ejecucion de sello', color: 'verde' },
   { campo: 'diaSemana', label: 'Dia', color: 'verde' },
   { campo: 'piso', label: 'Piso', color: 'verde' },
