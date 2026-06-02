@@ -10,11 +10,11 @@ const router = Router();
 // Cualquier usuario autenticado puede consultar la configuración de campos para un rol
 router.get('/', authenticate, obtenerConfiguracion);
 
-// Solo administrador e ingenieria pueden modificar la configuración
+// Solo administrador, ingenieria y jefeobra pueden modificar la configuración
 router.put(
   '/',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  authorize('administrador', 'ingenieria', 'jefeobra'),
   actualizarConfiguracion,
 );
 

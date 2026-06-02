@@ -90,30 +90,38 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 
-// Roles que solo operan en BECK (bloquea terreno/jefeobra de todo, y Firemat de BECK)
-const blockBeckRoutes = [
+// Bloquea módulos comerciales BECK: terreno, jefeobra y todos los roles Firemat
+const blockBeckCommercial = [
   authenticate,
   denyRoles('terreno', 'jefeobra', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
 ];
 
-// Rutas BECK — solo roles Beck + administrador
-app.use('/api/registros', blockBeckRoutes, registrosRoutes);
-app.use('/api/procesamiento', blockBeckRoutes, procesamientoRoutes);
-app.use('/api/notificaciones', blockBeckRoutes, notificacionesRoutes);
-app.use('/api/obras', blockBeckRoutes, obrasRoutes);
-app.use('/api/itemizados', blockBeckRoutes, itemizadosRoutes);
+// Bloquea módulos operativos BECK: terreno y roles Firemat (jefeobra PERMITIDO)
+const blockBeckOperacional = [
+  authenticate,
+  denyRoles('terreno', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
+];
+
+// Rutas BECK OPERATIVAS — accesibles para jefeobra + roles Beck con permisos
+app.use('/api/registros', blockBeckOperacional, registrosRoutes);
+app.use('/api/obras', blockBeckOperacional, obrasRoutes);
+app.use('/api/notificaciones', blockBeckOperacional, notificacionesRoutes);
+app.use('/api/dashboard/beck', blockBeckOperacional, dashboardBeckRoutes);
+app.use('/api/usuarios', blockBeckOperacional, usuariosRoutes);
+app.use('/api/usuarios-parametros', blockBeckOperacional, beckUsuariosParametrosRoutes);
+app.use('/api/beck/usuarios-parametros', blockBeckOperacional, beckUsuariosParametrosRoutes);
+
+// Rutas BECK COMERCIALES — jefeobra bloqueado explícitamente
+app.use('/api/funnel-beck', blockBeckCommercial, funnelBeckRoutes);
+app.use('/api/cotizaciones', blockBeckCommercial, cotizacionesRoutes);
+app.use('/api/clientes-beck', blockBeckCommercial, clientesBeckRoutes);
+app.use('/api/movimientos-crm', blockBeckCommercial, movimientosCrmRoutes);
+app.use('/api/stats', blockBeckCommercial, statsRoutes);
+app.use('/api/procesamiento', blockBeckCommercial, procesamientoRoutes);
+app.use('/api/itemizados', blockBeckCommercial, itemizadosRoutes);
+
 app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);
-app.use('/api/stats', blockBeckRoutes, statsRoutes);
-app.use('/api/dashboard/beck', blockBeckRoutes, dashboardBeckRoutes);
-app.use('/api/funnel-beck', blockBeckRoutes, funnelBeckRoutes);
 app.use('/api/oficina-tecnica-preventa', oficinaTecnicaPreventaRoutes);
-app.use('/api/usuarios', blockBeckRoutes, usuariosRoutes);
-app.use('/api/cotizaciones', blockBeckRoutes, cotizacionesRoutes);
-app.use('/api/movimientos-crm', blockBeckRoutes, movimientosCrmRoutes);
-app.use('/api/clientes-beck', blockBeckRoutes, clientesBeckRoutes);
-// Rutas parametros de usuarios por empresa
-app.use('/api/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
-app.use('/api/beck/usuarios-parametros', blockBeckRoutes, beckUsuariosParametrosRoutes);
 app.use('/api/firemat/usuarios-parametros', authenticate, firematUsuariosParametrosRoutes);
 
 // Rutas Firemat — permisos finos definidos en cada router

@@ -392,6 +392,14 @@ model OperadorBeck {
   observaciones String?
   urgencia                   String? @db.VarChar(50)
   observacionCamposFaltantes String? @map("observacion_campos_faltantes")
+  tipoProyecto             String?  @map("tipo_proyecto") @db.VarChar(100)
+  empresaMandante          String?  @map("empresa_mandante")
+  necesidadLevantamiento   Boolean? @map("necesidad_levantamiento")
+  oficinaTecnicaAsignada   String?  @map("oficina_tecnica_asignada") @db.VarChar(255)
+  duracionEstimada         String?  @map("duracion_estimada") @db.VarChar(100)
+  estadoRevisionTecnica    String?  @map("estado_revision_tecnica") @db.VarChar(50)
+  garantiasRequeridas      String?  @map("garantias_requeridas")
+  estadoDocumentacionVenta String?  @map("estado_documentacion_venta") @db.VarChar(100)
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])

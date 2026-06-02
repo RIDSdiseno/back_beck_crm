@@ -20,7 +20,7 @@ import { upload, uploadExcelFile } from '../middlewares/upload';
 
 const router = Router();
 
-const canReadRegistros = authorize('administrador', 'ingenieria', 'visualizador', 'terreno');
+const canReadRegistros = authorize('administrador', 'ingenieria', 'visualizador', 'terreno', 'jefeobra');
 
 /**
  * POST /api/registros
@@ -30,7 +30,7 @@ const canReadRegistros = authorize('administrador', 'ingenieria', 'visualizador'
 router.post(
   '/',
   authenticate,
-  authorize('terreno', 'administrador'),
+  authorize('terreno', 'administrador', 'jefeobra'),
   upload.array('fotos', 5), // Max 5 fotos
   crearRegistro
 );
@@ -43,7 +43,7 @@ router.post(
 router.post(
   '/importar',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  authorize('administrador', 'ingenieria', 'jefeobra'),
   uploadExcelFile,
   importarRegistrosExcel
 );
@@ -51,12 +51,12 @@ router.post(
 /**
  * GET /api/registros/ejemplo-excel
  * Descarga el archivo Excel de ejemplo con obra "Obra Demo"
- * Solo administrador e ingenieria
+ * Solo administrador, ingenieria y jefeobra
  */
 router.get(
   '/ejemplo-excel',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  authorize('administrador', 'ingenieria', 'jefeobra'),
   descargarEjemploExcel,
 );
 
@@ -117,12 +117,12 @@ router.patch(
 /**
  * GET /api/registros/:id/pdf
  * Descargar PDF con detalle completo del registro
- * Solo administrador e ingenieria
+ * Solo administrador, ingenieria y jefeobra
  */
 router.get(
   '/:id/pdf',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  authorize('administrador', 'ingenieria', 'jefeobra'),
   descargarRegistroPdf,
 );
 

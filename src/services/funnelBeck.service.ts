@@ -260,6 +260,15 @@ function extractInput(raw: Record<string, unknown>) {
     observaciones:        raw.observaciones                                  as string | undefined,
     urgencia:             raw.urgencia                                       as string | undefined,
     observacionCamposFaltantes: (raw.observacionCamposFaltantes ?? raw.observacion_campos_faltantes) as string | undefined,
+    // Campos punto 12 - Beck específicos
+    tipoProyecto:             (raw.tipoProyecto             ?? raw.tipo_proyecto)              as string | undefined,
+    empresaMandante:          (raw.empresaMandante          ?? raw.empresa_mandante)           as string | undefined,
+    necesidadLevantamiento:   (raw.necesidadLevantamiento  ?? raw.necesidad_levantamiento)    as boolean | undefined,
+    oficinaTecnicaAsignada:   (raw.oficinaTecnicaAsignada  ?? raw.oficina_tecnica_asignada)   as string | undefined,
+    duracionEstimada:         (raw.duracionEstimada         ?? raw.duracion_estimada)          as string | undefined,
+    estadoRevisionTecnica:    (raw.estadoRevisionTecnica    ?? raw.estado_revision_tecnica)    as string | undefined,
+    garantiasRequeridas:      (raw.garantiasRequeridas      ?? raw.garantias_requeridas)       as string | undefined,
+    estadoDocumentacionVenta: (raw.estadoDocumentacionVenta ?? raw.estado_documentacion_venta) as string | undefined,
   };
 }
 
@@ -544,6 +553,15 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       observaciones:       optStr(data.observaciones),
       urgencia:            optStr(data.urgencia),
       observacionCamposFaltantes: optStr(data.observacionCamposFaltantes),
+      // Campos punto 12 - Beck específicos
+      tipoProyecto:             optStr(data.tipoProyecto),
+      empresaMandante:          optStr(data.empresaMandante),
+      necesidadLevantamiento:   data.necesidadLevantamiento ?? null,
+      oficinaTecnicaAsignada:   optStr(data.oficinaTecnicaAsignada),
+      duracionEstimada:         optStr(data.duracionEstimada),
+      estadoRevisionTecnica:    optStr(data.estadoRevisionTecnica),
+      garantiasRequeridas:      optStr(data.garantiasRequeridas),
+      estadoDocumentacionVenta: optStr(data.estadoDocumentacionVenta),
     },
     include: FUNNEL_BECK_INCLUDE,
   });
@@ -943,6 +961,15 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.observaciones     !== undefined && { observaciones:     optStr(data.observaciones) }),
       ...(data.urgencia          !== undefined && { urgencia:          optStr(data.urgencia) }),
       ...(data.observacionCamposFaltantes !== undefined && { observacionCamposFaltantes: optStr(data.observacionCamposFaltantes) }),
+      // Campos punto 12 - Beck específicos
+      ...(data.tipoProyecto             !== undefined && { tipoProyecto:             optStr(data.tipoProyecto) }),
+      ...(data.empresaMandante          !== undefined && { empresaMandante:          optStr(data.empresaMandante) }),
+      ...(data.necesidadLevantamiento   !== undefined && { necesidadLevantamiento:   data.necesidadLevantamiento ?? null }),
+      ...(data.oficinaTecnicaAsignada   !== undefined && { oficinaTecnicaAsignada:   optStr(data.oficinaTecnicaAsignada) }),
+      ...(data.duracionEstimada         !== undefined && { duracionEstimada:         optStr(data.duracionEstimada) }),
+      ...(data.estadoRevisionTecnica    !== undefined && { estadoRevisionTecnica:    optStr(data.estadoRevisionTecnica) }),
+      ...(data.garantiasRequeridas      !== undefined && { garantiasRequeridas:      optStr(data.garantiasRequeridas) }),
+      ...(data.estadoDocumentacionVenta !== undefined && { estadoDocumentacionVenta: optStr(data.estadoDocumentacionVenta) }),
     },
     include: FUNNEL_BECK_INCLUDE,
   });
