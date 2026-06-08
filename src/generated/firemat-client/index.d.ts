@@ -78,6 +78,16 @@ export type ContactoClienteFiremat = $Result.DefaultSelection<Prisma.$ContactoCl
  * 
  */
 export type FunnelFirematArchivo = $Result.DefaultSelection<Prisma.$FunnelFirematArchivoPayload>
+/**
+ * Model AlertaVistaFiremat
+ * 
+ */
+export type AlertaVistaFiremat = $Result.DefaultSelection<Prisma.$AlertaVistaFirematPayload>
+/**
+ * Model HistorialEtapaFiremat
+ * 
+ */
+export type HistorialEtapaFiremat = $Result.DefaultSelection<Prisma.$HistorialEtapaFirematPayload>
 
 /**
  * Enums
@@ -368,6 +378,26 @@ export class PrismaClient<
     * ```
     */
   get funnelFirematArchivo(): Prisma.FunnelFirematArchivoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.alertaVistaFiremat`: Exposes CRUD operations for the **AlertaVistaFiremat** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AlertaVistaFiremats
+    * const alertaVistaFiremats = await prisma.alertaVistaFiremat.findMany()
+    * ```
+    */
+  get alertaVistaFiremat(): Prisma.AlertaVistaFirematDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.historialEtapaFiremat`: Exposes CRUD operations for the **HistorialEtapaFiremat** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HistorialEtapaFiremats
+    * const historialEtapaFiremats = await prisma.historialEtapaFiremat.findMany()
+    * ```
+    */
+  get historialEtapaFiremat(): Prisma.HistorialEtapaFirematDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -814,7 +844,9 @@ export namespace Prisma {
     CotizacionFirematDetalle: 'CotizacionFirematDetalle',
     FunnelFirematOpportunity: 'FunnelFirematOpportunity',
     ContactoClienteFiremat: 'ContactoClienteFiremat',
-    FunnelFirematArchivo: 'FunnelFirematArchivo'
+    FunnelFirematArchivo: 'FunnelFirematArchivo',
+    AlertaVistaFiremat: 'AlertaVistaFiremat',
+    HistorialEtapaFiremat: 'HistorialEtapaFiremat'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -830,7 +862,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat" | "funnelFirematArchivo"
+      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat" | "funnelFirematArchivo" | "alertaVistaFiremat" | "historialEtapaFiremat"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1796,6 +1828,154 @@ export namespace Prisma {
           }
         }
       }
+      AlertaVistaFiremat: {
+        payload: Prisma.$AlertaVistaFirematPayload<ExtArgs>
+        fields: Prisma.AlertaVistaFirematFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AlertaVistaFirematFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AlertaVistaFirematFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          findFirst: {
+            args: Prisma.AlertaVistaFirematFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AlertaVistaFirematFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          findMany: {
+            args: Prisma.AlertaVistaFirematFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>[]
+          }
+          create: {
+            args: Prisma.AlertaVistaFirematCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          createMany: {
+            args: Prisma.AlertaVistaFirematCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AlertaVistaFirematCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>[]
+          }
+          delete: {
+            args: Prisma.AlertaVistaFirematDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          update: {
+            args: Prisma.AlertaVistaFirematUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          deleteMany: {
+            args: Prisma.AlertaVistaFirematDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AlertaVistaFirematUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AlertaVistaFirematUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>[]
+          }
+          upsert: {
+            args: Prisma.AlertaVistaFirematUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertaVistaFirematPayload>
+          }
+          aggregate: {
+            args: Prisma.AlertaVistaFirematAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAlertaVistaFiremat>
+          }
+          groupBy: {
+            args: Prisma.AlertaVistaFirematGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AlertaVistaFirematGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AlertaVistaFirematCountArgs<ExtArgs>
+            result: $Utils.Optional<AlertaVistaFirematCountAggregateOutputType> | number
+          }
+        }
+      }
+      HistorialEtapaFiremat: {
+        payload: Prisma.$HistorialEtapaFirematPayload<ExtArgs>
+        fields: Prisma.HistorialEtapaFirematFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HistorialEtapaFirematFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HistorialEtapaFirematFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          findFirst: {
+            args: Prisma.HistorialEtapaFirematFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HistorialEtapaFirematFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          findMany: {
+            args: Prisma.HistorialEtapaFirematFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>[]
+          }
+          create: {
+            args: Prisma.HistorialEtapaFirematCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          createMany: {
+            args: Prisma.HistorialEtapaFirematCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HistorialEtapaFirematCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>[]
+          }
+          delete: {
+            args: Prisma.HistorialEtapaFirematDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          update: {
+            args: Prisma.HistorialEtapaFirematUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          deleteMany: {
+            args: Prisma.HistorialEtapaFirematDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HistorialEtapaFirematUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HistorialEtapaFirematUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>[]
+          }
+          upsert: {
+            args: Prisma.HistorialEtapaFirematUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HistorialEtapaFirematPayload>
+          }
+          aggregate: {
+            args: Prisma.HistorialEtapaFirematAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHistorialEtapaFiremat>
+          }
+          groupBy: {
+            args: Prisma.HistorialEtapaFirematGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HistorialEtapaFirematGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HistorialEtapaFirematCountArgs<ExtArgs>
+            result: $Utils.Optional<HistorialEtapaFirematCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1917,6 +2097,8 @@ export namespace Prisma {
     funnelFirematOpportunity?: FunnelFirematOpportunityOmit
     contactoClienteFiremat?: ContactoClienteFirematOmit
     funnelFirematArchivo?: FunnelFirematArchivoOmit
+    alertaVistaFiremat?: AlertaVistaFirematOmit
+    historialEtapaFiremat?: HistorialEtapaFirematOmit
   }
 
   /* Types for Logging */
@@ -2216,10 +2398,12 @@ export namespace Prisma {
 
   export type FunnelFirematOpportunityCountOutputType = {
     archivos: number
+    historialEtapas: number
   }
 
   export type FunnelFirematOpportunityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     archivos?: boolean | FunnelFirematOpportunityCountOutputTypeCountArchivosArgs
+    historialEtapas?: boolean | FunnelFirematOpportunityCountOutputTypeCountHistorialEtapasArgs
   }
 
   // Custom InputTypes
@@ -2238,6 +2422,13 @@ export namespace Prisma {
    */
   export type FunnelFirematOpportunityCountOutputTypeCountArchivosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FunnelFirematArchivoWhereInput
+  }
+
+  /**
+   * FunnelFirematOpportunityCountOutputType without action
+   */
+  export type FunnelFirematOpportunityCountOutputTypeCountHistorialEtapasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HistorialEtapaFirematWhereInput
   }
 
 
@@ -14511,6 +14702,8 @@ export namespace Prisma {
     probabilidadCierre: number | null
     cotizacionId: number | null
     probabilidad: number | null
+    descuento: number | null
+    reprogramacionesCount: number | null
   }
 
   export type FunnelFirematOpportunitySumAggregateOutputType = {
@@ -14523,6 +14716,8 @@ export namespace Prisma {
     probabilidadCierre: number | null
     cotizacionId: number | null
     probabilidad: number | null
+    descuento: number | null
+    reprogramacionesCount: number | null
   }
 
   export type FunnelFirematOpportunityMinAggregateOutputType = {
@@ -14590,6 +14785,11 @@ export namespace Prisma {
     comentariosInternos: string | null
     observacionesTecnicas: string | null
     observacionCamposFaltantes: string | null
+    lineaProducto: string | null
+    descuento: number | null
+    stockOportunidad: string | null
+    reprogramacionesCount: number | null
+    fechaUltimoCambioEtapa: Date | null
   }
 
   export type FunnelFirematOpportunityMaxAggregateOutputType = {
@@ -14657,6 +14857,11 @@ export namespace Prisma {
     comentariosInternos: string | null
     observacionesTecnicas: string | null
     observacionCamposFaltantes: string | null
+    lineaProducto: string | null
+    descuento: number | null
+    stockOportunidad: string | null
+    reprogramacionesCount: number | null
+    fechaUltimoCambioEtapa: Date | null
   }
 
   export type FunnelFirematOpportunityCountAggregateOutputType = {
@@ -14724,6 +14929,11 @@ export namespace Prisma {
     comentariosInternos: number
     observacionesTecnicas: number
     observacionCamposFaltantes: number
+    lineaProducto: number
+    descuento: number
+    stockOportunidad: number
+    reprogramacionesCount: number
+    fechaUltimoCambioEtapa: number
     _all: number
   }
 
@@ -14738,6 +14948,8 @@ export namespace Prisma {
     probabilidadCierre?: true
     cotizacionId?: true
     probabilidad?: true
+    descuento?: true
+    reprogramacionesCount?: true
   }
 
   export type FunnelFirematOpportunitySumAggregateInputType = {
@@ -14750,6 +14962,8 @@ export namespace Prisma {
     probabilidadCierre?: true
     cotizacionId?: true
     probabilidad?: true
+    descuento?: true
+    reprogramacionesCount?: true
   }
 
   export type FunnelFirematOpportunityMinAggregateInputType = {
@@ -14817,6 +15031,11 @@ export namespace Prisma {
     comentariosInternos?: true
     observacionesTecnicas?: true
     observacionCamposFaltantes?: true
+    lineaProducto?: true
+    descuento?: true
+    stockOportunidad?: true
+    reprogramacionesCount?: true
+    fechaUltimoCambioEtapa?: true
   }
 
   export type FunnelFirematOpportunityMaxAggregateInputType = {
@@ -14884,6 +15103,11 @@ export namespace Prisma {
     comentariosInternos?: true
     observacionesTecnicas?: true
     observacionCamposFaltantes?: true
+    lineaProducto?: true
+    descuento?: true
+    stockOportunidad?: true
+    reprogramacionesCount?: true
+    fechaUltimoCambioEtapa?: true
   }
 
   export type FunnelFirematOpportunityCountAggregateInputType = {
@@ -14951,6 +15175,11 @@ export namespace Prisma {
     comentariosInternos?: true
     observacionesTecnicas?: true
     observacionCamposFaltantes?: true
+    lineaProducto?: true
+    descuento?: true
+    stockOportunidad?: true
+    reprogramacionesCount?: true
+    fechaUltimoCambioEtapa?: true
     _all?: true
   }
 
@@ -15105,6 +15334,11 @@ export namespace Prisma {
     comentariosInternos: string | null
     observacionesTecnicas: string | null
     observacionCamposFaltantes: string | null
+    lineaProducto: string | null
+    descuento: number | null
+    stockOportunidad: string | null
+    reprogramacionesCount: number
+    fechaUltimoCambioEtapa: Date | null
     _count: FunnelFirematOpportunityCountAggregateOutputType | null
     _avg: FunnelFirematOpportunityAvgAggregateOutputType | null
     _sum: FunnelFirematOpportunitySumAggregateOutputType | null
@@ -15191,9 +15425,15 @@ export namespace Prisma {
     comentariosInternos?: boolean
     observacionesTecnicas?: boolean
     observacionCamposFaltantes?: boolean
+    lineaProducto?: boolean
+    descuento?: boolean
+    stockOportunidad?: boolean
+    reprogramacionesCount?: boolean
+    fechaUltimoCambioEtapa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
+    historialEtapas?: boolean | FunnelFirematOpportunity$historialEtapasArgs<ExtArgs>
     _count?: boolean | FunnelFirematOpportunityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
 
@@ -15262,6 +15502,11 @@ export namespace Prisma {
     comentariosInternos?: boolean
     observacionesTecnicas?: boolean
     observacionCamposFaltantes?: boolean
+    lineaProducto?: boolean
+    descuento?: boolean
+    stockOportunidad?: boolean
+    reprogramacionesCount?: boolean
+    fechaUltimoCambioEtapa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15331,6 +15576,11 @@ export namespace Prisma {
     comentariosInternos?: boolean
     observacionesTecnicas?: boolean
     observacionCamposFaltantes?: boolean
+    lineaProducto?: boolean
+    descuento?: boolean
+    stockOportunidad?: boolean
+    reprogramacionesCount?: boolean
+    fechaUltimoCambioEtapa?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15400,13 +15650,19 @@ export namespace Prisma {
     comentariosInternos?: boolean
     observacionesTecnicas?: boolean
     observacionCamposFaltantes?: boolean
+    lineaProducto?: boolean
+    descuento?: boolean
+    stockOportunidad?: boolean
+    reprogramacionesCount?: boolean
+    fechaUltimoCambioEtapa?: boolean
   }
 
-  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes", ExtArgs["result"]["funnelFirematOpportunity"]>
+  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes" | "lineaProducto" | "descuento" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa", ExtArgs["result"]["funnelFirematOpportunity"]>
   export type FunnelFirematOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
+    historialEtapas?: boolean | FunnelFirematOpportunity$historialEtapasArgs<ExtArgs>
     _count?: boolean | FunnelFirematOpportunityCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FunnelFirematOpportunityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15424,6 +15680,7 @@ export namespace Prisma {
       cotizacion: Prisma.$CotizacionFirematPayload<ExtArgs> | null
       producto: Prisma.$ProductoPayload<ExtArgs> | null
       archivos: Prisma.$FunnelFirematArchivoPayload<ExtArgs>[]
+      historialEtapas: Prisma.$HistorialEtapaFirematPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -15490,6 +15747,11 @@ export namespace Prisma {
       comentariosInternos: string | null
       observacionesTecnicas: string | null
       observacionCamposFaltantes: string | null
+      lineaProducto: string | null
+      descuento: number | null
+      stockOportunidad: string | null
+      reprogramacionesCount: number
+      fechaUltimoCambioEtapa: Date | null
     }, ExtArgs["result"]["funnelFirematOpportunity"]>
     composites: {}
   }
@@ -15887,6 +16149,7 @@ export namespace Prisma {
     cotizacion<T extends FunnelFirematOpportunity$cotizacionArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$cotizacionArgs<ExtArgs>>): Prisma__CotizacionFirematClient<$Result.GetResult<Prisma.$CotizacionFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     producto<T extends FunnelFirematOpportunity$productoArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$productoArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     archivos<T extends FunnelFirematOpportunity$archivosArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$archivosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematArchivoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    historialEtapas<T extends FunnelFirematOpportunity$historialEtapasArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunity$historialEtapasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15980,6 +16243,11 @@ export namespace Prisma {
     readonly comentariosInternos: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly observacionesTecnicas: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly observacionCamposFaltantes: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly lineaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly descuento: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly stockOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly reprogramacionesCount: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly fechaUltimoCambioEtapa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
   }
     
 
@@ -16440,6 +16708,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+  }
+
+  /**
+   * FunnelFirematOpportunity.historialEtapas
+   */
+  export type FunnelFirematOpportunity$historialEtapasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    where?: HistorialEtapaFirematWhereInput
+    orderBy?: HistorialEtapaFirematOrderByWithRelationInput | HistorialEtapaFirematOrderByWithRelationInput[]
+    cursor?: HistorialEtapaFirematWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
   }
 
   /**
@@ -18824,6 +19116,2154 @@ export namespace Prisma {
 
 
   /**
+   * Model AlertaVistaFiremat
+   */
+
+  export type AggregateAlertaVistaFiremat = {
+    _count: AlertaVistaFirematCountAggregateOutputType | null
+    _avg: AlertaVistaFirematAvgAggregateOutputType | null
+    _sum: AlertaVistaFirematSumAggregateOutputType | null
+    _min: AlertaVistaFirematMinAggregateOutputType | null
+    _max: AlertaVistaFirematMaxAggregateOutputType | null
+  }
+
+  export type AlertaVistaFirematAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AlertaVistaFirematSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AlertaVistaFirematMinAggregateOutputType = {
+    id: number | null
+    usuarioId: string | null
+    alertaKey: string | null
+    vistoAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AlertaVistaFirematMaxAggregateOutputType = {
+    id: number | null
+    usuarioId: string | null
+    alertaKey: string | null
+    vistoAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AlertaVistaFirematCountAggregateOutputType = {
+    id: number
+    usuarioId: number
+    alertaKey: number
+    vistoAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AlertaVistaFirematAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type AlertaVistaFirematSumAggregateInputType = {
+    id?: true
+  }
+
+  export type AlertaVistaFirematMinAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    alertaKey?: true
+    vistoAt?: true
+    createdAt?: true
+  }
+
+  export type AlertaVistaFirematMaxAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    alertaKey?: true
+    vistoAt?: true
+    createdAt?: true
+  }
+
+  export type AlertaVistaFirematCountAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    alertaKey?: true
+    vistoAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AlertaVistaFirematAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AlertaVistaFiremat to aggregate.
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AlertaVistaFiremats to fetch.
+     */
+    orderBy?: AlertaVistaFirematOrderByWithRelationInput | AlertaVistaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AlertaVistaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AlertaVistaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AlertaVistaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AlertaVistaFiremats
+    **/
+    _count?: true | AlertaVistaFirematCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AlertaVistaFirematAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AlertaVistaFirematSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AlertaVistaFirematMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AlertaVistaFirematMaxAggregateInputType
+  }
+
+  export type GetAlertaVistaFirematAggregateType<T extends AlertaVistaFirematAggregateArgs> = {
+        [P in keyof T & keyof AggregateAlertaVistaFiremat]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAlertaVistaFiremat[P]>
+      : GetScalarType<T[P], AggregateAlertaVistaFiremat[P]>
+  }
+
+
+
+
+  export type AlertaVistaFirematGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AlertaVistaFirematWhereInput
+    orderBy?: AlertaVistaFirematOrderByWithAggregationInput | AlertaVistaFirematOrderByWithAggregationInput[]
+    by: AlertaVistaFirematScalarFieldEnum[] | AlertaVistaFirematScalarFieldEnum
+    having?: AlertaVistaFirematScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AlertaVistaFirematCountAggregateInputType | true
+    _avg?: AlertaVistaFirematAvgAggregateInputType
+    _sum?: AlertaVistaFirematSumAggregateInputType
+    _min?: AlertaVistaFirematMinAggregateInputType
+    _max?: AlertaVistaFirematMaxAggregateInputType
+  }
+
+  export type AlertaVistaFirematGroupByOutputType = {
+    id: number
+    usuarioId: string
+    alertaKey: string
+    vistoAt: Date
+    createdAt: Date
+    _count: AlertaVistaFirematCountAggregateOutputType | null
+    _avg: AlertaVistaFirematAvgAggregateOutputType | null
+    _sum: AlertaVistaFirematSumAggregateOutputType | null
+    _min: AlertaVistaFirematMinAggregateOutputType | null
+    _max: AlertaVistaFirematMaxAggregateOutputType | null
+  }
+
+  type GetAlertaVistaFirematGroupByPayload<T extends AlertaVistaFirematGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AlertaVistaFirematGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AlertaVistaFirematGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AlertaVistaFirematGroupByOutputType[P]>
+            : GetScalarType<T[P], AlertaVistaFirematGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AlertaVistaFirematSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    alertaKey?: boolean
+    vistoAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["alertaVistaFiremat"]>
+
+  export type AlertaVistaFirematSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    alertaKey?: boolean
+    vistoAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["alertaVistaFiremat"]>
+
+  export type AlertaVistaFirematSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    alertaKey?: boolean
+    vistoAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["alertaVistaFiremat"]>
+
+  export type AlertaVistaFirematSelectScalar = {
+    id?: boolean
+    usuarioId?: boolean
+    alertaKey?: boolean
+    vistoAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type AlertaVistaFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "usuarioId" | "alertaKey" | "vistoAt" | "createdAt", ExtArgs["result"]["alertaVistaFiremat"]>
+
+  export type $AlertaVistaFirematPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AlertaVistaFiremat"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      usuarioId: string
+      alertaKey: string
+      vistoAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["alertaVistaFiremat"]>
+    composites: {}
+  }
+
+  type AlertaVistaFirematGetPayload<S extends boolean | null | undefined | AlertaVistaFirematDefaultArgs> = $Result.GetResult<Prisma.$AlertaVistaFirematPayload, S>
+
+  type AlertaVistaFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AlertaVistaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AlertaVistaFirematCountAggregateInputType | true
+    }
+
+  export interface AlertaVistaFirematDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AlertaVistaFiremat'], meta: { name: 'AlertaVistaFiremat' } }
+    /**
+     * Find zero or one AlertaVistaFiremat that matches the filter.
+     * @param {AlertaVistaFirematFindUniqueArgs} args - Arguments to find a AlertaVistaFiremat
+     * @example
+     * // Get one AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AlertaVistaFirematFindUniqueArgs>(args: SelectSubset<T, AlertaVistaFirematFindUniqueArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AlertaVistaFiremat that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AlertaVistaFirematFindUniqueOrThrowArgs} args - Arguments to find a AlertaVistaFiremat
+     * @example
+     * // Get one AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AlertaVistaFirematFindUniqueOrThrowArgs>(args: SelectSubset<T, AlertaVistaFirematFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AlertaVistaFiremat that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematFindFirstArgs} args - Arguments to find a AlertaVistaFiremat
+     * @example
+     * // Get one AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AlertaVistaFirematFindFirstArgs>(args?: SelectSubset<T, AlertaVistaFirematFindFirstArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AlertaVistaFiremat that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematFindFirstOrThrowArgs} args - Arguments to find a AlertaVistaFiremat
+     * @example
+     * // Get one AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AlertaVistaFirematFindFirstOrThrowArgs>(args?: SelectSubset<T, AlertaVistaFirematFindFirstOrThrowArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AlertaVistaFiremats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AlertaVistaFiremats
+     * const alertaVistaFiremats = await prisma.alertaVistaFiremat.findMany()
+     * 
+     * // Get first 10 AlertaVistaFiremats
+     * const alertaVistaFiremats = await prisma.alertaVistaFiremat.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const alertaVistaFirematWithIdOnly = await prisma.alertaVistaFiremat.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AlertaVistaFirematFindManyArgs>(args?: SelectSubset<T, AlertaVistaFirematFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AlertaVistaFiremat.
+     * @param {AlertaVistaFirematCreateArgs} args - Arguments to create a AlertaVistaFiremat.
+     * @example
+     * // Create one AlertaVistaFiremat
+     * const AlertaVistaFiremat = await prisma.alertaVistaFiremat.create({
+     *   data: {
+     *     // ... data to create a AlertaVistaFiremat
+     *   }
+     * })
+     * 
+     */
+    create<T extends AlertaVistaFirematCreateArgs>(args: SelectSubset<T, AlertaVistaFirematCreateArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AlertaVistaFiremats.
+     * @param {AlertaVistaFirematCreateManyArgs} args - Arguments to create many AlertaVistaFiremats.
+     * @example
+     * // Create many AlertaVistaFiremats
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AlertaVistaFirematCreateManyArgs>(args?: SelectSubset<T, AlertaVistaFirematCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AlertaVistaFiremats and returns the data saved in the database.
+     * @param {AlertaVistaFirematCreateManyAndReturnArgs} args - Arguments to create many AlertaVistaFiremats.
+     * @example
+     * // Create many AlertaVistaFiremats
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AlertaVistaFiremats and only return the `id`
+     * const alertaVistaFirematWithIdOnly = await prisma.alertaVistaFiremat.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AlertaVistaFirematCreateManyAndReturnArgs>(args?: SelectSubset<T, AlertaVistaFirematCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AlertaVistaFiremat.
+     * @param {AlertaVistaFirematDeleteArgs} args - Arguments to delete one AlertaVistaFiremat.
+     * @example
+     * // Delete one AlertaVistaFiremat
+     * const AlertaVistaFiremat = await prisma.alertaVistaFiremat.delete({
+     *   where: {
+     *     // ... filter to delete one AlertaVistaFiremat
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AlertaVistaFirematDeleteArgs>(args: SelectSubset<T, AlertaVistaFirematDeleteArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AlertaVistaFiremat.
+     * @param {AlertaVistaFirematUpdateArgs} args - Arguments to update one AlertaVistaFiremat.
+     * @example
+     * // Update one AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AlertaVistaFirematUpdateArgs>(args: SelectSubset<T, AlertaVistaFirematUpdateArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AlertaVistaFiremats.
+     * @param {AlertaVistaFirematDeleteManyArgs} args - Arguments to filter AlertaVistaFiremats to delete.
+     * @example
+     * // Delete a few AlertaVistaFiremats
+     * const { count } = await prisma.alertaVistaFiremat.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AlertaVistaFirematDeleteManyArgs>(args?: SelectSubset<T, AlertaVistaFirematDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AlertaVistaFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AlertaVistaFiremats
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AlertaVistaFirematUpdateManyArgs>(args: SelectSubset<T, AlertaVistaFirematUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AlertaVistaFiremats and returns the data updated in the database.
+     * @param {AlertaVistaFirematUpdateManyAndReturnArgs} args - Arguments to update many AlertaVistaFiremats.
+     * @example
+     * // Update many AlertaVistaFiremats
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AlertaVistaFiremats and only return the `id`
+     * const alertaVistaFirematWithIdOnly = await prisma.alertaVistaFiremat.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AlertaVistaFirematUpdateManyAndReturnArgs>(args: SelectSubset<T, AlertaVistaFirematUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AlertaVistaFiremat.
+     * @param {AlertaVistaFirematUpsertArgs} args - Arguments to update or create a AlertaVistaFiremat.
+     * @example
+     * // Update or create a AlertaVistaFiremat
+     * const alertaVistaFiremat = await prisma.alertaVistaFiremat.upsert({
+     *   create: {
+     *     // ... data to create a AlertaVistaFiremat
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AlertaVistaFiremat we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AlertaVistaFirematUpsertArgs>(args: SelectSubset<T, AlertaVistaFirematUpsertArgs<ExtArgs>>): Prisma__AlertaVistaFirematClient<$Result.GetResult<Prisma.$AlertaVistaFirematPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AlertaVistaFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematCountArgs} args - Arguments to filter AlertaVistaFiremats to count.
+     * @example
+     * // Count the number of AlertaVistaFiremats
+     * const count = await prisma.alertaVistaFiremat.count({
+     *   where: {
+     *     // ... the filter for the AlertaVistaFiremats we want to count
+     *   }
+     * })
+    **/
+    count<T extends AlertaVistaFirematCountArgs>(
+      args?: Subset<T, AlertaVistaFirematCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AlertaVistaFirematCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AlertaVistaFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AlertaVistaFirematAggregateArgs>(args: Subset<T, AlertaVistaFirematAggregateArgs>): Prisma.PrismaPromise<GetAlertaVistaFirematAggregateType<T>>
+
+    /**
+     * Group by AlertaVistaFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertaVistaFirematGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AlertaVistaFirematGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AlertaVistaFirematGroupByArgs['orderBy'] }
+        : { orderBy?: AlertaVistaFirematGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AlertaVistaFirematGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAlertaVistaFirematGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AlertaVistaFiremat model
+   */
+  readonly fields: AlertaVistaFirematFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AlertaVistaFiremat.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AlertaVistaFirematClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AlertaVistaFiremat model
+   */
+  interface AlertaVistaFirematFieldRefs {
+    readonly id: FieldRef<"AlertaVistaFiremat", 'Int'>
+    readonly usuarioId: FieldRef<"AlertaVistaFiremat", 'String'>
+    readonly alertaKey: FieldRef<"AlertaVistaFiremat", 'String'>
+    readonly vistoAt: FieldRef<"AlertaVistaFiremat", 'DateTime'>
+    readonly createdAt: FieldRef<"AlertaVistaFiremat", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AlertaVistaFiremat findUnique
+   */
+  export type AlertaVistaFirematFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter, which AlertaVistaFiremat to fetch.
+     */
+    where: AlertaVistaFirematWhereUniqueInput
+  }
+
+  /**
+   * AlertaVistaFiremat findUniqueOrThrow
+   */
+  export type AlertaVistaFirematFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter, which AlertaVistaFiremat to fetch.
+     */
+    where: AlertaVistaFirematWhereUniqueInput
+  }
+
+  /**
+   * AlertaVistaFiremat findFirst
+   */
+  export type AlertaVistaFirematFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter, which AlertaVistaFiremat to fetch.
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AlertaVistaFiremats to fetch.
+     */
+    orderBy?: AlertaVistaFirematOrderByWithRelationInput | AlertaVistaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AlertaVistaFiremats.
+     */
+    cursor?: AlertaVistaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AlertaVistaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AlertaVistaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AlertaVistaFiremats.
+     */
+    distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * AlertaVistaFiremat findFirstOrThrow
+   */
+  export type AlertaVistaFirematFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter, which AlertaVistaFiremat to fetch.
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AlertaVistaFiremats to fetch.
+     */
+    orderBy?: AlertaVistaFirematOrderByWithRelationInput | AlertaVistaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AlertaVistaFiremats.
+     */
+    cursor?: AlertaVistaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AlertaVistaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AlertaVistaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AlertaVistaFiremats.
+     */
+    distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * AlertaVistaFiremat findMany
+   */
+  export type AlertaVistaFirematFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter, which AlertaVistaFiremats to fetch.
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AlertaVistaFiremats to fetch.
+     */
+    orderBy?: AlertaVistaFirematOrderByWithRelationInput | AlertaVistaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AlertaVistaFiremats.
+     */
+    cursor?: AlertaVistaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AlertaVistaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AlertaVistaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AlertaVistaFiremats.
+     */
+    distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * AlertaVistaFiremat create
+   */
+  export type AlertaVistaFirematCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AlertaVistaFiremat.
+     */
+    data: XOR<AlertaVistaFirematCreateInput, AlertaVistaFirematUncheckedCreateInput>
+  }
+
+  /**
+   * AlertaVistaFiremat createMany
+   */
+  export type AlertaVistaFirematCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AlertaVistaFiremats.
+     */
+    data: AlertaVistaFirematCreateManyInput | AlertaVistaFirematCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AlertaVistaFiremat createManyAndReturn
+   */
+  export type AlertaVistaFirematCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * The data used to create many AlertaVistaFiremats.
+     */
+    data: AlertaVistaFirematCreateManyInput | AlertaVistaFirematCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AlertaVistaFiremat update
+   */
+  export type AlertaVistaFirematUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AlertaVistaFiremat.
+     */
+    data: XOR<AlertaVistaFirematUpdateInput, AlertaVistaFirematUncheckedUpdateInput>
+    /**
+     * Choose, which AlertaVistaFiremat to update.
+     */
+    where: AlertaVistaFirematWhereUniqueInput
+  }
+
+  /**
+   * AlertaVistaFiremat updateMany
+   */
+  export type AlertaVistaFirematUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AlertaVistaFiremats.
+     */
+    data: XOR<AlertaVistaFirematUpdateManyMutationInput, AlertaVistaFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which AlertaVistaFiremats to update
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * Limit how many AlertaVistaFiremats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AlertaVistaFiremat updateManyAndReturn
+   */
+  export type AlertaVistaFirematUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * The data used to update AlertaVistaFiremats.
+     */
+    data: XOR<AlertaVistaFirematUpdateManyMutationInput, AlertaVistaFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which AlertaVistaFiremats to update
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * Limit how many AlertaVistaFiremats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AlertaVistaFiremat upsert
+   */
+  export type AlertaVistaFirematUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AlertaVistaFiremat to update in case it exists.
+     */
+    where: AlertaVistaFirematWhereUniqueInput
+    /**
+     * In case the AlertaVistaFiremat found by the `where` argument doesn't exist, create a new AlertaVistaFiremat with this data.
+     */
+    create: XOR<AlertaVistaFirematCreateInput, AlertaVistaFirematUncheckedCreateInput>
+    /**
+     * In case the AlertaVistaFiremat was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AlertaVistaFirematUpdateInput, AlertaVistaFirematUncheckedUpdateInput>
+  }
+
+  /**
+   * AlertaVistaFiremat delete
+   */
+  export type AlertaVistaFirematDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+    /**
+     * Filter which AlertaVistaFiremat to delete.
+     */
+    where: AlertaVistaFirematWhereUniqueInput
+  }
+
+  /**
+   * AlertaVistaFiremat deleteMany
+   */
+  export type AlertaVistaFirematDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AlertaVistaFiremats to delete
+     */
+    where?: AlertaVistaFirematWhereInput
+    /**
+     * Limit how many AlertaVistaFiremats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AlertaVistaFiremat without action
+   */
+  export type AlertaVistaFirematDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AlertaVistaFiremat
+     */
+    select?: AlertaVistaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AlertaVistaFiremat
+     */
+    omit?: AlertaVistaFirematOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HistorialEtapaFiremat
+   */
+
+  export type AggregateHistorialEtapaFiremat = {
+    _count: HistorialEtapaFirematCountAggregateOutputType | null
+    _avg: HistorialEtapaFirematAvgAggregateOutputType | null
+    _sum: HistorialEtapaFirematSumAggregateOutputType | null
+    _min: HistorialEtapaFirematMinAggregateOutputType | null
+    _max: HistorialEtapaFirematMaxAggregateOutputType | null
+  }
+
+  export type HistorialEtapaFirematAvgAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+  }
+
+  export type HistorialEtapaFirematSumAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+  }
+
+  export type HistorialEtapaFirematMinAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    etapaAnterior: string | null
+    etapaNueva: string | null
+    usuarioId: string | null
+    createdAt: Date | null
+  }
+
+  export type HistorialEtapaFirematMaxAggregateOutputType = {
+    id: number | null
+    oportunidadId: number | null
+    etapaAnterior: string | null
+    etapaNueva: string | null
+    usuarioId: string | null
+    createdAt: Date | null
+  }
+
+  export type HistorialEtapaFirematCountAggregateOutputType = {
+    id: number
+    oportunidadId: number
+    etapaAnterior: number
+    etapaNueva: number
+    usuarioId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type HistorialEtapaFirematAvgAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+  }
+
+  export type HistorialEtapaFirematSumAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+  }
+
+  export type HistorialEtapaFirematMinAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    etapaAnterior?: true
+    etapaNueva?: true
+    usuarioId?: true
+    createdAt?: true
+  }
+
+  export type HistorialEtapaFirematMaxAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    etapaAnterior?: true
+    etapaNueva?: true
+    usuarioId?: true
+    createdAt?: true
+  }
+
+  export type HistorialEtapaFirematCountAggregateInputType = {
+    id?: true
+    oportunidadId?: true
+    etapaAnterior?: true
+    etapaNueva?: true
+    usuarioId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type HistorialEtapaFirematAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HistorialEtapaFiremat to aggregate.
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HistorialEtapaFiremats to fetch.
+     */
+    orderBy?: HistorialEtapaFirematOrderByWithRelationInput | HistorialEtapaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HistorialEtapaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HistorialEtapaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HistorialEtapaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HistorialEtapaFiremats
+    **/
+    _count?: true | HistorialEtapaFirematCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HistorialEtapaFirematAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HistorialEtapaFirematSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HistorialEtapaFirematMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HistorialEtapaFirematMaxAggregateInputType
+  }
+
+  export type GetHistorialEtapaFirematAggregateType<T extends HistorialEtapaFirematAggregateArgs> = {
+        [P in keyof T & keyof AggregateHistorialEtapaFiremat]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHistorialEtapaFiremat[P]>
+      : GetScalarType<T[P], AggregateHistorialEtapaFiremat[P]>
+  }
+
+
+
+
+  export type HistorialEtapaFirematGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HistorialEtapaFirematWhereInput
+    orderBy?: HistorialEtapaFirematOrderByWithAggregationInput | HistorialEtapaFirematOrderByWithAggregationInput[]
+    by: HistorialEtapaFirematScalarFieldEnum[] | HistorialEtapaFirematScalarFieldEnum
+    having?: HistorialEtapaFirematScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HistorialEtapaFirematCountAggregateInputType | true
+    _avg?: HistorialEtapaFirematAvgAggregateInputType
+    _sum?: HistorialEtapaFirematSumAggregateInputType
+    _min?: HistorialEtapaFirematMinAggregateInputType
+    _max?: HistorialEtapaFirematMaxAggregateInputType
+  }
+
+  export type HistorialEtapaFirematGroupByOutputType = {
+    id: number
+    oportunidadId: number
+    etapaAnterior: string | null
+    etapaNueva: string
+    usuarioId: string | null
+    createdAt: Date
+    _count: HistorialEtapaFirematCountAggregateOutputType | null
+    _avg: HistorialEtapaFirematAvgAggregateOutputType | null
+    _sum: HistorialEtapaFirematSumAggregateOutputType | null
+    _min: HistorialEtapaFirematMinAggregateOutputType | null
+    _max: HistorialEtapaFirematMaxAggregateOutputType | null
+  }
+
+  type GetHistorialEtapaFirematGroupByPayload<T extends HistorialEtapaFirematGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HistorialEtapaFirematGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HistorialEtapaFirematGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HistorialEtapaFirematGroupByOutputType[P]>
+            : GetScalarType<T[P], HistorialEtapaFirematGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HistorialEtapaFirematSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    etapaAnterior?: boolean
+    etapaNueva?: boolean
+    usuarioId?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["historialEtapaFiremat"]>
+
+  export type HistorialEtapaFirematSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    etapaAnterior?: boolean
+    etapaNueva?: boolean
+    usuarioId?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["historialEtapaFiremat"]>
+
+  export type HistorialEtapaFirematSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    oportunidadId?: boolean
+    etapaAnterior?: boolean
+    etapaNueva?: boolean
+    usuarioId?: boolean
+    createdAt?: boolean
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["historialEtapaFiremat"]>
+
+  export type HistorialEtapaFirematSelectScalar = {
+    id?: boolean
+    oportunidadId?: boolean
+    etapaAnterior?: boolean
+    etapaNueva?: boolean
+    usuarioId?: boolean
+    createdAt?: boolean
+  }
+
+  export type HistorialEtapaFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "oportunidadId" | "etapaAnterior" | "etapaNueva" | "usuarioId" | "createdAt", ExtArgs["result"]["historialEtapaFiremat"]>
+  export type HistorialEtapaFirematInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+  export type HistorialEtapaFirematIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+  export type HistorialEtapaFirematIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oportunidad?: boolean | FunnelFirematOpportunityDefaultArgs<ExtArgs>
+  }
+
+  export type $HistorialEtapaFirematPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HistorialEtapaFiremat"
+    objects: {
+      oportunidad: Prisma.$FunnelFirematOpportunityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      oportunidadId: number
+      etapaAnterior: string | null
+      etapaNueva: string
+      usuarioId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["historialEtapaFiremat"]>
+    composites: {}
+  }
+
+  type HistorialEtapaFirematGetPayload<S extends boolean | null | undefined | HistorialEtapaFirematDefaultArgs> = $Result.GetResult<Prisma.$HistorialEtapaFirematPayload, S>
+
+  type HistorialEtapaFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HistorialEtapaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HistorialEtapaFirematCountAggregateInputType | true
+    }
+
+  export interface HistorialEtapaFirematDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HistorialEtapaFiremat'], meta: { name: 'HistorialEtapaFiremat' } }
+    /**
+     * Find zero or one HistorialEtapaFiremat that matches the filter.
+     * @param {HistorialEtapaFirematFindUniqueArgs} args - Arguments to find a HistorialEtapaFiremat
+     * @example
+     * // Get one HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HistorialEtapaFirematFindUniqueArgs>(args: SelectSubset<T, HistorialEtapaFirematFindUniqueArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one HistorialEtapaFiremat that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HistorialEtapaFirematFindUniqueOrThrowArgs} args - Arguments to find a HistorialEtapaFiremat
+     * @example
+     * // Get one HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HistorialEtapaFirematFindUniqueOrThrowArgs>(args: SelectSubset<T, HistorialEtapaFirematFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HistorialEtapaFiremat that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematFindFirstArgs} args - Arguments to find a HistorialEtapaFiremat
+     * @example
+     * // Get one HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HistorialEtapaFirematFindFirstArgs>(args?: SelectSubset<T, HistorialEtapaFirematFindFirstArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HistorialEtapaFiremat that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematFindFirstOrThrowArgs} args - Arguments to find a HistorialEtapaFiremat
+     * @example
+     * // Get one HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HistorialEtapaFirematFindFirstOrThrowArgs>(args?: SelectSubset<T, HistorialEtapaFirematFindFirstOrThrowArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more HistorialEtapaFiremats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HistorialEtapaFiremats
+     * const historialEtapaFiremats = await prisma.historialEtapaFiremat.findMany()
+     * 
+     * // Get first 10 HistorialEtapaFiremats
+     * const historialEtapaFiremats = await prisma.historialEtapaFiremat.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const historialEtapaFirematWithIdOnly = await prisma.historialEtapaFiremat.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HistorialEtapaFirematFindManyArgs>(args?: SelectSubset<T, HistorialEtapaFirematFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a HistorialEtapaFiremat.
+     * @param {HistorialEtapaFirematCreateArgs} args - Arguments to create a HistorialEtapaFiremat.
+     * @example
+     * // Create one HistorialEtapaFiremat
+     * const HistorialEtapaFiremat = await prisma.historialEtapaFiremat.create({
+     *   data: {
+     *     // ... data to create a HistorialEtapaFiremat
+     *   }
+     * })
+     * 
+     */
+    create<T extends HistorialEtapaFirematCreateArgs>(args: SelectSubset<T, HistorialEtapaFirematCreateArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many HistorialEtapaFiremats.
+     * @param {HistorialEtapaFirematCreateManyArgs} args - Arguments to create many HistorialEtapaFiremats.
+     * @example
+     * // Create many HistorialEtapaFiremats
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HistorialEtapaFirematCreateManyArgs>(args?: SelectSubset<T, HistorialEtapaFirematCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HistorialEtapaFiremats and returns the data saved in the database.
+     * @param {HistorialEtapaFirematCreateManyAndReturnArgs} args - Arguments to create many HistorialEtapaFiremats.
+     * @example
+     * // Create many HistorialEtapaFiremats
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HistorialEtapaFiremats and only return the `id`
+     * const historialEtapaFirematWithIdOnly = await prisma.historialEtapaFiremat.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HistorialEtapaFirematCreateManyAndReturnArgs>(args?: SelectSubset<T, HistorialEtapaFirematCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a HistorialEtapaFiremat.
+     * @param {HistorialEtapaFirematDeleteArgs} args - Arguments to delete one HistorialEtapaFiremat.
+     * @example
+     * // Delete one HistorialEtapaFiremat
+     * const HistorialEtapaFiremat = await prisma.historialEtapaFiremat.delete({
+     *   where: {
+     *     // ... filter to delete one HistorialEtapaFiremat
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HistorialEtapaFirematDeleteArgs>(args: SelectSubset<T, HistorialEtapaFirematDeleteArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one HistorialEtapaFiremat.
+     * @param {HistorialEtapaFirematUpdateArgs} args - Arguments to update one HistorialEtapaFiremat.
+     * @example
+     * // Update one HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HistorialEtapaFirematUpdateArgs>(args: SelectSubset<T, HistorialEtapaFirematUpdateArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more HistorialEtapaFiremats.
+     * @param {HistorialEtapaFirematDeleteManyArgs} args - Arguments to filter HistorialEtapaFiremats to delete.
+     * @example
+     * // Delete a few HistorialEtapaFiremats
+     * const { count } = await prisma.historialEtapaFiremat.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HistorialEtapaFirematDeleteManyArgs>(args?: SelectSubset<T, HistorialEtapaFirematDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HistorialEtapaFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HistorialEtapaFiremats
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HistorialEtapaFirematUpdateManyArgs>(args: SelectSubset<T, HistorialEtapaFirematUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HistorialEtapaFiremats and returns the data updated in the database.
+     * @param {HistorialEtapaFirematUpdateManyAndReturnArgs} args - Arguments to update many HistorialEtapaFiremats.
+     * @example
+     * // Update many HistorialEtapaFiremats
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HistorialEtapaFiremats and only return the `id`
+     * const historialEtapaFirematWithIdOnly = await prisma.historialEtapaFiremat.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HistorialEtapaFirematUpdateManyAndReturnArgs>(args: SelectSubset<T, HistorialEtapaFirematUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one HistorialEtapaFiremat.
+     * @param {HistorialEtapaFirematUpsertArgs} args - Arguments to update or create a HistorialEtapaFiremat.
+     * @example
+     * // Update or create a HistorialEtapaFiremat
+     * const historialEtapaFiremat = await prisma.historialEtapaFiremat.upsert({
+     *   create: {
+     *     // ... data to create a HistorialEtapaFiremat
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HistorialEtapaFiremat we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HistorialEtapaFirematUpsertArgs>(args: SelectSubset<T, HistorialEtapaFirematUpsertArgs<ExtArgs>>): Prisma__HistorialEtapaFirematClient<$Result.GetResult<Prisma.$HistorialEtapaFirematPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of HistorialEtapaFiremats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematCountArgs} args - Arguments to filter HistorialEtapaFiremats to count.
+     * @example
+     * // Count the number of HistorialEtapaFiremats
+     * const count = await prisma.historialEtapaFiremat.count({
+     *   where: {
+     *     // ... the filter for the HistorialEtapaFiremats we want to count
+     *   }
+     * })
+    **/
+    count<T extends HistorialEtapaFirematCountArgs>(
+      args?: Subset<T, HistorialEtapaFirematCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HistorialEtapaFirematCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HistorialEtapaFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HistorialEtapaFirematAggregateArgs>(args: Subset<T, HistorialEtapaFirematAggregateArgs>): Prisma.PrismaPromise<GetHistorialEtapaFirematAggregateType<T>>
+
+    /**
+     * Group by HistorialEtapaFiremat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HistorialEtapaFirematGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HistorialEtapaFirematGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HistorialEtapaFirematGroupByArgs['orderBy'] }
+        : { orderBy?: HistorialEtapaFirematGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HistorialEtapaFirematGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHistorialEtapaFirematGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HistorialEtapaFiremat model
+   */
+  readonly fields: HistorialEtapaFirematFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HistorialEtapaFiremat.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HistorialEtapaFirematClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    oportunidad<T extends FunnelFirematOpportunityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FunnelFirematOpportunityDefaultArgs<ExtArgs>>): Prisma__FunnelFirematOpportunityClient<$Result.GetResult<Prisma.$FunnelFirematOpportunityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HistorialEtapaFiremat model
+   */
+  interface HistorialEtapaFirematFieldRefs {
+    readonly id: FieldRef<"HistorialEtapaFiremat", 'Int'>
+    readonly oportunidadId: FieldRef<"HistorialEtapaFiremat", 'Int'>
+    readonly etapaAnterior: FieldRef<"HistorialEtapaFiremat", 'String'>
+    readonly etapaNueva: FieldRef<"HistorialEtapaFiremat", 'String'>
+    readonly usuarioId: FieldRef<"HistorialEtapaFiremat", 'String'>
+    readonly createdAt: FieldRef<"HistorialEtapaFiremat", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HistorialEtapaFiremat findUnique
+   */
+  export type HistorialEtapaFirematFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which HistorialEtapaFiremat to fetch.
+     */
+    where: HistorialEtapaFirematWhereUniqueInput
+  }
+
+  /**
+   * HistorialEtapaFiremat findUniqueOrThrow
+   */
+  export type HistorialEtapaFirematFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which HistorialEtapaFiremat to fetch.
+     */
+    where: HistorialEtapaFirematWhereUniqueInput
+  }
+
+  /**
+   * HistorialEtapaFiremat findFirst
+   */
+  export type HistorialEtapaFirematFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which HistorialEtapaFiremat to fetch.
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HistorialEtapaFiremats to fetch.
+     */
+    orderBy?: HistorialEtapaFirematOrderByWithRelationInput | HistorialEtapaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HistorialEtapaFiremats.
+     */
+    cursor?: HistorialEtapaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HistorialEtapaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HistorialEtapaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HistorialEtapaFiremats.
+     */
+    distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * HistorialEtapaFiremat findFirstOrThrow
+   */
+  export type HistorialEtapaFirematFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which HistorialEtapaFiremat to fetch.
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HistorialEtapaFiremats to fetch.
+     */
+    orderBy?: HistorialEtapaFirematOrderByWithRelationInput | HistorialEtapaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HistorialEtapaFiremats.
+     */
+    cursor?: HistorialEtapaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HistorialEtapaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HistorialEtapaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HistorialEtapaFiremats.
+     */
+    distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * HistorialEtapaFiremat findMany
+   */
+  export type HistorialEtapaFirematFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter, which HistorialEtapaFiremats to fetch.
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HistorialEtapaFiremats to fetch.
+     */
+    orderBy?: HistorialEtapaFirematOrderByWithRelationInput | HistorialEtapaFirematOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HistorialEtapaFiremats.
+     */
+    cursor?: HistorialEtapaFirematWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HistorialEtapaFiremats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HistorialEtapaFiremats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HistorialEtapaFiremats.
+     */
+    distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+  }
+
+  /**
+   * HistorialEtapaFiremat create
+   */
+  export type HistorialEtapaFirematCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * The data needed to create a HistorialEtapaFiremat.
+     */
+    data: XOR<HistorialEtapaFirematCreateInput, HistorialEtapaFirematUncheckedCreateInput>
+  }
+
+  /**
+   * HistorialEtapaFiremat createMany
+   */
+  export type HistorialEtapaFirematCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HistorialEtapaFiremats.
+     */
+    data: HistorialEtapaFirematCreateManyInput | HistorialEtapaFirematCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HistorialEtapaFiremat createManyAndReturn
+   */
+  export type HistorialEtapaFirematCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * The data used to create many HistorialEtapaFiremats.
+     */
+    data: HistorialEtapaFirematCreateManyInput | HistorialEtapaFirematCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HistorialEtapaFiremat update
+   */
+  export type HistorialEtapaFirematUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * The data needed to update a HistorialEtapaFiremat.
+     */
+    data: XOR<HistorialEtapaFirematUpdateInput, HistorialEtapaFirematUncheckedUpdateInput>
+    /**
+     * Choose, which HistorialEtapaFiremat to update.
+     */
+    where: HistorialEtapaFirematWhereUniqueInput
+  }
+
+  /**
+   * HistorialEtapaFiremat updateMany
+   */
+  export type HistorialEtapaFirematUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HistorialEtapaFiremats.
+     */
+    data: XOR<HistorialEtapaFirematUpdateManyMutationInput, HistorialEtapaFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which HistorialEtapaFiremats to update
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * Limit how many HistorialEtapaFiremats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HistorialEtapaFiremat updateManyAndReturn
+   */
+  export type HistorialEtapaFirematUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * The data used to update HistorialEtapaFiremats.
+     */
+    data: XOR<HistorialEtapaFirematUpdateManyMutationInput, HistorialEtapaFirematUncheckedUpdateManyInput>
+    /**
+     * Filter which HistorialEtapaFiremats to update
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * Limit how many HistorialEtapaFiremats to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HistorialEtapaFiremat upsert
+   */
+  export type HistorialEtapaFirematUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * The filter to search for the HistorialEtapaFiremat to update in case it exists.
+     */
+    where: HistorialEtapaFirematWhereUniqueInput
+    /**
+     * In case the HistorialEtapaFiremat found by the `where` argument doesn't exist, create a new HistorialEtapaFiremat with this data.
+     */
+    create: XOR<HistorialEtapaFirematCreateInput, HistorialEtapaFirematUncheckedCreateInput>
+    /**
+     * In case the HistorialEtapaFiremat was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HistorialEtapaFirematUpdateInput, HistorialEtapaFirematUncheckedUpdateInput>
+  }
+
+  /**
+   * HistorialEtapaFiremat delete
+   */
+  export type HistorialEtapaFirematDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+    /**
+     * Filter which HistorialEtapaFiremat to delete.
+     */
+    where: HistorialEtapaFirematWhereUniqueInput
+  }
+
+  /**
+   * HistorialEtapaFiremat deleteMany
+   */
+  export type HistorialEtapaFirematDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HistorialEtapaFiremats to delete
+     */
+    where?: HistorialEtapaFirematWhereInput
+    /**
+     * Limit how many HistorialEtapaFiremats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HistorialEtapaFiremat without action
+   */
+  export type HistorialEtapaFirematDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HistorialEtapaFiremat
+     */
+    select?: HistorialEtapaFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HistorialEtapaFiremat
+     */
+    omit?: HistorialEtapaFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HistorialEtapaFirematInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -19079,7 +21519,12 @@ export namespace Prisma {
     riesgoTecnico: 'riesgoTecnico',
     comentariosInternos: 'comentariosInternos',
     observacionesTecnicas: 'observacionesTecnicas',
-    observacionCamposFaltantes: 'observacionCamposFaltantes'
+    observacionCamposFaltantes: 'observacionCamposFaltantes',
+    lineaProducto: 'lineaProducto',
+    descuento: 'descuento',
+    stockOportunidad: 'stockOportunidad',
+    reprogramacionesCount: 'reprogramacionesCount',
+    fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa'
   };
 
   export type FunnelFirematOpportunityScalarFieldEnum = (typeof FunnelFirematOpportunityScalarFieldEnum)[keyof typeof FunnelFirematOpportunityScalarFieldEnum]
@@ -19117,6 +21562,29 @@ export namespace Prisma {
   };
 
   export type FunnelFirematArchivoScalarFieldEnum = (typeof FunnelFirematArchivoScalarFieldEnum)[keyof typeof FunnelFirematArchivoScalarFieldEnum]
+
+
+  export const AlertaVistaFirematScalarFieldEnum: {
+    id: 'id',
+    usuarioId: 'usuarioId',
+    alertaKey: 'alertaKey',
+    vistoAt: 'vistoAt',
+    createdAt: 'createdAt'
+  };
+
+  export type AlertaVistaFirematScalarFieldEnum = (typeof AlertaVistaFirematScalarFieldEnum)[keyof typeof AlertaVistaFirematScalarFieldEnum]
+
+
+  export const HistorialEtapaFirematScalarFieldEnum: {
+    id: 'id',
+    oportunidadId: 'oportunidadId',
+    etapaAnterior: 'etapaAnterior',
+    etapaNueva: 'etapaNueva',
+    usuarioId: 'usuarioId',
+    createdAt: 'createdAt'
+  };
+
+  export type HistorialEtapaFirematScalarFieldEnum = (typeof HistorialEtapaFirematScalarFieldEnum)[keyof typeof HistorialEtapaFirematScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -20251,9 +22719,15 @@ export namespace Prisma {
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
+    fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
+    historialEtapas?: HistorialEtapaFirematListRelationFilter
   }
 
   export type FunnelFirematOpportunityOrderByWithRelationInput = {
@@ -20321,9 +22795,15 @@ export namespace Prisma {
     comentariosInternos?: SortOrderInput | SortOrder
     observacionesTecnicas?: SortOrderInput | SortOrder
     observacionCamposFaltantes?: SortOrderInput | SortOrder
+    lineaProducto?: SortOrderInput | SortOrder
+    descuento?: SortOrderInput | SortOrder
+    stockOportunidad?: SortOrderInput | SortOrder
+    reprogramacionesCount?: SortOrder
+    fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
     cotizacion?: CotizacionFirematOrderByWithRelationInput
     producto?: ProductoOrderByWithRelationInput
     archivos?: FunnelFirematArchivoOrderByRelationAggregateInput
+    historialEtapas?: HistorialEtapaFirematOrderByRelationAggregateInput
   }
 
   export type FunnelFirematOpportunityWhereUniqueInput = Prisma.AtLeast<{
@@ -20394,9 +22874,15 @@ export namespace Prisma {
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
+    fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
+    historialEtapas?: HistorialEtapaFirematListRelationFilter
   }, "id">
 
   export type FunnelFirematOpportunityOrderByWithAggregationInput = {
@@ -20464,6 +22950,11 @@ export namespace Prisma {
     comentariosInternos?: SortOrderInput | SortOrder
     observacionesTecnicas?: SortOrderInput | SortOrder
     observacionCamposFaltantes?: SortOrderInput | SortOrder
+    lineaProducto?: SortOrderInput | SortOrder
+    descuento?: SortOrderInput | SortOrder
+    stockOportunidad?: SortOrderInput | SortOrder
+    reprogramacionesCount?: SortOrder
+    fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
     _count?: FunnelFirematOpportunityCountOrderByAggregateInput
     _avg?: FunnelFirematOpportunityAvgOrderByAggregateInput
     _max?: FunnelFirematOpportunityMaxOrderByAggregateInput
@@ -20539,6 +23030,11 @@ export namespace Prisma {
     comentariosInternos?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     observacionesTecnicas?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     observacionCamposFaltantes?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    lineaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    descuento?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    stockOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    reprogramacionesCount?: IntWithAggregatesFilter<"FunnelFirematOpportunity"> | number
+    fechaUltimoCambioEtapa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
   }
 
   export type ContactoClienteFirematWhereInput = {
@@ -20713,6 +23209,123 @@ export namespace Prisma {
     etapa?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
     observaciones?: StringNullableWithAggregatesFilter<"FunnelFirematArchivo"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FunnelFirematArchivo"> | Date | string
+  }
+
+  export type AlertaVistaFirematWhereInput = {
+    AND?: AlertaVistaFirematWhereInput | AlertaVistaFirematWhereInput[]
+    OR?: AlertaVistaFirematWhereInput[]
+    NOT?: AlertaVistaFirematWhereInput | AlertaVistaFirematWhereInput[]
+    id?: IntFilter<"AlertaVistaFiremat"> | number
+    usuarioId?: UuidFilter<"AlertaVistaFiremat"> | string
+    alertaKey?: StringFilter<"AlertaVistaFiremat"> | string
+    vistoAt?: DateTimeFilter<"AlertaVistaFiremat"> | Date | string
+    createdAt?: DateTimeFilter<"AlertaVistaFiremat"> | Date | string
+  }
+
+  export type AlertaVistaFirematOrderByWithRelationInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    alertaKey?: SortOrder
+    vistoAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AlertaVistaFirematWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    usuarioId_alertaKey?: AlertaVistaFirematUsuarioIdAlertaKeyCompoundUniqueInput
+    AND?: AlertaVistaFirematWhereInput | AlertaVistaFirematWhereInput[]
+    OR?: AlertaVistaFirematWhereInput[]
+    NOT?: AlertaVistaFirematWhereInput | AlertaVistaFirematWhereInput[]
+    usuarioId?: UuidFilter<"AlertaVistaFiremat"> | string
+    alertaKey?: StringFilter<"AlertaVistaFiremat"> | string
+    vistoAt?: DateTimeFilter<"AlertaVistaFiremat"> | Date | string
+    createdAt?: DateTimeFilter<"AlertaVistaFiremat"> | Date | string
+  }, "id" | "usuarioId_alertaKey">
+
+  export type AlertaVistaFirematOrderByWithAggregationInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    alertaKey?: SortOrder
+    vistoAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: AlertaVistaFirematCountOrderByAggregateInput
+    _avg?: AlertaVistaFirematAvgOrderByAggregateInput
+    _max?: AlertaVistaFirematMaxOrderByAggregateInput
+    _min?: AlertaVistaFirematMinOrderByAggregateInput
+    _sum?: AlertaVistaFirematSumOrderByAggregateInput
+  }
+
+  export type AlertaVistaFirematScalarWhereWithAggregatesInput = {
+    AND?: AlertaVistaFirematScalarWhereWithAggregatesInput | AlertaVistaFirematScalarWhereWithAggregatesInput[]
+    OR?: AlertaVistaFirematScalarWhereWithAggregatesInput[]
+    NOT?: AlertaVistaFirematScalarWhereWithAggregatesInput | AlertaVistaFirematScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"AlertaVistaFiremat"> | number
+    usuarioId?: UuidWithAggregatesFilter<"AlertaVistaFiremat"> | string
+    alertaKey?: StringWithAggregatesFilter<"AlertaVistaFiremat"> | string
+    vistoAt?: DateTimeWithAggregatesFilter<"AlertaVistaFiremat"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"AlertaVistaFiremat"> | Date | string
+  }
+
+  export type HistorialEtapaFirematWhereInput = {
+    AND?: HistorialEtapaFirematWhereInput | HistorialEtapaFirematWhereInput[]
+    OR?: HistorialEtapaFirematWhereInput[]
+    NOT?: HistorialEtapaFirematWhereInput | HistorialEtapaFirematWhereInput[]
+    id?: IntFilter<"HistorialEtapaFiremat"> | number
+    oportunidadId?: IntFilter<"HistorialEtapaFiremat"> | number
+    etapaAnterior?: StringNullableFilter<"HistorialEtapaFiremat"> | string | null
+    etapaNueva?: StringFilter<"HistorialEtapaFiremat"> | string
+    usuarioId?: UuidNullableFilter<"HistorialEtapaFiremat"> | string | null
+    createdAt?: DateTimeFilter<"HistorialEtapaFiremat"> | Date | string
+    oportunidad?: XOR<FunnelFirematOpportunityScalarRelationFilter, FunnelFirematOpportunityWhereInput>
+  }
+
+  export type HistorialEtapaFirematOrderByWithRelationInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    etapaAnterior?: SortOrderInput | SortOrder
+    etapaNueva?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    oportunidad?: FunnelFirematOpportunityOrderByWithRelationInput
+  }
+
+  export type HistorialEtapaFirematWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: HistorialEtapaFirematWhereInput | HistorialEtapaFirematWhereInput[]
+    OR?: HistorialEtapaFirematWhereInput[]
+    NOT?: HistorialEtapaFirematWhereInput | HistorialEtapaFirematWhereInput[]
+    oportunidadId?: IntFilter<"HistorialEtapaFiremat"> | number
+    etapaAnterior?: StringNullableFilter<"HistorialEtapaFiremat"> | string | null
+    etapaNueva?: StringFilter<"HistorialEtapaFiremat"> | string
+    usuarioId?: UuidNullableFilter<"HistorialEtapaFiremat"> | string | null
+    createdAt?: DateTimeFilter<"HistorialEtapaFiremat"> | Date | string
+    oportunidad?: XOR<FunnelFirematOpportunityScalarRelationFilter, FunnelFirematOpportunityWhereInput>
+  }, "id">
+
+  export type HistorialEtapaFirematOrderByWithAggregationInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    etapaAnterior?: SortOrderInput | SortOrder
+    etapaNueva?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: HistorialEtapaFirematCountOrderByAggregateInput
+    _avg?: HistorialEtapaFirematAvgOrderByAggregateInput
+    _max?: HistorialEtapaFirematMaxOrderByAggregateInput
+    _min?: HistorialEtapaFirematMinOrderByAggregateInput
+    _sum?: HistorialEtapaFirematSumOrderByAggregateInput
+  }
+
+  export type HistorialEtapaFirematScalarWhereWithAggregatesInput = {
+    AND?: HistorialEtapaFirematScalarWhereWithAggregatesInput | HistorialEtapaFirematScalarWhereWithAggregatesInput[]
+    OR?: HistorialEtapaFirematScalarWhereWithAggregatesInput[]
+    NOT?: HistorialEtapaFirematScalarWhereWithAggregatesInput | HistorialEtapaFirematScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"HistorialEtapaFiremat"> | number
+    oportunidadId?: IntWithAggregatesFilter<"HistorialEtapaFiremat"> | number
+    etapaAnterior?: StringNullableWithAggregatesFilter<"HistorialEtapaFiremat"> | string | null
+    etapaNueva?: StringWithAggregatesFilter<"HistorialEtapaFiremat"> | string
+    usuarioId?: UuidNullableWithAggregatesFilter<"HistorialEtapaFiremat"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"HistorialEtapaFiremat"> | Date | string
   }
 
   export type CategoriaCreateInput = {
@@ -21825,9 +24438,15 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateInput = {
@@ -21895,7 +24514,13 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUpdateInput = {
@@ -21960,9 +24585,15 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateInput = {
@@ -22030,7 +24661,13 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityCreateManyInput = {
@@ -22098,6 +24735,11 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
   }
 
   export type FunnelFirematOpportunityUpdateManyMutationInput = {
@@ -22162,6 +24804,11 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyInput = {
@@ -22229,6 +24876,11 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ContactoClienteFirematCreateInput = {
@@ -22416,6 +25068,118 @@ export namespace Prisma {
     bytes?: NullableIntFieldUpdateOperationsInput | number | null
     etapa?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AlertaVistaFirematCreateInput = {
+    usuarioId: string
+    alertaKey: string
+    vistoAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type AlertaVistaFirematUncheckedCreateInput = {
+    id?: number
+    usuarioId: string
+    alertaKey: string
+    vistoAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type AlertaVistaFirematUpdateInput = {
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    alertaKey?: StringFieldUpdateOperationsInput | string
+    vistoAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AlertaVistaFirematUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    alertaKey?: StringFieldUpdateOperationsInput | string
+    vistoAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AlertaVistaFirematCreateManyInput = {
+    id?: number
+    usuarioId: string
+    alertaKey: string
+    vistoAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type AlertaVistaFirematUpdateManyMutationInput = {
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    alertaKey?: StringFieldUpdateOperationsInput | string
+    vistoAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AlertaVistaFirematUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    alertaKey?: StringFieldUpdateOperationsInput | string
+    vistoAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematCreateInput = {
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
+    createdAt?: Date | string
+    oportunidad: FunnelFirematOpportunityCreateNestedOneWithoutHistorialEtapasInput
+  }
+
+  export type HistorialEtapaFirematUncheckedCreateInput = {
+    id?: number
+    oportunidadId: number
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HistorialEtapaFirematUpdateInput = {
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    oportunidad?: FunnelFirematOpportunityUpdateOneRequiredWithoutHistorialEtapasNestedInput
+  }
+
+  export type HistorialEtapaFirematUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    oportunidadId?: IntFieldUpdateOperationsInput | number
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematCreateManyInput = {
+    id?: number
+    oportunidadId: number
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HistorialEtapaFirematUpdateManyMutationInput = {
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    oportunidadId?: IntFieldUpdateOperationsInput | number
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -23413,7 +26177,17 @@ export namespace Prisma {
     none?: FunnelFirematArchivoWhereInput
   }
 
+  export type HistorialEtapaFirematListRelationFilter = {
+    every?: HistorialEtapaFirematWhereInput
+    some?: HistorialEtapaFirematWhereInput
+    none?: HistorialEtapaFirematWhereInput
+  }
+
   export type FunnelFirematArchivoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type HistorialEtapaFirematOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23482,6 +26256,11 @@ export namespace Prisma {
     comentariosInternos?: SortOrder
     observacionesTecnicas?: SortOrder
     observacionCamposFaltantes?: SortOrder
+    lineaProducto?: SortOrder
+    descuento?: SortOrder
+    stockOportunidad?: SortOrder
+    reprogramacionesCount?: SortOrder
+    fechaUltimoCambioEtapa?: SortOrder
   }
 
   export type FunnelFirematOpportunityAvgOrderByAggregateInput = {
@@ -23494,6 +26273,8 @@ export namespace Prisma {
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+    descuento?: SortOrder
+    reprogramacionesCount?: SortOrder
   }
 
   export type FunnelFirematOpportunityMaxOrderByAggregateInput = {
@@ -23561,6 +26342,11 @@ export namespace Prisma {
     comentariosInternos?: SortOrder
     observacionesTecnicas?: SortOrder
     observacionCamposFaltantes?: SortOrder
+    lineaProducto?: SortOrder
+    descuento?: SortOrder
+    stockOportunidad?: SortOrder
+    reprogramacionesCount?: SortOrder
+    fechaUltimoCambioEtapa?: SortOrder
   }
 
   export type FunnelFirematOpportunityMinOrderByAggregateInput = {
@@ -23628,6 +26414,11 @@ export namespace Prisma {
     comentariosInternos?: SortOrder
     observacionesTecnicas?: SortOrder
     observacionCamposFaltantes?: SortOrder
+    lineaProducto?: SortOrder
+    descuento?: SortOrder
+    stockOportunidad?: SortOrder
+    reprogramacionesCount?: SortOrder
+    fechaUltimoCambioEtapa?: SortOrder
   }
 
   export type FunnelFirematOpportunitySumOrderByAggregateInput = {
@@ -23640,6 +26431,8 @@ export namespace Prisma {
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+    descuento?: SortOrder
+    reprogramacionesCount?: SortOrder
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -23759,6 +26552,134 @@ export namespace Prisma {
     id?: SortOrder
     oportunidadId?: SortOrder
     bytes?: SortOrder
+  }
+
+  export type UuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type AlertaVistaFirematUsuarioIdAlertaKeyCompoundUniqueInput = {
+    usuarioId: string
+    alertaKey: string
+  }
+
+  export type AlertaVistaFirematCountOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    alertaKey?: SortOrder
+    vistoAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AlertaVistaFirematAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type AlertaVistaFirematMaxOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    alertaKey?: SortOrder
+    vistoAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AlertaVistaFirematMinOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    alertaKey?: SortOrder
+    vistoAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AlertaVistaFirematSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type HistorialEtapaFirematCountOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    etapaAnterior?: SortOrder
+    etapaNueva?: SortOrder
+    usuarioId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HistorialEtapaFirematAvgOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+  }
+
+  export type HistorialEtapaFirematMaxOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    etapaAnterior?: SortOrder
+    etapaNueva?: SortOrder
+    usuarioId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HistorialEtapaFirematMinOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+    etapaAnterior?: SortOrder
+    etapaNueva?: SortOrder
+    usuarioId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HistorialEtapaFirematSumOrderByAggregateInput = {
+    id?: SortOrder
+    oportunidadId?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ProductoCreateNestedManyWithoutCategoriaInput = {
@@ -24472,11 +27393,25 @@ export namespace Prisma {
     connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
   }
 
+  export type HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput = {
+    create?: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput> | HistorialEtapaFirematCreateWithoutOportunidadInput[] | HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput | HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput[]
+    createMany?: HistorialEtapaFirematCreateManyOportunidadInputEnvelope
+    connect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+  }
+
   export type FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput = {
     create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
     connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
     createMany?: FunnelFirematArchivoCreateManyOportunidadInputEnvelope
     connect?: FunnelFirematArchivoWhereUniqueInput | FunnelFirematArchivoWhereUniqueInput[]
+  }
+
+  export type HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput = {
+    create?: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput> | HistorialEtapaFirematCreateWithoutOportunidadInput[] | HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput | HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput[]
+    createMany?: HistorialEtapaFirematCreateManyOportunidadInputEnvelope
+    connect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -24517,6 +27452,20 @@ export namespace Prisma {
     deleteMany?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
   }
 
+  export type HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput = {
+    create?: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput> | HistorialEtapaFirematCreateWithoutOportunidadInput[] | HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput | HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput[]
+    upsert?: HistorialEtapaFirematUpsertWithWhereUniqueWithoutOportunidadInput | HistorialEtapaFirematUpsertWithWhereUniqueWithoutOportunidadInput[]
+    createMany?: HistorialEtapaFirematCreateManyOportunidadInputEnvelope
+    set?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    disconnect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    delete?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    connect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    update?: HistorialEtapaFirematUpdateWithWhereUniqueWithoutOportunidadInput | HistorialEtapaFirematUpdateWithWhereUniqueWithoutOportunidadInput[]
+    updateMany?: HistorialEtapaFirematUpdateManyWithWhereWithoutOportunidadInput | HistorialEtapaFirematUpdateManyWithWhereWithoutOportunidadInput[]
+    deleteMany?: HistorialEtapaFirematScalarWhereInput | HistorialEtapaFirematScalarWhereInput[]
+  }
+
   export type FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput = {
     create?: XOR<FunnelFirematArchivoCreateWithoutOportunidadInput, FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput> | FunnelFirematArchivoCreateWithoutOportunidadInput[] | FunnelFirematArchivoUncheckedCreateWithoutOportunidadInput[]
     connectOrCreate?: FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput | FunnelFirematArchivoCreateOrConnectWithoutOportunidadInput[]
@@ -24529,6 +27478,20 @@ export namespace Prisma {
     update?: FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput | FunnelFirematArchivoUpdateWithWhereUniqueWithoutOportunidadInput[]
     updateMany?: FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput | FunnelFirematArchivoUpdateManyWithWhereWithoutOportunidadInput[]
     deleteMany?: FunnelFirematArchivoScalarWhereInput | FunnelFirematArchivoScalarWhereInput[]
+  }
+
+  export type HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput = {
+    create?: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput> | HistorialEtapaFirematCreateWithoutOportunidadInput[] | HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput[]
+    connectOrCreate?: HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput | HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput[]
+    upsert?: HistorialEtapaFirematUpsertWithWhereUniqueWithoutOportunidadInput | HistorialEtapaFirematUpsertWithWhereUniqueWithoutOportunidadInput[]
+    createMany?: HistorialEtapaFirematCreateManyOportunidadInputEnvelope
+    set?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    disconnect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    delete?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    connect?: HistorialEtapaFirematWhereUniqueInput | HistorialEtapaFirematWhereUniqueInput[]
+    update?: HistorialEtapaFirematUpdateWithWhereUniqueWithoutOportunidadInput | HistorialEtapaFirematUpdateWithWhereUniqueWithoutOportunidadInput[]
+    updateMany?: HistorialEtapaFirematUpdateManyWithWhereWithoutOportunidadInput | HistorialEtapaFirematUpdateManyWithWhereWithoutOportunidadInput[]
+    deleteMany?: HistorialEtapaFirematScalarWhereInput | HistorialEtapaFirematScalarWhereInput[]
   }
 
   export type ClienteCreateNestedOneWithoutContactosInput = {
@@ -24557,6 +27520,20 @@ export namespace Prisma {
     upsert?: FunnelFirematOpportunityUpsertWithoutArchivosInput
     connect?: FunnelFirematOpportunityWhereUniqueInput
     update?: XOR<XOR<FunnelFirematOpportunityUpdateToOneWithWhereWithoutArchivosInput, FunnelFirematOpportunityUpdateWithoutArchivosInput>, FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput>
+  }
+
+  export type FunnelFirematOpportunityCreateNestedOneWithoutHistorialEtapasInput = {
+    create?: XOR<FunnelFirematOpportunityCreateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedCreateWithoutHistorialEtapasInput>
+    connectOrCreate?: FunnelFirematOpportunityCreateOrConnectWithoutHistorialEtapasInput
+    connect?: FunnelFirematOpportunityWhereUniqueInput
+  }
+
+  export type FunnelFirematOpportunityUpdateOneRequiredWithoutHistorialEtapasNestedInput = {
+    create?: XOR<FunnelFirematOpportunityCreateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedCreateWithoutHistorialEtapasInput>
+    connectOrCreate?: FunnelFirematOpportunityCreateOrConnectWithoutHistorialEtapasInput
+    upsert?: FunnelFirematOpportunityUpsertWithoutHistorialEtapasInput
+    connect?: FunnelFirematOpportunityWhereUniqueInput
+    update?: XOR<XOR<FunnelFirematOpportunityUpdateToOneWithWhereWithoutHistorialEtapasInput, FunnelFirematOpportunityUpdateWithoutHistorialEtapasInput>, FunnelFirematOpportunityUncheckedUpdateWithoutHistorialEtapasInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -24837,6 +27814,56 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedUuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ProductoCreateWithoutCategoriaInput = {
@@ -25123,8 +28150,14 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateWithoutProductoInput = {
@@ -25191,7 +28224,13 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutProductoInput = {
@@ -25475,6 +28514,11 @@ export namespace Prisma {
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
+    fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
   }
 
   export type MovimientoUpsertWithWhereUniqueWithoutProductoInput = {
@@ -26372,8 +29416,14 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateWithoutCotizacionInput = {
@@ -26440,7 +29490,13 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutCotizacionInput = {
@@ -26880,6 +29936,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type HistorialEtapaFirematCreateWithoutOportunidadInput = {
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput = {
+    id?: number
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HistorialEtapaFirematCreateOrConnectWithoutOportunidadInput = {
+    where: HistorialEtapaFirematWhereUniqueInput
+    create: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput>
+  }
+
+  export type HistorialEtapaFirematCreateManyOportunidadInputEnvelope = {
+    data: HistorialEtapaFirematCreateManyOportunidadInput | HistorialEtapaFirematCreateManyOportunidadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CotizacionFirematUpsertWithoutFunnelFirematOpportunityInput = {
     update: XOR<CotizacionFirematUpdateWithoutFunnelFirematOpportunityInput, CotizacionFirematUncheckedUpdateWithoutFunnelFirematOpportunityInput>
     create: XOR<CotizacionFirematCreateWithoutFunnelFirematOpportunityInput, CotizacionFirematUncheckedCreateWithoutFunnelFirematOpportunityInput>
@@ -27041,6 +30122,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FunnelFirematArchivo"> | Date | string
   }
 
+  export type HistorialEtapaFirematUpsertWithWhereUniqueWithoutOportunidadInput = {
+    where: HistorialEtapaFirematWhereUniqueInput
+    update: XOR<HistorialEtapaFirematUpdateWithoutOportunidadInput, HistorialEtapaFirematUncheckedUpdateWithoutOportunidadInput>
+    create: XOR<HistorialEtapaFirematCreateWithoutOportunidadInput, HistorialEtapaFirematUncheckedCreateWithoutOportunidadInput>
+  }
+
+  export type HistorialEtapaFirematUpdateWithWhereUniqueWithoutOportunidadInput = {
+    where: HistorialEtapaFirematWhereUniqueInput
+    data: XOR<HistorialEtapaFirematUpdateWithoutOportunidadInput, HistorialEtapaFirematUncheckedUpdateWithoutOportunidadInput>
+  }
+
+  export type HistorialEtapaFirematUpdateManyWithWhereWithoutOportunidadInput = {
+    where: HistorialEtapaFirematScalarWhereInput
+    data: XOR<HistorialEtapaFirematUpdateManyMutationInput, HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadInput>
+  }
+
+  export type HistorialEtapaFirematScalarWhereInput = {
+    AND?: HistorialEtapaFirematScalarWhereInput | HistorialEtapaFirematScalarWhereInput[]
+    OR?: HistorialEtapaFirematScalarWhereInput[]
+    NOT?: HistorialEtapaFirematScalarWhereInput | HistorialEtapaFirematScalarWhereInput[]
+    id?: IntFilter<"HistorialEtapaFiremat"> | number
+    oportunidadId?: IntFilter<"HistorialEtapaFiremat"> | number
+    etapaAnterior?: StringNullableFilter<"HistorialEtapaFiremat"> | string | null
+    etapaNueva?: StringFilter<"HistorialEtapaFiremat"> | string
+    usuarioId?: UuidNullableFilter<"HistorialEtapaFiremat"> | string | null
+    createdAt?: DateTimeFilter<"HistorialEtapaFiremat"> | Date | string
+  }
+
   export type ClienteCreateWithoutContactosInput = {
     nombre: string
     rut?: string | null
@@ -27197,8 +30306,14 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
+    historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityUncheckedCreateWithoutArchivosInput = {
@@ -27266,6 +30381,12 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
   export type FunnelFirematOpportunityCreateOrConnectWithoutArchivosInput = {
@@ -27346,8 +30467,14 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateWithoutArchivosInput = {
@@ -27415,6 +30542,318 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelFirematOpportunityCreateWithoutHistorialEtapasInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
+    producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
+    archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelFirematOpportunityUncheckedCreateWithoutHistorialEtapasInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    productoId?: number | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    cotizacionId?: number | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelFirematOpportunityCreateOrConnectWithoutHistorialEtapasInput = {
+    where: FunnelFirematOpportunityWhereUniqueInput
+    create: XOR<FunnelFirematOpportunityCreateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedCreateWithoutHistorialEtapasInput>
+  }
+
+  export type FunnelFirematOpportunityUpsertWithoutHistorialEtapasInput = {
+    update: XOR<FunnelFirematOpportunityUpdateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedUpdateWithoutHistorialEtapasInput>
+    create: XOR<FunnelFirematOpportunityCreateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedCreateWithoutHistorialEtapasInput>
+    where?: FunnelFirematOpportunityWhereInput
+  }
+
+  export type FunnelFirematOpportunityUpdateToOneWithWhereWithoutHistorialEtapasInput = {
+    where?: FunnelFirematOpportunityWhereInput
+    data: XOR<FunnelFirematOpportunityUpdateWithoutHistorialEtapasInput, FunnelFirematOpportunityUncheckedUpdateWithoutHistorialEtapasInput>
+  }
+
+  export type FunnelFirematOpportunityUpdateWithoutHistorialEtapasInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
+    archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelFirematOpportunityUncheckedUpdateWithoutHistorialEtapasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    productoId?: NullableIntFieldUpdateOperationsInput | number | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type ProductoCreateManyCategoriaInput = {
@@ -27567,6 +31006,11 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
   }
 
   export type MovimientoCreateManyProductoInput = {
@@ -27715,8 +31159,14 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateWithoutProductoInput = {
@@ -27783,7 +31233,13 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoInput = {
@@ -27850,6 +31306,11 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MovimientoUpdateWithoutProductoInput = {
@@ -28222,6 +31683,11 @@ export namespace Prisma {
     comentariosInternos?: string | null
     observacionesTecnicas?: string | null
     observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
   }
 
   export type CotizacionFirematDetalleUpdateWithoutCotizacionInput = {
@@ -28318,8 +31784,14 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateWithoutCotizacionInput = {
@@ -28386,7 +31858,13 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyWithoutCotizacionInput = {
@@ -28453,6 +31931,11 @@ export namespace Prisma {
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
     observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FunnelFirematArchivoCreateManyOportunidadInput = {
@@ -28465,6 +31948,14 @@ export namespace Prisma {
     bytes?: number | null
     etapa?: string | null
     observaciones?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HistorialEtapaFirematCreateManyOportunidadInput = {
+    id?: number
+    etapaAnterior?: string | null
+    etapaNueva: string
+    usuarioId?: string | null
     createdAt?: Date | string
   }
 
@@ -28503,6 +31994,29 @@ export namespace Prisma {
     bytes?: NullableIntFieldUpdateOperationsInput | number | null
     etapa?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematUpdateWithoutOportunidadInput = {
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematUncheckedUpdateWithoutOportunidadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
+    etapaNueva?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

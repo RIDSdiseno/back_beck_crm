@@ -22,6 +22,8 @@ const ROLES_ASIGNABLES_INGENIERIA: RolUsuario[] = [
 ];
 
 const esIngenieria = (req: Request): boolean => req.userRole === RolUsuario.ingenieria;
+const esJefeObra = (req: Request): boolean => req.userRole === RolUsuario.jefeobra;
+const esRolRestringido = (req: Request): boolean => esIngenieria(req) || esJefeObra(req);
 
 function validarGestionIngenieria(
   req: Request,
@@ -29,7 +31,7 @@ function validarGestionIngenieria(
   usuarioObjetivo?: { rol: RolUsuario },
   rolNuevo?: RolUsuario,
 ): boolean {
-  if (!esIngenieria(req)) return true;
+  if (!esRolRestringido(req)) return true;
 
   if (usuarioObjetivo?.rol === RolUsuario.administrador) {
     res.status(403).json({ success: false, error: 'No tienes permiso para gestionar administradores.' });
@@ -37,12 +39,12 @@ function validarGestionIngenieria(
   }
 
   if (rolNuevo === RolUsuario.administrador) {
-    res.status(403).json({ success: false, error: 'Ingeniería no puede asignar rol administrador.' });
+    res.status(403).json({ success: false, error: 'No puedes asignar rol administrador.' });
     return false;
   }
 
   if (rolNuevo && !ROLES_ASIGNABLES_INGENIERIA.includes(rolNuevo)) {
-    res.status(403).json({ success: false, error: 'Ingeniería solo puede asignar roles Beck permitidos.' });
+    res.status(403).json({ success: false, error: 'Solo puedes asignar roles Beck permitidos.' });
     return false;
   }
 
@@ -249,7 +251,7 @@ export const actualizarUsuarioParametros = async (req: Request, res: Response): 
     }
 
     if (typeof activo === 'boolean') {
-      if (esIngenieria(req) && !activo && id === req.userId) {
+      if (esRolRestringido(req) && !activo && id === req.userId) {
         res.status(403).json({ success: false, error: 'No puedes desactivarte a ti mismo.' });
         return;
       }
@@ -320,7 +322,7 @@ export const eliminarUsuarioParametros = async (req: Request, res: Response): Pr
       return;
     }
 
-    if (esIngenieria(req) && id === req.userId) {
+    if (esRolRestringido(req) && id === req.userId) {
       res.status(403).json({ success: false, error: 'No puedes desactivarte a ti mismo.' });
       return;
     }

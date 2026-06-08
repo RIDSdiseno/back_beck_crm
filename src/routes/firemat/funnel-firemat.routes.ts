@@ -4,9 +4,11 @@ import {
   deleteFunnelFiremat,
   getFunnelFiremat,
   getFunnelFirematById,
+  getHistorialEtapasFiremat,
   patchEtapaFunnelFiremat,
   updateFunnelFiremat,
 } from '../../controllers/firemat/funnel-firemat.controller';
+import { getDashboardFunnelFiremat } from '../../controllers/firemat/funnel-firemat-dashboard.controller';
 import {
   eliminarArchivoFunnelFiremat,
   listarArchivosFunnelFiremat,
@@ -23,9 +25,11 @@ const canRead  = authorize('administrador', 'vendedor_firemat', 'visualizador_fi
 const canWrite = authorize('administrador', 'vendedor_firemat');
 
 router.get('/', canRead, getFunnelFiremat);
+router.get('/dashboard', canRead, getDashboardFunnelFiremat);
 router.delete('/archivos/:archivoId', canWrite, eliminarArchivoFunnelFiremat);
 router.get('/:id/archivos', canRead, listarArchivosFunnelFiremat);
 router.post('/:id/archivos', canWrite, uploadFunnelFirematFiles, subirArchivosFunnelFiremat);
+router.get('/:id/historial-etapas', canRead, getHistorialEtapasFiremat);
 router.get('/:id', canRead, getFunnelFirematById);
 router.post('/', canWrite, createFunnelFiremat);
 router.put('/:id', canWrite, updateFunnelFiremat);

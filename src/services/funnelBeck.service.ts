@@ -4,6 +4,7 @@ import {
   MonedaFunnel,
   FuenteLeadFunnel,
   TipoMovimientoCRM,
+  Prisma,
 } from "@prisma/client";
 import { prisma } from "../config/prisma";
 import { registrarMovimientoCRM } from "./movimientoCrm.service";
@@ -421,6 +422,29 @@ function validarCamposObligatorios(data: NormalizedInput) {
   });
 }
 
+async function registrarCambioEtapaBeck({
+  tx,
+  oportunidadId,
+  etapaAnterior,
+  etapaNueva,
+  usuarioId,
+}: {
+  tx: Prisma.TransactionClient;
+  oportunidadId: string;
+  etapaAnterior: string | null;
+  etapaNueva: string;
+  usuarioId?: string | null;
+}): Promise<void> {
+  await tx.historialEtapaBeck.create({
+    data: {
+      oportunidadId,
+      etapaAnterior,
+      etapaNueva,
+      usuarioId: usuarioId ?? null,
+    },
+  });
+}
+
 export async function createFunnelBeck(rawData: Record<string, unknown>, userId: string) {
   const data = extractInput(rawData);
   validarCamposObligatorios(data);
@@ -448,7 +472,8 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
     }
   }
 
-  const oportunidad = await prisma.operadorBeck.create({
+  const oportunidad = await prisma.$transaction(async (tx) => {
+  const created = await tx.operadorBeck.create({
     data: {
       nombreProyecto:      normalizeString(data.nombreProyecto),
       empresa:             normalizeString(data.empresa),
@@ -562,8 +587,18 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       estadoRevisionTecnica:    optStr(data.estadoRevisionTecnica),
       garantiasRequeridas:      optStr(data.garantiasRequeridas),
       estadoDocumentacionVenta: optStr(data.estadoDocumentacionVenta),
+      fechaUltimoCambioEtapa: new Date(),
     },
     include: FUNNEL_BECK_INCLUDE,
+  });
+  await registrarCambioEtapaBeck({
+    tx,
+    oportunidadId: created.id,
+    etapaAnterior: null,
+    etapaNueva: created.etapa,
+    usuarioId: userId,
+  });
+  return created;
   });
 
   await registrarMovimientoCRM({
@@ -826,6 +861,18 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     fechaProximaAccion: fechaProximaAccionFinal,
   });
 
+  // Regla reprogramaciones: solo incrementar si antes había fecha Y ahora hay fecha distinta
+  let incrementarReprogramaciones = false;
+  if (data.fechaProximaAccion !== undefined) {
+    const anteriorFecha = existente.fechaProximaAccion;
+    const nuevaFecha = parseOptionalDate(data.fechaProximaAccion);
+    if (anteriorFecha !== null && nuevaFecha !== null) {
+      const anteriorStr = anteriorFecha.toISOString().split("T")[0];
+      const nuevaStr = nuevaFecha.toISOString().split("T")[0];
+      if (anteriorStr !== nuevaStr) incrementarReprogramaciones = true;
+    }
+  }
+
   const etapaCambio = etapa !== existente.etapa;
   const cierreCambio = data.estadoCierre !== undefined && data.estadoCierre !== existente.estadoCierre;
 
@@ -854,7 +901,8 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     }
   }
 
-  const oportunidad = await prisma.operadorBeck.update({
+  const oportunidad = await prisma.$transaction(async (tx) => {
+  const updated = await tx.operadorBeck.update({
     where: { id },
     data: {
       nombreProyecto,
@@ -970,8 +1018,21 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.estadoRevisionTecnica    !== undefined && { estadoRevisionTecnica:    optStr(data.estadoRevisionTecnica) }),
       ...(data.garantiasRequeridas      !== undefined && { garantiasRequeridas:      optStr(data.garantiasRequeridas) }),
       ...(data.estadoDocumentacionVenta !== undefined && { estadoDocumentacionVenta: optStr(data.estadoDocumentacionVenta) }),
+      ...(incrementarReprogramaciones && { reprogramacionesCount: { increment: 1 } }),
+      ...(etapaCambio && { fechaUltimoCambioEtapa: new Date() }),
     },
     include: FUNNEL_BECK_INCLUDE,
+  });
+  if (etapaCambio) {
+    await registrarCambioEtapaBeck({
+      tx,
+      oportunidadId: id,
+      etapaAnterior: existente.etapa,
+      etapaNueva: etapa,
+      usuarioId: userId,
+    });
+  }
+  return updated;
   });
 
   const cambios: string[] = [];
@@ -1080,7 +1141,8 @@ export async function updateEtapaFunnelBeck(
     }
   }
 
-  const oportunidad = await prisma.operadorBeck.update({
+  const oportunidad = await prisma.$transaction(async (tx) => {
+  const updated = await tx.operadorBeck.update({
     where: { id },
     data: {
       etapa: payload.etapa,
@@ -1105,8 +1167,20 @@ export async function updateEtapaFunnelBeck(
       ...(payload.responsableTraspasoAdministracion !== undefined && { responsableTraspasoAdministracion: optStr(payload.responsableTraspasoAdministracion) }),
       ...(payload.observacionesTraspasoAdministracion !== undefined && { observacionesTraspasoAdministracion: optStr(payload.observacionesTraspasoAdministracion) }),
       ...(payload.observacionCamposFaltantes !== undefined && { observacionCamposFaltantes: optStr(payload.observacionCamposFaltantes) }),
+      ...(etapaCambio && { fechaUltimoCambioEtapa: new Date() }),
     },
     include: FUNNEL_BECK_INCLUDE,
+  });
+  if (etapaCambio) {
+    await registrarCambioEtapaBeck({
+      tx,
+      oportunidadId: id,
+      etapaAnterior: existente.etapa,
+      etapaNueva: payload.etapa!,
+      usuarioId: userId,
+    });
+  }
+  return updated;
   });
 
   if (payload.etapa !== existente.etapa) {
@@ -1121,6 +1195,35 @@ export async function updateEtapaFunnelBeck(
   }
 
   return oportunidad;
+}
+
+export async function getHistorialEtapasBeck(id: string) {
+  const oportunidad = await prisma.operadorBeck.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  if (!oportunidad) throw new Error("Oportunidad no encontrada.");
+
+  return prisma.historialEtapaBeck.findMany({
+    where: { oportunidadId: id },
+    orderBy: { createdAt: "asc" },
+    select: {
+      id: true,
+      oportunidadId: true,
+      etapaAnterior: true,
+      etapaNueva: true,
+      usuarioId: true,
+      createdAt: true,
+      usuario: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+        },
+      },
+    },
+  });
 }
 
 export async function deleteFunnelBeck(id: string, userId: string) {

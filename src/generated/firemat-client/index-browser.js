@@ -332,7 +332,12 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   riesgoTecnico: 'riesgoTecnico',
   comentariosInternos: 'comentariosInternos',
   observacionesTecnicas: 'observacionesTecnicas',
-  observacionCamposFaltantes: 'observacionCamposFaltantes'
+  observacionCamposFaltantes: 'observacionCamposFaltantes',
+  lineaProducto: 'lineaProducto',
+  descuento: 'descuento',
+  stockOportunidad: 'stockOportunidad',
+  reprogramacionesCount: 'reprogramacionesCount',
+  fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa'
 };
 
 exports.Prisma.ContactoClienteFirematScalarFieldEnum = {
@@ -360,6 +365,23 @@ exports.Prisma.FunnelFirematArchivoScalarFieldEnum = {
   bytes: 'bytes',
   etapa: 'etapa',
   observaciones: 'observaciones',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AlertaVistaFirematScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  alertaKey: 'alertaKey',
+  vistoAt: 'vistoAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.HistorialEtapaFirematScalarFieldEnum = {
+  id: 'id',
+  oportunidadId: 'oportunidadId',
+  etapaAnterior: 'etapaAnterior',
+  etapaNueva: 'etapaNueva',
+  usuarioId: 'usuarioId',
   createdAt: 'createdAt'
 };
 
@@ -410,7 +432,9 @@ exports.Prisma.ModelName = {
   CotizacionFirematDetalle: 'CotizacionFirematDetalle',
   FunnelFirematOpportunity: 'FunnelFirematOpportunity',
   ContactoClienteFiremat: 'ContactoClienteFiremat',
-  FunnelFirematArchivo: 'FunnelFirematArchivo'
+  FunnelFirematArchivo: 'FunnelFirematArchivo',
+  AlertaVistaFiremat: 'AlertaVistaFiremat',
+  HistorialEtapaFiremat: 'HistorialEtapaFiremat'
 };
 
 /**

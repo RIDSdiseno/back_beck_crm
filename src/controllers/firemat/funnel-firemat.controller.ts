@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
+import { prisma } from '../../config/prisma';
 
 const ETAPAS_PERMITIDAS = [
   'PROSPECTO',
@@ -81,6 +82,11 @@ const hasOwn = (body: Record<string, unknown>, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(body, key);
 
 const isActiva = (etapa: string): boolean => !ETAPAS_CERRADAS.has(etapa);
+
+const isSameCalendarDay = (a: Date, b: Date): boolean =>
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
 
 interface CamposCriticosInput {
   cliente: string | null;
@@ -183,6 +189,26 @@ const handleError = (res: Response, error: unknown): void => {
 
   console.error('Error en Funnel Firemat:', error);
   res.status(500).json({ success: false, error: 'Error interno del servidor' });
+};
+
+interface RegistrarCambioEtapaParams {
+  tx: Prisma.TransactionClient;
+  oportunidadId: number;
+  etapaAnterior: string | null;
+  etapaNueva: string;
+  usuarioId: string | null;
+}
+
+const registrarCambioEtapaFiremat = async ({
+  tx,
+  oportunidadId,
+  etapaAnterior,
+  etapaNueva,
+  usuarioId,
+}: RegistrarCambioEtapaParams): Promise<void> => {
+  await tx.historialEtapaFiremat.create({
+    data: { oportunidadId, etapaAnterior, etapaNueva, usuarioId },
+  });
 };
 
 const assertLinkedRecordsExist = async (
@@ -316,6 +342,9 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     observaciones: getNullableString(body.observaciones),
     origen: getNullableString(body.origen),
     estadoStock: getNullableString(body.estadoStock),
+    lineaProducto: getNullableString(body.lineaProducto),
+    descuento: getNumber(body.descuento),
+    stockOportunidad: getNullableString(body.stockOportunidad),
     cotizacionId: getInt(body.cotizacionId),
     motivoPerdida,
     motivoPostergacion,
@@ -484,7 +513,17 @@ const buildUpdateData = (
   if (hasOwn(body, 'montoEstimado')) data.montoEstimado = montoEstimado ?? 0;
   if (hasOwn(body, 'probabilidadCierre')) data.probabilidadCierre = getInt(body.probabilidadCierre);
   if (hasOwn(body, 'proximaAccion')) data.proximaAccion = proximaAccion;
-  if (hasOwn(body, 'fechaProximaAccion')) data.fechaProximaAccion = fechaProximaAccion;
+  if (hasOwn(body, 'fechaProximaAccion')) {
+    data.fechaProximaAccion = fechaProximaAccion;
+    // Incrementar cuando se reprograma: anterior fecha → nueva fecha distinta (no null→fecha ni fecha→null)
+    if (
+      current.fechaProximaAccion !== null &&
+      fechaProximaAccion !== null &&
+      !isSameCalendarDay(current.fechaProximaAccion, fechaProximaAccion)
+    ) {
+      data.reprogramacionesCount = { increment: 1 };
+    }
+  }
   if (hasOwn(body, 'observaciones')) data.observaciones = getNullableString(body.observaciones);
   if (hasOwn(body, 'origen')) data.origen = getNullableString(body.origen);
   if (hasOwn(body, 'estadoStock')) data.estadoStock = getNullableString(body.estadoStock);
@@ -504,6 +543,9 @@ const buildUpdateData = (
   if (hasOwn(body, 'comentariosInternos')) data.comentariosInternos = getNullableString(body.comentariosInternos);
   if (hasOwn(body, 'observacionesTecnicas')) data.observacionesTecnicas = getNullableString(body.observacionesTecnicas);
   if (hasOwn(body, 'observacionCamposFaltantes')) data.observacionCamposFaltantes = getNullableString(body.observacionCamposFaltantes);
+  if (hasOwn(body, 'lineaProducto')) data.lineaProducto = getNullableString(body.lineaProducto);
+  if (hasOwn(body, 'descuento')) data.descuento = getNumber(body.descuento);
+  if (hasOwn(body, 'stockOportunidad')) data.stockOportunidad = getNullableString(body.stockOportunidad);
 
   return data;
 };
@@ -596,9 +638,19 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
       typeof dataInput.cotizacionId === 'number' ? dataInput.cotizacionId : null
     );
 
-    const data = await firematPrisma.funnelFirematOpportunity.create({
-      data: dataInput,
-      include: funnelInclude,
+    const data = await firematPrisma.$transaction(async (tx) => {
+      const created = await tx.funnelFirematOpportunity.create({
+        data: { ...dataInput, fechaUltimoCambioEtapa: new Date() },
+        include: funnelInclude,
+      });
+      await registrarCambioEtapaFiremat({
+        tx,
+        oportunidadId: created.id,
+        etapaAnterior: null,
+        etapaNueva: created.etapa,
+        usuarioId: req.userId ?? null,
+      });
+      return created;
     });
 
     const clienteSets = await cargarClientesParaMatch();
@@ -661,10 +713,27 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
       }
     }
 
-    const data = await firematPrisma.funnelFirematOpportunity.update({
-      where: { id },
-      data: dataInput,
-      include: funnelInclude,
+    const etapaCambio = nuevaEtapa !== null && nuevaEtapa !== current.etapa;
+    if (etapaCambio) {
+      dataInput.fechaUltimoCambioEtapa = new Date();
+    }
+
+    const data = await firematPrisma.$transaction(async (tx) => {
+      const updated = await tx.funnelFirematOpportunity.update({
+        where: { id },
+        data: dataInput,
+        include: funnelInclude,
+      });
+      if (etapaCambio && nuevaEtapa !== null) {
+        await registrarCambioEtapaFiremat({
+          tx,
+          oportunidadId: id,
+          etapaAnterior: current.etapa,
+          etapaNueva: nuevaEtapa,
+          usuarioId: req.userId ?? null,
+        });
+      }
+      return updated;
     });
 
     const clienteSets = await cargarClientesParaMatch();
@@ -727,10 +796,27 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
       }
     }
 
-    const data = await firematPrisma.funnelFirematOpportunity.update({
-      where: { id },
-      data: dataInput,
-      include: funnelInclude,
+    const etapaCambio = etapa !== current.etapa;
+    if (etapaCambio) {
+      dataInput.fechaUltimoCambioEtapa = new Date();
+    }
+
+    const data = await firematPrisma.$transaction(async (tx) => {
+      const updated = await tx.funnelFirematOpportunity.update({
+        where: { id },
+        data: dataInput,
+        include: funnelInclude,
+      });
+      if (etapaCambio) {
+        await registrarCambioEtapaFiremat({
+          tx,
+          oportunidadId: id,
+          etapaAnterior: current.etapa,
+          etapaNueva: etapa,
+          usuarioId: req.userId ?? null,
+        });
+      }
+      return updated;
     });
 
     const clienteSets = await cargarClientesParaMatch();
@@ -751,6 +837,60 @@ export const deleteFunnelFiremat = async (req: Request, res: Response): Promise<
     await firematPrisma.funnelFirematOpportunity.delete({ where: { id } });
 
     res.json({ success: true, message: 'Oportunidad Firemat eliminada' });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const getHistorialEtapasFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseIdParam(req.params.id);
+    if (!id) {
+      res.status(400).json({ success: false, error: 'ID invalido' });
+      return;
+    }
+
+    const oportunidad = await firematPrisma.funnelFirematOpportunity.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!oportunidad) {
+      res.status(404).json({ success: false, error: 'Oportunidad no encontrada' });
+      return;
+    }
+
+    const historial = await firematPrisma.historialEtapaFiremat.findMany({
+      where: { oportunidadId: id },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const usuarioIds = [
+      ...new Set(historial.map(h => h.usuarioId).filter((uid): uid is string => uid !== null)),
+    ];
+
+    const usuariosMap = new Map<string, { nombre: string; email: string }>();
+    if (usuarioIds.length > 0) {
+      const usuarios = await prisma.usuario.findMany({
+        where: { id: { in: usuarioIds } },
+        select: { id: true, nombre: true, email: true },
+      });
+      for (const u of usuarios) {
+        usuariosMap.set(u.id, { nombre: u.nombre, email: u.email });
+      }
+    }
+
+    const data = historial.map(h => ({
+      id: h.id,
+      oportunidadId: h.oportunidadId,
+      etapaAnterior: h.etapaAnterior,
+      etapaNueva: h.etapaNueva,
+      usuarioId: h.usuarioId,
+      usuarioNombre: h.usuarioId ? (usuariosMap.get(h.usuarioId)?.nombre ?? null) : null,
+      usuarioEmail: h.usuarioId ? (usuariosMap.get(h.usuarioId)?.email ?? null) : null,
+      createdAt: h.createdAt.toISOString(),
+    }));
+
+    res.json({ success: true, data });
   } catch (error) {
     handleError(res, error);
   }

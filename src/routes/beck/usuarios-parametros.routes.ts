@@ -17,9 +17,9 @@ router.use((_req: Request, _res: Response, next: NextFunction) => {
 
 router.use(authenticate);
 
-router.get('/', authorize('administrador', 'ingenieria'), listarUsuariosParametros);
-router.post('/', authorize('administrador', 'ingenieria'), crearUsuarioParametros);
-router.put('/:id', authorize('administrador', 'ingenieria'), actualizarUsuarioParametros);
-router.delete('/:id', authorize('administrador', 'ingenieria'), eliminarUsuarioParametros);
+router.get('/', authorize('administrador', 'ingenieria', 'jefeobra'), listarUsuariosParametros);
+router.post('/', authorize('administrador', 'ingenieria', 'jefeobra'), crearUsuarioParametros);
+router.put('/:id', authorize('administrador', 'ingenieria', 'jefeobra'), actualizarUsuarioParametros);
+router.delete('/:id', authorize('administrador', 'ingenieria', 'jefeobra'), eliminarUsuarioParametros);
 
 export default router;

@@ -28,6 +28,8 @@ import firematClientesRoutes from './routes/firemat/clientes-firemat.routes';
 import oficinaTecnicaPreventaRoutes from './routes/oficinaTecnicaPreventa.routes';
 import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegistro.routes';
 import registrosCampoRoutes from './routes/registros-campo.routes';
+import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
+import alertasRoutes from './routes/alertas.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -119,6 +121,7 @@ app.use('/api/movimientos-crm', blockBeckCommercial, movimientosCrmRoutes);
 app.use('/api/stats', blockBeckCommercial, statsRoutes);
 app.use('/api/procesamiento', blockBeckCommercial, procesamientoRoutes);
 app.use('/api/itemizados', blockBeckCommercial, itemizadosRoutes);
+app.use('/api/alertas', authenticate, alertasRoutes);
 
 app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);
 app.use('/api/oficina-tecnica-preventa', oficinaTecnicaPreventaRoutes);
@@ -135,6 +138,9 @@ app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
 
 // Configuración de visibilidad de campos por rol (accesible a todos los roles autenticados)
 app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);
+
+// Opciones de itemizado por obra
+app.use('/api/itemizado-opciones', itemizadoOpcionesRoutes);
 
 // Registros con sanitización por rol — accesibles para terreno, jefeobra y roles Beck
 // NO usa blockBeckRoutes para permitir terreno/jefeobra

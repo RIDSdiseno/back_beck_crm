@@ -24,9 +24,11 @@ model Usuario {
   notificaciones        Notificacion[]
   obrasCreadas          Obra[]                    @relation("ObrasCreadasPorUsuario")
   procesamientos        ProcesamientoIngenieria[]
+  registrosRechazados   RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
   registrosTerreno      RegistroTerreno[]
   usuarios_obras        usuarios_obras[]
-  registrosRechazados      RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
+  alertasVistas AlertaVista[]
+  historialEtapasBeck HistorialEtapaBeck[]
 
   @@index([email])
   @@index([rol])
@@ -127,21 +129,21 @@ model RegistroTerreno {
   reparacionTabique         Decimal?                 @map("reparacion_tabique") @db.Decimal(6, 2)
   cantidadFinal             Decimal?                 @map("cantidad_final") @db.Decimal(12, 2)
   folio                     String?                  @db.VarChar(100)
-  motivoRechazo            String?                  @map("motivo_rechazo")
-  fechaRechazo             DateTime?                @map("fecha_rechazo") @db.Timestamp(6)
-  rechazadoPorId           String?                  @map("rechazado_por_id") @db.Uuid
-  corregidoAt              DateTime?                @map("corregido_at") @db.Timestamp(6)
-  reenviadoRevisionAt      DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
-  registroOrigenId        String?                  @map("registro_origen_id") @db.Uuid
-  esCorreccion            Boolean                  @default(false) @map("es_correccion")
+  corregidoAt               DateTime?                @map("corregido_at") @db.Timestamp(6)
+  fechaRechazo              DateTime?                @map("fecha_rechazo") @db.Timestamp(6)
+  motivoRechazo             String?                  @map("motivo_rechazo")
+  rechazadoPorId            String?                  @map("rechazado_por_id") @db.Uuid
+  reenviadoRevisionAt       DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
+  esCorreccion              Boolean                  @default(false) @map("es_correccion")
+  registroOrigenId          String?                  @map("registro_origen_id") @db.Uuid
   fotos_registro            fotos_registro[]
   procesamiento             ProcesamientoIngenieria?
   itemizadoMandante         ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
   obra                      Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  rechazadoPor              Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
+  registroOrigen            RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
+  correcciones              RegistroTerreno[]        @relation("CorreccionesRegistro")
   usuario                   Usuario                  @relation(fields: [usuarioId], references: [id])
-  rechazadoPor             Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
-  registroOrigen          RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
-  correcciones            RegistroTerreno[]        @relation("CorreccionesRegistro")
 
   @@index([rechazadoPorId])
   @@index([obraId])
@@ -151,9 +153,9 @@ model RegistroTerreno {
   @@index([estado])
   @@index([tipoRegistro])
   @@index([devuelto_a_tecnico])
-  @@map("registros_terreno")
   @@index([registroOrigenId])
   @@index([esCorreccion])
+  @@map("registros_terreno")
 }
 
 model ProcesamientoIngenieria {
@@ -387,25 +389,29 @@ model OperadorBeck {
   responsableTraspasoOperaciones      String?                   @map("responsable_traspaso_operaciones") @db.VarChar(255)
   traspasadoAdministracion            Boolean?                  @map("traspasado_administracion")
   traspasadoOperaciones               Boolean?                  @map("traspasado_operaciones")
-  direccionProyecto String? @map("direccion_proyecto")
-  unidadNegocio String? @map("unidad_negocio") @db.VarChar(150)
-  observaciones String?
-  urgencia                   String? @db.VarChar(50)
-  observacionCamposFaltantes String? @map("observacion_campos_faltantes")
-  tipoProyecto             String?  @map("tipo_proyecto") @db.VarChar(100)
-  empresaMandante          String?  @map("empresa_mandante")
-  necesidadLevantamiento   Boolean? @map("necesidad_levantamiento")
-  oficinaTecnicaAsignada   String?  @map("oficina_tecnica_asignada") @db.VarChar(255)
-  duracionEstimada         String?  @map("duracion_estimada") @db.VarChar(100)
-  estadoRevisionTecnica    String?  @map("estado_revision_tecnica") @db.VarChar(50)
-  garantiasRequeridas      String?  @map("garantias_requeridas")
-  estadoDocumentacionVenta String?  @map("estado_documentacion_venta") @db.VarChar(100)
+  direccionProyecto                   String?                   @map("direccion_proyecto")
+  observaciones                       String?
+  unidadNegocio                       String?                   @map("unidad_negocio") @db.VarChar(150)
+  observacionCamposFaltantes          String?                   @map("observacion_campos_faltantes")
+  urgencia                            String?                   @db.VarChar(50)
+  duracionEstimada                    String?                   @map("duracion_estimada") @db.VarChar(100)
+  empresaMandante                     String?                   @map("empresa_mandante")
+  estadoDocumentacionVenta            String?                   @map("estado_documentacion_venta") @db.VarChar(100)
+  estadoRevisionTecnica               String?                   @map("estado_revision_tecnica") @db.VarChar(50)
+  garantiasRequeridas                 String?                   @map("garantias_requeridas")
+  necesidadLevantamiento              Boolean?                  @map("necesidad_levantamiento")
+  oficinaTecnicaAsignada              String?                   @map("oficina_tecnica_asignada") @db.VarChar(255)
+  tipoProyecto                        String?                   @map("tipo_proyecto") @db.VarChar(100)
+  reprogramacionesCount               Int                       @default(0) @map("reprogramaciones_count")
+  fechaUltimoCambioEtapa              DateTime?                 @map("fecha_ultimo_cambio_etapa") @db.Timestamp(6)
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])
   obra                                Obra?                     @relation(fields: [obraId], references: [id])
   archivos                            FunnelBeckArchivo[]
   solicitudesOficinaTecnica           SolicitudOficinaTecnica[]
+  historialEtapas HistorialEtapaBeck[]
+  
 
   @@index([etapa])
   @@index([estadoCierre])
@@ -584,6 +590,55 @@ model ConfiguracionCamposRegistro {
   @@map("configuracion_campos_registro")
 }
 
+model ItemizadoOpcion {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoBeck      String?  @map("codigo_beck") @db.VarChar(100)
+  tipo            String?  @db.VarChar(100)
+  elementoPasante String?  @map("elemento_pasante")
+  elementoPenetra String?  @map("elemento_penetra")
+  materialidad    String?  @db.VarChar(150)
+  visible         Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([codigoBeck])
+  @@index([tipo])
+  @@index([materialidad])
+  @@map("itemizado_opciones")
+}
+
+model AlertaVista {
+  id        Int      @id @default(autoincrement())
+  usuarioId String   @map("usuario_id") @db.Uuid
+  alertaKey String   @map("alerta_key")
+  vistoAt   DateTime @default(now()) @map("visto_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, alertaKey])
+  @@index([usuarioId])
+  @@index([alertaKey])
+  @@map("alertas_vistas")
+}
+
+model HistorialEtapaBeck {
+  id              Int      @id @default(autoincrement())
+  oportunidadId   String   @map("oportunidad_id") @db.Uuid
+  etapaAnterior   String?  @map("etapa_anterior") @db.VarChar(100)
+  etapaNueva      String   @map("etapa_nueva") @db.VarChar(100)
+  usuarioId       String?  @map("usuario_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  oportunidad OperadorBeck @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+  usuario     Usuario?     @relation(fields: [usuarioId], references: [id])
+
+  @@index([oportunidadId])
+  @@index([etapaNueva])
+  @@index([createdAt])
+  @@map("historial_etapas_beck")
+}
+
 enum RolUsuario {
   administrador
   terreno
@@ -717,9 +772,9 @@ enum TipoMovimientoCRM {
   USUARIO_ACTIVADO
   USUARIO_DESACTIVADO
   ROL_CAMBIADO
-  PASSWORD_CAMBIADO
   OBRA_CREADA
   OBRA_EDITADA
   OBRA_ELIMINADA
   REGISTRO_CREADO
+  PASSWORD_CAMBIADO
 }

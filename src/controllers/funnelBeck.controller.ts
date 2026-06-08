@@ -6,6 +6,7 @@ import {
   getAllFunnelBeck,
   getFunnelBeckById,
   getGanadasSinObraFunnelBeck,
+  getHistorialEtapasBeck,
   updateEtapaFunnelBeck,
   updateFunnelBeck,
   updateObraFunnelBeck,
@@ -250,6 +251,33 @@ export async function updateObraFunnelBeckController(req: Request, res: Response
         ? 404
         : 400;
 
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
+    });
+  }
+}
+
+export async function getHistorialEtapasBeckController(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id || "").trim();
+    const historial = await getHistorialEtapasBeck(id);
+    return res.status(200).json({
+      success: true,
+      data: historial.map((h) => ({
+        id: h.id,
+        oportunidadId: h.oportunidadId,
+        etapaAnterior: h.etapaAnterior,
+        etapaNueva: h.etapaNueva,
+        usuarioId: h.usuarioId,
+        usuarioNombre: h.usuario?.nombre ?? null,
+        usuarioEmail: h.usuario?.email ?? null,
+        createdAt: h.createdAt.toISOString(),
+      })),
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al obtener historial de etapas.";
+    const statusCode = message === "Oportunidad no encontrada." ? 404 : 500;
     return res.status(statusCode).json({
       success: false,
       error: message,

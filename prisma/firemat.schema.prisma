@@ -251,10 +251,16 @@ model FunnelFirematOpportunity {
   comentariosInternos        String?   @map("comentarios_internos")
   observacionesTecnicas      String?   @map("observaciones_tecnicas")
   observacionCamposFaltantes String?   @map("observacion_campos_faltantes")
+  lineaProducto    String? @map("linea_producto") @db.VarChar(150)
+  descuento        Float?
+  stockOportunidad String? @map("stock_oportunidad") @db.VarChar(20)
+  reprogramacionesCount Int @default(0) @map("reprogramaciones_count")
+  fechaUltimoCambioEtapa DateTime? @map("fecha_ultimo_cambio_etapa")
 
   cotizacion               CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
   producto                 Producto?          @relation(fields: [productoId], references: [id])
   archivos FunnelFirematArchivo[]
+  historialEtapas HistorialEtapaFiremat[]
 }
 
 model ContactoClienteFiremat {
@@ -298,6 +304,35 @@ model FunnelFirematArchivo {
   @@index([tipo])
   @@index([etapa])
   @@map("funnel_firemat_archivos")
+}
+
+model AlertaVistaFiremat {
+  id        Int      @id @default(autoincrement())
+  usuarioId String   @map("usuario_id") @db.Uuid
+  alertaKey String   @map("alerta_key")
+  vistoAt   DateTime @default(now()) @map("visto_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([usuarioId, alertaKey])
+  @@index([usuarioId])
+  @@index([alertaKey])
+  @@map("alertas_vistas_firemat")
+}
+
+model HistorialEtapaFiremat {
+  id             Int      @id @default(autoincrement())
+  oportunidadId  Int      @map("oportunidad_id")
+  etapaAnterior  String?  @map("etapa_anterior") @db.VarChar(100)
+  etapaNueva     String   @map("etapa_nueva") @db.VarChar(100)
+  usuarioId      String?  @map("usuario_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  oportunidad FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+
+  @@index([oportunidadId])
+  @@index([etapaNueva])
+  @@index([createdAt])
+  @@map("historial_etapas_firemat")
 }
 
 enum TipoClienteFiremat {
