@@ -16,8 +16,10 @@ model Usuario {
   createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   azureId               String?                   @unique @map("azure_id") @db.VarChar(255)
+  alertasVistas         AlertaVista[]
   cotizacionesCreadas   Cotizacion[]              @relation("CotizacionesCreadasPorUsuario")
   fotos_registro        fotos_registro[]
+  historialEtapasBeck   HistorialEtapaBeck[]
   itemizadosCreados     Itemizado[]               @relation("ItemizadosCreadosPorUsuario")
   movimientosCrm        MovimientoCRM[]           @relation("MovimientosCrmPorUsuario")
   movimientosInventario MovimientoInventario[]
@@ -27,8 +29,6 @@ model Usuario {
   registrosRechazados   RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
   registrosTerreno      RegistroTerreno[]
   usuarios_obras        usuarios_obras[]
-  alertasVistas AlertaVista[]
-  historialEtapasBeck HistorialEtapaBeck[]
 
   @@index([email])
   @@index([rol])
@@ -105,7 +105,6 @@ model RegistroTerreno {
   cantidadSellos            Int                      @map("cantidad_sellos")
   nombreSellador            String                   @map("nombre_sellador") @db.VarChar(255)
   holgura                   Decimal                  @db.Decimal(3, 1)
-  accesibilidad             Int
   observaciones             String?
   fotosUrls                 String[]                 @map("fotos_urls")
   createdAt                 DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
@@ -113,7 +112,6 @@ model RegistroTerreno {
   estado                    EstadoRegistroTerreno    @default(pendiente)
   metrosLineales            Float?                   @map("metros_lineales")
   tipoRegistro              String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
-  itemizadoSacyr            String?                  @map("itemizado_sacyr") @db.VarChar(255)
   devuelto_a_tecnico        Boolean                  @default(false)
   codigoBeck                String?                  @map("codigo_beck")
   itemizadoMandanteId       String?                  @map("itemizado_mandante_id") @db.Uuid
@@ -122,7 +120,7 @@ model RegistroTerreno {
   fotoUrl                   String?                  @map("foto_url")
   recinto                   String?                  @db.VarChar(100)
   factorPorHolguras         Decimal?                 @map("factor_por_holguras") @db.Decimal(6, 2)
-  cieloModular              Int?                     @map("cielo_modular")
+  accesibilidad             Int?
   cantidadSellosConFactores Decimal?                 @map("cantidad_sellos_con_factores") @db.Decimal(12, 2)
   aislacion                 Decimal?                 @db.Decimal(6, 2)
   cantidadSellosAislacion   Decimal?                 @map("cantidad_sellos_aislacion") @db.Decimal(12, 2)
@@ -404,15 +402,14 @@ model OperadorBeck {
   tipoProyecto                        String?                   @map("tipo_proyecto") @db.VarChar(100)
   reprogramacionesCount               Int                       @default(0) @map("reprogramaciones_count")
   fechaUltimoCambioEtapa              DateTime?                 @map("fecha_ultimo_cambio_etapa") @db.Timestamp(6)
-  esReactivacion Boolean @default(false) @map("es_reactivacion")
+  esReactivacion                      Boolean                   @default(false) @map("es_reactivacion")
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])
   obra                                Obra?                     @relation(fields: [obraId], references: [id])
   archivos                            FunnelBeckArchivo[]
+  historialEtapas                     HistorialEtapaBeck[]
   solicitudesOficinaTecnica           SolicitudOficinaTecnica[]
-  historialEtapas HistorialEtapaBeck[]
-  
 
   @@index([etapa])
   @@index([estadoCierre])
@@ -614,8 +611,7 @@ model AlertaVista {
   alertaKey String   @map("alerta_key")
   vistoAt   DateTime @default(now()) @map("visto_at")
   createdAt DateTime @default(now()) @map("created_at")
-  
-  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, alertaKey])
   @@index([usuarioId])
@@ -624,15 +620,14 @@ model AlertaVista {
 }
 
 model HistorialEtapaBeck {
-  id              Int      @id @default(autoincrement())
-  oportunidadId   String   @map("oportunidad_id") @db.Uuid
-  etapaAnterior   String?  @map("etapa_anterior") @db.VarChar(100)
-  etapaNueva      String   @map("etapa_nueva") @db.VarChar(100)
-  usuarioId       String?  @map("usuario_id") @db.Uuid
-  createdAt       DateTime @default(now()) @map("created_at")
-
-  oportunidad OperadorBeck @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
-  usuario     Usuario?     @relation(fields: [usuarioId], references: [id])
+  id            Int          @id @default(autoincrement())
+  oportunidadId String       @map("oportunidad_id") @db.Uuid
+  etapaAnterior String?      @map("etapa_anterior") @db.VarChar(100)
+  etapaNueva    String       @map("etapa_nueva") @db.VarChar(100)
+  usuarioId     String?      @map("usuario_id") @db.Uuid
+  createdAt     DateTime     @default(now()) @map("created_at")
+  oportunidad   OperadorBeck @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+  usuario       Usuario?     @relation(fields: [usuarioId], references: [id])
 
   @@index([oportunidadId])
   @@index([etapaNueva])
@@ -644,14 +639,13 @@ model ConfiguracionValidacion {
   id        Int      @id @default(autoincrement())
   modulo    String   @db.VarChar(50)
   regla     String   @db.VarChar(100)
-  etapa     String   @db.VarChar(100)
   campo     String   @db.VarChar(100)
   etiqueta  String   @db.VarChar(255)
   nivel     String   @default("BLOQUEANTE") @db.VarChar(20)
   activo    Boolean  @default(true)
-
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  etapa     String   @db.VarChar(100)
 
   @@unique([modulo, regla, etapa])
   @@index([modulo])
@@ -659,6 +653,7 @@ model ConfiguracionValidacion {
   @@index([activo])
   @@map("configuracion_validacion")
 }
+
 enum RolUsuario {
   administrador
   terreno
