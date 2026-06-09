@@ -179,18 +179,20 @@ export async function deleteFunnelBeckArchivoController(req: Request, res: Respo
 export async function updateFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const oportunidad = await updateFunnelBeck(id, req.body, req.userId ?? '');
+    const { oportunidad, advertencias } = await updateFunnelBeck(id, req.body, req.userId ?? '');
     return res.status(200).json({
       success: true,
       data: oportunidad,
+      ...(advertencias.length > 0 && { advertencias }),
       message: "Oportunidad actualizada correctamente.",
     });
   } catch (error) {
     if (error instanceof AdvertenciaCamposCriticosError) {
       return res.status(409).json({
         success: false,
-        advertenciasCamposCriticos: error.faltantes,
-        requiereObservacionCamposFaltantes: true,
+        bloqueos: error.bloqueos,
+        advertencias: error.advertencias,
+        puedeAvanzar: false,
         message: 'Faltan campos críticos para avanzar de etapa.',
       });
     }
@@ -204,18 +206,20 @@ export async function updateFunnelBeckController(req: Request, res: Response) {
 export async function updateEtapaFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const oportunidad = await updateEtapaFunnelBeck(id, req.body, req.userId ?? '');
+    const { oportunidad, advertencias } = await updateEtapaFunnelBeck(id, req.body, req.userId ?? '');
     return res.status(200).json({
       success: true,
       data: oportunidad,
+      ...(advertencias.length > 0 && { advertencias }),
       message: "Etapa actualizada correctamente.",
     });
   } catch (error) {
     if (error instanceof AdvertenciaCamposCriticosError) {
       return res.status(409).json({
         success: false,
-        advertenciasCamposCriticos: error.faltantes,
-        requiereObservacionCamposFaltantes: true,
+        bloqueos: error.bloqueos,
+        advertencias: error.advertencias,
+        puedeAvanzar: false,
         message: 'Faltan campos críticos para avanzar de etapa.',
       });
     }

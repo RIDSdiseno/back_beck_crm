@@ -26,6 +26,12 @@ const toDTO = (p: ProdWithCat) => ({
   categoria: p.Categoria.nombre,
   categoriaId: p.categoriaId,
   precio: p.precio,
+  precioClp: p.precio,
+  precioUsd: p.precioUsd,
+  precioSugerido: p.precioSugerido,
+  disponibilidad: p.disponibilidad,
+  formato: p.formato,
+  cantidadCaja: p.cantidadCaja,
   stockActual: p.stock,
   stockReservado: p.stockReservado,
   stockDisponible: p.stock - p.stockReservado,
@@ -50,6 +56,7 @@ export const getProductosFiremat = async (req: Request, res: Response): Promise<
     }
     if (typeof q === 'string' && q.trim()) {
       where.OR = [
+        { sku: { contains: q.trim(), mode: 'insensitive' } },
         { nombre: { contains: q.trim(), mode: 'insensitive' } },
         { descripcion: { contains: q.trim(), mode: 'insensitive' } },
       ];
@@ -61,7 +68,7 @@ export const getProductosFiremat = async (req: Request, res: Response): Promise<
       orderBy: { createdAt: 'desc' },
     });
 
-    res.json({ success: true, data: productos.map(toDTO) });
+    res.json({ success: true, total: productos.length, data: productos.map(toDTO) });
   } catch (error) {
     console.error('Error al obtener productos Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al obtener productos' });
@@ -107,6 +114,11 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       criticidad,
       activo,
       imagen,
+      disponibilidad,
+      formato,
+      cantidadCaja,
+      precioUsd,
+      precioSugerido,
     } = req.body;
 
     if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
@@ -128,8 +140,36 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     const precioNum = parseFloat(String(precio ?? 0));
-    if (isNaN(precioNum) || precioNum < 0) {
+    if (!Number.isFinite(precioNum) || precioNum < 0) {
       res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
+      return;
+    }
+    let precioUsdNum: number | undefined;
+    if (precioUsd !== undefined) {
+      precioUsdNum = parseFloat(String(precioUsd));
+      if (!Number.isFinite(precioUsdNum) || precioUsdNum < 0) {
+        res.status(400).json({ success: false, error: 'precioUsd debe ser >= 0' });
+        return;
+      }
+    }
+    let precioSugeridoNum: number | undefined;
+    if (precioSugerido !== undefined) {
+      precioSugeridoNum = parseFloat(String(precioSugerido));
+      if (!Number.isFinite(precioSugeridoNum) || precioSugeridoNum < 0) {
+        res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
+        return;
+      }
+    }
+    if (cantidadCaja !== undefined && cantidadCaja !== null && typeof cantidadCaja !== 'string') {
+      res.status(400).json({ success: false, error: 'cantidadCaja debe ser string' });
+      return;
+    }
+    if (disponibilidad !== undefined && typeof disponibilidad !== 'string') {
+      res.status(400).json({ success: false, error: 'disponibilidad debe ser string' });
+      return;
+    }
+    if (formato !== undefined && typeof formato !== 'string') {
+      res.status(400).json({ success: false, error: 'formato debe ser string' });
       return;
     }
     const stockIni = parseInt(String(stockInicial ?? 0), 10);
@@ -165,6 +205,11 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
         descripcion: descripcion?.trim() ?? null,
         categoriaId: catId,
         precio: precioNum,
+        precioUsd: precioUsdNum,
+        precioSugerido: precioSugeridoNum,
+        disponibilidad: disponibilidad?.trim() || null,
+        formato: formato?.trim() || null,
+        cantidadCaja: cantidadCaja?.trim() || null,
         stock: stockIni,
         minStock: stockMin,
         ubicacion: ubicacion?.trim() ?? null,
@@ -219,6 +264,11 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
       criticidad,
       activo,
       imagen,
+      disponibilidad,
+      formato,
+      cantidadCaja,
+      precioUsd,
+      precioSugerido,
     } = req.body;
 
     const data: Prisma.ProductoUpdateInput = {};
@@ -264,11 +314,53 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
 
     if (precio !== undefined) {
       const p = parseFloat(String(precio));
-      if (isNaN(p) || p < 0) {
+      if (!Number.isFinite(p) || p < 0) {
         res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
         return;
       }
       data.precio = p;
+    }
+
+    if (precioUsd !== undefined) {
+      const p = parseFloat(String(precioUsd));
+      if (!Number.isFinite(p) || p < 0) {
+        res.status(400).json({ success: false, error: 'precioUsd debe ser >= 0' });
+        return;
+      }
+      data.precioUsd = p;
+    }
+
+    if (precioSugerido !== undefined) {
+      const p = parseFloat(String(precioSugerido));
+      if (!Number.isFinite(p) || p < 0) {
+        res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
+        return;
+      }
+      data.precioSugerido = p;
+    }
+
+    if (cantidadCaja !== undefined) {
+      if (cantidadCaja !== null && typeof cantidadCaja !== 'string') {
+        res.status(400).json({ success: false, error: 'cantidadCaja debe ser string' });
+        return;
+      }
+      data.cantidadCaja = cantidadCaja?.trim() || null;
+    }
+
+    if (disponibilidad !== undefined) {
+      if (typeof disponibilidad !== 'string') {
+        res.status(400).json({ success: false, error: 'disponibilidad debe ser string' });
+        return;
+      }
+      data.disponibilidad = disponibilidad.trim() || null;
+    }
+
+    if (formato !== undefined) {
+      if (typeof formato !== 'string') {
+        res.status(400).json({ success: false, error: 'formato debe ser string' });
+        return;
+      }
+      data.formato = formato.trim() || null;
     }
 
     if (stockMinimo !== undefined) {

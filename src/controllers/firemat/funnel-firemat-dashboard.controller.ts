@@ -71,6 +71,7 @@ type OppRow = {
   origen: string | null;
   unidadNegocio: string | null;
   tipoCliente: string | null;
+  esReactivacion: boolean;
 };
 
 function agruparMonto(
@@ -229,6 +230,7 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
         origen:             true,
         unidadNegocio:      true,
         tipoCliente:        true,
+        esReactivacion:     true,
       },
     });
 
@@ -260,6 +262,8 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
     const tasaRecompraFiremat = totalOportunidades > 0
       ? Number(((recompraCount / totalOportunidades) * 100).toFixed(2))
       : 0;
+
+    const clientesReactivados = opps.filter(o => o.esReactivacion).length;
 
     // ── Distribución estado ───────────────────────────────────────────────────
     const distribucionEstado = {
@@ -578,6 +582,7 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
           montoPerdido,
           tasaCierre,
           tasaRecompraFiremat,
+          clientesReactivados,
         },
         distribucionEstado,
         porEtapa,

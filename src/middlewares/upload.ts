@@ -220,6 +220,46 @@ export const uploadExcelMacrosFile = (req: Request, res: Response, next: NextFun
   });
 };
 
+const pdfFileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  if (file.mimetype === 'application/pdf' || /\.pdf$/i.test(file.originalname)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Solo se aceptan archivos PDF (.pdf)'));
+  }
+};
+
+const uploadPdf = multer({
+  storage,
+  fileFilter: pdfFileFilter,
+  limits: { fileSize: 20 * 1024 * 1024, files: 1 },
+});
+
+export const uploadPdfFile = (req: Request, res: Response, next: NextFunction): void => {
+  uploadPdf.single('file')(req, res, (err: unknown) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        res.status(400).json({ success: false, error: "Campo de archivo inválido. Use 'file'." });
+        return;
+      }
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({ success: false, error: 'El archivo PDF excede el tamaño máximo de 20MB' });
+        return;
+      }
+      res.status(400).json({ success: false, error: err.message });
+      return;
+    }
+    if (err) {
+      res.status(400).json({ success: false, error: (err as Error).message });
+      return;
+    }
+    next();
+  });
+};
+
 /**
  * Middleware para manejar errores de multer
  */

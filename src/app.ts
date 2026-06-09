@@ -30,6 +30,7 @@ import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegis
 import registrosCampoRoutes from './routes/registros-campo.routes';
 import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
 import alertasRoutes from './routes/alertas.routes';
+import configuracionValidacionRoutes from './routes/configuracionValidacion.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -122,6 +123,7 @@ app.use('/api/stats', blockBeckCommercial, statsRoutes);
 app.use('/api/procesamiento', blockBeckCommercial, procesamientoRoutes);
 app.use('/api/itemizados', blockBeckCommercial, itemizadosRoutes);
 app.use('/api/alertas', authenticate, alertasRoutes);
+app.use('/api/configuracion-validacion', configuracionValidacionRoutes);
 
 app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);
 app.use('/api/oficina-tecnica-preventa', oficinaTecnicaPreventaRoutes);

@@ -165,6 +165,7 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
         motivoPerdida: true,
         motivoPostergacion: true,
         proximaAccion: true,
+        esReactivacion: true,
       },
     });
 
@@ -189,6 +190,8 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
     const tasaCierre = denominadorTasa > 0
       ? Number(((oportunidadesGanadas / denominadorTasa) * 100).toFixed(2))
       : 0;
+
+    const clientesReactivados = opps.filter(o => o.esReactivacion).length;
 
     // ── Distribución por estado (para gráfico circular) ────────────────────────
     const distribucionEstado = {
@@ -562,6 +565,7 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
           oportunidadesGanadas,
           oportunidadesPerdidas,
           oportunidadesPostergadas,
+          clientesReactivados,
           pipelineTotalClp,
           montoGanadoClp,
           montoPerdidoClp,

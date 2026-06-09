@@ -3,6 +3,7 @@ import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 
 type EstadoStock = 'SIN_STOCK' | 'BAJO_STOCK' | 'OK';
+type ProductoInventario = Prisma.ProductoGetPayload<{ include: { Categoria: true } }>;
 
 const calcEstadoStock = (disponible: number, minStock: number): EstadoStock => {
   if (disponible <= 0) return 'SIN_STOCK';
@@ -13,6 +14,84 @@ const calcEstadoStock = (disponible: number, minStock: number): EstadoStock => {
 const parseDate = (val: string): Date | undefined => {
   const d = new Date(val);
   return isNaN(d.getTime()) ? undefined : d;
+};
+
+const parseInventoryDate = (value: unknown): Date | null | undefined => {
+  if (value === null || value === '') return null;
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string') return undefined;
+
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const localDate = trimmed.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2}|\d{4})$/);
+  if (localDate) {
+    const [, dayRaw, monthRaw, yearRaw] = localDate;
+    const day = Number(dayRaw);
+    const month = Number(monthRaw);
+    const year = yearRaw.length === 2 ? 2000 + Number(yearRaw) : Number(yearRaw);
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+      date.getUTCFullYear() !== year ||
+      date.getUTCMonth() !== month - 1 ||
+      date.getUTCDate() !== day
+    ) {
+      return undefined;
+    }
+    return date;
+  }
+
+  const date = new Date(trimmed);
+  return isNaN(date.getTime()) ? undefined : date;
+};
+
+const parseOptionalNonNegativeInteger = (
+  value: unknown,
+): number | null | undefined => {
+  if (value === undefined) return undefined;
+  if (value === null || value === '') return null;
+
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : undefined;
+};
+
+const parseIdParam = (value: string | string[] | undefined): number | null => {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw) return null;
+  const id = Number(raw);
+  return Number.isInteger(id) && id > 0 ? id : null;
+};
+
+const toInventarioDTO = (producto: ProductoInventario) => {
+  const stockDisponible = producto.stock - producto.stockReservado;
+  const estadoStock = calcEstadoStock(stockDisponible, producto.minStock);
+
+  return {
+    id: producto.id,
+    sku: producto.sku,
+    nombre: producto.nombre,
+    descripcion: producto.descripcion,
+    categoria: producto.Categoria.nombre,
+    categoriaId: producto.categoriaId,
+    stockInicial: producto.stockInicial,
+    salidas: producto.salidas,
+    fechaUltimaSalida: producto.fechaUltimaSalida,
+    entradas: producto.entradas,
+    fechaUltimaEntrada: producto.fechaUltimaEntrada,
+    stock: producto.stock,
+    stockReservado: producto.stockReservado,
+    stockDisponible,
+    minStock: producto.minStock,
+    estadoStock,
+    alertaStockBajo: estadoStock !== 'OK',
+    criticidad: producto.criticidad,
+    ubicacion: producto.ubicacion,
+    activo: producto.activo,
+    imagen: producto.imagen,
+    precio: producto.precio,
+    createdAt: producto.createdAt,
+  };
 };
 
 export const getInventarioFiremat = async (req: Request, res: Response): Promise<void> => {
@@ -36,6 +115,7 @@ export const getInventarioFiremat = async (req: Request, res: Response): Promise
 
     if (typeof q === 'string' && q.trim()) {
       where.OR = [
+        { sku: { contains: q.trim(), mode: 'insensitive' } },
         { nombre: { contains: q.trim(), mode: 'insensitive' } },
         { descripcion: { contains: q.trim(), mode: 'insensitive' } },
       ];
@@ -47,29 +127,7 @@ export const getInventarioFiremat = async (req: Request, res: Response): Promise
       orderBy: { nombre: 'asc' },
     });
 
-    let data = productos.map((p) => {
-      const stockDisponible = p.stock - p.stockReservado;
-      const estadoStock = calcEstadoStock(stockDisponible, p.minStock);
-      return {
-        id: p.id,
-        nombre: p.nombre,
-        descripcion: p.descripcion,
-        categoria: p.Categoria.nombre,
-        categoriaId: p.categoriaId,
-        stock: p.stock,
-        stockReservado: p.stockReservado,
-        stockDisponible,
-        minStock: p.minStock,
-        estadoStock,
-        alertaStockBajo: estadoStock !== 'OK',
-        criticidad: p.criticidad,
-        ubicacion: p.ubicacion,
-        activo: p.activo,
-        imagen: p.imagen,
-        precio: p.precio,
-        createdAt: p.createdAt,
-      };
-    });
+    let data = productos.map(toInventarioDTO);
 
     if (bajoStock === 'true') {
       data = data.filter((p) => p.alertaStockBajo);
@@ -160,5 +218,129 @@ export const getMovimientosInventarioFiremat = async (req: Request, res: Respons
   } catch (error) {
     console.error('Error al obtener movimientos Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al obtener movimientos' });
+  }
+};
+
+export const updateInventarioFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const productoId = parseIdParam(req.params.productoId);
+    if (!productoId) {
+      res.status(400).json({ success: false, error: 'productoId inválido' });
+      return;
+    }
+
+    const {
+      stockNuevo,
+      stockInicial,
+      salidas,
+      fechaUltimaSalida,
+      entradas,
+      fechaUltimaEntrada,
+      ubicacion,
+      activo,
+      motivo,
+    } = req.body;
+
+    const stockNuevoNum = parseOptionalNonNegativeInteger(stockNuevo);
+    const stockInicialNum = parseOptionalNonNegativeInteger(stockInicial);
+    const salidasNum = parseOptionalNonNegativeInteger(salidas);
+    const entradasNum = parseOptionalNonNegativeInteger(entradas);
+
+    const integerFields = [
+      ['stockInicial', stockInicial, stockInicialNum],
+      ['salidas', salidas, salidasNum],
+      ['entradas', entradas, entradasNum],
+    ] as const;
+
+    for (const [field, input, parsed] of integerFields) {
+      if (input !== undefined && (parsed === undefined || parsed === null)) {
+        res.status(400).json({
+          success: false,
+          error: `${field} debe ser un entero >= 0`,
+        });
+        return;
+      }
+    }
+
+    if (stockNuevo === undefined || stockNuevoNum === undefined || stockNuevoNum === null) {
+      res.status(400).json({ success: false, error: 'stockNuevo debe ser un entero >= 0' });
+      return;
+    }
+
+    const fechaUltimaSalidaDate = parseInventoryDate(fechaUltimaSalida);
+    const fechaUltimaEntradaDate = parseInventoryDate(fechaUltimaEntrada);
+    if (fechaUltimaSalida !== undefined && fechaUltimaSalidaDate === undefined) {
+      res.status(400).json({ success: false, error: 'fechaUltimaSalida inválida' });
+      return;
+    }
+    if (fechaUltimaEntrada !== undefined && fechaUltimaEntradaDate === undefined) {
+      res.status(400).json({ success: false, error: 'fechaUltimaEntrada inválida' });
+      return;
+    }
+    if (ubicacion !== undefined && typeof ubicacion !== 'string') {
+      res.status(400).json({ success: false, error: 'ubicacion debe ser string' });
+      return;
+    }
+    if (activo !== undefined && typeof activo !== 'boolean') {
+      res.status(400).json({ success: false, error: 'activo debe ser boolean' });
+      return;
+    }
+    if (motivo !== undefined && typeof motivo !== 'string') {
+      res.status(400).json({ success: false, error: 'motivo debe ser string' });
+      return;
+    }
+
+    const result = await firematPrisma.$transaction(async (tx) => {
+      const producto = await tx.producto.findUnique({ where: { id: productoId } });
+      if (!producto) return null;
+
+      const productoActualizado = await tx.producto.update({
+        where: { id: productoId },
+        data: {
+          stock: stockNuevoNum,
+          ...(stockInicialNum !== undefined && stockInicialNum !== null
+            ? { stockInicial: stockInicialNum }
+            : {}),
+          ...(salidasNum !== undefined && salidasNum !== null ? { salidas: salidasNum } : {}),
+          ...(fechaUltimaSalidaDate !== undefined
+            ? { fechaUltimaSalida: fechaUltimaSalidaDate }
+            : {}),
+          ...(entradasNum !== undefined && entradasNum !== null ? { entradas: entradasNum } : {}),
+          ...(fechaUltimaEntradaDate !== undefined
+            ? { fechaUltimaEntrada: fechaUltimaEntradaDate }
+            : {}),
+          ...(ubicacion !== undefined ? { ubicacion: ubicacion.trim() || null } : {}),
+          ...(activo !== undefined ? { activo } : {}),
+        },
+        include: { Categoria: true },
+      });
+
+      const movimientoCreado = await tx.movimiento.create({
+        data: {
+          tipo: 'AJUSTE_MANUAL',
+          cantidad: Math.abs(stockNuevoNum - producto.stock),
+          stockAnterior: producto.stock,
+          stockNuevo: stockNuevoNum,
+          motivo: motivo?.trim() || 'Ajuste manual de inventario',
+          productoId,
+        },
+      });
+
+      return { productoActualizado, movimientoCreado };
+    });
+
+    if (!result) {
+      res.status(404).json({ success: false, error: 'Producto no encontrado' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: toInventarioDTO(result.productoActualizado),
+      movimiento: result.movimientoCreado,
+    });
+  } catch (error) {
+    console.error('Error al actualizar inventario Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al actualizar inventario' });
   }
 };

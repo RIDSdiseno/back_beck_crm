@@ -152,7 +152,17 @@ exports.Prisma.ProductoScalarFieldEnum = {
   imagen: 'imagen',
   categoriaId: 'categoriaId',
   stockReservado: 'stockReservado',
-  sku: 'sku'
+  sku: 'sku',
+  disponibilidad: 'disponibilidad',
+  formato: 'formato',
+  cantidadCaja: 'cantidadCaja',
+  precioUsd: 'precioUsd',
+  precioSugerido: 'precioSugerido',
+  stockInicial: 'stockInicial',
+  salidas: 'salidas',
+  fechaUltimaSalida: 'fechaUltimaSalida',
+  entradas: 'entradas',
+  fechaUltimaEntrada: 'fechaUltimaEntrada'
 };
 
 exports.Prisma.VentaScalarFieldEnum = {
@@ -337,7 +347,8 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   descuento: 'descuento',
   stockOportunidad: 'stockOportunidad',
   reprogramacionesCount: 'reprogramacionesCount',
-  fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa'
+  fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa',
+  esReactivacion: 'esReactivacion'
 };
 
 exports.Prisma.ContactoClienteFirematScalarFieldEnum = {

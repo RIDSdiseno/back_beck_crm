@@ -20,8 +20,6 @@ async function resolverFiltroVendedor(
 }
 
 export async function getAlertasBeckController(req: Request, res: Response): Promise<void> {
-  console.log("[ALERTAS] GET /beck ejecutado");
-  console.log("[ALERTAS] Usuario:", req.userId, "Rol:", req.userRole);
   try {
     const userId = req.userId!;
     const rol = req.userRole!;

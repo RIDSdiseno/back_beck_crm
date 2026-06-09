@@ -404,6 +404,7 @@ model OperadorBeck {
   tipoProyecto                        String?                   @map("tipo_proyecto") @db.VarChar(100)
   reprogramacionesCount               Int                       @default(0) @map("reprogramaciones_count")
   fechaUltimoCambioEtapa              DateTime?                 @map("fecha_ultimo_cambio_etapa") @db.Timestamp(6)
+  esReactivacion Boolean @default(false) @map("es_reactivacion")
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])
@@ -639,6 +640,25 @@ model HistorialEtapaBeck {
   @@map("historial_etapas_beck")
 }
 
+model ConfiguracionValidacion {
+  id        Int      @id @default(autoincrement())
+  modulo    String   @db.VarChar(50)
+  regla     String   @db.VarChar(100)
+  etapa     String   @db.VarChar(100)
+  campo     String   @db.VarChar(100)
+  etiqueta  String   @db.VarChar(255)
+  nivel     String   @default("BLOQUEANTE") @db.VarChar(20)
+  activo    Boolean  @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@unique([modulo, regla, etapa])
+  @@index([modulo])
+  @@index([etapa])
+  @@index([activo])
+  @@map("configuracion_validacion")
+}
 enum RolUsuario {
   administrador
   terreno

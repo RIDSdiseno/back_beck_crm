@@ -42,6 +42,17 @@ model Producto {
   categoriaId              Int
   stockReservado           Int                        @default(0)
   sku                      String?                    @unique
+  disponibilidad           String?
+  formato                  String?
+  cantidadCaja             String?
+  precioUsd                Float?
+  precioSugerido           Float?
+  stockInicial             Int?                       @default(0)
+  salidas                  Int?                       @default(0)
+  fechaUltimaSalida        DateTime?
+  entradas                 Int?                       @default(0)
+  fechaUltimaEntrada       DateTime?
+
   CotizacionFirematDetalle CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
   Movimiento               Movimiento[]
@@ -256,6 +267,7 @@ model FunnelFirematOpportunity {
   stockOportunidad String? @map("stock_oportunidad") @db.VarChar(20)
   reprogramacionesCount Int @default(0) @map("reprogramaciones_count")
   fechaUltimoCambioEtapa DateTime? @map("fecha_ultimo_cambio_etapa")
+  esReactivacion Boolean @default(false) @map("es_reactivacion")
 
   cotizacion               CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
   producto                 Producto?          @relation(fields: [productoId], references: [id])

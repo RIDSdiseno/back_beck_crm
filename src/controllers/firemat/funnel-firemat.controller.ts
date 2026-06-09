@@ -360,6 +360,7 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
     comentariosInternos: getNullableString(body.comentariosInternos),
     observacionesTecnicas: getNullableString(body.observacionesTecnicas),
     observacionCamposFaltantes: getNullableString(body.observacionCamposFaltantes),
+    esReactivacion: typeof body.esReactivacion === 'boolean' ? body.esReactivacion : false,
   };
 };
 
@@ -546,6 +547,9 @@ const buildUpdateData = (
   if (hasOwn(body, 'lineaProducto')) data.lineaProducto = getNullableString(body.lineaProducto);
   if (hasOwn(body, 'descuento')) data.descuento = getNumber(body.descuento);
   if (hasOwn(body, 'stockOportunidad')) data.stockOportunidad = getNullableString(body.stockOportunidad);
+  if (hasOwn(body, 'esReactivacion')) {
+    data.esReactivacion = typeof body.esReactivacion === 'boolean' ? body.esReactivacion : false;
+  }
 
   return data;
 };

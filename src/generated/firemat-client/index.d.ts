@@ -4707,6 +4707,11 @@ export namespace Prisma {
     minStock: number | null
     categoriaId: number | null
     stockReservado: number | null
+    precioUsd: number | null
+    precioSugerido: number | null
+    stockInicial: number | null
+    salidas: number | null
+    entradas: number | null
   }
 
   export type ProductoSumAggregateOutputType = {
@@ -4716,6 +4721,11 @@ export namespace Prisma {
     minStock: number | null
     categoriaId: number | null
     stockReservado: number | null
+    precioUsd: number | null
+    precioSugerido: number | null
+    stockInicial: number | null
+    salidas: number | null
+    entradas: number | null
   }
 
   export type ProductoMinAggregateOutputType = {
@@ -4733,6 +4743,16 @@ export namespace Prisma {
     categoriaId: number | null
     stockReservado: number | null
     sku: string | null
+    disponibilidad: string | null
+    formato: string | null
+    cantidadCaja: string | null
+    precioUsd: number | null
+    precioSugerido: number | null
+    stockInicial: number | null
+    salidas: number | null
+    fechaUltimaSalida: Date | null
+    entradas: number | null
+    fechaUltimaEntrada: Date | null
   }
 
   export type ProductoMaxAggregateOutputType = {
@@ -4750,6 +4770,16 @@ export namespace Prisma {
     categoriaId: number | null
     stockReservado: number | null
     sku: string | null
+    disponibilidad: string | null
+    formato: string | null
+    cantidadCaja: string | null
+    precioUsd: number | null
+    precioSugerido: number | null
+    stockInicial: number | null
+    salidas: number | null
+    fechaUltimaSalida: Date | null
+    entradas: number | null
+    fechaUltimaEntrada: Date | null
   }
 
   export type ProductoCountAggregateOutputType = {
@@ -4767,6 +4797,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado: number
     sku: number
+    disponibilidad: number
+    formato: number
+    cantidadCaja: number
+    precioUsd: number
+    precioSugerido: number
+    stockInicial: number
+    salidas: number
+    fechaUltimaSalida: number
+    entradas: number
+    fechaUltimaEntrada: number
     _all: number
   }
 
@@ -4778,6 +4818,11 @@ export namespace Prisma {
     minStock?: true
     categoriaId?: true
     stockReservado?: true
+    precioUsd?: true
+    precioSugerido?: true
+    stockInicial?: true
+    salidas?: true
+    entradas?: true
   }
 
   export type ProductoSumAggregateInputType = {
@@ -4787,6 +4832,11 @@ export namespace Prisma {
     minStock?: true
     categoriaId?: true
     stockReservado?: true
+    precioUsd?: true
+    precioSugerido?: true
+    stockInicial?: true
+    salidas?: true
+    entradas?: true
   }
 
   export type ProductoMinAggregateInputType = {
@@ -4804,6 +4854,16 @@ export namespace Prisma {
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    disponibilidad?: true
+    formato?: true
+    cantidadCaja?: true
+    precioUsd?: true
+    precioSugerido?: true
+    stockInicial?: true
+    salidas?: true
+    fechaUltimaSalida?: true
+    entradas?: true
+    fechaUltimaEntrada?: true
   }
 
   export type ProductoMaxAggregateInputType = {
@@ -4821,6 +4881,16 @@ export namespace Prisma {
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    disponibilidad?: true
+    formato?: true
+    cantidadCaja?: true
+    precioUsd?: true
+    precioSugerido?: true
+    stockInicial?: true
+    salidas?: true
+    fechaUltimaSalida?: true
+    entradas?: true
+    fechaUltimaEntrada?: true
   }
 
   export type ProductoCountAggregateInputType = {
@@ -4838,6 +4908,16 @@ export namespace Prisma {
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    disponibilidad?: true
+    formato?: true
+    cantidadCaja?: true
+    precioUsd?: true
+    precioSugerido?: true
+    stockInicial?: true
+    salidas?: true
+    fechaUltimaSalida?: true
+    entradas?: true
+    fechaUltimaEntrada?: true
     _all?: true
   }
 
@@ -4942,6 +5022,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado: number
     sku: string | null
+    disponibilidad: string | null
+    formato: string | null
+    cantidadCaja: string | null
+    precioUsd: number | null
+    precioSugerido: number | null
+    stockInicial: number | null
+    salidas: number | null
+    fechaUltimaSalida: Date | null
+    entradas: number | null
+    fechaUltimaEntrada: Date | null
     _count: ProductoCountAggregateOutputType | null
     _avg: ProductoAvgAggregateOutputType | null
     _sum: ProductoSumAggregateOutputType | null
@@ -4978,6 +5068,16 @@ export namespace Prisma {
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    disponibilidad?: boolean
+    formato?: boolean
+    cantidadCaja?: boolean
+    precioUsd?: boolean
+    precioSugerido?: boolean
+    stockInicial?: boolean
+    salidas?: boolean
+    fechaUltimaSalida?: boolean
+    entradas?: boolean
+    fechaUltimaEntrada?: boolean
     CotizacionFirematDetalle?: boolean | Producto$CotizacionFirematDetalleArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | Producto$FunnelFirematOpportunityArgs<ExtArgs>
     Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
@@ -5003,6 +5103,16 @@ export namespace Prisma {
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    disponibilidad?: boolean
+    formato?: boolean
+    cantidadCaja?: boolean
+    precioUsd?: boolean
+    precioSugerido?: boolean
+    stockInicial?: boolean
+    salidas?: boolean
+    fechaUltimaSalida?: boolean
+    entradas?: boolean
+    fechaUltimaEntrada?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -5021,6 +5131,16 @@ export namespace Prisma {
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    disponibilidad?: boolean
+    formato?: boolean
+    cantidadCaja?: boolean
+    precioUsd?: boolean
+    precioSugerido?: boolean
+    stockInicial?: boolean
+    salidas?: boolean
+    fechaUltimaSalida?: boolean
+    entradas?: boolean
+    fechaUltimaEntrada?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -5039,9 +5159,19 @@ export namespace Prisma {
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    disponibilidad?: boolean
+    formato?: boolean
+    cantidadCaja?: boolean
+    precioUsd?: boolean
+    precioSugerido?: boolean
+    stockInicial?: boolean
+    salidas?: boolean
+    fechaUltimaSalida?: boolean
+    entradas?: boolean
+    fechaUltimaEntrada?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial" | "salidas" | "fechaUltimaSalida" | "entradas" | "fechaUltimaEntrada", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CotizacionFirematDetalle?: boolean | Producto$CotizacionFirematDetalleArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | Producto$FunnelFirematOpportunityArgs<ExtArgs>
@@ -5085,6 +5215,16 @@ export namespace Prisma {
       categoriaId: number
       stockReservado: number
       sku: string | null
+      disponibilidad: string | null
+      formato: string | null
+      cantidadCaja: string | null
+      precioUsd: number | null
+      precioSugerido: number | null
+      stockInicial: number | null
+      salidas: number | null
+      fechaUltimaSalida: Date | null
+      entradas: number | null
+      fechaUltimaEntrada: Date | null
     }, ExtArgs["result"]["producto"]>
     composites: {}
   }
@@ -5529,6 +5669,16 @@ export namespace Prisma {
     readonly categoriaId: FieldRef<"Producto", 'Int'>
     readonly stockReservado: FieldRef<"Producto", 'Int'>
     readonly sku: FieldRef<"Producto", 'String'>
+    readonly disponibilidad: FieldRef<"Producto", 'String'>
+    readonly formato: FieldRef<"Producto", 'String'>
+    readonly cantidadCaja: FieldRef<"Producto", 'String'>
+    readonly precioUsd: FieldRef<"Producto", 'Float'>
+    readonly precioSugerido: FieldRef<"Producto", 'Float'>
+    readonly stockInicial: FieldRef<"Producto", 'Int'>
+    readonly salidas: FieldRef<"Producto", 'Int'>
+    readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
+    readonly entradas: FieldRef<"Producto", 'Int'>
+    readonly fechaUltimaEntrada: FieldRef<"Producto", 'DateTime'>
   }
     
 
@@ -14790,6 +14940,7 @@ export namespace Prisma {
     stockOportunidad: string | null
     reprogramacionesCount: number | null
     fechaUltimoCambioEtapa: Date | null
+    esReactivacion: boolean | null
   }
 
   export type FunnelFirematOpportunityMaxAggregateOutputType = {
@@ -14862,6 +15013,7 @@ export namespace Prisma {
     stockOportunidad: string | null
     reprogramacionesCount: number | null
     fechaUltimoCambioEtapa: Date | null
+    esReactivacion: boolean | null
   }
 
   export type FunnelFirematOpportunityCountAggregateOutputType = {
@@ -14934,6 +15086,7 @@ export namespace Prisma {
     stockOportunidad: number
     reprogramacionesCount: number
     fechaUltimoCambioEtapa: number
+    esReactivacion: number
     _all: number
   }
 
@@ -15036,6 +15189,7 @@ export namespace Prisma {
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
+    esReactivacion?: true
   }
 
   export type FunnelFirematOpportunityMaxAggregateInputType = {
@@ -15108,6 +15262,7 @@ export namespace Prisma {
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
+    esReactivacion?: true
   }
 
   export type FunnelFirematOpportunityCountAggregateInputType = {
@@ -15180,6 +15335,7 @@ export namespace Prisma {
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
+    esReactivacion?: true
     _all?: true
   }
 
@@ -15339,6 +15495,7 @@ export namespace Prisma {
     stockOportunidad: string | null
     reprogramacionesCount: number
     fechaUltimoCambioEtapa: Date | null
+    esReactivacion: boolean
     _count: FunnelFirematOpportunityCountAggregateOutputType | null
     _avg: FunnelFirematOpportunityAvgAggregateOutputType | null
     _sum: FunnelFirematOpportunitySumAggregateOutputType | null
@@ -15430,6 +15587,7 @@ export namespace Prisma {
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
+    esReactivacion?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelFirematOpportunity$archivosArgs<ExtArgs>
@@ -15507,6 +15665,7 @@ export namespace Prisma {
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
+    esReactivacion?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15581,6 +15740,7 @@ export namespace Prisma {
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
+    esReactivacion?: boolean
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelFirematOpportunity"]>
@@ -15655,9 +15815,10 @@ export namespace Prisma {
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
+    esReactivacion?: boolean
   }
 
-  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes" | "lineaProducto" | "descuento" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa", ExtArgs["result"]["funnelFirematOpportunity"]>
+  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes" | "lineaProducto" | "descuento" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa" | "esReactivacion", ExtArgs["result"]["funnelFirematOpportunity"]>
   export type FunnelFirematOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
@@ -15752,6 +15913,7 @@ export namespace Prisma {
       stockOportunidad: string | null
       reprogramacionesCount: number
       fechaUltimoCambioEtapa: Date | null
+      esReactivacion: boolean
     }, ExtArgs["result"]["funnelFirematOpportunity"]>
     composites: {}
   }
@@ -16248,6 +16410,7 @@ export namespace Prisma {
     readonly stockOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly reprogramacionesCount: FieldRef<"FunnelFirematOpportunity", 'Int'>
     readonly fechaUltimoCambioEtapa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly esReactivacion: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
   }
     
 
@@ -21315,7 +21478,17 @@ export namespace Prisma {
     imagen: 'imagen',
     categoriaId: 'categoriaId',
     stockReservado: 'stockReservado',
-    sku: 'sku'
+    sku: 'sku',
+    disponibilidad: 'disponibilidad',
+    formato: 'formato',
+    cantidadCaja: 'cantidadCaja',
+    precioUsd: 'precioUsd',
+    precioSugerido: 'precioSugerido',
+    stockInicial: 'stockInicial',
+    salidas: 'salidas',
+    fechaUltimaSalida: 'fechaUltimaSalida',
+    entradas: 'entradas',
+    fechaUltimaEntrada: 'fechaUltimaEntrada'
   };
 
   export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
@@ -21524,7 +21697,8 @@ export namespace Prisma {
     descuento: 'descuento',
     stockOportunidad: 'stockOportunidad',
     reprogramacionesCount: 'reprogramacionesCount',
-    fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa'
+    fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa',
+    esReactivacion: 'esReactivacion'
   };
 
   export type FunnelFirematOpportunityScalarFieldEnum = (typeof FunnelFirematOpportunityScalarFieldEnum)[keyof typeof FunnelFirematOpportunityScalarFieldEnum]
@@ -21852,6 +22026,16 @@ export namespace Prisma {
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
     sku?: StringNullableFilter<"Producto"> | string | null
+    disponibilidad?: StringNullableFilter<"Producto"> | string | null
+    formato?: StringNullableFilter<"Producto"> | string | null
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioSugerido?: FloatNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
     Movimiento?: MovimientoListRelationFilter
@@ -21876,6 +22060,16 @@ export namespace Prisma {
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrderInput | SortOrder
+    disponibilidad?: SortOrderInput | SortOrder
+    formato?: SortOrderInput | SortOrder
+    cantidadCaja?: SortOrderInput | SortOrder
+    precioUsd?: SortOrderInput | SortOrder
+    precioSugerido?: SortOrderInput | SortOrder
+    stockInicial?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
+    entradas?: SortOrderInput | SortOrder
+    fechaUltimaEntrada?: SortOrderInput | SortOrder
     CotizacionFirematDetalle?: CotizacionFirematDetalleOrderByRelationAggregateInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityOrderByRelationAggregateInput
     Movimiento?: MovimientoOrderByRelationAggregateInput
@@ -21903,6 +22097,16 @@ export namespace Prisma {
     imagen?: StringNullableFilter<"Producto"> | string | null
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
+    disponibilidad?: StringNullableFilter<"Producto"> | string | null
+    formato?: StringNullableFilter<"Producto"> | string | null
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioSugerido?: FloatNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
     Movimiento?: MovimientoListRelationFilter
@@ -21927,6 +22131,16 @@ export namespace Prisma {
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrderInput | SortOrder
+    disponibilidad?: SortOrderInput | SortOrder
+    formato?: SortOrderInput | SortOrder
+    cantidadCaja?: SortOrderInput | SortOrder
+    precioUsd?: SortOrderInput | SortOrder
+    precioSugerido?: SortOrderInput | SortOrder
+    stockInicial?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
+    entradas?: SortOrderInput | SortOrder
+    fechaUltimaEntrada?: SortOrderInput | SortOrder
     _count?: ProductoCountOrderByAggregateInput
     _avg?: ProductoAvgOrderByAggregateInput
     _max?: ProductoMaxOrderByAggregateInput
@@ -21952,6 +22166,16 @@ export namespace Prisma {
     categoriaId?: IntWithAggregatesFilter<"Producto"> | number
     stockReservado?: IntWithAggregatesFilter<"Producto"> | number
     sku?: StringNullableWithAggregatesFilter<"Producto"> | string | null
+    disponibilidad?: StringNullableWithAggregatesFilter<"Producto"> | string | null
+    formato?: StringNullableWithAggregatesFilter<"Producto"> | string | null
+    cantidadCaja?: StringNullableWithAggregatesFilter<"Producto"> | string | null
+    precioUsd?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
+    precioSugerido?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
+    stockInicial?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    salidas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    entradas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
   }
 
   export type VentaWhereInput = {
@@ -22724,6 +22948,7 @@ export namespace Prisma {
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    esReactivacion?: BoolFilter<"FunnelFirematOpportunity"> | boolean
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
@@ -22800,6 +23025,7 @@ export namespace Prisma {
     stockOportunidad?: SortOrderInput | SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
+    esReactivacion?: SortOrder
     cotizacion?: CotizacionFirematOrderByWithRelationInput
     producto?: ProductoOrderByWithRelationInput
     archivos?: FunnelFirematArchivoOrderByRelationAggregateInput
@@ -22879,6 +23105,7 @@ export namespace Prisma {
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    esReactivacion?: BoolFilter<"FunnelFirematOpportunity"> | boolean
     cotizacion?: XOR<CotizacionFirematNullableScalarRelationFilter, CotizacionFirematWhereInput> | null
     producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelFirematArchivoListRelationFilter
@@ -22955,6 +23182,7 @@ export namespace Prisma {
     stockOportunidad?: SortOrderInput | SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
+    esReactivacion?: SortOrder
     _count?: FunnelFirematOpportunityCountOrderByAggregateInput
     _avg?: FunnelFirematOpportunityAvgOrderByAggregateInput
     _max?: FunnelFirematOpportunityMaxOrderByAggregateInput
@@ -23035,6 +23263,7 @@ export namespace Prisma {
     stockOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntWithAggregatesFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    esReactivacion?: BoolWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean
   }
 
   export type ContactoClienteFirematWhereInput = {
@@ -23464,6 +23693,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
@@ -23488,6 +23727,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
@@ -23509,6 +23758,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
@@ -23533,6 +23792,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
@@ -23556,6 +23825,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
   }
 
   export type ProductoUpdateManyMutationInput = {
@@ -23571,6 +23850,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductoUncheckedUpdateManyInput = {
@@ -23588,6 +23877,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type VentaCreateInput = {
@@ -24443,6 +24742,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
@@ -24519,6 +24819,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
@@ -24590,6 +24891,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
@@ -24666,6 +24968,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
@@ -24740,6 +25043,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
   }
 
   export type FunnelFirematOpportunityUpdateManyMutationInput = {
@@ -24809,6 +25113,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type FunnelFirematOpportunityUncheckedUpdateManyInput = {
@@ -24881,6 +25186,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ContactoClienteFirematCreateInput = {
@@ -25444,6 +25750,28 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type CotizacionFirematDetalleListRelationFilter = {
     every?: CotizacionFirematDetalleWhereInput
     some?: CotizacionFirematDetalleWhereInput
@@ -25524,6 +25852,16 @@ export namespace Prisma {
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    disponibilidad?: SortOrder
+    formato?: SortOrder
+    cantidadCaja?: SortOrder
+    precioUsd?: SortOrder
+    precioSugerido?: SortOrder
+    stockInicial?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    entradas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
   }
 
   export type ProductoAvgOrderByAggregateInput = {
@@ -25533,6 +25871,11 @@ export namespace Prisma {
     minStock?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
+    precioUsd?: SortOrder
+    precioSugerido?: SortOrder
+    stockInicial?: SortOrder
+    salidas?: SortOrder
+    entradas?: SortOrder
   }
 
   export type ProductoMaxOrderByAggregateInput = {
@@ -25550,6 +25893,16 @@ export namespace Prisma {
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    disponibilidad?: SortOrder
+    formato?: SortOrder
+    cantidadCaja?: SortOrder
+    precioUsd?: SortOrder
+    precioSugerido?: SortOrder
+    stockInicial?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    entradas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
   }
 
   export type ProductoMinOrderByAggregateInput = {
@@ -25567,6 +25920,16 @@ export namespace Prisma {
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    disponibilidad?: SortOrder
+    formato?: SortOrder
+    cantidadCaja?: SortOrder
+    precioUsd?: SortOrder
+    precioSugerido?: SortOrder
+    stockInicial?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    entradas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
   }
 
   export type ProductoSumOrderByAggregateInput = {
@@ -25576,6 +25939,11 @@ export namespace Prisma {
     minStock?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
+    precioUsd?: SortOrder
+    precioSugerido?: SortOrder
+    stockInicial?: SortOrder
+    salidas?: SortOrder
+    entradas?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -25602,18 +25970,7 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -25621,7 +25978,26 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type VentaCountOrderByAggregateInput = {
@@ -25694,36 +26070,6 @@ export namespace Prisma {
     precio?: SortOrder
     total?: SortOrder
     probabilidad?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type VentaScalarRelationFilter = {
@@ -26261,6 +26607,7 @@ export namespace Prisma {
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
+    esReactivacion?: SortOrder
   }
 
   export type FunnelFirematOpportunityAvgOrderByAggregateInput = {
@@ -26347,6 +26694,7 @@ export namespace Prisma {
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
+    esReactivacion?: SortOrder
   }
 
   export type FunnelFirematOpportunityMinOrderByAggregateInput = {
@@ -26419,6 +26767,7 @@ export namespace Prisma {
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
+    esReactivacion?: SortOrder
   }
 
   export type FunnelFirematOpportunitySumOrderByAggregateInput = {
@@ -26868,6 +27217,18 @@ export namespace Prisma {
     set?: boolean
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput = {
     create?: XOR<CotizacionFirematDetalleCreateWithoutProductoInput, CotizacionFirematDetalleUncheckedCreateWithoutProductoInput> | CotizacionFirematDetalleCreateWithoutProductoInput[] | CotizacionFirematDetalleUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: CotizacionFirematDetalleCreateOrConnectWithoutProductoInput | CotizacionFirematDetalleCreateOrConnectWithoutProductoInput[]
@@ -27062,18 +27423,6 @@ export namespace Prisma {
     connectOrCreate?: VentaDetalleCreateOrConnectWithoutVentaInput | VentaDetalleCreateOrConnectWithoutVentaInput[]
     createMany?: VentaDetalleCreateManyVentaInputEnvelope
     connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ProductoUpdateOneRequiredWithoutVentaNestedInput = {
@@ -27704,6 +28053,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -27728,31 +28088,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -27767,6 +28102,20 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumTipoClienteFirematNullableFilter<$PrismaModel = never> = {
@@ -27879,6 +28228,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
@@ -27901,6 +28260,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
@@ -27953,6 +28322,16 @@ export namespace Prisma {
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
     sku?: StringNullableFilter<"Producto"> | string | null
+    disponibilidad?: StringNullableFilter<"Producto"> | string | null
+    formato?: StringNullableFilter<"Producto"> | string | null
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioSugerido?: FloatNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
   }
 
   export type ProductoCreateWithoutMovimientoInput = {
@@ -27968,6 +28347,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
@@ -27991,6 +28380,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
@@ -28027,6 +28426,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
@@ -28050,6 +28459,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
@@ -28155,6 +28574,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
@@ -28229,6 +28649,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
@@ -28519,6 +28940,7 @@ export namespace Prisma {
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    esReactivacion?: BoolFilter<"FunnelFirematOpportunity"> | boolean
   }
 
   export type MovimientoUpsertWithWhereUniqueWithoutProductoInput = {
@@ -28686,6 +29108,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
@@ -28709,6 +29141,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
@@ -28770,6 +29212,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
@@ -28793,6 +29245,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
@@ -28829,6 +29291,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
@@ -28852,6 +29324,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
@@ -28928,6 +29410,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
@@ -28951,6 +29443,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
@@ -29184,6 +29686,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
@@ -29207,6 +29719,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
@@ -29293,6 +29815,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
@@ -29316,6 +29848,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
@@ -29421,6 +29963,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
@@ -29495,6 +30038,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
@@ -29622,6 +30166,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
@@ -29645,6 +30199,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
@@ -29755,6 +30319,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
@@ -29778,6 +30352,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
@@ -29866,6 +30450,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
@@ -29889,6 +30483,16 @@ export namespace Prisma {
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
@@ -30059,6 +30663,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
@@ -30082,6 +30696,16 @@ export namespace Prisma {
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
@@ -30311,6 +30935,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     historialEtapas?: HistorialEtapaFirematCreateNestedManyWithoutOportunidadInput
@@ -30386,6 +31011,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     historialEtapas?: HistorialEtapaFirematUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
@@ -30472,6 +31098,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
@@ -30547,6 +31174,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -30617,6 +31245,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     cotizacion?: CotizacionFirematCreateNestedOneWithoutFunnelFirematOpportunityInput
     producto?: ProductoCreateNestedOneWithoutFunnelFirematOpportunityInput
     archivos?: FunnelFirematArchivoCreateNestedManyWithoutOportunidadInput
@@ -30692,6 +31321,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
     archivos?: FunnelFirematArchivoUncheckedCreateNestedManyWithoutOportunidadInput
   }
 
@@ -30778,6 +31408,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
@@ -30853,6 +31484,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -30870,6 +31502,16 @@ export namespace Prisma {
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    salidas?: number | null
+    fechaUltimaSalida?: Date | string | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
   }
 
   export type ProductoUpdateWithoutCategoriaInput = {
@@ -30885,6 +31527,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
@@ -30907,6 +31559,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
@@ -30929,6 +31591,16 @@ export namespace Prisma {
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CotizacionFirematDetalleCreateManyProductoInput = {
@@ -31011,6 +31683,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
   }
 
   export type MovimientoCreateManyProductoInput = {
@@ -31164,6 +31837,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     cotizacion?: CotizacionFirematUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
@@ -31238,6 +31912,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
@@ -31311,6 +31986,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MovimientoUpdateWithoutProductoInput = {
@@ -31688,6 +32364,7 @@ export namespace Prisma {
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
   }
 
   export type CotizacionFirematDetalleUpdateWithoutCotizacionInput = {
@@ -31789,6 +32466,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     producto?: ProductoUpdateOneWithoutFunnelFirematOpportunityNestedInput
     archivos?: FunnelFirematArchivoUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaFirematUpdateManyWithoutOportunidadNestedInput
@@ -31863,6 +32541,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaFirematUncheckedUpdateManyWithoutOportunidadNestedInput
   }
@@ -31936,6 +32615,7 @@ export namespace Prisma {
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type FunnelFirematArchivoCreateManyOportunidadInput = {
