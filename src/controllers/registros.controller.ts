@@ -530,7 +530,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             fotosUrls:                 existente.fotosUrls,
             metrosLineales:            existente.metrosLineales,
             tipoRegistro:              existente.tipoRegistro,
-            itemizadoSacyr:            existente.itemizadoSacyr,
             codigoBeck:                existente.codigoBeck,
             itemizadoMandanteId:       existente.itemizadoMandanteId,
             itemizadoBeck:             existente.itemizadoBeck,
@@ -538,7 +537,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             fotoUrl:                   existente.fotoUrl,
             recinto:                   existente.recinto,
             factorPorHolguras:         existente.factorPorHolguras,
-            cieloModular:              existente.cieloModular,
             cantidadSellosConFactores: existente.cantidadSellosConFactores,
             aislacion:                 existente.aislacion,
             cantidadSellosAislacion:   existente.cantidadSellosAislacion,
@@ -769,7 +767,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
     const sacyrRaw = body.itemizadoSacyr ?? body.itemizado_sacyr;
     if (sacyrRaw !== undefined) {
-      data.itemizadoSacyr = sacyrRaw === null ? null : String(sacyrRaw) || null;
+      data.itemizadoMandanteTexto = sacyrRaw === null ? null : String(sacyrRaw) || null;
     }
     const optionalDecimalFields = [
       ['factor_por_holguras', 'factorPorHolguras', 'factorPorHolguras'],
@@ -787,7 +785,9 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
     const cieloModularRaw = getBodyValue(body as Record<string, unknown>, 'cielo_modular', 'cieloModular');
     if (cieloModularRaw !== undefined) {
-      data.cieloModular = cieloModularRaw === null || cieloModularRaw === '' ? null : parseIntegerOrNull(cieloModularRaw);
+      data.accesibilidad = cieloModularRaw === null || cieloModularRaw === ''
+        ? null
+        : parseIntegerOrNull(cieloModularRaw);
     }
 
     const registro = await prisma.registroTerreno.update({
