@@ -67,12 +67,11 @@ export interface RegistroTerreno {
   cantidad_sellos: number;
   nombre_sellador: string;
   holgura: FactorHolgura;
-  accesibilidad: FactorAccesibilidad;
   observaciones?: string;
   fotos_urls: string[];
   tipo_registro: TipoRegistroTerreno;
   metros_lineales?: number | null;
-  itemizado_sacyr?: string | null;
+  itemizado_mandante?: string | null;
   factor_por_holguras?: number | null;
   cielo_modular?: number | null;
   cantidad_sellos_con_factores?: number | null;

@@ -387,7 +387,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let codigoBeck: string | null = null;
           let itemizadoMandanteId: string | null = null;
           let factor_por_holguras: number | null = null;
-          let cielo_modular: number | null = null;
+          let accesibilidad: number | null = null;
           let cantidad_sellos_con_factores: number | null = null;
           let aislacion: number | null = null;
           let cantidad_sellos_aislacion: number | null = null;
@@ -533,8 +533,8 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           }
 
           factor_por_holguras = parseDecimal(getCell(rowObj, 'Factor por holguras', 'Factor Holguras', 'factor_por_holguras', 'factorPorHolguras'));
-          const cieloModularParsed = parseDecimal(getCell(rowObj, 'Cielo modular', 'cielo_modular', 'cieloModular'));
-          cielo_modular = cieloModularParsed === null ? null : Math.trunc(cieloModularParsed);
+          const accesibilidadParsed = parseDecimal(getCell(rowObj, 'Accesibilidad', 'Cielo modular', 'cielo_modular', 'cieloModular'));
+          accesibilidad = accesibilidadParsed === null ? null : Math.trunc(accesibilidadParsed);
           cantidad_sellos_con_factores = parseDecimal(getCell(rowObj, 'Cantidad sellos con factores', 'Cantidad de sellos con factores', 'Cantidad sellos con factores sin reparaciones', 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
           aislacion = parseDecimal(getCell(rowObj, 'Aislación', 'Aislacion', 'aislacion'));
           cantidad_sellos_aislacion = parseDecimal(getCell(rowObj, 'Cantidad sellos aislación', 'Cantidad sellos aislacion', 'Cantidad de Sellos Aislación', 'Cantidad de Sellos Aislacion', 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
@@ -622,7 +622,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               cantidadSellos: toInt(cantidad_sellos),
               nombreSellador: truncate(nombre_sellador, 255),
               holgura: holgura,
-              accesibilidad: cielo_modular ?? 1,
+              accesibilidad: accesibilidad ?? 1,
               observaciones: observaciones && observaciones.trim() ? observaciones.trim() : null,
               fotosUrls: [],
               tipoRegistro: truncate(tipoRegistro, 50),

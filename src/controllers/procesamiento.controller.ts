@@ -48,7 +48,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     const { cantidad_sellos, holgura, accesibilidad } = registro;
 
     // CÁLCULO AUTOMÁTICO DE TOTAL DE SELLOS
-    const total_sellos_calculado = cantidad_sellos * holgura * accesibilidad;
+    const total_sellos_calculado = cantidad_sellos * holgura * (accesibilidad ?? 1);
 
     // Verificar que el itemizado exista
     const itemizadoCheck = await dbQuery(

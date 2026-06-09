@@ -588,23 +588,6 @@ model ConfiguracionCamposRegistro {
   @@map("configuracion_campos_registro")
 }
 
-model ItemizadoOpcion {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoBeck      String?  @map("codigo_beck") @db.VarChar(100)
-  tipo            String?  @db.VarChar(100)
-  elementoPasante String?  @map("elemento_pasante")
-  elementoPenetra String?  @map("elemento_penetra")
-  materialidad    String?  @db.VarChar(150)
-  visible         Boolean  @default(true)
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
-
-  @@index([codigoBeck])
-  @@index([tipo])
-  @@index([materialidad])
-  @@map("itemizado_opciones")
-}
-
 model AlertaVista {
   id        Int      @id @default(autoincrement())
   usuarioId String   @map("usuario_id") @db.Uuid
@@ -614,8 +597,8 @@ model AlertaVista {
   usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, alertaKey])
-  @@index([usuarioId])
   @@index([alertaKey])
+  @@index([usuarioId])
   @@map("alertas_vistas")
 }
 
@@ -629,10 +612,27 @@ model HistorialEtapaBeck {
   oportunidad   OperadorBeck @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
   usuario       Usuario?     @relation(fields: [usuarioId], references: [id])
 
-  @@index([oportunidadId])
-  @@index([etapaNueva])
   @@index([createdAt])
+  @@index([etapaNueva])
+  @@index([oportunidadId])
   @@map("historial_etapas_beck")
+}
+
+model ItemizadoOpcion {
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoBeck      String?  @map("codigo_beck") @db.VarChar(100)
+  tipo            String?  @db.VarChar(100)
+  elementoPasante String?  @map("elemento_pasante")
+  elementoPenetra String?  @map("elemento_penetra")
+  materialidad    String?  @db.VarChar(150)
+  visible         Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([codigoBeck])
+  @@index([materialidad])
+  @@index([tipo])
+  @@map("itemizado_opciones")
 }
 
 model ConfiguracionValidacion {

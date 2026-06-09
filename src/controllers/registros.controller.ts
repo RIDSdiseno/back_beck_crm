@@ -98,12 +98,17 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       : req.body.metrosLineales != null ? Number(req.body.metrosLineales)
       : null;
 
-    const itemizadoSacyr: string | null =
-      req.body.itemizadoSacyr != null ? String(req.body.itemizadoSacyr) || null
-      : req.body.itemizado_sacyr != null ? String(req.body.itemizado_sacyr) || null
-      : null;
+    const itemizadoMandanteTextoRaw =
+      req.body.itemizado_mandante ??
+      req.body.itemizadoMandanteTexto ??
+      req.body.itemizadoSacyr ??
+      req.body.itemizado_sacyr;
+    const itemizadoMandanteTexto: string | null =
+      itemizadoMandanteTextoRaw != null ? String(itemizadoMandanteTextoRaw) || null : null;
     const factor_por_holguras = parseDecimalOrNull(getBodyValue(req.body, 'factor_por_holguras', 'factorPorHolguras'));
-    const cielo_modular = parseIntegerOrNull(getBodyValue(req.body, 'cielo_modular', 'cieloModular'));
+    const accesibilidadFinal = parseIntegerOrNull(
+      getBodyValue(req.body, 'cielo_modular', 'cieloModular') ?? accesibilidad
+    );
     const cantidad_sellos_con_factores = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
     const aislacion = parseDecimalOrNull(getBodyValue(req.body, 'aislacion', 'aislacion'));
     const cantidad_sellos_aislacion = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
@@ -131,7 +136,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       (tipoRegistroFinal === 'sello_cortafuego' && !cantidad_sellos) ||
       !nombre_sellador ||
       !holgura ||
-      !accesibilidad
+      accesibilidadFinal == null
     ) {
       res.status(400).json({ error: 'Faltan campos obligatorios' });
       return;
@@ -202,14 +207,13 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       cantidadSellosNorm,
       nombre_sellador,
       holgura,
-      accesibilidad,
       observaciones || null,
       fotosUrls,
       tipoRegistroFinal,
       metros_lineales,
-      itemizadoSacyr,
+      itemizadoMandanteTexto,
       factor_por_holguras,
-      cielo_modular,
+      accesibilidadFinal,
       cantidad_sellos_con_factores,
       aislacion,
       cantidad_sellos_aislacion,
@@ -222,11 +226,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         `INSERT INTO registros_terreno (
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
-          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
           reparacion_tabique, cantidad_final, itemizado_mandante_id, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
         RETURNING *`,
         [...insertValues, itemizadoMandanteId, codigoBeckFinal],
       )
@@ -235,11 +239,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         `INSERT INTO registros_terreno (
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
-          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
           reparacion_tabique, cantidad_final, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
         RETURNING *`,
         [...insertValues, codigoBeckFinal],
       )
@@ -247,11 +251,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         `INSERT INTO registros_terreno (
           obra_id, usuario_id, fecha, dia_semana, descripcion_material, modulo,
           piso, eje_numerico, eje_alfabetico, numero_sello, cantidad_sellos,
-          nombre_sellador, holgura, accesibilidad, observaciones, fotos_urls, tipo_registro,
-          metros_lineales, itemizado_sacyr, factor_por_holguras, cielo_modular,
+          nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
+          metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
           reparacion_tabique, cantidad_final
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
         RETURNING *`,
         insertValues,
       );
@@ -525,7 +529,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             cantidadSellos:            existente.cantidadSellos,
             nombreSellador:            existente.nombreSellador,
             holgura:                   existente.holgura,
-            accesibilidad:             existente.accesibilidad,
             observaciones:             existente.observaciones,
             fotosUrls:                 existente.fotosUrls,
             metrosLineales:            existente.metrosLineales,
@@ -537,6 +540,7 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             fotoUrl:                   existente.fotoUrl,
             recinto:                   existente.recinto,
             factorPorHolguras:         existente.factorPorHolguras,
+            accesibilidad:             existente.accesibilidad,
             cantidadSellosConFactores: existente.cantidadSellosConFactores,
             aislacion:                 existente.aislacion,
             cantidadSellosAislacion:   existente.cantidadSellosAislacion,
@@ -607,11 +611,11 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
         res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
         return;
       }
-      // Calcular total técnico: cantidad_sellos × holgura × accesibilidad
+      // Calcular total técnico con el factor actual de accesibilidad.
       const total_sellos_calculado =
         Number(existente.cantidadSellos) *
         Number(existente.holgura) *
-        Number(existente.accesibilidad);
+        Number(existente.accesibilidad ?? 1);
 
       await dbQuery(
         `INSERT INTO procesamiento_ingenieria
@@ -1073,9 +1077,8 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     pdfFieldRow(doc, `${cantLabel}:`,         cantValor);
     pdfFieldRow(doc, 'Sellador:',             registro.nombreSellador);
     pdfFieldRow(doc, 'Holgura:',              registro.holgura.toString());
-    pdfFieldRow(doc, 'Accesibilidad:',        registro.accesibilidad);
     pdfFieldRow(doc, 'Factor por holguras:',  regRaw['factor_por_holguras'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Cielo modular:',        regRaw['cielo_modular'] as string | number | null | undefined);
+    pdfFieldRow(doc, 'Accesibilidad:',        regRaw['accesibilidad'] as string | number | null | undefined);
     pdfFieldRow(doc, 'Cantidad sellos con factores:', regRaw['cantidad_sellos_con_factores'] as string | number | null | undefined);
     pdfFieldRow(doc, 'Aislacion:',            regRaw['aislacion'] as string | number | null | undefined);
     pdfFieldRow(doc, 'Cantidad sellos aislacion:', regRaw['cantidad_sellos_aislacion'] as string | number | null | undefined);
