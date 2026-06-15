@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 import { prisma } from '../../config/prisma';
+import {
+  obtenerMapaReglasValidacion,
+  clasificarResultadoValidacion,
+  construirResultadoValidacion,
+} from '../../services/configuracionValidacion.service';
+import { validarMotivoCierre, MotivoInvalidoError } from '../../constants/motivosCierre';
 
 const ETAPAS_PERMITIDAS = [
   'PROSPECTO',
@@ -81,14 +87,23 @@ const parseEtapa = (value: unknown): EtapaFunnelFiremat | null => {
 const hasOwn = (body: Record<string, unknown>, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(body, key);
 
-const isActiva = (etapa: string): boolean => !ETAPAS_CERRADAS.has(etapa);
 
 const isSameCalendarDay = (a: Date, b: Date): boolean =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-interface CamposCriticosInput {
+// ---------- Validación estructural (no dinámica) ----------
+
+const validateStructuralConstraints = (etapa: string, montoEstimado: number | null): void => {
+  if (etapa === 'GANADA' && (montoEstimado === null || montoEstimado <= 0)) {
+    throw new ValidationError('montoEstimado es obligatorio para oportunidades ganadas');
+  }
+};
+
+// ---------- Validación dinámica FIREMAT ----------
+
+interface CamposSnapshotFiremat {
   cliente: string | null;
   rutEmpresa: string | null;
   nombreOportunidad: string | null;
@@ -97,86 +112,102 @@ interface CamposCriticosInput {
   correo: string | null;
   responsable: string | null;
   unidadNegocio: string | null;
-  etapa: string;
   proximaAccion: string | null;
   fechaProximaAccion: Date | null;
-}
-
-const validarCamposCriticosFiremat = (oportunidad: CamposCriticosInput): string[] => {
-  const faltantes: string[] = [];
-  if (!oportunidad.cliente) faltantes.push('Cliente / empresa');
-  if (!oportunidad.rutEmpresa) faltantes.push('RUT empresa');
-  if (!oportunidad.nombreOportunidad) faltantes.push('Nombre del proyecto u oportunidad');
-  if (!oportunidad.contacto) faltantes.push('Nombre del contacto');
-  if (!oportunidad.telefono && !oportunidad.correo) faltantes.push('Teléfono o correo del contacto');
-  if (!oportunidad.responsable) faltantes.push('Responsable comercial');
-  if (!oportunidad.unidadNegocio) faltantes.push('Unidad de negocio');
-  if (!oportunidad.etapa) faltantes.push('Etapa del pipeline');
-  if (!oportunidad.proximaAccion) faltantes.push('Próxima acción');
-  if (!oportunidad.fechaProximaAccion) faltantes.push('Fecha de próxima acción');
-  return faltantes;
-};
-
-const validateOpportunityState = (data: {
-  cliente: string | null;
-  etapa: string;
-  montoEstimado: number | null;
-  responsable: string | null;
   documentoRespaldo: string | null;
+  flujoPosterior: string | null;
   motivoPerdida: string | null;
   motivoPostergacion: string | null;
-  motivoDescarte: string | null;
   fechaReactivacion: Date | null;
-  proximaAccion: string | null;
-  fechaProximaAccion: Date | null;
-}): void => {
-  if (!data.cliente) {
-    throw new ValidationError('cliente es obligatorio');
+  motivoDescarte: string | null;
+}
+
+async function ejecutarValidacionDinamicaFiremat(
+  etapaParaReglas: string,
+  etapaDestino: string,
+  c: CamposSnapshotFiremat
+): Promise<{ bloqueos: string[]; advertencias: string[]; puedeAvanzar: boolean }> {
+  // Reglas generales: se obtienen para la etapa actual (desde la que se sale)
+  const mapa = await obtenerMapaReglasValidacion('FIREMAT', etapaParaReglas);
+  const resultado = { bloqueos: [] as string[], advertencias: [] as string[] };
+
+  clasificarResultadoValidacion('CLIENTE_REQUERIDO',              !c.cliente,                    mapa, resultado);
+  clasificarResultadoValidacion('RUT_EMPRESA_REQUERIDO',          !c.rutEmpresa,                 mapa, resultado);
+  clasificarResultadoValidacion('NOMBRE_OPORTUNIDAD_REQUERIDO',   !c.nombreOportunidad,          mapa, resultado);
+  clasificarResultadoValidacion('CONTACTO_REQUERIDO',             !c.contacto,                   mapa, resultado);
+  clasificarResultadoValidacion('TELEFONO_CORREO_REQUERIDO',      !c.telefono && !c.correo,      mapa, resultado);
+  clasificarResultadoValidacion('RESPONSABLE_REQUERIDO',          !c.responsable,                mapa, resultado);
+  clasificarResultadoValidacion('UNIDAD_NEGOCIO_REQUERIDA',       !c.unidadNegocio,              mapa, resultado);
+  clasificarResultadoValidacion('PROXIMA_ACCION_REQUERIDA',       !c.proximaAccion,              mapa, resultado);
+  clasificarResultadoValidacion('FECHA_PROXIMA_ACCION_REQUERIDA', !c.fechaProximaAccion,         mapa, resultado);
+
+  // Checks de cierre: se evalúan contra la etapa destino
+  if (etapaDestino === 'GANADA') {
+    clasificarResultadoValidacion('GANADA_DOCUMENTO_RESPALDO',          !c.documentoRespaldo, mapa, resultado);
+    clasificarResultadoValidacion('GANADA_FLUJO_POSTERIOR_REQUERIDO',   !c.flujoPosterior,    mapa, resultado);
+  }
+  if (etapaDestino === 'PERDIDA') {
+    clasificarResultadoValidacion('PERDIDA_MOTIVO_REQUERIDO', !c.motivoPerdida, mapa, resultado);
+    // PERDIDA_ETAPA_REQUERIDA: etapaPerdida no existe aún en el modelo Firemat
+  }
+  if (etapaDestino === 'POSTERGADA') {
+    clasificarResultadoValidacion('POSTERGADA_MOTIVO_REQUERIDO',             !c.motivoPostergacion, mapa, resultado);
+    clasificarResultadoValidacion('POSTERGADA_FECHA_REACTIVACION_REQUERIDA', !c.fechaReactivacion,  mapa, resultado);
+  }
+  if (etapaDestino === 'DESCARTADO') {
+    clasificarResultadoValidacion('DESCARTADA_MOTIVO_REQUERIDO', !c.motivoDescarte, mapa, resultado);
   }
 
-  if (!ETAPAS_PERMITIDAS.includes(data.etapa as EtapaFunnelFiremat)) {
-    throw new ValidationError(`etapa debe ser una de: ${ETAPAS_PERMITIDAS.join(', ')}`);
-  }
+  return construirResultadoValidacion(resultado.bloqueos, resultado.advertencias);
+}
 
-  if (isActiva(data.etapa) && !data.proximaAccion) {
-    throw new ValidationError('proximaAccion es obligatoria para oportunidades activas');
-  }
+const snapshotDesdeBody = (body: Record<string, unknown>): CamposSnapshotFiremat => ({
+  cliente:             getString(body.cliente),
+  rutEmpresa:          getNullableString(body.rutEmpresa),
+  nombreOportunidad:   getNullableString(body.nombreOportunidad),
+  contacto:            getNullableString(body.contacto),
+  telefono:            getNullableString(body.telefono),
+  correo:              getNullableString(body.correo),
+  responsable:         getNullableString(body.responsable),
+  unidadNegocio:       getNullableString(body.unidadNegocio),
+  proximaAccion:       getNullableString(body.proximaAccion),
+  fechaProximaAccion:  getDate(body.fechaProximaAccion),
+  documentoRespaldo:   getNullableString(body.documentoRespaldo),
+  flujoPosterior:      getNullableString(body.flujoPosterior),
+  motivoPerdida:       getNullableString(body.motivoPerdida),
+  motivoPostergacion:  getNullableString(body.motivoPostergacion),
+  fechaReactivacion:   getDate(body.fechaReactivacion),
+  motivoDescarte:      getNullableString(body.motivoDescarte),
+});
 
-  if (isActiva(data.etapa) && !data.fechaProximaAccion) {
-    throw new ValidationError('fechaProximaAccion es obligatoria para oportunidades activas');
-  }
-
-  if (data.etapa === 'GANADA') {
-    if (data.montoEstimado === null || data.montoEstimado <= 0) {
-      throw new ValidationError('montoEstimado es obligatorio para oportunidades ganadas');
-    }
-    if (!data.responsable) {
-      throw new ValidationError('responsable es obligatorio para oportunidades ganadas');
-    }
-    if (!data.documentoRespaldo) {
-      throw new ValidationError('documentoRespaldo es obligatorio para oportunidades ganadas');
-    }
-  }
-
-  if (data.etapa === 'PERDIDA' && !data.motivoPerdida) {
-    throw new ValidationError('motivoPerdida es obligatorio para oportunidades perdidas');
-  }
-
-  if (data.etapa === 'POSTERGADA') {
-    if (!data.motivoPostergacion) {
-      throw new ValidationError('motivoPostergacion es obligatorio para oportunidades postergadas');
-    }
-    if (!data.fechaReactivacion) {
-      throw new ValidationError('fechaReactivacion es obligatoria para oportunidades postergadas');
-    }
-  }
-
-  if (data.etapa === 'DESCARTADO' && !data.motivoDescarte) {
-    throw new ValidationError('motivoDescarte es obligatorio para oportunidades descartadas');
-  }
-};
+const snapshotDesdeCurrent = (
+  current: Prisma.FunnelFirematOpportunityGetPayload<Record<string, never>>,
+  body: Record<string, unknown>
+): CamposSnapshotFiremat => ({
+  cliente:            hasOwn(body, 'cliente')            ? getString(body.cliente)            : current.cliente,
+  rutEmpresa:         hasOwn(body, 'rutEmpresa')         ? getNullableString(body.rutEmpresa)         : current.rutEmpresa,
+  nombreOportunidad:  hasOwn(body, 'nombreOportunidad')  ? getNullableString(body.nombreOportunidad)  : current.nombreOportunidad,
+  contacto:           hasOwn(body, 'contacto')           ? getNullableString(body.contacto)           : current.contacto,
+  telefono:           hasOwn(body, 'telefono')           ? getNullableString(body.telefono)           : current.telefono,
+  correo:             hasOwn(body, 'correo')             ? getNullableString(body.correo)             : current.correo,
+  responsable:        hasOwn(body, 'responsable')        ? getNullableString(body.responsable)        : current.responsable,
+  unidadNegocio:      hasOwn(body, 'unidadNegocio')      ? getNullableString(body.unidadNegocio)      : current.unidadNegocio,
+  proximaAccion:      hasOwn(body, 'proximaAccion')      ? getNullableString(body.proximaAccion)      : current.proximaAccion,
+  fechaProximaAccion: hasOwn(body, 'fechaProximaAccion') ? getDate(body.fechaProximaAccion)           : current.fechaProximaAccion,
+  documentoRespaldo:  hasOwn(body, 'documentoRespaldo')  ? getNullableString(body.documentoRespaldo)  : current.documentoRespaldo,
+  flujoPosterior:     hasOwn(body, 'flujoPosterior')     ? getNullableString(body.flujoPosterior)     : current.flujoPosterior,
+  motivoPerdida:      hasOwn(body, 'motivoPerdida')      ? getNullableString(body.motivoPerdida)      : current.motivoPerdida,
+  motivoPostergacion: hasOwn(body, 'motivoPostergacion') ? getNullableString(body.motivoPostergacion) : current.motivoPostergacion,
+  fechaReactivacion:  hasOwn(body, 'fechaReactivacion')  ? getDate(body.fechaReactivacion)            : current.fechaReactivacion,
+  motivoDescarte:     hasOwn(body, 'motivoDescarte')     ? getNullableString(body.motivoDescarte)     : current.motivoDescarte,
+});
 
 const handleError = (res: Response, error: unknown): void => {
+  if (error instanceof MotivoInvalidoError) {
+    res.status(400).json({ success: false, error: 'Motivo inválido', detalles: error.detalles });
+    return;
+  }
+
   if (error instanceof ValidationError) {
     res.status(400).json({ success: false, error: error.message });
     return;
@@ -190,6 +221,29 @@ const handleError = (res: Response, error: unknown): void => {
   console.error('Error en Funnel Firemat:', error);
   res.status(500).json({ success: false, error: 'Error interno del servidor' });
 };
+
+function validarMotivosEnBody(body: Record<string, unknown>): void {
+  const motivoPerdida = typeof body.motivoPerdida === 'string' ? body.motivoPerdida : null;
+  if (motivoPerdida && !validarMotivoCierre('PERDIDA', motivoPerdida)) {
+    throw new MotivoInvalidoError([
+      'El motivo de pérdida debe ser uno de los motivos predefinidos o usar formato Otro: detalle.',
+    ]);
+  }
+
+  const motivoPostergacion = typeof body.motivoPostergacion === 'string' ? body.motivoPostergacion : null;
+  if (motivoPostergacion && !validarMotivoCierre('POSTERGACION', motivoPostergacion)) {
+    throw new MotivoInvalidoError([
+      'El motivo de postergación debe ser uno de los motivos predefinidos o usar formato Otro: detalle.',
+    ]);
+  }
+
+  const motivoDescarte = typeof body.motivoDescarte === 'string' ? body.motivoDescarte : null;
+  if (motivoDescarte && !validarMotivoCierre('DESCARTE', motivoDescarte)) {
+    throw new MotivoInvalidoError([
+      'El motivo de descarte debe ser uno de los motivos predefinidos o usar formato Otro: detalle.',
+    ]);
+  }
+}
 
 interface RegistrarCambioEtapaParams {
   tx: Prisma.TransactionClient;
@@ -272,20 +326,6 @@ const buildCreateData = (body: Record<string, unknown>): Prisma.FunnelFirematOpp
   const fechaReactivacion = getDate(body.fechaReactivacion);
   const proximaAccion = getNullableString(body.proximaAccion);
   const fechaProximaAccion = getDate(body.fechaProximaAccion);
-
-  validateOpportunityState({
-    cliente,
-    etapa,
-    montoEstimado,
-    responsable,
-    documentoRespaldo,
-    motivoPerdida,
-    motivoPostergacion,
-    motivoDescarte,
-    fechaReactivacion,
-    proximaAccion,
-    fechaProximaAccion,
-  });
 
   return {
     cliente: cliente ?? '',
@@ -401,20 +441,6 @@ const buildUpdateData = (
   const fechaProximaAccion = hasOwn(body, 'fechaProximaAccion')
     ? getDate(body.fechaProximaAccion)
     : current.fechaProximaAccion;
-
-  validateOpportunityState({
-    cliente,
-    etapa,
-    montoEstimado,
-    responsable,
-    documentoRespaldo,
-    motivoPerdida,
-    motivoPostergacion,
-    motivoDescarte,
-    fechaReactivacion,
-    proximaAccion,
-    fechaProximaAccion,
-  });
 
   const data: Prisma.FunnelFirematOpportunityUncheckedUpdateInput = {};
 
@@ -635,6 +661,28 @@ export const getFunnelFirematById = async (req: Request, res: Response): Promise
 export const createFunnelFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Record<string, unknown>;
+    validarMotivosEnBody(body);
+    const etapa = parseEtapa(body.etapa) ?? 'PROSPECTO';
+    const montoEstimado = getNumber(body.montoEstimado) ?? 0;
+
+    validateStructuralConstraints(etapa, montoEstimado);
+
+    const snapshot = snapshotDesdeBody(body);
+    // Al crear, no hay etapa previa; etapaParaReglas = etapaDestino = etapa inicial
+    const validacion = await ejecutarValidacionDinamicaFiremat(etapa, etapa, snapshot);
+
+    if (!validacion.puedeAvanzar) {
+      res.status(409).json({
+        message: 'Existen reglas bloqueantes pendientes.',
+        bloqueos: validacion.bloqueos,
+        advertencias: validacion.advertencias,
+        puedeAvanzar: false,
+        advertenciasCamposCriticos: validacion.bloqueos,
+        requiereObservacionCamposFaltantes: true,
+      });
+      return;
+    }
+
     const dataInput = buildCreateData(body);
 
     await assertLinkedRecordsExist(
@@ -658,7 +706,12 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
     });
 
     const clienteSets = await cargarClientesParaMatch();
-    res.status(201).json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Oportunidad Firemat creada' });
+    res.status(201).json({
+      success: true,
+      data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) },
+      message: 'Oportunidad Firemat creada',
+      advertencias: validacion.advertencias,
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -679,6 +732,7 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
     }
 
     const body = req.body as Record<string, unknown>;
+    validarMotivosEnBody(body);
     const dataInput = buildUpdateData(current, body);
 
     await assertLinkedRecordsExist(
@@ -687,33 +741,29 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
     );
 
     const nuevaEtapa = hasOwn(body, 'etapa') ? parseEtapa(body.etapa) : null;
+    let advertenciasUpdate: string[] = [];
     if (nuevaEtapa !== null && nuevaEtapa !== current.etapa) {
-      const mergedObservacion = hasOwn(body, 'observacionCamposFaltantes')
-        ? getNullableString(body.observacionCamposFaltantes)
-        : current.observacionCamposFaltantes;
+      const idxActualUpd  = ETAPAS_PERMITIDAS.indexOf(current.etapa as typeof ETAPAS_PERMITIDAS[number]);
+      const idxDestinoUpd = ETAPAS_PERMITIDAS.indexOf(nuevaEtapa as typeof ETAPAS_PERMITIDAS[number]);
+      const esRetrocesoUpd = idxActualUpd !== -1 && idxDestinoUpd !== -1 && idxDestinoUpd < idxActualUpd;
 
-      const faltantes = validarCamposCriticosFiremat({
-        cliente: hasOwn(body, 'cliente') ? getString(body.cliente) : current.cliente,
-        rutEmpresa: hasOwn(body, 'rutEmpresa') ? getNullableString(body.rutEmpresa) : current.rutEmpresa,
-        nombreOportunidad: hasOwn(body, 'nombreOportunidad') ? getNullableString(body.nombreOportunidad) : current.nombreOportunidad,
-        contacto: hasOwn(body, 'contacto') ? getNullableString(body.contacto) : current.contacto,
-        telefono: hasOwn(body, 'telefono') ? getNullableString(body.telefono) : current.telefono,
-        correo: hasOwn(body, 'correo') ? getNullableString(body.correo) : current.correo,
-        responsable: hasOwn(body, 'responsable') ? getNullableString(body.responsable) : current.responsable,
-        unidadNegocio: hasOwn(body, 'unidadNegocio') ? getNullableString(body.unidadNegocio) : current.unidadNegocio,
-        etapa: nuevaEtapa,
-        proximaAccion: hasOwn(body, 'proximaAccion') ? getNullableString(body.proximaAccion) : current.proximaAccion,
-        fechaProximaAccion: hasOwn(body, 'fechaProximaAccion') ? getDate(body.fechaProximaAccion) : current.fechaProximaAccion,
-      });
+      if (!esRetrocesoUpd) {
+        const snapshot = snapshotDesdeCurrent(current, body);
+        const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, nuevaEtapa, snapshot);
 
-      if (faltantes.length > 0 && !mergedObservacion) {
-        res.status(409).json({
-          success: false,
-          advertenciasCamposCriticos: faltantes,
-          requiereObservacionCamposFaltantes: true,
-          message: 'Faltan campos críticos para avanzar de etapa.',
-        });
-        return;
+        if (!validacion.puedeAvanzar) {
+          res.status(409).json({
+            message: 'Existen reglas bloqueantes pendientes.',
+            bloqueos: validacion.bloqueos,
+            advertencias: validacion.advertencias,
+            puedeAvanzar: false,
+            advertenciasCamposCriticos: validacion.bloqueos,
+            requiereObservacionCamposFaltantes: true,
+          });
+          return;
+        }
+
+        advertenciasUpdate = validacion.advertencias;
       }
     }
 
@@ -741,7 +791,12 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
     });
 
     const clienteSets = await cargarClientesParaMatch();
-    res.json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Oportunidad Firemat actualizada' });
+    res.json({
+      success: true,
+      data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) },
+      message: 'Oportunidad Firemat actualizada',
+      advertencias: advertenciasUpdate,
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -768,35 +823,42 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
     }
 
     const body: Record<string, unknown> = { ...(req.body as Record<string, unknown>), etapa };
+    validarMotivosEnBody(body);
     const dataInput = buildUpdateData(current, body);
 
+    let advertenciasPatch: string[] = [];
     if (etapa !== current.etapa) {
-      const mergedObservacion = hasOwn(body, 'observacionCamposFaltantes')
-        ? getNullableString(body.observacionCamposFaltantes)
-        : current.observacionCamposFaltantes;
+      const idxActual  = ETAPAS_PERMITIDAS.indexOf(current.etapa as typeof ETAPAS_PERMITIDAS[number]);
+      const idxDestino = ETAPAS_PERMITIDAS.indexOf(etapa as typeof ETAPAS_PERMITIDAS[number]);
+      const esRetroceso = idxActual !== -1 && idxDestino !== -1 && idxDestino < idxActual;
 
-      const faltantes = validarCamposCriticosFiremat({
-        cliente: current.cliente,
-        rutEmpresa: current.rutEmpresa,
-        nombreOportunidad: current.nombreOportunidad,
-        contacto: current.contacto,
-        telefono: current.telefono,
-        correo: current.correo,
-        responsable: current.responsable,
-        unidadNegocio: current.unidadNegocio,
-        etapa,
-        proximaAccion: current.proximaAccion,
-        fechaProximaAccion: current.fechaProximaAccion,
+      console.log("[VALIDACION ETAPA]", {
+        modulo: "FIREMAT",
+        etapaActual: current.etapa,
+        etapaDestino: etapa,
+        idxActual,
+        idxDestino,
+        esRetroceso,
+        etapaUsadaParaValidar: esRetroceso ? "(omitido — retroceso)" : current.etapa,
       });
 
-      if (faltantes.length > 0 && !mergedObservacion) {
-        res.status(409).json({
-          success: false,
-          advertenciasCamposCriticos: faltantes,
-          requiereObservacionCamposFaltantes: true,
-          message: 'Faltan campos críticos para avanzar de etapa.',
-        });
-        return;
+      if (!esRetroceso) {
+        const snapshot = snapshotDesdeCurrent(current, body);
+        const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, etapa, snapshot);
+
+        if (!validacion.puedeAvanzar) {
+          res.status(409).json({
+            message: 'Existen reglas bloqueantes pendientes.',
+            bloqueos: validacion.bloqueos,
+            advertencias: validacion.advertencias,
+            puedeAvanzar: false,
+            advertenciasCamposCriticos: validacion.bloqueos,
+            requiereObservacionCamposFaltantes: true,
+          });
+          return;
+        }
+
+        advertenciasPatch = validacion.advertencias;
       }
     }
 
@@ -824,7 +886,12 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
     });
 
     const clienteSets = await cargarClientesParaMatch();
-    res.json({ success: true, data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) }, message: 'Etapa actualizada' });
+    res.json({
+      success: true,
+      data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) },
+      message: 'Etapa actualizada',
+      advertencias: advertenciasPatch,
+    });
   } catch (error) {
     handleError(res, error);
   }

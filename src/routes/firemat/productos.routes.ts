@@ -5,6 +5,7 @@ import {
   createProductoFiremat,
   updateProductoFiremat,
   patchEstadoProductoFiremat,
+  asignarCategoriaProductosFiremat,
 } from '../../controllers/firemat/productos.controller';
 import { importarListaPreciosPdf } from '../../controllers/firemat/importar-firemat-pdf.controller';
 import { authorize } from '../../middlewares/auth';
@@ -17,6 +18,7 @@ const canWrite = authorize('administrador', 'bodeguero');
 
 // Static routes before parameter routes
 router.post('/importar-lista-precios-pdf', canWrite, uploadPdfFile, importarListaPreciosPdf);
+router.patch('/asignar-categoria', canWrite, asignarCategoriaProductosFiremat);
 
 router.get('/', canRead, getProductosFiremat);
 router.get('/:id', canRead, getProductoFirematById);

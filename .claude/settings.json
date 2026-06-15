@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build; Write-Host \"EXIT:$LASTEXITCODE\")"
+    ]
+  }
+}

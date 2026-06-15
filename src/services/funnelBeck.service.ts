@@ -12,6 +12,7 @@ import {
   obtenerMapaReglasValidacion,
   clasificarResultadoValidacion,
 } from "./configuracionValidacion.service";
+import { validarMotivoCierre, MotivoInvalidoError } from "../constants/motivosCierre";
 
 // De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
@@ -325,6 +326,11 @@ function validarEtapaYCierre(params: {
   if (estadoCierre === "perdida" && !normalizeString(motivoPerdida)) {
     throw new Error("Debes indicar el motivo de pérdida.");
   }
+  if (estadoCierre === "perdida" && motivoPerdida && !validarMotivoCierre("PERDIDA", motivoPerdida)) {
+    throw new MotivoInvalidoError([
+      "El motivo de pérdida debe ser uno de los motivos predefinidos o usar formato Otro: detalle.",
+    ]);
+  }
 
   if (estadoCierre === "postergada") {
     if (!normalizeString(motivoPostergacion)) {
@@ -333,6 +339,11 @@ function validarEtapaYCierre(params: {
     if (!fechaReactivacion) {
       throw new Error("Debes indicar la fecha de reactivación.");
     }
+  }
+  if (estadoCierre === "postergada" && motivoPostergacion && !validarMotivoCierre("POSTERGACION", motivoPostergacion)) {
+    throw new MotivoInvalidoError([
+      "El motivo de postergación debe ser uno de los motivos predefinidos o usar formato Otro: detalle.",
+    ]);
   }
 }
 
@@ -369,6 +380,16 @@ export class AdvertenciaCamposCriticosError extends Error {
     this.faltantes = bloqueos;
   }
 }
+
+const ORDEN_ETAPAS_BECK = [
+  "prospecto_identificado",
+  "visita_levantamiento",
+  "cotizacion_elaborada",
+  "cotizacion_enviada",
+  "en_negociacion",
+  "documentacion_venta",
+  "cerrada",
+] as const;
 
 interface CamposCriticosBeckInput {
   empresa: string | null;
@@ -1178,30 +1199,48 @@ export async function updateEtapaFunnelBeck(
       : existente.observacionCamposFaltantes;
 
     if (!observacionFinal) {
-      const { bloqueos, advertencias } = await validarCamposCriticosBeck({
-        empresa: existente.empresa,
-        rutEmpresa: existente.rutEmpresa,
-        nombreProyecto: existente.nombreProyecto,
-        nombreContacto: existente.nombreContacto,
-        telefonoContacto: existente.telefonoContacto,
-        correoContacto: existente.correoContacto,
-        vendedor: existente.vendedor,
-        unidadNegocio: existente.unidadNegocio,
-        etapa: payload.etapa,
-        estadoCierre: payload.estadoCierre !== undefined ? payload.estadoCierre : existente.estadoCierre,
-        proximaAccion: existente.proximaAccion,
-        fechaProximaAccion: existente.fechaProximaAccion,
-        documentoRespaldo: payload.documentoRespaldo !== undefined ? optStr(payload.documentoRespaldo) : existente.documentoRespaldo,
-        flujoPosterior: payload.flujoPosterior !== undefined ? optStr(payload.flujoPosterior) : existente.flujoPosterior,
-        motivoPerdida: payload.motivoPerdida !== undefined ? optStr(payload.motivoPerdida) : existente.motivoPerdida,
-        etapaPerdida: payload.etapaPerdida !== undefined ? optStr(payload.etapaPerdida) : existente.etapaPerdida,
-        motivoPostergacion: payload.motivoPostergacion !== undefined ? optStr(payload.motivoPostergacion) : existente.motivoPostergacion,
-        fechaReactivacion: payload.fechaReactivacion !== undefined ? parseOptionalDate(payload.fechaReactivacion) : existente.fechaReactivacion,
+      const idxActual  = ORDEN_ETAPAS_BECK.indexOf(existente.etapa as typeof ORDEN_ETAPAS_BECK[number]);
+      const idxDestino = ORDEN_ETAPAS_BECK.indexOf((payload.etapa ?? '') as typeof ORDEN_ETAPAS_BECK[number]);
+      // Retroceso: solo aplica cuando la etapa en sí cambia hacia atrás
+      const esRetroceso = etapaCambio && idxActual !== -1 && idxDestino !== -1 && idxDestino < idxActual;
+      const etapaUsadaParaValidar = existente.etapa;
+
+      console.log("[VALIDACION ETAPA]", {
+        modulo: "BECK",
+        etapaActual: existente.etapa,
+        etapaDestino: payload.etapa,
+        idxActual,
+        idxDestino,
+        esRetroceso,
+        etapaUsadaParaValidar,
       });
-      if (bloqueos.length > 0) {
-        throw new AdvertenciaCamposCriticosError(bloqueos, advertencias);
+
+      if (!esRetroceso) {
+        const { bloqueos, advertencias } = await validarCamposCriticosBeck({
+          empresa: existente.empresa,
+          rutEmpresa: existente.rutEmpresa,
+          nombreProyecto: existente.nombreProyecto,
+          nombreContacto: existente.nombreContacto,
+          telefonoContacto: existente.telefonoContacto,
+          correoContacto: existente.correoContacto,
+          vendedor: existente.vendedor,
+          unidadNegocio: existente.unidadNegocio,
+          etapa: etapaUsadaParaValidar,
+          estadoCierre: payload.estadoCierre !== undefined ? payload.estadoCierre : existente.estadoCierre,
+          proximaAccion: existente.proximaAccion,
+          fechaProximaAccion: existente.fechaProximaAccion,
+          documentoRespaldo: payload.documentoRespaldo !== undefined ? optStr(payload.documentoRespaldo) : existente.documentoRespaldo,
+          flujoPosterior: payload.flujoPosterior !== undefined ? optStr(payload.flujoPosterior) : existente.flujoPosterior,
+          motivoPerdida: payload.motivoPerdida !== undefined ? optStr(payload.motivoPerdida) : existente.motivoPerdida,
+          etapaPerdida: payload.etapaPerdida !== undefined ? optStr(payload.etapaPerdida) : existente.etapaPerdida,
+          motivoPostergacion: payload.motivoPostergacion !== undefined ? optStr(payload.motivoPostergacion) : existente.motivoPostergacion,
+          fechaReactivacion: payload.fechaReactivacion !== undefined ? parseOptionalDate(payload.fechaReactivacion) : existente.fechaReactivacion,
+        });
+        if (bloqueos.length > 0) {
+          throw new AdvertenciaCamposCriticosError(bloqueos, advertencias);
+        }
+        advertenciasValidacion = advertencias;
       }
-      advertenciasValidacion = advertencias;
     }
   }
 

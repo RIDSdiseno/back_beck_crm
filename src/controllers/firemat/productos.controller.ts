@@ -408,6 +408,76 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
   }
 };
 
+export const asignarCategoriaProductosFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { productoIds, categoriaId } = req.body;
+
+    if (productoIds === undefined || productoIds === null) {
+      res.status(400).json({ success: false, error: 'productoIds es requerido' });
+      return;
+    }
+    if (!Array.isArray(productoIds)) {
+      res.status(400).json({ success: false, error: 'productoIds debe ser un array' });
+      return;
+    }
+    if (productoIds.length === 0) {
+      res.status(400).json({ success: false, error: 'productoIds debe contener al menos un ID' });
+      return;
+    }
+
+    const ids: number[] = [];
+    for (const raw of productoIds) {
+      const id = Number(raw);
+      if (!Number.isInteger(id) || id <= 0) {
+        res.status(400).json({ success: false, error: `ID inválido: ${raw}` });
+        return;
+      }
+      ids.push(id);
+    }
+
+    if (categoriaId === undefined || categoriaId === null) {
+      res.status(400).json({ success: false, error: 'categoriaId es requerido' });
+      return;
+    }
+    const catId = parseInt(String(categoriaId), 10);
+    if (!Number.isInteger(catId) || catId <= 0) {
+      res.status(400).json({ success: false, error: 'categoriaId inválido' });
+      return;
+    }
+
+    const categoria = await firematPrisma.categoria.findUnique({ where: { id: catId } });
+    if (!categoria) {
+      res.status(404).json({ success: false, error: 'Categoría no encontrada' });
+      return;
+    }
+
+    const productosExistentes = await firematPrisma.producto.count({
+      where: { id: { in: ids } },
+    });
+    if (productosExistentes === 0) {
+      res.status(404).json({ success: false, error: 'Ningún producto encontrado con los IDs proporcionados' });
+      return;
+    }
+
+    const result = await firematPrisma.producto.updateMany({
+      where: { id: { in: ids } },
+      data: { categoriaId: catId },
+    });
+
+    res.json({
+      success: true,
+      message: 'Categoría asignada correctamente',
+      data: {
+        categoriaId: catId,
+        productosActualizados: result.count,
+      },
+    });
+  } catch (error) {
+    console.error('Error al asignar categoría masiva Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al asignar categoría' });
+  }
+};
+
 export const patchEstadoProductoFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);

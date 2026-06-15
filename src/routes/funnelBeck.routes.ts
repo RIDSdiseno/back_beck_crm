@@ -4,6 +4,7 @@ import {
   createFunnelBeckArchivosController,
   deleteFunnelBeckController,
   deleteFunnelBeckArchivoController,
+  exportarFunnelBeck,
   getAllFunnelBeckController,
   getCotizacionesByFunnelBeckController,
   getFunnelBeckArchivosController,
@@ -26,6 +27,7 @@ const canReadCotizacionesBeck = authorize("administrador", "vendedor", "ingenier
 
 router.get("/", authenticate, canReadFunnelBeck, getAllFunnelBeckController);
 router.get("/dashboard", authenticate, canReadFunnelBeck, getDashboardFunnelBeck);
+router.get("/exportar", authenticate, canReadFunnelBeck, exportarFunnelBeck);
 router.get("/ganadas-sin-obra", authenticate, canReadFunnelBeck, getGanadasSinObraFunnelBeckController);
 router.delete("/archivos/:archivoId", authenticate, canWriteFunnelBeck, deleteFunnelBeckArchivoController);
 router.get("/:id/archivos", authenticate, canReadFunnelBeck, getFunnelBeckArchivosController);
