@@ -11,6 +11,7 @@ import {
   cambiarEstadoContacto,
   obtenerOportunidadesCliente,
   importarClientes,
+  getObrasPorClienteBeck,
 } from '../controllers/clientes-beck.controller';
 import { authenticate, authorize } from '../middlewares/auth';
 import { uploadExcelOrCsvFile } from '../middlewares/upload';
@@ -28,6 +29,7 @@ router.get('/buscar', authenticate, canReadClientes, buscarClientes);
 router.get('/', authenticate, canReadClientes, listarClientes);
 
 router.get('/:id/oportunidades', authenticate, canReadClientes, obtenerOportunidadesCliente);
+router.get('/:id/obras', authenticate, authorize('administrador', 'ingenieria'), getObrasPorClienteBeck);
 
 router.get('/:id', authenticate, canReadClientes, obtenerCliente);
 

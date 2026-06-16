@@ -35,6 +35,14 @@ const obraUsuariosInclude = {
       fechaCierre: true,
     },
   },
+  clienteBeck: {
+    select: {
+      id: true,
+      rut: true,
+      razonSocial: true,
+      nombreEmpresa: true,
+    },
+  },
 } satisfies Prisma.ObraInclude;
 
 type ObraConUsuarios = Prisma.ObraGetPayload<{
@@ -76,6 +84,7 @@ type CrearObraBody = {
   cliente?: unknown;
   estado?: unknown;
   funnelBeckId?: unknown;
+  clienteBeckId?: unknown;
 };
 
 type ActualizarObraBody = {
@@ -85,6 +94,7 @@ type ActualizarObraBody = {
   cliente?: unknown;
   estado?: unknown;
   funnelBeckId?: unknown;
+  clienteBeckId?: unknown;
 };
 
 type CambiarEstadoObraBody = {
@@ -191,7 +201,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
 
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId } =
+    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId } =
       req.body as CrearObraBody;
 
     if (typeof nombre !== 'string' || !nombre.trim()) {
@@ -208,6 +218,27 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
     const codigoFinal =
       typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null;
     const oportunidadId = getFunnelBeckId(funnelBeckId);
+    const clienteBeckIdFinal =
+      typeof clienteBeckId === 'string' && clienteBeckId.trim() ? clienteBeckId.trim() : null;
+
+    let clienteBeckRecord: { razonSocial: string; nombreEmpresa: string | null } | null = null;
+    if (clienteBeckIdFinal) {
+      clienteBeckRecord = await prisma.clienteBeck.findUnique({
+        where: { id: clienteBeckIdFinal },
+        select: { razonSocial: true, nombreEmpresa: true },
+      });
+      if (!clienteBeckRecord) {
+        res.status(404).json({ error: 'Cliente Beck no encontrado' });
+        return;
+      }
+    }
+
+    const clienteTexto =
+      typeof cliente === 'string'
+        ? cliente
+        : clienteBeckRecord
+          ? (clienteBeckRecord.nombreEmpresa || clienteBeckRecord.razonSocial)
+          : undefined;
 
     const obra = await prisma.$transaction(async (tx) => {
       if (oportunidadId) {
@@ -231,9 +262,10 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
           codigo: codigoFinal,
           descripcion: typeof descripcion === 'string' ? descripcion : undefined,
           direccion: typeof direccion === 'string' ? direccion : undefined,
-          cliente: typeof cliente === 'string' ? cliente : undefined,
+          cliente: clienteTexto,
           estado: estadoObra,
           creadoPorId: req.userId ?? '',
+          ...(clienteBeckIdFinal && { clienteBeckId: clienteBeckIdFinal }),
         },
       });
 
@@ -279,7 +311,7 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const { nombre, codigo, direccion, cliente, estado, funnelBeckId } = req.body as ActualizarObraBody;
+    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId } = req.body as ActualizarObraBody;
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'ID de obra invalido' });
@@ -299,6 +331,26 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
     }
 
     const oportunidadId = getFunnelBeckId(funnelBeckId);
+
+    // undefined = no change | null/'' = borrar | 'uuid' = asignar
+    let clienteBeckIdUpdate: string | null | undefined = undefined;
+    let clienteBeckRecord: { razonSocial: string; nombreEmpresa: string | null } | null = null;
+    if (clienteBeckId !== undefined) {
+      if (clienteBeckId === null || (typeof clienteBeckId === 'string' && clienteBeckId.trim() === '')) {
+        clienteBeckIdUpdate = null;
+      } else if (typeof clienteBeckId === 'string') {
+        const trimmed = clienteBeckId.trim();
+        clienteBeckRecord = await prisma.clienteBeck.findUnique({
+          where: { id: trimmed },
+          select: { razonSocial: true, nombreEmpresa: true },
+        });
+        if (!clienteBeckRecord) {
+          res.status(404).json({ error: 'Cliente Beck no encontrado' });
+          return;
+        }
+        clienteBeckIdUpdate = trimmed;
+      }
+    }
 
     const obra = await prisma.$transaction(async (tx) => {
       if (oportunidadId) {
@@ -324,8 +376,13 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
             codigo: typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null,
           }),
           ...(typeof direccion === 'string' && { direccion }),
-          ...(typeof cliente === 'string' && { cliente }),
+          ...(typeof cliente === 'string'
+            ? { cliente }
+            : clienteBeckRecord
+              ? { cliente: clienteBeckRecord.nombreEmpresa || clienteBeckRecord.razonSocial }
+              : {}),
           ...(estadoObra !== undefined && { estado: estadoObra }),
+          ...(clienteBeckIdUpdate !== undefined && { clienteBeckId: clienteBeckIdUpdate }),
         },
       });
 

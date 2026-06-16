@@ -37,26 +37,30 @@ model Usuario {
 }
 
 model Obra {
-  id                            String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                        String                        @db.VarChar(255)
-  codigo                        String?                       @unique @db.VarChar(100)
-  descripcion                   String?
-  estado                        EstadoObra                    @default(activa)
-  creadoPorId                   String                        @map("creado_por_id") @db.Uuid
-  createdAt                     DateTime                      @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                     DateTime                      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  cliente                       String?                       @db.VarChar(255)
-  direccion                     String?
-  configuracionesCamposRegistro ConfiguracionCamposRegistro[]
-  cotizaciones                  Cotizacion[]
-  oportunidades                 OperadorBeck[]
-  creadoPor                     Usuario                       @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
-  registrosTerreno              RegistroTerreno[]
-  usuarios_obras                usuarios_obras[]
+  id                             String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                         String                             @db.VarChar(255)
+  codigo                         String?                            @unique @db.VarChar(100)
+  descripcion                    String?
+  estado                         EstadoObra                         @default(activa)
+  creadoPorId                    String                             @map("creado_por_id") @db.Uuid
+  createdAt                      DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                      DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  cliente                        String?                            @db.VarChar(255)
+  direccion                      String?
+  clienteBeckId                  String?                            @map("cliente_beck_id") @db.Uuid
+  configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
+  configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
+  cotizaciones                   Cotizacion[]
+  oportunidades                  OperadorBeck[]
+  clienteBeck                    ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
+  creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  registrosTerreno               RegistroTerreno[]
+  usuarios_obras                 usuarios_obras[]
 
   @@index([codigo])
   @@index([estado])
   @@index([creadoPorId])
+  @@index([clienteBeckId])
   @@map("obras")
 }
 
@@ -503,6 +507,7 @@ model ClienteBeck {
   contactos     ContactoClienteBeck[]
   cotizaciones  Cotizacion[]
   oportunidades OperadorBeck[]
+  obras         Obra[]
 
   @@index([rut])
   @@index([razonSocial])
@@ -619,20 +624,37 @@ model HistorialEtapaBeck {
 }
 
 model ItemizadoOpcion {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoBeck      String?  @map("codigo_beck") @db.VarChar(100)
-  tipo            String?  @db.VarChar(100)
-  elementoPasante String?  @map("elemento_pasante")
-  elementoPenetra String?  @map("elemento_penetra")
-  materialidad    String?  @db.VarChar(150)
-  visible         Boolean  @default(true)
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  id                     String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoBeck             String?                            @map("codigo_beck") @db.VarChar(100)
+  tipo                   String?                            @db.VarChar(100)
+  elementoPasante        String?                            @map("elemento_pasante")
+  elementoPenetra        String?                            @map("elemento_penetra")
+  materialidad           String?                            @db.VarChar(150)
+  visible                Boolean                            @default(true)
+  createdAt              DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt              DateTime                           @updatedAt @map("updated_at") @db.Timestamp(6)
+  configuracionesPorObra ConfiguracionItemizadoOpcionObra[]
 
   @@index([codigoBeck])
   @@index([materialidad])
   @@index([tipo])
   @@map("itemizado_opciones")
+}
+
+model ConfiguracionItemizadoOpcionObra {
+  id                String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId            String          @map("obra_id") @db.Uuid
+  itemizadoOpcionId String          @map("itemizado_opcion_id") @db.Uuid
+  visible           Boolean         @default(true)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
+  itemizadoOpcion   ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
+  obra              Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, itemizadoOpcionId])
+  @@index([obraId])
+  @@index([itemizadoOpcionId])
+  @@map("configuracion_itemizado_opcion_obra")
 }
 
 model ConfiguracionValidacion {
@@ -664,6 +686,7 @@ enum RolUsuario {
   vendedor_firemat
   bodeguero
   visualizador_firemat
+  cliente
 }
 
 enum EstadoSolicitudOficinaTecnica {

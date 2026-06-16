@@ -260,6 +260,47 @@ export const uploadPdfFile = (req: Request, res: Response, next: NextFunction): 
   });
 };
 
+const firematProductoFileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Solo se aceptan imágenes JPG, JPEG, PNG o WebP'));
+  }
+};
+
+const uploadFirematProducto = multer({
+  storage,
+  fileFilter: firematProductoFileFilter,
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+});
+
+export const uploadFirematProductoImage = (req: Request, res: Response, next: NextFunction): void => {
+  uploadFirematProducto.single('imagen')(req, res, (err: unknown) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        res.status(400).json({ success: false, error: "Campo de archivo inválido. Use 'imagen'." });
+        return;
+      }
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(400).json({ success: false, error: 'La imagen excede el tamaño máximo de 10MB' });
+        return;
+      }
+      res.status(400).json({ success: false, error: err.message });
+      return;
+    }
+    if (err) {
+      res.status(400).json({ success: false, error: (err as Error).message });
+      return;
+    }
+    next();
+  });
+};
+
 /**
  * Middleware para manejar errores de multer
  */

@@ -25,12 +25,14 @@ import firematUsuariosParametrosRoutes from './routes/firemat/usuarios-parametro
 import { authenticate, denyRoles } from './middlewares/auth';
 import clientesBeckRoutes from './routes/clientes-beck.routes';
 import firematClientesRoutes from './routes/firemat/clientes-firemat.routes';
+import reportesFirematRoutes from './routes/firemat/reportes.routes';
 import oficinaTecnicaPreventaRoutes from './routes/oficinaTecnicaPreventa.routes';
 import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegistro.routes';
 import registrosCampoRoutes from './routes/registros-campo.routes';
 import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
 import alertasRoutes from './routes/alertas.routes';
 import configuracionValidacionRoutes from './routes/configuracionValidacion.routes';
+import clienteRoutes from './routes/cliente.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -137,6 +139,7 @@ app.use('/api/firemat/ventas', authenticate, firematVentasRoutes);
 app.use('/api/firemat/funnel', authenticate, funnelFirematRoutes);
 app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
 app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
+app.use('/api/firemat/reportes', authenticate, reportesFirematRoutes);
 
 // Configuración de visibilidad de campos por rol (accesible a todos los roles autenticados)
 app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);
@@ -147,6 +150,9 @@ app.use('/api/itemizado-opciones', itemizadoOpcionesRoutes);
 // Registros con sanitización por rol — accesibles para terreno, jefeobra y roles Beck
 // NO usa blockBeckRoutes para permitir terreno/jefeobra
 app.use('/api/registros-campo', registrosCampoRoutes);
+
+// Portal cliente — solo obras asignadas + registros validados
+app.use('/api/cliente', clienteRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

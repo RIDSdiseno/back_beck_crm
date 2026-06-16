@@ -9,7 +9,8 @@ export type RolUsuario =
   | 'jefeobra'
   | 'vendedor_firemat'
   | 'bodeguero'
-  | 'visualizador_firemat';
+  | 'visualizador_firemat'
+  | 'cliente';
 
 export interface Usuario {
   id: string;

@@ -17,6 +17,7 @@ import {
   sanitizarRegistroPorRol,
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
+import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -105,15 +106,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       req.body.itemizado_sacyr;
     const itemizadoMandanteTexto: string | null =
       itemizadoMandanteTextoRaw != null ? String(itemizadoMandanteTextoRaw) || null : null;
-    const factor_por_holguras = parseDecimalOrNull(getBodyValue(req.body, 'factor_por_holguras', 'factorPorHolguras'));
     const accesibilidadFinal = parseIntegerOrNull(
       getBodyValue(req.body, 'cielo_modular', 'cieloModular') ?? accesibilidad
     );
-    const cantidad_sellos_con_factores = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
-    const aislacion = parseDecimalOrNull(getBodyValue(req.body, 'aislacion', 'aislacion'));
-    const cantidad_sellos_aislacion = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
-    const reparacion_tabique = parseDecimalOrNull(getBodyValue(req.body, 'reparacion_tabique', 'reparacionTabique'));
-    const cantidad_final = parseDecimalOrNull(getBodyValue(req.body, 'cantidad_final', 'cantidadFinal'));
+    const aislacion_raw = getBodyValue(req.body, 'aislacion', 'aislacion');
+    const reparacion_tabique_raw = getBodyValue(req.body, 'reparacion_tabique', 'reparacionTabique');
 
     const usuario_id = req.userId; // Del middleware auth
 
@@ -192,6 +189,24 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         ? Number(cantidad_sellos ?? 0)
         : Number(cantidad_sellos);
 
+    // Calcular campos derivados (fuente de verdad en backend)
+    let calcResult!: CalcRegistroResult;
+    try {
+      calcResult = calcularCamposRegistroTerreno({
+        cantidad_sellos: cantidadSellosNorm,
+        holgura: Number(holgura),
+        accesibilidad: accesibilidadFinal ?? 1,
+        aislacion: aislacion_raw,
+        reparacion_tabique: reparacion_tabique_raw,
+      });
+    } catch (err) {
+      if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
+        res.status(400).json({ error: 'CORREGIR HOLGURA' });
+        return;
+      }
+      throw err;
+    }
+
     // Insertar en BD
     const insertValues = [
       obra_id,
@@ -212,13 +227,13 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       tipoRegistroFinal,
       metros_lineales,
       itemizadoMandanteTexto,
-      factor_por_holguras,
+      calcResult.factor_por_holguras,
       accesibilidadFinal,
-      cantidad_sellos_con_factores,
-      aislacion,
-      cantidad_sellos_aislacion,
-      reparacion_tabique,
-      cantidad_final,
+      calcResult.cantidad_sellos_con_factores,
+      calcResult.aislacion_normalizada,
+      calcResult.cantidad_sellos_aislacion,
+      calcResult.reparacion_tabique_normalizada,
+      calcResult.cantidad_final,
     ];
 
     const result = itemizadoMandanteId
@@ -773,26 +788,51 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     if (sacyrRaw !== undefined) {
       data.itemizadoMandanteTexto = sacyrRaw === null ? null : String(sacyrRaw) || null;
     }
-    const optionalDecimalFields = [
-      ['factor_por_holguras', 'factorPorHolguras', 'factorPorHolguras'],
-      ['cantidad_sellos_con_factores', 'cantidadSellosConFactores', 'cantidadSellosConFactores'],
-      ['aislacion', 'aislacion', 'aislacion'],
-      ['cantidad_sellos_aislacion', 'cantidadSellosAislacion', 'cantidadSellosAislacion'],
-      ['reparacion_tabique', 'reparacionTabique', 'reparacionTabique'],
-      ['cantidad_final', 'cantidadFinal', 'cantidadFinal'],
-    ] as const;
-    for (const [snake, camel, prismaField] of optionalDecimalFields) {
-      const value = getBodyValue(body as Record<string, unknown>, snake, camel);
-      if (value !== undefined) {
-        data[prismaField] = value === null || value === '' ? null : parseDecimalOrNull(value);
-      }
-    }
     const cieloModularRaw = getBodyValue(body as Record<string, unknown>, 'cielo_modular', 'cieloModular');
     if (cieloModularRaw !== undefined) {
       data.accesibilidad = cieloModularRaw === null || cieloModularRaw === ''
         ? null
         : parseIntegerOrNull(cieloModularRaw);
     }
+
+    // Recalcular campos derivados usando valores actualizados + fallback al registro existente
+    const holguraFinal = body.holgura !== undefined
+      ? Number(String(body.holgura))
+      : Number(existente.holgura);
+    const cantidadSellosBase = body.cantidad_sellos !== undefined
+      ? Number(body.cantidad_sellos)
+      : existente.cantidadSellos;
+    const accesibilidadBase = data.accesibilidad !== undefined
+      ? (data.accesibilidad ?? 1)
+      : (existente.accesibilidad ?? 1);
+    const aislacionRaw = getBodyValue(body as Record<string, unknown>, 'aislacion', 'aislacion');
+    const reparacionRaw = getBodyValue(body as Record<string, unknown>, 'reparacion_tabique', 'reparacionTabique');
+    const aislacionBase = aislacionRaw !== undefined ? aislacionRaw : existente.aislacion;
+    const reparacionBase = reparacionRaw !== undefined ? reparacionRaw : existente.reparacionTabique;
+
+    let calcResult!: CalcRegistroResult;
+    try {
+      calcResult = calcularCamposRegistroTerreno({
+        cantidad_sellos: cantidadSellosBase,
+        holgura: holguraFinal,
+        accesibilidad: accesibilidadBase,
+        aislacion: aislacionBase,
+        reparacion_tabique: reparacionBase,
+      });
+    } catch (err) {
+      if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
+        res.status(400).json({ error: 'CORREGIR HOLGURA' });
+        return;
+      }
+      throw err;
+    }
+
+    data.factorPorHolguras = calcResult.factor_por_holguras;
+    data.cantidadSellosConFactores = calcResult.cantidad_sellos_con_factores;
+    data.aislacion = calcResult.aislacion_normalizada;
+    data.cantidadSellosAislacion = calcResult.cantidad_sellos_aislacion;
+    data.reparacionTabique = calcResult.reparacion_tabique_normalizada;
+    data.cantidadFinal = calcResult.cantidad_final;
 
     const registro = await prisma.registroTerreno.update({
       where: { id },
@@ -1218,9 +1258,10 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
 
 /**
  * GET /api/registros/pendientes
- * Lista registros en estado "pendiente" o "en_revision" para que Ingeniería los procese.
- * - pendiente: acción disponible → "Iniciar revisión"
- * - en_revision: acciones disponibles → "Validar" / "Rechazar"
+ * Retorna TODOS los registros de terreno (todos los estados) para que Ingeniería
+ * pueda calcular KPIs correctos en el cliente.
+ * - El frontend filtra la tabla a pendiente/en_revision client-side.
+ * - El frontend calcula los contadores de todos los estados desde esta misma respuesta.
  */
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -1229,7 +1270,6 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
-       WHERE rt.estado IN ('pendiente', 'en_revision')
        ORDER BY rt.created_at ASC`
     );
 
@@ -1237,6 +1277,39 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
   } catch (error) {
     console.error('Error al listar pendientes:', error);
     res.status(500).json({ error: 'Error al listar pendientes' });
+  }
+};
+
+/**
+ * GET /api/registros/resumen
+ * Devuelve conteos por estado para el módulo de Procesamiento Ingeniería.
+ * Endpoint dedicado para KPIs — no depende del listado filtrado.
+ */
+export const getResumenRegistros = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await dbQuery<{ estado: string; cantidad: string }>(
+      `SELECT estado, COUNT(*) AS cantidad
+       FROM registros_terreno
+       GROUP BY estado`
+    );
+
+    const conteos: Record<string, number> = {};
+    let total = 0;
+    for (const row of result.rows) {
+      conteos[row.estado] = Number(row.cantidad);
+      total += Number(row.cantidad);
+    }
+
+    res.json({
+      pendientes:  conteos['pendiente']    ?? 0,
+      enRevision:  conteos['en_revision']  ?? 0,
+      validados:   conteos['validado']     ?? 0,
+      rechazados:  conteos['rechazado']    ?? 0,
+      total,
+    });
+  } catch (error) {
+    console.error('Error al obtener resumen de registros:', error);
+    res.status(500).json({ error: 'Error al obtener resumen' });
   }
 };
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
+import { prisma } from '../config/prisma';
 import {
   listarClientesBeck,
   buscarClientesBeck,
@@ -227,5 +228,44 @@ export const importarClientes = async (req: Request, res: Response): Promise<voi
     res.status(200).json(resultado);
   } catch (error) {
     handleError(res, error, 'importar clientes');
+  }
+};
+
+// GET /api/clientes-beck/:id/obras
+// Devuelve obras asociadas directamente a un Cliente Beck (Obra.clienteBeckId = id).
+export const getObrasPorClienteBeck = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (typeof id !== 'string' || !id.trim()) {
+      res.status(400).json({ error: 'ID de cliente inválido.' });
+      return;
+    }
+
+    const cliente = await prisma.clienteBeck.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!cliente) {
+      res.status(404).json({ error: 'Cliente Beck no encontrado.' });
+      return;
+    }
+
+    const obras = await prisma.obra.findMany({
+      where: { clienteBeckId: id },
+      select: {
+        id: true,
+        nombre: true,
+        codigo: true,
+        estado: true,
+        clienteBeckId: true,
+      },
+      orderBy: { nombre: 'asc' },
+    });
+
+    res.json({ success: true, data: obras });
+  } catch (error) {
+    handleError(res, error, 'obtener obras del cliente Beck');
   }
 };

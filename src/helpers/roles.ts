@@ -9,6 +9,7 @@ export const ROLES_BECK: RolUsuario[] = [
   RolUsuario.ingenieria,
   RolUsuario.jefeobra,
   RolUsuario.visualizador,
+  RolUsuario.cliente,
 ];
 
 export const ROLES_FIREMAT: RolUsuario[] = [
@@ -26,6 +27,7 @@ export const ROLES_CREABLES_BECK: RolUsuario[] = [
   RolUsuario.ingenieria,
   RolUsuario.jefeobra,
   RolUsuario.visualizador,
+  RolUsuario.cliente,
 ];
 
 export const ROLES_CREABLES_FIREMAT: RolUsuario[] = [

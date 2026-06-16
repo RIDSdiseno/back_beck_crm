@@ -26,7 +26,7 @@ const handleError = (res: Response, error: unknown): void => {
 
 export const listarItemizadoOpciones = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigoBeck, tipo, elementoPasante, elementoPenetra, materialidad, visible } = req.query;
+    const { codigoBeck, tipo, elementoPasante, elementoPenetra, materialidad, visible, obraId } = req.query;
 
     const where: Prisma.ItemizadoOpcionWhereInput = {};
 
@@ -45,15 +45,44 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
     if (typeof materialidad === 'string' && materialidad.trim()) {
       where.materialidad = { contains: materialidad.trim(), mode: 'insensitive' };
     }
-    if (visible === 'true') where.visible = true;
-    if (visible === 'false') where.visible = false;
 
-    const data = await prisma.itemizadoOpcion.findMany({
+    // Cuando se filtra por visible sin obraId se usa el campo global
+    const obraIdStr = typeof obraId === 'string' && obraId.trim() ? obraId.trim() : null;
+    if (!obraIdStr) {
+      if (visible === 'true') where.visible = true;
+      if (visible === 'false') where.visible = false;
+    }
+
+    const opciones = await prisma.itemizadoOpcion.findMany({
       where,
       orderBy: [{ codigoBeck: 'asc' }, { createdAt: 'asc' }],
     });
 
-    res.json({ success: true, data });
+    if (!obraIdStr) {
+      res.json({ success: true, data: opciones });
+      return;
+    }
+
+    // Cargar configuraciones específicas de esta obra en un solo query
+    const configs = await prisma.configuracionItemizadoOpcionObra.findMany({
+      where: { obraId: obraIdStr },
+      select: { itemizadoOpcionId: true, visible: true },
+    });
+    const configMap = new Map(configs.map((c) => [c.itemizadoOpcionId, c.visible]));
+
+    const data = opciones.map((op) => ({
+      ...op,
+      // Si hay config por obra se usa ese valor, si no visible = true por defecto
+      visible: configMap.has(op.id) ? configMap.get(op.id)! : true,
+    }));
+
+    // Aplicar filtro de visible después de resolver el efectivo
+    const filtrado =
+      visible === 'true' ? data.filter((d) => d.visible) :
+      visible === 'false' ? data.filter((d) => !d.visible) :
+      data;
+
+    res.json({ success: true, data: filtrado });
   } catch (error) {
     handleError(res, error);
   }
@@ -133,12 +162,27 @@ export const patchVisibleItemizadoOpcion = async (req: Request, res: Response): 
       return;
     }
 
+    const obraId = typeof body.obraId === 'string' && body.obraId.trim() ? body.obraId.trim() : null;
+
+    if (obraId) {
+      // Actualizar visibilidad solo para esta obra (no toca el maestro global)
+      const config = await prisma.configuracionItemizadoOpcionObra.upsert({
+        where: { obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId: id } },
+        create: { obraId, itemizadoOpcionId: id, visible: body.visible },
+        update: { visible: body.visible },
+      });
+
+      res.json({ success: true, data: config, scope: 'obra' });
+      return;
+    }
+
+    // Sin obraId → actualizar visible global (administración del maestro)
     const data = await prisma.itemizadoOpcion.update({
       where: { id },
       data: { visible: body.visible },
     });
 
-    res.json({ success: true, data });
+    res.json({ success: true, data, scope: 'global' });
   } catch (error) {
     handleError(res, error);
   }

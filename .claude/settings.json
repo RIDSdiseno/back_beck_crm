@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build; Write-Host \"EXIT:$LASTEXITCODE\")"
+      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build; Write-Host \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build 2>&1; echo \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build; Write-Host \"Exit code: $LASTEXITCODE\")",
+      "Bash(echo \"EXIT:$?\")",
+      "PowerShell(cd \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; $result = npm run build 2>&1; $result | Select-Object -Last 30; Write-Host \"EXIT: $LASTEXITCODE\")",
+      "PowerShell(cd \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; $out = npm run build 2>&1; $out | Where-Object { $_ -notmatch \"^npm :\" -and $_ -notmatch \"CategoryInfo\" -and $_ -notmatch \"FullyQualifiedErrorId\" -and $_ -notmatch \"NativeCommandError\" }; Write-Host \"EXIT CODE: $LASTEXITCODE\")",
+      "Bash(xargs grep -l \"pendiente\\\\|procesamiento\\\\|ingenieria\\\\|resumen\\\\|kpi\")",
+      "Bash(xargs grep -l \"pendiente\\\\|procesamiento\\\\|resumen\\\\|ingenieria\")",
+      "Bash(xargs grep -l \"pendiente\\\\|procesamiento\\\\|resumen\\\\|ingenieria\\\\|KPI\\\\|kpi\")",
+      "PowerShell(cd \"c:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; $out = npm run build 2>&1; $out | Where-Object { $_ -notmatch \"NativeCommandError\" -and $_ -notmatch \"CategoryInfo\" -and $_ -notmatch \"FullyQualifiedErrorId\" -and $_ -notmatch \"En linea\" -and $_ -notmatch \"^\\\\+\" }; Write-Host \"EXIT: $LASTEXITCODE\")",
+      "PowerShell(cd \"C:\\\\Users\\\\RIDS\\\\Desktop\\\\back_beck_crm\"; npm run build; echo \"EXIT:$LASTEXITCODE\")"
     ]
   }
 }

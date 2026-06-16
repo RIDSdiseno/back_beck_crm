@@ -9,7 +9,7 @@ import {
 } from '../../controllers/firemat/productos.controller';
 import { importarListaPreciosPdf } from '../../controllers/firemat/importar-firemat-pdf.controller';
 import { authorize } from '../../middlewares/auth';
-import { uploadPdfFile } from '../../middlewares/upload';
+import { uploadPdfFile, uploadFirematProductoImage } from '../../middlewares/upload';
 
 const router = Router();
 
@@ -22,8 +22,8 @@ router.patch('/asignar-categoria', canWrite, asignarCategoriaProductosFiremat);
 
 router.get('/', canRead, getProductosFiremat);
 router.get('/:id', canRead, getProductoFirematById);
-router.post('/', canWrite, createProductoFiremat);
-router.put('/:id', canWrite, updateProductoFiremat);
+router.post('/', canWrite, uploadFirematProductoImage, createProductoFiremat);
+router.put('/:id', canWrite, uploadFirematProductoImage, updateProductoFiremat);
 router.patch('/:id/estado', canWrite, patchEstadoProductoFiremat);
 
 export default router;

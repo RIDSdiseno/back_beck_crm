@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
+import { uploadImageDetailed, deleteImage } from '../../config/cloudinary';
 
 type ProdWithCat = Prisma.ProductoGetPayload<{ include: { Categoria: true } }>;
 
@@ -13,9 +14,33 @@ const parseIdParam = (value: string | string[] | undefined): number | null => {
 
 const CRITICIDADES = ['baja', 'media', 'alta'];
 
+const CLOUDINARY_FOLDER = 'Firemat/productos';
+
+const extractPublicId = (url: string): string | null => {
+  try {
+    const uploadIdx = url.indexOf('/upload/');
+    if (uploadIdx === -1) return null;
+    const withoutExt = url.slice(uploadIdx + '/upload/'.length).replace(/\.[a-zA-Z0-9]+$/, '');
+    const folderIdx = withoutExt.indexOf('Firemat/productos');
+    return folderIdx !== -1 ? withoutExt.slice(folderIdx) : null;
+  } catch {
+    return null;
+  }
+};
+
 const normCriticidad = (v: string): string => {
   const l = v.toLowerCase();
   return l.charAt(0).toUpperCase() + l.slice(1);
+};
+
+const parseBool = (v: unknown): boolean | null => {
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'string') {
+    const l = v.toLowerCase().trim();
+    if (l === 'true' || l === 'activo') return true;
+    if (l === 'false' || l === 'inactivo') return false;
+  }
+  return null;
 };
 
 const toDTO = (p: ProdWithCat) => ({
@@ -187,9 +212,14 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       res.status(400).json({ success: false, error: 'criticidad debe ser baja, media o alta' });
       return;
     }
-    if (activo !== undefined && typeof activo !== 'boolean') {
-      res.status(400).json({ success: false, error: 'activo debe ser boolean' });
-      return;
+    let activoBool: boolean | undefined;
+    if (activo !== undefined) {
+      const parsed = parseBool(activo);
+      if (parsed === null) {
+        res.status(400).json({ success: false, error: 'activo debe ser boolean (true/false)' });
+        return;
+      }
+      activoBool = parsed;
     }
 
     const cat = await firematPrisma.categoria.findUnique({ where: { id: catId } });
@@ -198,26 +228,59 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       return;
     }
 
-    const producto = await firematPrisma.producto.create({
-      data: {
-        nombre: nombre.trim(),
-        sku: sku.trim(),
-        descripcion: descripcion?.trim() ?? null,
-        categoriaId: catId,
-        precio: precioNum,
-        precioUsd: precioUsdNum,
-        precioSugerido: precioSugeridoNum,
-        disponibilidad: disponibilidad?.trim() || null,
-        formato: formato?.trim() || null,
-        cantidadCaja: cantidadCaja?.trim() || null,
-        stock: stockIni,
-        minStock: stockMin,
-        ubicacion: ubicacion?.trim() ?? null,
-        criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
-        activo: activo ?? true,
-        imagen: imagen?.trim() ?? null,
-      },
-      include: { Categoria: true },
+    let imagenFinal: string | null = typeof imagen === 'string' ? imagen.trim() || null : null;
+    if (req.file) {
+      try {
+        const uploaded = await uploadImageDetailed(req.file.buffer, CLOUDINARY_FOLDER);
+        imagenFinal = uploaded.secure_url;
+      } catch {
+        res.status(500).json({ success: false, error: 'Error al subir la imagen' });
+        return;
+      }
+    }
+
+    const ahora = new Date();
+
+    const producto = await firematPrisma.$transaction(async (tx) => {
+      const prod = await tx.producto.create({
+        data: {
+          nombre: nombre.trim(),
+          sku: sku.trim(),
+          descripcion: descripcion?.trim() ?? null,
+          categoriaId: catId,
+          precio: precioNum,
+          precioUsd: precioUsdNum,
+          precioSugerido: precioSugeridoNum,
+          disponibilidad: disponibilidad?.trim() || null,
+          formato: formato?.trim() || null,
+          cantidadCaja: cantidadCaja?.trim() || null,
+          stock: stockIni,
+          stockInicial: stockIni,
+          entradas: stockIni,
+          fechaUltimaEntrada: stockIni > 0 ? ahora : null,
+          minStock: stockMin,
+          ubicacion: ubicacion?.trim() ?? null,
+          criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
+          activo: activoBool ?? true,
+          imagen: imagenFinal,
+        },
+        include: { Categoria: true },
+      });
+
+      if (stockIni > 0) {
+        await tx.movimiento.create({
+          data: {
+            tipo: 'ENTRADA_INICIAL',
+            cantidad: stockIni,
+            stockAnterior: 0,
+            stockNuevo: stockIni,
+            motivo: 'Creación de producto',
+            productoId: prod.id,
+          },
+        });
+      }
+
+      return prod;
     });
 
     res.status(201).json({ success: true, data: toDTO(producto) });
@@ -373,7 +436,24 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     if (ubicacion !== undefined) data.ubicacion = ubicacion?.trim() ?? null;
-    if (imagen !== undefined) data.imagen = imagen?.trim() ?? null;
+
+    if (req.file) {
+      try {
+        const oldPublicId = existing.imagen ? extractPublicId(existing.imagen) : null;
+        const uploaded = await uploadImageDetailed(req.file.buffer, CLOUDINARY_FOLDER);
+        data.imagen = uploaded.secure_url;
+        if (oldPublicId) {
+          deleteImage(oldPublicId).catch((err) =>
+            console.error('Error al eliminar imagen anterior de Cloudinary:', err)
+          );
+        }
+      } catch {
+        res.status(500).json({ success: false, error: 'Error al subir la imagen' });
+        return;
+      }
+    } else if (imagen !== undefined) {
+      data.imagen = imagen?.trim() ?? null;
+    }
 
     if (criticidad !== undefined) {
       if (!CRITICIDADES.includes(String(criticidad).toLowerCase())) {
@@ -384,11 +464,12 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     if (activo !== undefined) {
-      if (typeof activo !== 'boolean') {
-        res.status(400).json({ success: false, error: 'activo debe ser boolean' });
+      const parsed = parseBool(activo);
+      if (parsed === null) {
+        res.status(400).json({ success: false, error: 'activo debe ser boolean (true/false)' });
         return;
       }
-      data.activo = activo;
+      data.activo = parsed;
     }
 
     const updated = await firematPrisma.producto.update({

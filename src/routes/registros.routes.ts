@@ -5,6 +5,7 @@ import {
   listarRegistros,
   obtenerRegistro,
   listarPendientes,
+  getResumenRegistros,
   actualizarEstadoRegistro,
   actualizarRegistro,
   descargarRegistroPdf,
@@ -68,7 +69,8 @@ router.get('/', authenticate, canReadRegistros, listarRegistros);
 
 /**
  * GET /api/registros/pendientes
- * Listar registros pendientes (para Ingeniería)
+ * Listar registros para Procesamiento Ingeniería (todos los estados).
+ * El cliente filtra la tabla a pendiente/en_revision y usa todos los estados para KPIs.
  * Solo ingenieria, administrador, visualizador
  */
 router.get(
@@ -76,6 +78,18 @@ router.get(
   authenticate,
   authorize('ingenieria', 'administrador', 'visualizador'),
   listarPendientes
+);
+
+/**
+ * GET /api/registros/resumen
+ * Conteos por estado para KPIs de Procesamiento Ingeniería.
+ * Solo ingenieria, administrador, visualizador
+ */
+router.get(
+  '/resumen',
+  authenticate,
+  authorize('ingenieria', 'administrador', 'visualizador'),
+  getResumenRegistros
 );
 
 /**

@@ -8,6 +8,7 @@ import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
+import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -386,13 +387,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let itemizadoSacyr: string | null = null;
           let codigoBeck: string | null = null;
           let itemizadoMandanteId: string | null = null;
-          let factor_por_holguras: number | null = null;
           let accesibilidad: number | null = null;
-          let cantidad_sellos_con_factores: number | null = null;
-          let aislacion: number | null = null;
-          let cantidad_sellos_aislacion: number | null = null;
-          let reparacion_tabique: number | null = null;
-          let cantidad_final: number | null = null;
+          let aislacion_raw: string | null = null;
+          let reparacion_tabique_raw: string | null = null;
           let recinto: string | null = null;
           let itemizadoBeck: string | null = null;
           let itemizadoMandanteTexto: string | null = null;
@@ -532,14 +529,10 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Observaciones', 'OBSERVACIONES', 'observaciones', 'Obs') ?? null;
           }
 
-          factor_por_holguras = parseDecimal(getCell(rowObj, 'Factor por holguras', 'Factor Holguras', 'factor_por_holguras', 'factorPorHolguras'));
           const accesibilidadParsed = parseDecimal(getCell(rowObj, 'Accesibilidad', 'Cielo modular', 'cielo_modular', 'cieloModular'));
           accesibilidad = accesibilidadParsed === null ? null : Math.trunc(accesibilidadParsed);
-          cantidad_sellos_con_factores = parseDecimal(getCell(rowObj, 'Cantidad sellos con factores', 'Cantidad de sellos con factores', 'Cantidad sellos con factores sin reparaciones', 'cantidad_sellos_con_factores', 'cantidadSellosConFactores'));
-          aislacion = parseDecimal(getCell(rowObj, 'Aislación', 'Aislacion', 'aislacion'));
-          cantidad_sellos_aislacion = parseDecimal(getCell(rowObj, 'Cantidad sellos aislación', 'Cantidad sellos aislacion', 'Cantidad de Sellos Aislación', 'Cantidad de Sellos Aislacion', 'cantidad_sellos_aislacion', 'cantidadSellosAislacion'));
-          reparacion_tabique = parseDecimal(getCell(rowObj, 'Reparación tabique', 'Reparacion tabique', 'Reparación de tabique', 'Reparacion de tabique', 'reparacion_tabique', 'reparacionTabique'));
-          cantidad_final = parseDecimal(getCell(rowObj, 'Cantidad final', 'cantidad_final', 'cantidadFinal'));
+          aislacion_raw = getCell(rowObj, 'Aislación', 'Aislacion', 'aislacion');
+          reparacion_tabique_raw = getCell(rowObj, 'Reparación tabique', 'Reparacion tabique', 'Reparación de tabique', 'Reparacion de tabique', 'reparacion_tabique', 'reparacionTabique');
 
           // Saltar filas completamente vacías
           if (!descripcion_material && !nombre_sellador) continue;
@@ -581,6 +574,24 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             }
             itemizadoMandanteIdFinal = itemizadoMandante.id;
             codigoBeckFinal = itemizadoMandante.codigoBeck;
+          }
+
+          // Calcular campos derivados (no confiar en valores del Excel)
+          let calcResult!: CalcRegistroResult;
+          try {
+            calcResult = calcularCamposRegistroTerreno({
+              cantidad_sellos: toInt(cantidad_sellos),
+              holgura,
+              accesibilidad: accesibilidad ?? 1,
+              aislacion: aislacion_raw,
+              reparacion_tabique: reparacion_tabique_raw,
+            });
+          } catch (err) {
+            if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
+              errores.push(`Fila ${rowIdx}: CORREGIR HOLGURA (holgura = ${holgura})`);
+              continue;
+            }
+            throw err;
           }
 
           // Verificar duplicado antes de crear
@@ -630,12 +641,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               itemizadoMandanteTexto: itemizadoMandanteTexto ? truncate(itemizadoMandanteTexto, 255) : null,
               folio: folio ? truncate(folio, 100) : null,
               ...(metrosFinal !== null ? { metrosLineales: metrosFinal } : {}),
-              factorPorHolguras: factor_por_holguras,
-              cantidadSellosConFactores: cantidad_sellos_con_factores,
-              aislacion,
-              cantidadSellosAislacion: cantidad_sellos_aislacion,
-              reparacionTabique: reparacion_tabique,
-              cantidadFinal: cantidad_final,
+              factorPorHolguras: calcResult.factor_por_holguras,
+              cantidadSellosConFactores: calcResult.cantidad_sellos_con_factores,
+              aislacion: calcResult.aislacion_normalizada,
+              cantidadSellosAislacion: calcResult.cantidad_sellos_aislacion,
+              reparacionTabique: calcResult.reparacion_tabique_normalizada,
+              cantidadFinal: calcResult.cantidad_final,
             },
           });
 
