@@ -5,16 +5,13 @@ import {
   eliminarCategoriaFiremat,
   getCategoriasFiremat,
 } from '../../controllers/firemat/categorias.controller';
-import { authorize } from '../../middlewares/auth';
+import { requirePermission } from '../../middlewares/requirePermission';
 
 const router = Router();
 
-const canRead = authorize('administrador', 'vendedor_firemat', 'bodeguero', 'visualizador_firemat');
-const canManage = authorize('administrador', 'bodeguero');
-
-router.get('/', canRead, getCategoriasFiremat);
-router.post('/', canManage, crearCategoriaFiremat);
-router.put('/:id', canManage, actualizarCategoriaFiremat);
-router.delete('/:id', canManage, eliminarCategoriaFiremat);
+router.get('/', requirePermission('firemat_categorias', 'ver'), getCategoriasFiremat);
+router.post('/', requirePermission('firemat_categorias', 'editar'), crearCategoriaFiremat);
+router.put('/:id', requirePermission('firemat_categorias', 'editar'), actualizarCategoriaFiremat);
+router.delete('/:id', requirePermission('firemat_categorias', 'editar'), eliminarCategoriaFiremat);
 
 export default router;

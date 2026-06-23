@@ -5,7 +5,7 @@ import path from 'path';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
-import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
+import { EstadoConformidadInspeccion, EstadoRegistroTerreno, Prisma, ResultadoParametroInspeccion } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
@@ -18,6 +18,8 @@ import {
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
 import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
+import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
+import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -114,14 +116,14 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
     const usuario_id = req.userId; // Del middleware auth
 
-    const tiposValidos = ['sello_cortafuego', 'junta_lineal_espuma'];
-    const tipoRegistroFinal =
-      tipo_registro && tiposValidos.includes(tipo_registro as string)
-        ? (tipo_registro as string)
+    // Determinar tipo intentado (backward compat: default 'sello_cortafuego')
+    const tipoIntentado =
+      typeof tipo_registro === 'string' && tipo_registro.trim()
+        ? tipo_registro.trim()
         : 'sello_cortafuego';
 
     // Validar campos obligatorios
-    // cantidad_sellos es opcional para junta_lineal_espuma (se usa metros_lineales)
+    // cantidad_sellos es obligatorio solo para sello_cortafuego
     if (
       !obra_id ||
       !descripcion_material ||
@@ -130,7 +132,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       !eje_numerico ||
       !eje_alfabetico ||
       !numero_sello ||
-      (tipoRegistroFinal === 'sello_cortafuego' && !cantidad_sellos) ||
+      (tipoIntentado === 'sello_cortafuego' && !cantidad_sellos) ||
       !nombre_sellador ||
       !holgura ||
       accesibilidadFinal == null
@@ -156,6 +158,15 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
+
+    // Validar tipo de registro contra configuración de la obra
+    const validacionTipo = await validarTipoRegistroPermitidoPorObra(obra_id, tipoIntentado);
+    if (!validacionTipo.permitido) {
+      res.status(400).json({ error: validacionTipo.error ?? 'Tipo de registro no permitido para esta obra.' });
+      return;
+    }
+    const tipoRegistroFinal = validacionTipo.tipoNormalizado!;
+    const warningTipoRegistro = validacionTipo.warning;
 
     const fecha = new Date();
     const folder = buildCloudinaryFolder(
@@ -183,9 +194,9 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     const dia_semana = dias[fecha.getDay()];
     const eje_numerico_norm = parseEjeNumericoTexto(eje_numerico);
 
-    // Para junta_lineal_espuma, cantidad_sellos puede ser 0
+    // Para tipos distintos de sello_cortafuego, cantidad_sellos es opcional (default 0)
     const cantidadSellosNorm =
-      tipoRegistroFinal === 'junta_lineal_espuma'
+      tipoRegistroFinal !== 'sello_cortafuego'
         ? Number(cantidad_sellos ?? 0)
         : Number(cantidad_sellos);
 
@@ -318,7 +329,10 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
     const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
     const [registroConItemizado] = await adjuntarItemizadosMandante([registroConCodigo]);
-    res.status(201).json(registroConItemizado);
+    const respuesta: Record<string, unknown> = warningTipoRegistro
+      ? { ...(registroConItemizado as Record<string, unknown>), warningTipoRegistro }
+      : (registroConItemizado as Record<string, unknown>);
+    res.status(201).json(respuesta);
   } catch (error) {
     console.error('Error al crear registro:', error);
     res.status(500).json({ error: 'Error al crear registro' });
@@ -360,6 +374,8 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
             id: true,
             nombre: true,
             codigo: true,
+            rendimientoSellosEsperadoDiario: true,
+            rendimientoReparacionEsperadoDiario: true,
           },
         },
         usuario: {
@@ -379,6 +395,14 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
         },
         registroOrigen: {
           select: { id: true, numeroSello: true, descripcionMaterial: true, estado: true },
+        },
+        seleccionadoInspeccionPor: {
+          select: { id: true, nombre: true },
+        },
+        controlesInspeccion: {
+          select: { id: true, fecha: true, conformidad: true, ensayo: true },
+          orderBy: { fecha: 'desc' as const },
+          take: 1,
         },
       },
       orderBy: [
@@ -402,7 +426,7 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
       ? await sanitizarRegistrosPorRol(resultConItemizado, 'trabajador')
       : resultConItemizado;
 
-    res.json(result);
+    res.json(result.map((reg) => ({ ...reg, ...calcularRendimientoIndividual(reg) })));
   } catch (error) {
     console.error('Error al listar registros:', error);
     res.status(500).json({ error: 'Error al listar registros' });
@@ -420,10 +444,14 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
     const user_rol = req.userRole;
 
     let query = `
-      SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre
+      SELECT rt.*, o.nombre as obra_nombre,
+             o.rendimiento_sellos_esperado_diario, o.rendimiento_reparacion_esperado_diario,
+             u.nombre as usuario_nombre,
+             ui.nombre as seleccionado_inspeccion_por_nombre
       FROM registros_terreno rt
       LEFT JOIN obras o ON rt.obra_id = o.id
       LEFT JOIN usuarios u ON rt.usuario_id = u.id
+      LEFT JOIN usuarios ui ON rt.seleccionado_inspeccion_por_id = ui.id
       WHERE rt.id = $1
     `;
 
@@ -437,7 +465,8 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
       }
       const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
       const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
-      res.json(await sanitizarRegistroPorRol(registro, 'trabajador'));
+      const sanitizado = await sanitizarRegistroPorRol(registro, 'trabajador');
+      res.json({ ...sanitizado, ...calcularRendimientoIndividual(sanitizado) });
     } else {
       const result = await dbQuery(query, [id]);
       if (result.rows.length === 0) {
@@ -446,7 +475,7 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
       }
       const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
       const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
-      res.json(registro);
+      res.json({ ...registro, ...calcularRendimientoIndividual(registro) });
     }
   } catch (error) {
     console.error('Error al obtener registro:', error);
@@ -973,7 +1002,7 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     const registro = await prisma.registroTerreno.findUnique({
       where: { id },
       include: {
-        obra:           { select: { id: true, nombre: true, codigo: true } },
+        obra:           { select: { id: true, nombre: true, codigo: true, rendimientoSellosEsperadoDiario: true, rendimientoReparacionEsperadoDiario: true } },
         usuario:        { select: { id: true, nombre: true, email: true, rol: true } },
         fotos_registro: { select: { url: true }, orderBy: { created_at: 'asc' } },
       },
@@ -1266,14 +1295,15 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery(
-      `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre
+      `SELECT rt.*, o.nombre as obra_nombre, o.rendimiento_sellos_esperado_diario, o.rendimiento_reparacion_esperado_diario, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
+       LEFT JOIN usuarios ui ON rt.seleccionado_inspeccion_por_id = ui.id
        ORDER BY rt.created_at ASC`
     );
 
-    res.json(result.rows);
+    res.json(result.rows.map((row) => ({ ...row, ...calcularRendimientoIndividual(row) })));
   } catch (error) {
     console.error('Error al listar pendientes:', error);
     res.status(500).json({ error: 'Error al listar pendientes' });
@@ -1361,5 +1391,283 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Error al iniciar revisión:', error);
     res.status(500).json({ error: 'Error al iniciar revisión del registro' });
+  }
+};
+
+/**
+ * GET /api/registros/rendimiento-acumulado
+ * Suma el rendimientoIndividual de cada registro dentro del rango de fechas,
+ * agrupado por nombreSellador (equivalente a SUMAR.SI.CONJUNTO de Excel).
+ *
+ * Query params:
+ *   fechaInicio  string  YYYY-MM-DD  obligatorio
+ *   fechaFin     string  YYYY-MM-DD  obligatorio
+ *   obraId       string  UUID        opcional
+ *   nombreSellador string           opcional
+ */
+export const rendimientoAcumulado = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { fechaInicio, fechaFin, obraId, nombreSellador } = req.query;
+
+    if (typeof fechaInicio !== 'string' || typeof fechaFin !== 'string') {
+      res.status(400).json({ error: 'fechaInicio y fechaFin son obligatorios' });
+      return;
+    }
+
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+    fin.setUTCHours(23, 59, 59, 999);
+
+    if (!Number.isFinite(inicio.getTime()) || !Number.isFinite(fin.getTime())) {
+      res.status(400).json({ error: 'fechaInicio y fechaFin deben ser fechas válidas (YYYY-MM-DD)' });
+      return;
+    }
+
+    if (inicio > fin) {
+      res.status(400).json({ error: 'fechaInicio debe ser menor o igual a fechaFin' });
+      return;
+    }
+
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      fecha: { gte: inicio, lte: fin },
+    };
+
+    if (typeof obraId === 'string' && obraId.trim()) {
+      where.obraId = obraId.trim();
+    }
+
+    if (typeof nombreSellador === 'string' && nombreSellador.trim()) {
+      where.nombreSellador = nombreSellador.trim();
+    }
+
+    const registros = await prisma.registroTerreno.findMany({
+      where,
+      select: {
+        tipoRegistro: true,
+        nombreSellador: true,
+        cantidadFinal: true,
+        cantidadSellosConFactores: true,
+        cantidadSellos: true,
+        metrosLineales: true,
+        obra: {
+          select: {
+            rendimientoSellosEsperadoDiario: true,
+            rendimientoReparacionEsperadoDiario: true,
+          },
+        },
+      },
+    });
+
+    const agrupado = new Map<string, {
+      totalRegistros: number;
+      cantidadEjecutadaTotal: number;
+      sumaRendimiento: number;
+    }>();
+
+    for (const reg of registros) {
+      const { cantidadEjecutada, rendimientoIndividual } = calcularRendimientoIndividual(
+        reg as unknown as Record<string, unknown>,
+      );
+      if (rendimientoIndividual === null) continue;
+
+      const sellador = reg.nombreSellador ?? 'Sin asignar';
+      const acc = agrupado.get(sellador) ?? { totalRegistros: 0, cantidadEjecutadaTotal: 0, sumaRendimiento: 0 };
+
+      acc.totalRegistros++;
+      acc.cantidadEjecutadaTotal += cantidadEjecutada ?? 0;
+      acc.sumaRendimiento += rendimientoIndividual;
+
+      agrupado.set(sellador, acc);
+    }
+
+    const resultado = Array.from(agrupado.entries()).map(([sellador, data]) => ({
+      nombreSellador: sellador,
+      totalRegistros: data.totalRegistros,
+      cantidadEjecutadaTotal: data.cantidadEjecutadaTotal,
+      rendimientoAcumulado: Math.round(data.sumaRendimiento * 10000) / 10000,
+      rendimientoAcumuladoPct: Math.round(data.sumaRendimiento * 10000) / 100,
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error al calcular rendimiento acumulado:', error);
+    res.status(500).json({ error: 'Error al calcular rendimiento acumulado' });
+  }
+};
+
+/**
+ * PATCH /api/registros/:id/inspeccion
+ * Marca o desmarca un registro para inspección.
+ * Body: { seleccionadoParaInspeccion: boolean }
+ */
+export const marcarInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const { seleccionadoParaInspeccion } = req.body as { seleccionadoParaInspeccion: unknown };
+
+    if (typeof seleccionadoParaInspeccion !== 'boolean') {
+      res.status(400).json({ error: 'seleccionadoParaInspeccion debe ser boolean' });
+      return;
+    }
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: seleccionadoParaInspeccion
+        ? {
+            seleccionadoParaInspeccion: true,
+            fechaSeleccionInspeccion: new Date(),
+            seleccionadoInspeccionPorId: req.userId,
+          }
+        : {
+            seleccionadoParaInspeccion: false,
+            fechaSeleccionInspeccion: null,
+            seleccionadoInspeccionPorId: null,
+          },
+      include: {
+        seleccionadoInspeccionPor: { select: { id: true, nombre: true } },
+      },
+    });
+
+    res.json(registro);
+  } catch (error) {
+    console.error('Error al marcar inspección:', error);
+    res.status(500).json({ error: 'Error al marcar inspección' });
+  }
+};
+
+/**
+ * GET /api/registros/:id/control-inspeccion
+ * Devuelve el control de inspección del registro, con sus parámetros.
+ */
+export const getControlInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+
+    const registro = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const control = await prisma.controlInspeccion.findFirst({
+      where: { registroTerrenoId: id },
+      include: {
+        ingeniero: { select: { id: true, nombre: true, email: true } },
+        parametros: { orderBy: { orden: 'asc' } },
+      },
+    });
+
+    if (!control) {
+      res.status(404).json({ error: 'Control de inspección no encontrado' });
+      return;
+    }
+
+    res.json(control);
+  } catch (error) {
+    console.error('Error al obtener control de inspección:', error);
+    res.status(500).json({ error: 'Error al obtener control de inspección' });
+  }
+};
+
+/**
+ * POST /api/registros/:id/control-inspeccion
+ * Crea un control de inspección para el registro.
+ * Body: { fecha, ensayo, observacion?, conformidad?, fotoInspeccionUrl?, fotoNoConformidadUrl?, parametros? }
+ */
+export const crearControlInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const {
+      fecha,
+      ensayo,
+      observacion,
+      conformidad,
+      fotoInspeccionUrl,
+      fotoNoConformidadUrl,
+      parametros,
+    } = req.body as {
+      fecha?: string;
+      ensayo?: string;
+      observacion?: string;
+      conformidad?: string;
+      fotoInspeccionUrl?: string;
+      fotoNoConformidadUrl?: string;
+      parametros?: Array<{
+        orden?: number;
+        parametro: string;
+        resultado: string;
+        observacion?: string;
+      }>;
+    };
+
+    if (!fecha) {
+      res.status(400).json({ error: 'fecha es obligatoria' });
+      return;
+    }
+    if (!ensayo || !ensayo.trim()) {
+      res.status(400).json({ error: 'ensayo es obligatorio' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const conformidadesValidas: string[] = Object.values(EstadoConformidadInspeccion);
+    if (conformidad !== undefined && conformidad !== null && !conformidadesValidas.includes(conformidad)) {
+      res.status(400).json({ error: 'conformidad debe ser: conforme o no_conforme' });
+      return;
+    }
+
+    const resultadosValidos: string[] = Object.values(ResultadoParametroInspeccion);
+    const parametrosArr = Array.isArray(parametros) ? parametros : [];
+    for (const p of parametrosArr) {
+      if (!p.parametro || !p.resultado || !resultadosValidos.includes(p.resultado)) {
+        res.status(400).json({
+          error: 'Cada parámetro debe tener parametro y resultado válido (cumple|no_cumple|no_aplica)',
+        });
+        return;
+      }
+    }
+
+    const control = await prisma.controlInspeccion.create({
+      data: {
+        registroTerrenoId: id,
+        ingenieroId: req.userId!,
+        fecha: new Date(fecha),
+        ensayo: ensayo.trim(),
+        observacion: observacion ?? null,
+        conformidad: conformidad ? (conformidad as EstadoConformidadInspeccion) : null,
+        fotoInspeccionUrl: fotoInspeccionUrl ?? null,
+        fotoNoConformidadUrl: fotoNoConformidadUrl ?? null,
+        parametros: parametrosArr.length > 0
+          ? {
+              create: parametrosArr.map((p, idx) => ({
+                orden: typeof p.orden === 'number' ? p.orden : idx + 1,
+                parametro: String(p.parametro).trim(),
+                resultado: p.resultado as ResultadoParametroInspeccion,
+                observacion: p.observacion ?? null,
+              })),
+            }
+          : undefined,
+      },
+      include: {
+        ingeniero: { select: { id: true, nombre: true, email: true } },
+        parametros: { orderBy: { orden: 'asc' } },
+      },
+    });
+
+    res.status(201).json(control);
+  } catch (error) {
+    console.error('Error al crear control de inspección:', error);
+    res.status(500).json({ error: 'Error al crear control de inspección' });
   }
 };

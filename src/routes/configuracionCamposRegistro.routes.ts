@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
+import { requirePermission } from '../middlewares/requirePermission';
 import {
   obtenerConfiguracion,
   actualizarConfiguracion,
@@ -10,11 +11,11 @@ const router = Router();
 // Cualquier usuario autenticado puede consultar la configuración de campos para un rol
 router.get('/', authenticate, obtenerConfiguracion);
 
-// Solo administrador, ingenieria y jefeobra pueden modificar la configuración
+// requirePermission es la autoridad final para escritura
 router.put(
   '/',
   authenticate,
-  authorize('administrador', 'ingenieria', 'jefeobra'),
+  requirePermission('beck_obras', 'editar'),
   actualizarConfiguracion,
 );
 

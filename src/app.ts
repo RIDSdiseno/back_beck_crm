@@ -33,6 +33,8 @@ import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
 import alertasRoutes from './routes/alertas.routes';
 import configuracionValidacionRoutes from './routes/configuracionValidacion.routes';
 import clienteRoutes from './routes/cliente.routes';
+import meRoutes from './routes/me.routes';
+import permisosRolRoutes from './routes/permisos-rol.routes';
 
 const app = express();
 const allowedOrigins = [
@@ -150,6 +152,12 @@ app.use('/api/itemizado-opciones', itemizadoOpcionesRoutes);
 // Registros con sanitización por rol — accesibles para terreno, jefeobra y roles Beck
 // NO usa blockBeckRoutes para permitir terreno/jefeobra
 app.use('/api/registros-campo', registrosCampoRoutes);
+
+// Permisos del usuario autenticado — accesible para todos los roles
+app.use('/api/me', meRoutes);
+
+// Administración de permisos por rol — solo administrador (autorización interna en el router)
+app.use('/api/permisos', authenticate, permisosRolRoutes);
 
 // Portal cliente — solo obras asignadas + registros validados
 app.use('/api/cliente', clienteRoutes);

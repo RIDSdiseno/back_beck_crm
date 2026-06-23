@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, authorize } from '../middlewares/auth';
+import { requirePermission } from '../middlewares/requirePermission';
 import {
   getClientesBeck,
   getUsuariosClientes,
@@ -10,17 +11,17 @@ import {
 
 const router = Router();
 
-const soloCliente = [authenticate, authorize('cliente', 'administrador')];
 const soloAdmin = [authenticate, authorize('administrador')];
+const vistaCliente = [authenticate, requirePermission('beck_vista_cliente', 'ver')];
 
-// Listas para que el admin seleccione el cliente a visualizar
-router.get('/clientes-beck', soloAdmin, getClientesBeck);
+// Selector de clientes Beck — accesible a cualquiera con permiso beck_vista_cliente
+router.get('/clientes-beck', vistaCliente, getClientesBeck);
 router.get('/usuarios-clientes', soloAdmin, getUsuariosClientes);
 
-// Vista de cliente — admin usa ?clienteBeckId=UUID o ?clienteUsuarioId=UUID
-// Cliente autenticado usa siempre su propio userId (query params ignorados)
-router.get('/obras', soloCliente, getObrasCliente);
-router.get('/obras/:obraId/registros', soloCliente, getRegistrosObra);
-router.get('/dashboard', soloCliente, getDashboardCliente);
+// Vista de cliente — scope resuelto por resolverScope según rol
+// cliente: obras propias | administrador: clienteBeckId o clienteUsuarioId | interno: clienteBeckId obligatorio
+router.get('/obras', vistaCliente, getObrasCliente);
+router.get('/obras/:obraId/registros', vistaCliente, getRegistrosObra);
+router.get('/dashboard', vistaCliente, getDashboardCliente);
 
 export default router;

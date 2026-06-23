@@ -85,11 +85,73 @@ async function validarObrasCliente(
   return null;
 }
 
+type ObraResumen = { id: string; nombre: string; codigo: string | null; clienteBeckId: string | null };
+type BeckResumen = { id: string; rut: string; razonSocial: string | null; nombreEmpresa: string | null };
+
+/**
+ * Enriquece usuarios con rol "cliente" con sus obras asignadas, clienteBeckId y clienteBeck.
+ * Se aplica para todos los roles que acceden a la lista de usuarios.
+ */
+async function enriquecerClienteBeck<T extends { id: string; rol: string }>(
+  usuarios: T[],
+): Promise<(T & { obras?: ObraResumen[]; cantidadObrasAsignadas?: number; clienteBeckId?: string | null; clienteBeck?: BeckResumen | null })[]> {
+  const clienteIds = usuarios.filter(u => u.rol === RolUsuario.cliente).map(u => u.id);
+
+  if (clienteIds.length === 0) return usuarios;
+
+  const asignaciones = await prisma.usuarios_obras.findMany({
+    where: { usuario_id: { in: clienteIds } },
+    select: {
+      usuario_id: true,
+      obras: { select: { id: true, nombre: true, codigo: true, clienteBeckId: true } },
+    },
+  });
+
+  const obrasMapByUser = new Map<string, ObraResumen[]>();
+  for (const a of asignaciones) {
+    const list = obrasMapByUser.get(a.usuario_id) ?? [];
+    list.push(a.obras);
+    obrasMapByUser.set(a.usuario_id, list);
+  }
+
+  const allBeckIds = new Set<string>();
+  for (const obras of obrasMapByUser.values()) {
+    for (const obra of obras) {
+      if (obra.clienteBeckId) allBeckIds.add(obra.clienteBeckId);
+    }
+  }
+
+  const beckMap = new Map<string, BeckResumen>();
+  if (allBeckIds.size > 0) {
+    const becks = await prisma.clienteBeck.findMany({
+      where: { id: { in: [...allBeckIds] } },
+      select: { id: true, rut: true, razonSocial: true, nombreEmpresa: true },
+    });
+    for (const b of becks) beckMap.set(b.id, b);
+  }
+
+  return usuarios.map(u => {
+    if (u.rol !== RolUsuario.cliente) return u;
+    const obras = obrasMapByUser.get(u.id) ?? [];
+    const uniqueClienteBeckIds = [...new Set(
+      obras.map(o => o.clienteBeckId).filter((cid): cid is string => cid !== null),
+    )];
+    const clienteBeckId = uniqueClienteBeckIds.length === 1 ? uniqueClienteBeckIds[0] : null;
+    return {
+      ...u,
+      obras,
+      cantidadObrasAsignadas: obras.length,
+      clienteBeckId,
+      clienteBeck: clienteBeckId ? (beckMap.get(clienteBeckId) ?? null) : null,
+    };
+  });
+}
+
 /**
  * GET /api/usuarios
  * Soporta ?empresa=beck|firemat para filtrar por contexto de empresa.
- * Admin ve datos de gestión. Ingenieria solo ve campos seguros para asignación.
- * Para usuarios con rol cliente (admin only), incluye obras asignadas.
+ * Admin recibe además azureId y createdAt. Todos los roles con acceso reciben
+ * clienteBeckId, clienteBeck y cantidadObrasAsignadas para usuarios con rol cliente.
  */
 export const listarUsuarios = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -133,70 +195,12 @@ export const listarUsuarios = async (req: Request, res: Response): Promise<void>
     const usuarios = await prisma.usuario.findMany({
       where,
       select: isAdmin
-        ? {
-            id: true,
-            nombre: true,
-            email: true,
-            rol: true,
-            activo: true,
-            azureId: true,
-            createdAt: true,
-          }
-        : {
-            id: true,
-            nombre: true,
-            email: true,
-            rol: true,
-            activo: true,
-          },
-      orderBy: {
-        createdAt: 'desc',
-      },
+        ? { id: true, nombre: true, email: true, rol: true, activo: true, azureId: true, createdAt: true }
+        : { id: true, nombre: true, email: true, rol: true, activo: true },
+      orderBy: { createdAt: 'desc' },
     });
 
-    // Para admin: enriquecer usuarios con rol cliente con sus obras asignadas
-    if (isAdmin) {
-      const clienteIds = usuarios.filter(u => u.rol === RolUsuario.cliente).map(u => u.id);
-
-      if (clienteIds.length > 0) {
-        const asignaciones = await prisma.usuarios_obras.findMany({
-          where: { usuario_id: { in: clienteIds } },
-          select: {
-            usuario_id: true,
-            obras: {
-              select: { id: true, nombre: true, codigo: true, clienteBeckId: true },
-            },
-          },
-        });
-
-        type ObraResumen = { id: string; nombre: string; codigo: string | null; clienteBeckId: string | null };
-        const obrasMapByUser = new Map<string, ObraResumen[]>();
-        for (const a of asignaciones) {
-          const list = obrasMapByUser.get(a.usuario_id) ?? [];
-          list.push(a.obras);
-          obrasMapByUser.set(a.usuario_id, list);
-        }
-
-        const enriched = usuarios.map(u => {
-          if (u.rol !== RolUsuario.cliente) return u;
-          const obras = obrasMapByUser.get(u.id) ?? [];
-          const uniqueClienteBeckIds = [...new Set(
-            obras.map(o => o.clienteBeckId).filter((cid): cid is string => cid !== null),
-          )];
-          return {
-            ...u,
-            obras,
-            cantidadObrasAsignadas: obras.length,
-            clienteBeckId: uniqueClienteBeckIds.length === 1 ? uniqueClienteBeckIds[0] : null,
-          };
-        });
-
-        res.json(enriched);
-        return;
-      }
-    }
-
-    res.json(usuarios);
+    res.json(await enriquecerClienteBeck(usuarios));
   } catch (error) {
     console.error('Error listando usuarios:', error);
     res.status(500).json({ error: 'Error al listar usuarios' });
@@ -259,11 +263,21 @@ export const obtenerUsuario = async (req: Request, res: Response): Promise<void>
       const uniqueClienteBeckIds = [...new Set(
         obras.map(o => o.clienteBeckId).filter((cid): cid is string => cid !== null),
       )];
+      const clienteBeckId = uniqueClienteBeckIds.length === 1 ? uniqueClienteBeckIds[0] : null;
+
+      let clienteBeck = null;
+      if (clienteBeckId) {
+        clienteBeck = await prisma.clienteBeck.findUnique({
+          where: { id: clienteBeckId },
+          select: { id: true, rut: true, razonSocial: true, nombreEmpresa: true },
+        });
+      }
 
       response.obraIds = obras.map(o => o.id);
       response.obras = obras;
       response.cantidadObrasAsignadas = obras.length;
-      response.clienteBeckId = uniqueClienteBeckIds.length === 1 ? uniqueClienteBeckIds[0] : null;
+      response.clienteBeckId = clienteBeckId;
+      response.clienteBeck = clienteBeck;
     }
 
     res.json(response);

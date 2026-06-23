@@ -25,10 +25,13 @@ model Usuario {
   movimientosInventario MovimientoInventario[]
   notificaciones        Notificacion[]
   obrasCreadas          Obra[]                    @relation("ObrasCreadasPorUsuario")
+  permisosModulo        PermisoUsuarioModulo[]
   procesamientos        ProcesamientoIngenieria[]
   registrosRechazados   RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
   registrosTerreno      RegistroTerreno[]
   usuarios_obras        usuarios_obras[]
+  registrosSeleccionadosInspeccion RegistroTerreno[]    @relation("RegistrosSeleccionadosInspeccion")
+  controlesInspeccion              ControlInspeccion[]  @relation("ControlesInspeccionPorUsuario")
 
   @@index([email])
   @@index([rol])
@@ -48,6 +51,8 @@ model Obra {
   cliente                        String?                            @db.VarChar(255)
   direccion                      String?
   clienteBeckId                  String?                            @map("cliente_beck_id") @db.Uuid
+  rendimientoSellosEsperadoDiario Int?                              @map("rendimiento_sellos_esperado_diario")
+  rendimientoReparacionEsperadoDiario Int? @map("rendimiento_reparacion_esperado_diario")
   configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
   configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
   cotizaciones                   Cotizacion[]
@@ -56,6 +61,7 @@ model Obra {
   creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
   registrosTerreno               RegistroTerreno[]
   usuarios_obras                 usuarios_obras[]
+  tiposRegistro ObraTipoRegistro[]
 
   @@index([codigo])
   @@index([estado])
@@ -138,6 +144,9 @@ model RegistroTerreno {
   reenviadoRevisionAt       DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
   esCorreccion              Boolean                  @default(false) @map("es_correccion")
   registroOrigenId          String?                  @map("registro_origen_id") @db.Uuid
+  seleccionadoParaInspeccion  Boolean   @default(false) @map("seleccionado_para_inspeccion")
+  fechaSeleccionInspeccion    DateTime? @map("fecha_seleccion_inspeccion") @db.Timestamp(6)
+  seleccionadoInspeccionPorId String?   @map("seleccionado_inspeccion_por_id") @db.Uuid
   fotos_registro            fotos_registro[]
   procesamiento             ProcesamientoIngenieria?
   itemizadoMandante         ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
@@ -146,6 +155,8 @@ model RegistroTerreno {
   registroOrigen            RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
   correcciones              RegistroTerreno[]        @relation("CorreccionesRegistro")
   usuario                   Usuario                  @relation(fields: [usuarioId], references: [id])
+  seleccionadoInspeccionPor Usuario? @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
+  controlesInspeccion      ControlInspeccion[]
 
   @@index([rechazadoPorId])
   @@index([obraId])
@@ -157,6 +168,8 @@ model RegistroTerreno {
   @@index([devuelto_a_tecnico])
   @@index([registroOrigenId])
   @@index([esCorreccion])
+  @@index([seleccionadoParaInspeccion])
+  @@index([seleccionadoInspeccionPorId])
   @@map("registros_terreno")
 }
 
@@ -676,6 +689,101 @@ model ConfiguracionValidacion {
   @@map("configuracion_validacion")
 }
 
+model PermisoRolModulo {
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  rol         RolUsuario
+  modulo      String     @db.VarChar(100)
+  puedeVer    Boolean    @default(false) @map("puede_ver")
+  puedeEditar Boolean    @default(false) @map("puede_editar")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@unique([rol, modulo])
+  @@index([rol])
+  @@index([modulo])
+  @@map("permisos_rol_modulo")
+}
+
+model PermisoUsuarioModulo {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId   String   @map("usuario_id") @db.Uuid
+  modulo      String   @db.VarChar(100)
+  puedeVer    Boolean  @default(false) @map("puede_ver")
+  puedeEditar Boolean  @default(false) @map("puede_editar")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, modulo])
+  @@index([usuarioId])
+  @@index([modulo])
+  @@map("permisos_usuario_modulo")
+}
+
+model ObraTipoRegistro {
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId       String   @map("obra_id") @db.Uuid
+  tipoRegistro String   @map("tipo_registro") @db.VarChar(50)
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  obra Obra @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, tipoRegistro])
+  @@index([obraId])
+  @@index([tipoRegistro])
+  @@map("obra_tipos_registro")
+}
+
+model ControlInspeccion {
+  id                   String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  registroTerrenoId    String                       @map("registro_terreno_id") @db.Uuid
+  ingenieroId          String                       @map("ingeniero_id") @db.Uuid
+
+  fecha                DateTime                     @db.Date
+  ensayo               String                       @db.VarChar(255)
+
+  observacion          String?
+  conformidad          EstadoConformidadInspeccion?
+  fotoInspeccionUrl    String?                      @map("foto_inspeccion_url")
+  fotoNoConformidadUrl String?                      @map("foto_no_conformidad_url")
+
+  createdAt            DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  registroTerreno      RegistroTerreno              @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
+  ingeniero            Usuario                      @relation("ControlesInspeccionPorUsuario", fields: [ingenieroId], references: [id])
+
+  parametros           ControlInspeccionParametro[]
+
+  @@index([registroTerrenoId])
+  @@index([ingenieroId])
+  @@index([fecha])
+  @@index([conformidad])
+  @@map("controles_inspeccion")
+}
+
+model ControlInspeccionParametro {
+  id                  String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  controlInspeccionId String                       @map("control_inspeccion_id") @db.Uuid
+
+  orden               Int
+  parametro           String                       @db.VarChar(500)
+  resultado           ResultadoParametroInspeccion
+  observacion         String?
+
+  createdAt           DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  controlInspeccion   ControlInspeccion            @relation(fields: [controlInspeccionId], references: [id], onDelete: Cascade)
+
+  @@index([controlInspeccionId])
+  @@index([resultado])
+  @@index([orden])
+  @@map("controles_inspeccion_parametros")
+}
+
 enum RolUsuario {
   administrador
   terreno
@@ -815,4 +923,15 @@ enum TipoMovimientoCRM {
   OBRA_ELIMINADA
   REGISTRO_CREADO
   PASSWORD_CAMBIADO
+}
+
+enum EstadoConformidadInspeccion {
+  conforme
+  no_conforme
+}
+
+enum ResultadoParametroInspeccion {
+  cumple
+  no_cumple
+  no_aplica
 }

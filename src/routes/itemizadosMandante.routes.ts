@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
+import { requirePermission } from '../middlewares/requirePermission';
 import {
   actualizarItemizadoMandante,
   crearItemizadoMandante,
@@ -10,8 +11,8 @@ import {
 const router = Router();
 
 router.get('/', authenticate, listarItemizadosMandante);
-router.post('/', authenticate, authorize('administrador', 'ingenieria'), crearItemizadoMandante);
-router.put('/:id', authenticate, authorize('administrador', 'ingenieria'), actualizarItemizadoMandante);
-router.delete('/:id', authenticate, authorize('administrador', 'ingenieria'), eliminarItemizadoMandante);
+router.post('/', authenticate, requirePermission('beck_obras', 'editar'), crearItemizadoMandante);
+router.put('/:id', authenticate, requirePermission('beck_obras', 'editar'), actualizarItemizadoMandante);
+router.delete('/:id', authenticate, requirePermission('beck_obras', 'editar'), eliminarItemizadoMandante);
 
 export default router;

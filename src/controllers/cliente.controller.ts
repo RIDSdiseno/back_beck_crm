@@ -109,7 +109,31 @@ async function resolverScope(req: Request): Promise<ScopeResult> {
     };
   }
 
-  return { ok: false, status: 403, error: 'Acceso denegado' };
+  // ── Usuario interno (ingenieria, vendedor, jefeobra, etc.) con permiso beck_vista_cliente ─
+  // El guard requirePermission ya verificó el permiso; aquí solo resolvemos el scope.
+  // Se requiere clienteBeckId para delimitar el acceso — no se permite vista global.
+  const clienteBeckId = req.query.clienteBeckId as string | undefined;
+
+  if (!clienteBeckId) {
+    return {
+      ok: false,
+      status: 400,
+      error: 'Debe seleccionar un cliente para ver la información.',
+    };
+  }
+
+  const beck = await prisma.clienteBeck.findUnique({
+    where: { id: clienteBeckId },
+    select: { id: true, activo: true },
+  });
+  if (!beck) {
+    return { ok: false, status: 404, error: 'Cliente Beck no encontrado' };
+  }
+  if (!beck.activo) {
+    return { ok: false, status: 403, error: 'El cliente Beck está inactivo' };
+  }
+  const obraIds = await getObrasPorClienteBeck(clienteBeckId);
+  return { ok: true, mode: 'clienteBeck', clienteBeckId, obraIds };
 }
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────

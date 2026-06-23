@@ -5,21 +5,19 @@ import {
   listarProcesamientos,
   obtenerProcesamiento,
 } from '../controllers/procesamiento.controller';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
+import { requirePermission } from '../middlewares/requirePermission';
 
 const router = Router();
-
-const canUseProcesamiento = authorize('ingenieria', 'administrador');
 
 /**
  * POST /api/procesamiento
  * Procesar un registro de terreno
- * Solo ingenieria y administrador
  */
 router.post(
   '/',
   authenticate,
-  canUseProcesamiento,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
   procesarRegistro
 );
 
@@ -27,12 +25,12 @@ router.post(
  * GET /api/procesamiento
  * Listar procesamientos con filtros opcionales
  */
-router.get('/', authenticate, canUseProcesamiento, listarProcesamientos);
+router.get('/', authenticate, requirePermission('beck_procesamiento_ingenieria', 'ver'), listarProcesamientos);
 
 /**
  * GET /api/procesamiento/:id
  * Obtener un procesamiento específico
  */
-router.get('/:id', authenticate, canUseProcesamiento, obtenerProcesamiento);
+router.get('/:id', authenticate, requirePermission('beck_procesamiento_ingenieria', 'ver'), obtenerProcesamiento);
 
 export default router;

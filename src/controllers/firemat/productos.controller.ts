@@ -33,6 +33,15 @@ const normCriticidad = (v: string): string => {
   return l.charAt(0).toUpperCase() + l.slice(1);
 };
 
+const NULL_PRICE_RE = /^(-{1,3}|—|n\/?a)$/i;
+
+function normalizePriceField(value: unknown): number {
+  if (value === null || value === undefined) return 0;
+  const s = String(value).trim();
+  if (!s || NULL_PRICE_RE.test(s)) return 0;
+  return parseFloat(s);
+}
+
 const parseBool = (v: unknown): boolean | null => {
   if (typeof v === 'boolean') return v;
   if (typeof v === 'string') {
@@ -164,14 +173,14 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       return;
     }
 
-    const precioNum = parseFloat(String(precio ?? 0));
+    const precioNum = normalizePriceField(precio);
     if (!Number.isFinite(precioNum) || precioNum < 0) {
       res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
       return;
     }
     let precioUsdNum: number | undefined;
     if (precioUsd !== undefined) {
-      precioUsdNum = parseFloat(String(precioUsd));
+      precioUsdNum = normalizePriceField(precioUsd);
       if (!Number.isFinite(precioUsdNum) || precioUsdNum < 0) {
         res.status(400).json({ success: false, error: 'precioUsd debe ser >= 0' });
         return;
@@ -179,7 +188,7 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
     }
     let precioSugeridoNum: number | undefined;
     if (precioSugerido !== undefined) {
-      precioSugeridoNum = parseFloat(String(precioSugerido));
+      precioSugeridoNum = normalizePriceField(precioSugerido);
       if (!Number.isFinite(precioSugeridoNum) || precioSugeridoNum < 0) {
         res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
         return;
@@ -376,7 +385,7 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     if (precio !== undefined) {
-      const p = parseFloat(String(precio));
+      const p = normalizePriceField(precio);
       if (!Number.isFinite(p) || p < 0) {
         res.status(400).json({ success: false, error: 'precio debe ser >= 0' });
         return;
@@ -385,7 +394,7 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     if (precioUsd !== undefined) {
-      const p = parseFloat(String(precioUsd));
+      const p = normalizePriceField(precioUsd);
       if (!Number.isFinite(p) || p < 0) {
         res.status(400).json({ success: false, error: 'precioUsd debe ser >= 0' });
         return;
@@ -394,7 +403,7 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
     }
 
     if (precioSugerido !== undefined) {
-      const p = parseFloat(String(precioSugerido));
+      const p = normalizePriceField(precioSugerido);
       if (!Number.isFinite(p) || p < 0) {
         res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
         return;

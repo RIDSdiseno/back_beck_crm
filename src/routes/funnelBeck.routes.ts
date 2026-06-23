@@ -17,28 +17,27 @@ import {
 } from "../controllers/funnelBeck.controller";
 import { getDashboardFunnelBeck } from "../controllers/funnelBeckDashboard.controller";
 import { authenticate, authorize } from "../middlewares/auth";
+import { requirePermission } from "../middlewares/requirePermission";
 import { uploadFunnelBeckFiles } from "../middlewares/upload";
 
 const router = Router();
 
-const canReadFunnelBeck = authorize("administrador", "vendedor", "terreno", "ingenieria", "visualizador");
-const canWriteFunnelBeck = authorize("administrador", "vendedor", "terreno", "ingenieria");
-const canReadCotizacionesBeck = authorize("administrador", "vendedor", "ingenieria", "visualizador");
-
-router.get("/", authenticate, canReadFunnelBeck, getAllFunnelBeckController);
-router.get("/dashboard", authenticate, canReadFunnelBeck, getDashboardFunnelBeck);
-router.get("/exportar", authenticate, canReadFunnelBeck, exportarFunnelBeck);
-router.get("/ganadas-sin-obra", authenticate, canReadFunnelBeck, getGanadasSinObraFunnelBeckController);
-router.delete("/archivos/:archivoId", authenticate, canWriteFunnelBeck, deleteFunnelBeckArchivoController);
-router.get("/:id/archivos", authenticate, canReadFunnelBeck, getFunnelBeckArchivosController);
-router.post("/:id/archivos", authenticate, canWriteFunnelBeck, uploadFunnelBeckFiles, createFunnelBeckArchivosController);
-router.get("/:id/cotizaciones", authenticate, canReadCotizacionesBeck, getCotizacionesByFunnelBeckController);
-router.get("/:id/historial-etapas", authenticate, canReadFunnelBeck, getHistorialEtapasBeckController);
-router.get("/:id", authenticate, canReadFunnelBeck, getFunnelBeckByIdController);
-router.post("/", authenticate, canWriteFunnelBeck, createFunnelBeckController);
-router.put("/:id", authenticate, canWriteFunnelBeck, updateFunnelBeckController);
-router.patch("/:id/etapa", authenticate, canWriteFunnelBeck, updateEtapaFunnelBeckController);
-router.patch("/:id/obra", authenticate, canWriteFunnelBeck, updateObraFunnelBeckController);
-router.delete("/:id", authenticate, authorize("administrador"), deleteFunnelBeckController);
+router.get("/", authenticate, requirePermission('beck_funnel', 'ver'), getAllFunnelBeckController);
+router.get("/dashboard", authenticate, requirePermission('beck_funnel', 'ver'), getDashboardFunnelBeck);
+router.get("/exportar", authenticate, requirePermission('beck_funnel', 'ver'), exportarFunnelBeck);
+router.get("/ganadas-sin-obra", authenticate, requirePermission('beck_funnel', 'ver'), getGanadasSinObraFunnelBeckController);
+// requirePermission es la autoridad final para escritura; no gate intermedio de rol
+router.delete("/archivos/:archivoId", authenticate, requirePermission('beck_funnel', 'editar'), deleteFunnelBeckArchivoController);
+router.get("/:id/archivos", authenticate, requirePermission('beck_funnel', 'ver'), getFunnelBeckArchivosController);
+router.post("/:id/archivos", authenticate, requirePermission('beck_funnel', 'editar'), uploadFunnelBeckFiles, createFunnelBeckArchivosController);
+router.get("/:id/cotizaciones", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizacionesByFunnelBeckController);
+router.get("/:id/historial-etapas", authenticate, requirePermission('beck_funnel', 'ver'), getHistorialEtapasBeckController);
+router.get("/:id", authenticate, requirePermission('beck_funnel', 'ver'), getFunnelBeckByIdController);
+router.post("/", authenticate, requirePermission('beck_funnel', 'editar'), createFunnelBeckController);
+router.put("/:id", authenticate, requirePermission('beck_funnel', 'editar'), updateFunnelBeckController);
+router.patch("/:id/etapa", authenticate, requirePermission('beck_funnel', 'editar'), updateEtapaFunnelBeckController);
+router.patch("/:id/obra", authenticate, requirePermission('beck_funnel', 'editar'), updateObraFunnelBeckController);
+// DELETE oportunidad: solo administrador por diseño (acción destructiva de alto impacto)
+router.delete("/:id", authenticate, authorize("administrador"), requirePermission('beck_funnel', 'editar'), deleteFunnelBeckController);
 
 export default router;

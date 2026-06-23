@@ -10,36 +10,35 @@ import {
   downloadCotizacionPdf,
 } from "../controllers/cotizaciones.controller";
 import { authenticate, authorize } from "../middlewares/auth";
+import { requirePermission } from "../middlewares/requirePermission";
 
 const router = Router();
 
-const canReadCotizaciones = authorize("administrador", "vendedor", "ingenieria", "visualizador");
-const canWriteCotizaciones = authorize("administrador", "vendedor");
+router.get("/", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizaciones);
+router.get("/:id/versiones", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizacionVersiones);
+router.get("/:id", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizacionById);
+router.get("/:id/pdf", authenticate, requirePermission('beck_cotizaciones', 'ver'), downloadCotizacionPdf);
 
-router.get("/", authenticate, canReadCotizaciones, getCotizaciones);
-router.get("/:id/versiones", authenticate, canReadCotizaciones, getCotizacionVersiones);
-router.get("/:id", authenticate, canReadCotizaciones, getCotizacionById);
-router.get("/:id/pdf", authenticate, canReadCotizaciones, downloadCotizacionPdf);
-
-// Solo roles con permiso de edición
+// requirePermission es la autoridad final para escritura: valida permisos efectivos
+// (incluye excepciones individuales por usuario), sin gate intermedio de rol.
 router.post(
   "/",
   authenticate,
-  canWriteCotizaciones,
+  requirePermission('beck_cotizaciones', 'editar'),
   createCotizacion
 );
 
 router.put(
   "/:id",
   authenticate,
-  canWriteCotizaciones,
+  requirePermission('beck_cotizaciones', 'editar'),
   updateCotizacion
 );
 
 router.patch(
   "/:id/estado",
   authenticate,
-  canWriteCotizaciones,
+  requirePermission('beck_cotizaciones', 'editar'),
   patchCotizacionEstado
 );
 
@@ -47,8 +46,8 @@ router.delete(
   "/:id",
   authenticate,
   authorize("administrador"),
+  requirePermission('beck_cotizaciones', 'editar'),
   deleteCotizacion
 );
 
 export default router;
-

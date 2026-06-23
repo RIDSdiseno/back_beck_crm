@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import { getReportesFiremat } from '../../controllers/firemat/reportes.controller';
-import { authorize } from '../../middlewares/auth';
+import { requirePermission } from '../../middlewares/requirePermission';
 
 const router = Router();
 
-const canRead = authorize('administrador', 'vendedor_firemat', 'bodeguero', 'visualizador_firemat');
-
-router.get('/', canRead, getReportesFiremat);
+router.get('/', requirePermission('firemat_reportes', 'ver'), getReportesFiremat);
 
 export default router;

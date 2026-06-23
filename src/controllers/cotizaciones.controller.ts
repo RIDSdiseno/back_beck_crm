@@ -135,6 +135,11 @@ const ESTADO_COT_COLORS: Record<string, string> = {
   VENCIDA:   '#d97706',
 };
 
+const BECK_RUT       = '76.695.302-6';
+const BECK_DIRECCION = 'Jorge Alessandri 180, galpón 4, La Reina';
+const BORDER_COLOR   = '#e2e8f0';
+const ROW_ALT        = '#f8fafc';
+
 // CLP sin decimales: $240.000
 const formatCLP = (value: number): string =>
   new Intl.NumberFormat('es-CL', {
@@ -494,173 +499,255 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
     const logoPath   = path.join(process.cwd(), 'public', 'logo-beck.png');
     const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
 
-    // ══════════════════════════════════════════════════════════════
-    // ENCABEZADO
-    // ══════════════════════════════════════════════════════════════
+    const val = (v: unknown): string => {
+      if (v == null) return '—';
+      const s = String(v).trim();
+      return s.length > 0 ? s : '—';
+    };
 
-    // Barra amarilla superior
-    doc.rect(0, 0, PDF_W, 5).fill(BECK_YELLOW);
-    doc.y = 14;
+    const badgeColor = ESTADO_COT_COLORS[cotizacion.estado] ?? '#64748b';
 
-    const headerY = doc.y;
+    // ══════════════════════ A) ENCABEZADO ══════════════════════
 
+    doc.rect(0, 0, PDF_W, 4).fill(BECK_YELLOW);
+
+    const HDR_TOP    = 14;
+    const RBOX_X     = 348;
+    const RBOX_W     = PDF_W - PDF_MARGIN - RBOX_X; // 207
+    const RBOX_H     = 76;
+    const RBOX_HDRH  = 15;
+
+    // Bloque empresa (izquierda)
     if (logoBuffer) {
-      doc.image(logoBuffer, PDF_MARGIN, headerY, { height: 38 });
+      doc.image(logoBuffer, PDF_MARGIN, HDR_TOP + 2, { height: 34 });
     }
-    const textStartX = logoBuffer ? PDF_MARGIN + 52 : PDF_MARGIN;
+    const CMP_X = logoBuffer ? PDF_MARGIN + 48 : PDF_MARGIN;
 
-    doc.font('Helvetica-Bold').fontSize(15).fillColor(BECK_DARK)
-      .text('BECK Soluciones', textStartX, headerY, { lineBreak: false });
-    doc.font('Helvetica').fontSize(9).fillColor(TEXT_MUTED)
-      .text('Cotización Comercial', textStartX, headerY + 20, { lineBreak: false });
+    doc.font('Helvetica-Bold').fontSize(13).fillColor(BECK_DARK)
+      .text('BECK Soluciones', CMP_X, HDR_TOP, { lineBreak: false });
+    doc.font('Helvetica').fontSize(7.5).fillColor(TEXT_MUTED)
+      .text(`RUT: ${BECK_RUT}`,  CMP_X, HDR_TOP + 16, { lineBreak: false })
+      .text(BECK_DIRECCION,       CMP_X, HDR_TOP + 26, { width: RBOX_X - CMP_X - 10, lineBreak: false })
+      .text('Correo: —',          CMP_X, HDR_TOP + 36, { lineBreak: false })
+      .text('Teléfono: —',        CMP_X, HDR_TOP + 46, { lineBreak: false });
 
-    // Fecha de generación (derecha)
-    const genDate = new Intl.DateTimeFormat('es-CL', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
-    }).format(new Date());
-    doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
-      .text(`Generado: ${genDate}`, PDF_MARGIN, headerY + 32, {
-        width: PDF_CONTENT_W,
-        align: 'right',
-        lineBreak: false,
-      });
+    // Recuadro cotización (derecha)
+    doc.lineWidth(0.8).rect(RBOX_X, HDR_TOP - 1, RBOX_W, RBOX_H).stroke(BORDER_COLOR);
+    doc.rect(RBOX_X, HDR_TOP - 1, RBOX_W, RBOX_HDRH).fill(BECK_DARK);
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#ffffff')
+      .text('COTIZACIÓN', RBOX_X, HDR_TOP + 2, { width: RBOX_W, align: 'center', lineBreak: false });
 
-    doc.y = headerY + 50;
+    const BLX = RBOX_X + 6;
+    const BVX = RBOX_X + 76;
+    const BVW = RBOX_W - 82;
 
-    // Línea amarilla separadora
+    const rLine = (label: string, value: string, y: number): void => {
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(TEXT_MUTED)
+        .text(label, BLX, y, { width: 68, lineBreak: false });
+      doc.font('Helvetica').fontSize(8).fillColor(TEXT_DARK)
+        .text(value, BVX, y, { width: BVW, lineBreak: false });
+    };
+    rLine('N°:',       val(cotizacion.numero),                       HDR_TOP + 20);
+    rLine('Emisión:',  formatCotDate(new Date(cotizacion.createdAt)), HDR_TOP + 32);
+    rLine('Vigencia:', formatCotDate(new Date(cotizacion.vigencia)),  HDR_TOP + 44);
+
+    const BDGE_Y = HDR_TOP + 57;
+    doc.rect(RBOX_X + 6, BDGE_Y, RBOX_W - 12, 13).fill(badgeColor);
+    doc.font('Helvetica-Bold').fontSize(7).fillColor('#ffffff')
+      .text(cotizacion.estado, RBOX_X + 6, BDGE_Y + 3,
+        { width: RBOX_W - 12, align: 'center', lineBreak: false });
+
+    doc.y = HDR_TOP + RBOX_H + 4;
+
+    // Línea separadora amarilla
     doc.rect(PDF_MARGIN, doc.y, PDF_CONTENT_W, 1.5).fill(BECK_YELLOW);
-    doc.y += 10;
-
-    // ══════════════════════════════════════════════════════════════
-    // TÍTULO
-    // ══════════════════════════════════════════════════════════════
-    doc.font('Helvetica-Bold').fontSize(14).fillColor(BECK_DARK)
-      .text('Cotización');
-    doc.y += 3;
-    doc.font('Helvetica').fontSize(10).fillColor(TEXT_MUTED)
-      .text(`N° ${cotizacion.numero ?? 'S/N'}   ·   Fecha: ${formatCotDate(new Date(cotizacion.createdAt))}`);
     doc.y += 8;
 
-    // Badge de estado
-    const badgeColor = ESTADO_COT_COLORS[cotizacion.estado] ?? '#64748b';
-    const badgeY = doc.y;
-    doc.rect(PDF_MARGIN, badgeY, 90, 15).fill(badgeColor);
-    doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
-      .text(cotizacion.estado, PDF_MARGIN + 5, badgeY + 4, { width: 80, lineBreak: false });
-    doc.y = badgeY + 22;
+    // ══════════════════════ B+C) BLOQUES DE INFORMACIÓN ══════════════════════
 
-    cotHRule(doc);
+    const BINFO_TOP = doc.y;
+    const BINFO_LX  = PDF_MARGIN;
+    const BINFO_LW  = 254;
+    const BINFO_RX  = PDF_MARGIN + BINFO_LW + 7;
+    const BINFO_RW  = PDF_W - PDF_MARGIN - BINFO_RX;
+    const BI_HDR_H  = 16;
+    const BI_ROW_H  = 14;
+    const BI_ROWS   = 6;
+    const BI_BODY_H = BI_ROWS * BI_ROW_H + 8;
+    const BI_TOTAL  = BI_HDR_H + BI_BODY_H;
 
-    // ══════════════════════════════════════════════════════════════
-    // DATOS DEL CLIENTE
-    // ══════════════════════════════════════════════════════════════
-    cotSectionHeader(doc, 'DATOS DEL CLIENTE');
-    cotFieldRow(doc, 'Cliente:', cotizacion.clienteNombre);
-    cotFieldRow(doc, 'N° Cotización:', cotizacion.numero ?? 'Sin número');
-    cotFieldRow(doc, 'Fecha emisión:', formatCotDate(new Date(cotizacion.createdAt)));
-    cotFieldRow(doc, 'Vigencia hasta:', formatCotDate(new Date(cotizacion.vigencia)));
-    cotFieldRow(doc, 'Estado:', cotizacion.estado);
-    if (cotizacion.obra) {
-      cotFieldRow(doc, 'Obra asociada:', cotizacion.obra.nombre);
-    }
-    if (cotizacion.observaciones) {
-      cotFieldRow(doc, 'Observaciones:', cotizacion.observaciones);
-    }
+    const drawInfoBox = (
+      bx: number,
+      bw: number,
+      title: string,
+      rows: Array<[string, string]>,
+    ): void => {
+      doc.rect(bx, BINFO_TOP, bw, BI_HDR_H).fill(BECK_DARK);
+      doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
+        .text(title, bx + 6, BINFO_TOP + 4, { width: bw - 12, lineBreak: false });
+      doc.lineWidth(0.5).rect(bx, BINFO_TOP + BI_HDR_H, bw, BI_BODY_H).stroke(BORDER_COLOR);
+      const kw = 82;
+      const vw = bw - kw - 14;
+      let ry = BINFO_TOP + BI_HDR_H + 5;
+      for (const [key, value] of rows) {
+        doc.font('Helvetica-Bold').fontSize(7.5).fillColor(TEXT_MUTED)
+          .text(key, bx + 6, ry, { width: kw, lineBreak: false });
+        doc.font('Helvetica').fontSize(7.5).fillColor(TEXT_DARK)
+          .text(value, bx + kw + 6, ry, { width: vw, lineBreak: false });
+        ry += BI_ROW_H;
+      }
+    };
 
-    cotHRule(doc);
+    const cRut   = val(cotizacion.clienteBeck?.rut);
+    const cNom   = val(cotizacion.contactoBeck?.nombre);
+    const cEmail = val(cotizacion.contactoBeck?.correo ?? cotizacion.clienteBeck?.correo);
+    const cTel   = val(cotizacion.contactoBeck?.telefono ?? cotizacion.clienteBeck?.telefono);
+    const cObra  = val(cotizacion.obra?.nombre);
 
-    // ══════════════════════════════════════════════════════════════
-    // DETALLE
-    // ══════════════════════════════════════════════════════════════
-    cotSectionHeader(doc, 'DETALLE');
+    drawInfoBox(BINFO_LX, BINFO_LW, 'DATOS DEL CLIENTE', [
+      ['Cliente:',         cotizacion.clienteNombre],
+      ['RUT:',             cRut],
+      ['Contacto:',        cNom],
+      ['Correo:',          cEmail],
+      ['Teléfono:',        cTel],
+      ['Obra / Proyecto:', cObra],
+    ]);
 
-    // Posiciones de columnas (dentro de PDF_MARGIN=40, PDF_W=595)
-    const COL_DESC_X  = PDF_MARGIN;        // 40
-    const COL_DESC_W  = 240;
-    const COL_CANT_X  = PDF_MARGIN + 248;  // 288
-    const COL_CANT_W  = 42;
-    const COL_PUNIT_X = PDF_MARGIN + 297;  // 337
-    const COL_PUNIT_W = 88;
-    const COL_SUB_X   = PDF_MARGIN + 392;  // 432
-    const COL_SUB_W   = PDF_W - PDF_MARGIN - (PDF_MARGIN + 392); // 123
+    drawInfoBox(BINFO_RX, BINFO_RW, 'DATOS DE COTIZACIÓN', [
+      ['Responsable:',   '—'],
+      ['Fecha emisión:', formatCotDate(new Date(cotizacion.createdAt))],
+      ['Vigencia:',      formatCotDate(new Date(cotizacion.vigencia))],
+      ['Estado:',        cotizacion.estado],
+      ['Versión:',       String(cotizacion.version ?? 1)],
+      ['Moneda:',        'CLP'],
+    ]);
+
+    doc.y = BINFO_TOP + BI_TOTAL + 10;
+
+    // ══════════════════════ D) TABLA DE DETALLE ══════════════════════
+
+    const TC_NUM  = { x: PDF_MARGIN,       w: 22  };
+    const TC_DESC = { x: PDF_MARGIN + 22,  w: 218 };
+    const TC_CANT = { x: PDF_MARGIN + 240, w: 40  };
+    const TC_PUN  = { x: PDF_MARGIN + 280, w: 95  };
+    const TC_SUB  = { x: PDF_MARGIN + 375, w: 140 };
 
     const drawTableHeader = (): void => {
-      const thY = doc.y;
-      doc.rect(PDF_MARGIN, thY, PDF_CONTENT_W, 16).fill(BECK_DARK);
-      doc.font('Helvetica-Bold').fontSize(8).fillColor('#ffffff');
-      doc.text('DESCRIPCIÓN', COL_DESC_X + 4, thY + 4, { width: COL_DESC_W - 4, lineBreak: false });
-      doc.text('CANT.', COL_CANT_X, thY + 4, { width: COL_CANT_W, align: 'right', lineBreak: false });
-      doc.text('P. UNIT.', COL_PUNIT_X, thY + 4, { width: COL_PUNIT_W, align: 'right', lineBreak: false });
-      doc.text('SUBTOTAL', COL_SUB_X, thY + 4, { width: COL_SUB_W - 2, align: 'right', lineBreak: false });
-      doc.y = thY + 16;
+      const ty = doc.y;
+      doc.rect(PDF_MARGIN, ty, PDF_CONTENT_W, 17).fill(BECK_DARK);
+      doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff');
+      doc.text('#',            TC_NUM.x  + 3, ty + 4, { width: TC_NUM.w,               lineBreak: false });
+      doc.text('DESCRIPCIÓN',  TC_DESC.x + 3, ty + 4, { width: TC_DESC.w,              lineBreak: false });
+      doc.text('CANT.',         TC_CANT.x,    ty + 4, { width: TC_CANT.w, align: 'right', lineBreak: false });
+      doc.text('P. UNIT.',      TC_PUN.x,     ty + 4, { width: TC_PUN.w,  align: 'right', lineBreak: false });
+      doc.text('SUBTOTAL',      TC_SUB.x,     ty + 4, { width: TC_SUB.w - 4, align: 'right', lineBreak: false });
+      doc.y = ty + 17;
     };
 
     drawTableHeader();
 
     let rowIdx = 0;
     for (const linea of lineas) {
-      if (doc.y > 750) {
+      if (doc.y > 740) {
         doc.addPage();
         doc.y = PDF_MARGIN;
         drawTableHeader();
         rowIdx = 0;
       }
-
       const rowY = doc.y;
       const rowH = 18;
 
-      // Fondo alternado en filas impares
       if (rowIdx % 2 === 1) {
-        doc.rect(PDF_MARGIN, rowY, PDF_CONTENT_W, rowH).fill('#f8fafc');
+        doc.rect(PDF_MARGIN, rowY, PDF_CONTENT_W, rowH).fill(ROW_ALT);
       }
 
-      doc.font('Helvetica').fontSize(9).fillColor(TEXT_DARK);
-      doc.text(linea.descripcion, COL_DESC_X + 4, rowY + 4, { width: COL_DESC_W - 4, lineBreak: false });
-      doc.text(String(linea.cantidad), COL_CANT_X, rowY + 4, { width: COL_CANT_W, align: 'right', lineBreak: false });
-      doc.text(formatCLP(linea.precioUnitario), COL_PUNIT_X, rowY + 4, { width: COL_PUNIT_W, align: 'right', lineBreak: false });
-      doc.text(formatCLP(linea.subtotal), COL_SUB_X, rowY + 4, { width: COL_SUB_W - 2, align: 'right', lineBreak: false });
+      doc.font('Helvetica').fontSize(8.5).fillColor(TEXT_DARK);
+      doc.text(String(rowIdx + 1),              TC_NUM.x  + 3, rowY + 4, { width: TC_NUM.w,               lineBreak: false });
+      doc.text(linea.descripcion,               TC_DESC.x + 3, rowY + 4, { width: TC_DESC.w,              lineBreak: false });
+      doc.text(String(linea.cantidad),          TC_CANT.x,     rowY + 4, { width: TC_CANT.w, align: 'right', lineBreak: false });
+      doc.text(formatCLP(linea.precioUnitario), TC_PUN.x,      rowY + 4, { width: TC_PUN.w,  align: 'right', lineBreak: false });
+      doc.text(formatCLP(linea.subtotal),       TC_SUB.x,      rowY + 4, { width: TC_SUB.w - 4, align: 'right', lineBreak: false });
 
       doc.y = rowY + rowH;
       rowIdx++;
     }
 
-    // Línea inferior de tabla
-    doc.strokeColor('#e2e8f0').lineWidth(0.5)
-      .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke();
-    doc.y += 14;
+    doc.lineWidth(0.5)
+      .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke(BORDER_COLOR);
+    doc.y += 12;
 
-    // ══════════════════════════════════════════════════════════════
-    // TOTALES
-    // ══════════════════════════════════════════════════════════════
-    const TOT_LABEL_X = 355;
-    const TOT_LABEL_W = 100;
-    const TOT_VAL_X   = 460;
-    const TOT_VAL_W   = PDF_W - PDF_MARGIN - TOT_VAL_X; // 95
+    // ══════════════════════ E) TOTALES ══════════════════════
 
-    let totY = doc.y;
+    const TT_X  = 358;
+    const TT_LW = 112;
+    const TT_VX = TT_X + TT_LW;
+    const TT_VW = PDF_W - PDF_MARGIN - TT_VX;
+    let   totY  = doc.y;
 
-    const drawTotLine = (label: string, value: string, bold = false): void => {
-      doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(10).fillColor(TEXT_DARK);
-      doc.text(label, TOT_LABEL_X, totY, { width: TOT_LABEL_W, lineBreak: false });
-      doc.text(value, TOT_VAL_X, totY, { width: TOT_VAL_W, align: 'right', lineBreak: false });
-      totY += 17;
+    const drawTotRow = (
+      label: string,
+      value: string,
+      opts: { bold?: boolean; highlight?: boolean } = {},
+    ): void => {
+      const { bold = false, highlight = false } = opts;
+      if (highlight) {
+        doc.rect(TT_X - 6, totY - 2, PDF_W - PDF_MARGIN - TT_X + 6, 18).fill(BECK_YELLOW);
+      }
+      doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(9)
+        .fillColor(highlight ? BECK_DARK : TEXT_DARK);
+      doc.text(label, TT_X,  totY, { width: TT_LW,               lineBreak: false });
+      doc.text(value, TT_VX, totY, { width: TT_VW, align: 'right', lineBreak: false });
+      totY += 16;
     };
 
-    drawTotLine('Subtotal:', formatCLP(subtotal));
+    drawTotRow('Subtotal:', formatCLP(subtotal));
     if (descuentoPct > 0) {
-      drawTotLine(`Descuento (${formatPct(descuentoPct)}):`, `-${formatCLP(descuentoMonto)}`);
+      drawTotRow(`Descuento (${formatPct(descuentoPct)}):`, `− ${formatCLP(descuentoMonto)}`);
     }
     if (impuesto > 0) {
-      drawTotLine('IVA (19%):', formatCLP(impuesto));
+      drawTotRow('IVA (19%):', formatCLP(impuesto));
     }
 
-    // Separador antes del total
-    doc.strokeColor('#e2e8f0').lineWidth(0.5)
-      .moveTo(TOT_LABEL_X, totY - 4).lineTo(PDF_W - PDF_MARGIN, totY - 4).stroke();
+    doc.lineWidth(0.5)
+      .moveTo(TT_X - 6, totY - 3).lineTo(PDF_W - PDF_MARGIN, totY - 3).stroke(BORDER_COLOR);
     totY += 4;
 
-    drawTotLine('TOTAL:', formatCLP(total), true);
+    drawTotRow('TOTAL:', formatCLP(total), { bold: true, highlight: true });
+    doc.y = totY + 10;
+
+    // ══════════════════════ F) OBSERVACIONES ══════════════════════
+
+    if (cotizacion.observaciones) {
+      if (doc.y > 720) { doc.addPage(); doc.y = PDF_MARGIN; }
+      doc.y += 6;
+
+      const obsY = doc.y;
+      doc.rect(PDF_MARGIN, obsY, PDF_CONTENT_W, 16).fill(BECK_DARK);
+      doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
+        .text('OBSERVACIONES', PDF_MARGIN + 8, obsY + 4, { width: PDF_CONTENT_W - 16, lineBreak: false });
+
+      doc.y = obsY + 16;
+      doc.lineWidth(0.5)
+        .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke(BORDER_COLOR);
+
+      doc.font('Helvetica').fontSize(8.5).fillColor(TEXT_DARK)
+        .text(cotizacion.observaciones, PDF_MARGIN + 6, doc.y + 6, { width: PDF_CONTENT_W - 12 });
+
+      doc.y += 8;
+      doc.lineWidth(0.5)
+        .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke(BORDER_COLOR);
+      doc.y += 8;
+    }
+
+    // ══════════════════════ G) FIRMA ══════════════════════
+
+    if (doc.y > 760) { doc.addPage(); doc.y = PDF_MARGIN; }
+
+    const sigY = doc.y < 690 ? 710 : doc.y + 24;
+    doc.lineWidth(0.5)
+      .moveTo(PDF_MARGIN, sigY).lineTo(PDF_MARGIN + 190, sigY).stroke('#94a3b8');
+    doc.font('Helvetica').fontSize(8).fillColor(TEXT_MUTED)
+      .text('Firma y Aclaración', PDF_MARGIN, sigY + 5, { lineBreak: false });
 
     doc.end();
   } catch (error) {

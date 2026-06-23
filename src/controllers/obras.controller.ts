@@ -3,6 +3,10 @@ import { Request, Response } from 'express';
 import { EstadoObra, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
+import {
+  TIPOS_REGISTRO_VALIDOS,
+  validarTiposRegistroSistema,
+} from '../helpers/tiposRegistro';
 
 const estadosObraValidos: EstadoObra[] = [
   EstadoObra.activa,
@@ -85,6 +89,8 @@ type CrearObraBody = {
   estado?: unknown;
   funnelBeckId?: unknown;
   clienteBeckId?: unknown;
+  rendimientoSellosEsperadoDiario?: unknown;
+  rendimientoReparacionEsperadoDiario?: unknown;
 };
 
 type ActualizarObraBody = {
@@ -95,6 +101,8 @@ type ActualizarObraBody = {
   estado?: unknown;
   funnelBeckId?: unknown;
   clienteBeckId?: unknown;
+  rendimientoSellosEsperadoDiario?: unknown;
+  rendimientoReparacionEsperadoDiario?: unknown;
 };
 
 type CambiarEstadoObraBody = {
@@ -106,10 +114,23 @@ type AsignarUsuariosObraBody = {
   usuarioIds?: unknown;
 };
 
+type ActualizarTiposRegistroObraBody = {
+  tiposRegistro?: unknown;
+};
+
 const getFunnelBeckId = (value: unknown): string | null => {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
   return trimmed || null;
+};
+
+const parseRendimientoObra = (raw: unknown, nombreCampo: string): { value: number | null } | { error: string } => {
+  if (raw === null || raw === '') return { value: null };
+  const num = typeof raw === 'number' ? raw : Number(raw);
+  if (!Number.isFinite(num) || num < 0) {
+    return { error: `${nombreCampo} debe ser un número mayor o igual a 0` };
+  }
+  return { value: Math.floor(num) };
 };
 
 const sendFunnelBeckLinkError = (res: Response, error: unknown): boolean => {
@@ -182,17 +203,24 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const obra = await prisma.obra.findUnique({
-      where: { id },
-      include: obraUsuariosInclude,
-    });
+    const [obra, tiposRegistro] = await Promise.all([
+      prisma.obra.findUnique({ where: { id }, include: obraUsuariosInclude }),
+      prisma.obraTipoRegistro.findMany({
+        where: { obraId: id, activo: true },
+        select: { tipoRegistro: true },
+        orderBy: { tipoRegistro: 'asc' },
+      }),
+    ]);
 
     if (!obra) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
 
-    res.json(formatObraResponse(obra));
+    res.json({
+      ...formatObraResponse(obra),
+      tiposRegistro: tiposRegistro.map((t) => t.tipoRegistro),
+    });
   } catch (error) {
     console.error('Error al obtener obra:', error);
     res.status(500).json({ error: 'Error al obtener obra' });
@@ -201,7 +229,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
 
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId } =
+    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId, rendimientoSellosEsperadoDiario, rendimientoReparacionEsperadoDiario } =
       req.body as CrearObraBody;
 
     if (typeof nombre !== 'string' || !nombre.trim()) {
@@ -213,6 +241,26 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
     if (!estadoObra) {
       res.status(400).json({ error: 'Estado invalido' });
       return;
+    }
+
+    let rendimientoFinal: number | null | undefined = undefined;
+    if (rendimientoSellosEsperadoDiario !== undefined) {
+      const parsed = parseRendimientoObra(rendimientoSellosEsperadoDiario, 'rendimientoSellosEsperadoDiario');
+      if ('error' in parsed) {
+        res.status(400).json({ error: parsed.error });
+        return;
+      }
+      rendimientoFinal = parsed.value;
+    }
+
+    let rendimientoReparacionFinal: number | null | undefined = undefined;
+    if (rendimientoReparacionEsperadoDiario !== undefined) {
+      const parsed = parseRendimientoObra(rendimientoReparacionEsperadoDiario, 'Rendimiento Reparación Esperado diario');
+      if ('error' in parsed) {
+        res.status(400).json({ error: parsed.error });
+        return;
+      }
+      rendimientoReparacionFinal = parsed.value;
     }
 
     const codigoFinal =
@@ -266,6 +314,8 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
           estado: estadoObra,
           creadoPorId: req.userId ?? '',
           ...(clienteBeckIdFinal && { clienteBeckId: clienteBeckIdFinal }),
+          ...(rendimientoFinal !== undefined && { rendimientoSellosEsperadoDiario: rendimientoFinal }),
+          ...(rendimientoReparacionFinal !== undefined && { rendimientoReparacionEsperadoDiario: rendimientoReparacionFinal }),
         },
       });
 
@@ -311,7 +361,7 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId } = req.body as ActualizarObraBody;
+    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId, rendimientoSellosEsperadoDiario, rendimientoReparacionEsperadoDiario } = req.body as ActualizarObraBody;
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'ID de obra invalido' });
@@ -352,6 +402,26 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       }
     }
 
+    let rendimientoUpdate: number | null | undefined = undefined;
+    if (rendimientoSellosEsperadoDiario !== undefined) {
+      const parsed = parseRendimientoObra(rendimientoSellosEsperadoDiario, 'rendimientoSellosEsperadoDiario');
+      if ('error' in parsed) {
+        res.status(400).json({ error: parsed.error });
+        return;
+      }
+      rendimientoUpdate = parsed.value;
+    }
+
+    let rendimientoReparacionUpdate: number | null | undefined = undefined;
+    if (rendimientoReparacionEsperadoDiario !== undefined) {
+      const parsed = parseRendimientoObra(rendimientoReparacionEsperadoDiario, 'Rendimiento Reparación Esperado diario');
+      if ('error' in parsed) {
+        res.status(400).json({ error: parsed.error });
+        return;
+      }
+      rendimientoReparacionUpdate = parsed.value;
+    }
+
     const obra = await prisma.$transaction(async (tx) => {
       if (oportunidadId) {
         const oportunidad = await tx.operadorBeck.findUnique({
@@ -383,6 +453,8 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
               : {}),
           ...(estadoObra !== undefined && { estado: estadoObra }),
           ...(clienteBeckIdUpdate !== undefined && { clienteBeckId: clienteBeckIdUpdate }),
+          ...(rendimientoUpdate !== undefined && { rendimientoSellosEsperadoDiario: rendimientoUpdate }),
+          ...(rendimientoReparacionUpdate !== undefined && { rendimientoReparacionEsperadoDiario: rendimientoReparacionUpdate }),
         },
       });
 
@@ -711,6 +783,80 @@ export const listarUsuariosObra = async (req: Request, res: Response): Promise<v
   } catch (error) {
     console.error('Error al listar usuarios de obra:', error);
     res.status(500).json({ error: 'Error al listar usuarios de obra' });
+  }
+};
+
+export const obtenerTiposRegistroObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+
+    const obra = await prisma.obra.findUnique({ where: { id }, select: { id: true } });
+    if (!obra) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    const tipos = await prisma.obraTipoRegistro.findMany({
+      where: { obraId: id, activo: true },
+      select: { tipoRegistro: true },
+      orderBy: { tipoRegistro: 'asc' },
+    });
+
+    res.json({
+      obraId: id,
+      tiposRegistro: tipos.map((t) => t.tipoRegistro),
+    });
+  } catch (error) {
+    console.error('Error al obtener tipos de registro de obra:', error);
+    res.status(500).json({ error: 'Error al obtener tipos de registro' });
+  }
+};
+
+export const actualizarTiposRegistroObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const { tiposRegistro } = req.body as ActualizarTiposRegistroObraBody;
+
+    if (!Array.isArray(tiposRegistro)) {
+      res.status(400).json({ error: 'tiposRegistro debe ser un array' });
+      return;
+    }
+
+    if (!validarTiposRegistroSistema(tiposRegistro)) {
+      res.status(400).json({
+        error: `Tipos inválidos. Valores permitidos: ${TIPOS_REGISTRO_VALIDOS.join(', ')}`,
+      });
+      return;
+    }
+
+    const obra = await prisma.obra.findUnique({ where: { id }, select: { id: true } });
+    if (!obra) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    const uniqueTipos = [...new Set(tiposRegistro)];
+
+    await prisma.$transaction(async (tx) => {
+      await tx.obraTipoRegistro.deleteMany({ where: { obraId: id } });
+      if (uniqueTipos.length > 0) {
+        await tx.obraTipoRegistro.createMany({
+          data: uniqueTipos.map((tipo) => ({
+            obraId: id,
+            tipoRegistro: tipo,
+            activo: true,
+          })),
+        });
+      }
+    });
+
+    res.json({
+      obraId: id,
+      tiposRegistro: uniqueTipos,
+    });
+  } catch (error) {
+    console.error('Error al actualizar tipos de registro de obra:', error);
+    res.status(500).json({ error: 'Error al actualizar tipos de registro' });
   }
 };
 

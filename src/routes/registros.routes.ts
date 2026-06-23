@@ -11,27 +11,29 @@ import {
   descargarRegistroPdf,
   reenviarRevision,
   iniciarRevision,
+  rendimientoAcumulado,
+  marcarInspeccion,
+  getControlInspeccion,
+  crearControlInspeccion,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
   descargarEjemploExcel,
 } from '../controllers/importar-registros.controller';
-import { authenticate, authorize } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
+import { requirePermission } from '../middlewares/requirePermission';
 import { upload, uploadExcelFile } from '../middlewares/upload';
 
 const router = Router();
 
-const canReadRegistros = authorize('administrador', 'ingenieria', 'visualizador', 'terreno', 'jefeobra');
-
 /**
  * POST /api/registros
  * Crear registro con fotos (1-5 imágenes)
- * Solo terreno y administrador
  */
 router.post(
   '/',
   authenticate,
-  authorize('terreno', 'administrador', 'jefeobra'),
+  requirePermission('beck_registro', 'editar'),
   upload.array('fotos', 5), // Max 5 fotos
   crearRegistro
 );
@@ -39,12 +41,11 @@ router.post(
 /**
  * POST /api/registros/importar
  * Importar registros desde Excel (hojas: SELLOS CORTAFUEGOS, Junta Lineal ESPUMA)
- * Solo administrador e ingenieria
  */
 router.post(
   '/importar',
   authenticate,
-  authorize('administrador', 'ingenieria', 'jefeobra'),
+  requirePermission('beck_registro', 'editar'),
   uploadExcelFile,
   importarRegistrosExcel
 );
@@ -52,103 +53,143 @@ router.post(
 /**
  * GET /api/registros/ejemplo-excel
  * Descarga el archivo Excel de ejemplo con obra "Obra Demo"
- * Solo administrador, ingenieria y jefeobra
  */
 router.get(
   '/ejemplo-excel',
   authenticate,
-  authorize('administrador', 'ingenieria', 'jefeobra'),
+  requirePermission('beck_registro', 'ver'),
   descargarEjemploExcel,
 );
 
 /**
  * GET /api/registros
- * Listar registros con filtros opcionales
+ * Listar registros con filtros opcionales.
+ * Acepta beck_registro.ver (módulo Registros) o beck_reportes.ver (página Reportes).
  */
-router.get('/', authenticate, canReadRegistros, listarRegistros);
+router.get('/', authenticate, requirePermission(['beck_registro', 'beck_reportes'], 'ver'), listarRegistros);
 
 /**
  * GET /api/registros/pendientes
  * Listar registros para Procesamiento Ingeniería (todos los estados).
  * El cliente filtra la tabla a pendiente/en_revision y usa todos los estados para KPIs.
- * Solo ingenieria, administrador, visualizador
  */
 router.get(
   '/pendientes',
   authenticate,
-  authorize('ingenieria', 'administrador', 'visualizador'),
+  requirePermission('beck_procesamiento_ingenieria', 'ver'),
   listarPendientes
 );
 
 /**
  * GET /api/registros/resumen
  * Conteos por estado para KPIs de Procesamiento Ingeniería.
- * Solo ingenieria, administrador, visualizador
  */
 router.get(
   '/resumen',
   authenticate,
-  authorize('ingenieria', 'administrador', 'visualizador'),
+  requirePermission('beck_procesamiento_ingenieria', 'ver'),
   getResumenRegistros
 );
 
 /**
  * PATCH /api/registros/:id/estado
  * Actualizar estado del registro (pendiente, validado, rechazado)
- * Solo administrador e ingenieria
  */
 router.patch(
   '/:id/estado',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
   actualizarEstadoRegistro,
 );
 
 /**
  * PATCH /api/registros/:id/iniciar-revision
  * Ingeniería inicia revisión de un registro en estado pendiente
- * Solo ingenieria y administrador
  */
 router.patch(
   '/:id/iniciar-revision',
   authenticate,
-  authorize('ingenieria', 'administrador'),
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
   iniciarRevision,
 );
 
 /**
  * PATCH /api/registros/:id/reenviar-revision
  * Reenviar corrección (o registro pendiente) a revisión de Ingeniería
- * Terreno y administrador
  */
 router.patch(
   '/:id/reenviar-revision',
   authenticate,
-  authorize('terreno', 'administrador'),
+  requirePermission('beck_registro', 'editar'),
   reenviarRevision,
 );
 
 /**
+ * GET /api/registros/rendimiento-acumulado
+ * Rendimiento acumulado por sellador en un rango de fechas (equivale a SUMAR.SI.CONJUNTO de Excel).
+ * Query params: fechaInicio, fechaFin (obligatorios), obraId, nombreSellador (opcionales).
+ */
+router.get(
+  '/rendimiento-acumulado',
+  authenticate,
+  requirePermission(['beck_registro', 'beck_reportes'], 'ver'),
+  rendimientoAcumulado,
+);
+
+/**
  * GET /api/registros/:id/pdf
- * Descargar PDF con detalle completo del registro
- * Solo administrador, ingenieria y jefeobra
+ * Descargar PDF con detalle completo del registro.
+ * Acepta beck_procesamiento_ingenieria.ver o beck_reportes.ver (descarga desde página Reportes).
  */
 router.get(
   '/:id/pdf',
   authenticate,
-  authorize('administrador', 'ingenieria', 'jefeobra'),
+  requirePermission(['beck_procesamiento_ingenieria', 'beck_reportes'], 'ver'),
   descargarRegistroPdf,
+);
+
+/**
+ * PATCH /api/registros/:id/inspeccion
+ * Marca o desmarca un registro para inspección.
+ * Body: { seleccionadoParaInspeccion: boolean }
+ */
+router.patch(
+  '/:id/inspeccion',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  marcarInspeccion,
+);
+
+/**
+ * GET /api/registros/:id/control-inspeccion
+ * Devuelve el control de inspección asociado al registro.
+ */
+router.get(
+  '/:id/control-inspeccion',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'ver'),
+  getControlInspeccion,
+);
+
+/**
+ * POST /api/registros/:id/control-inspeccion
+ * Crea el control de inspección para el registro.
+ */
+router.post(
+  '/:id/control-inspeccion',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  crearControlInspeccion,
 );
 
 /**
  * PUT /api/registros/:id
  * Actualizar campos editables de un registro
- * Solo administrador e ingenieria
  */
 router.put(
   '/:id',
   authenticate,
-  authorize('administrador', 'ingenieria'),
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
   actualizarRegistro,
 );
 
@@ -156,6 +197,6 @@ router.put(
  * GET /api/registros/:id
  * Obtener un registro especifico
  */
-router.get('/:id', authenticate, canReadRegistros, obtenerRegistro);
+router.get('/:id', authenticate, requirePermission('beck_registro', 'ver'), obtenerRegistro);
 
 export default router;

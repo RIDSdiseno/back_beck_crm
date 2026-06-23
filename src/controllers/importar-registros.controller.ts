@@ -9,6 +9,7 @@ import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
 import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
+import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -359,6 +360,10 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       let insertados = 0;
       let duplicados = 0;
 
+      // Cache por (obraId, tipoRegistro) para evitar una query DB por fila
+      const validacionTipoCache = new Map<string, { permitido: boolean; warning?: string; error?: string }>();
+      const warningsEmitidos = new Set<string>();
+
       const lastRowNum = worksheet.lastRow?.number ?? 1;
       if (DEV) console.log(`[importar] hoja "${sheetName}": filas de datos = ${Math.max(0, lastRowNum - headerRowNum)}`);
 
@@ -560,6 +565,23 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           if (!rowObraId) {
             errores.push(`Fila ${rowIdx}: No se pudo determinar la obra (sin banner ni columna 'Obra' con valor).`);
             continue;
+          }
+
+          // Validar tipo de registro contra configuración de la obra (con cache por par obra+tipo)
+          const cacheKey = `${rowObraId}:${tipoRegistro}`;
+          let validacionCacheada = validacionTipoCache.get(cacheKey);
+          if (!validacionCacheada) {
+            const validResult = await validarTipoRegistroPermitidoPorObra(rowObraId, tipoRegistro);
+            validacionCacheada = { permitido: validResult.permitido, warning: validResult.warning, error: validResult.error };
+            validacionTipoCache.set(cacheKey, validacionCacheada);
+          }
+          if (!validacionCacheada.permitido) {
+            errores.push(`Fila ${rowIdx}: ${validacionCacheada.error ?? 'Tipo de registro no permitido para esta obra.'}`);
+            continue;
+          }
+          if (validacionCacheada.warning && !warningsEmitidos.has(cacheKey)) {
+            advertencias.push(validacionCacheada.warning);
+            warningsEmitidos.add(cacheKey);
           }
 
           const metrosFinal = toFloatOrNull(metros_lineales);
