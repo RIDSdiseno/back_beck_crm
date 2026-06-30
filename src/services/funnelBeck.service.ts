@@ -13,6 +13,8 @@ import {
   clasificarResultadoValidacion,
 } from "./configuracionValidacion.service";
 import { validarMotivoCierre, MotivoInvalidoError } from "../constants/motivosCierre";
+import { RolUsuario } from "../types";
+import { puedeCambiarEmpresa } from "../helpers/puedeCambiarEmpresa";
 
 // De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
@@ -827,7 +829,7 @@ export async function updateObraFunnelBeck(id: string, obraId: string) {
   });
 }
 
-export async function updateFunnelBeck(id: string, rawData: Record<string, unknown>, userId: string) {
+export async function updateFunnelBeck(id: string, rawData: Record<string, unknown>, userId: string, userRole?: RolUsuario) {
   const existente = await prisma.operadorBeck.findUnique({ where: { id } });
   if (!existente) throw new Error("Oportunidad no encontrada.");
 
@@ -836,6 +838,19 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
   // Resolve final clienteBeckId / contactoBeckId
   const newClienteBeckId  = data.clienteBeckId  !== undefined ? data.clienteBeckId  : existente.clienteBeckId;
   const newContactoBeckId = data.contactoBeckId !== undefined ? data.contactoBeckId : existente.contactoBeckId;
+
+  // Verify permission if empresa/cliente/contacto is changing
+  if (userRole && userRole !== 'administrador') {
+    const empresaCambia = data.empresa !== undefined && normalizeString(data.empresa) !== existente.empresa;
+    const clienteCambia = data.clienteBeckId !== undefined && newClienteBeckId !== existente.clienteBeckId;
+    const contactoCambia = data.contactoBeckId !== undefined && newContactoBeckId !== existente.contactoBeckId;
+    if (empresaCambia || clienteCambia || contactoCambia) {
+      const puede = await puedeCambiarEmpresa(userId, userRole, 'beck');
+      if (!puede) {
+        throw Object.assign(new Error("No tienes permiso para cambiar la empresa o cliente asociado."), { statusCode: 403 });
+      }
+    }
+  }
 
   if (newClienteBeckId === null && newContactoBeckId !== null) {
     throw new Error("Para limpiar el cliente debes también limpiar el contacto.");

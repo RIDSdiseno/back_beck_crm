@@ -7,6 +7,7 @@ import {
   getObrasCliente,
   getRegistrosObra,
   getDashboardCliente,
+  validarRegistroCliente,
 } from '../controllers/cliente.controller';
 
 const router = Router();
@@ -22,6 +23,7 @@ router.get('/usuarios-clientes', soloAdmin, getUsuariosClientes);
 // cliente: obras propias | administrador: clienteBeckId o clienteUsuarioId | interno: clienteBeckId obligatorio
 router.get('/obras', vistaCliente, getObrasCliente);
 router.get('/obras/:obraId/registros', vistaCliente, getRegistrosObra);
+router.patch('/registros/:registroId/validar', vistaCliente, validarRegistroCliente);
 router.get('/dashboard', vistaCliente, getDashboardCliente);
 
 export default router;

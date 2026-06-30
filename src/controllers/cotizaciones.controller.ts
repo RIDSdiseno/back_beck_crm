@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { EstadoCotizacion, Prisma } from '@prisma/client';
 import { CotizacionError, LineaInput } from '../types/cotizaciones.types';
 import * as CotizacionService from '../services/cotizaciones.service';
+import { puedeCambiarEmpresa } from '../helpers/puedeCambiarEmpresa';
 
 const PDFDocument = require('pdfkit');
 
@@ -368,6 +369,23 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
         canViewGanancia(req) ? b.lineas : stripGananciaPctFromRawLineas(b.lineas),
       )
       : undefined;
+
+    // Check permission if client fields are changing
+    if (req.userId && req.userRole && req.userRole !== 'administrador') {
+      if (has('clienteNombre') || hasClienteBeckId || hasContactoBeckId) {
+        const existing = await CotizacionService.findCotizacion(id);
+        const clienteNombreCambia = has('clienteNombre') && optStr(b.clienteNombre) !== existing.clienteNombre;
+        const clienteBeckCambia = hasClienteBeckId && optStr(rawClienteBeckId) !== existing.clienteBeckId;
+        const contactoBeckCambia = hasContactoBeckId && optStr(rawContactoBeckId) !== existing.contactoBeckId;
+        if (clienteNombreCambia || clienteBeckCambia || contactoBeckCambia) {
+          const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'beck');
+          if (!puede) {
+            res.status(403).json({ success: false, error: 'No tienes permiso para cambiar la empresa o cliente asociado.' });
+            return;
+          }
+        }
+      }
+    }
 
     const { cotizacion: data, advertencias } = await CotizacionService.updateCotizacion(
       id,

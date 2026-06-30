@@ -33,6 +33,7 @@ import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
 import alertasRoutes from './routes/alertas.routes';
 import configuracionValidacionRoutes from './routes/configuracionValidacion.routes';
 import clienteRoutes from './routes/cliente.routes';
+import vistaClienteConfigRoutes from './routes/vistaClienteConfig.routes';
 import meRoutes from './routes/me.routes';
 import permisosRolRoutes from './routes/permisos-rol.routes';
 
@@ -161,6 +162,9 @@ app.use('/api/permisos', authenticate, permisosRolRoutes);
 
 // Portal cliente — solo obras asignadas + registros validados
 app.use('/api/cliente', clienteRoutes);
+
+// Configuración de Vista Cliente (general + por empresa)
+app.use('/api/vista-cliente', blockBeckOperacional, vistaClienteConfigRoutes);
 
 // Ruta 404
 app.use((_req: Request, res: Response) => {

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import PDFDocument from 'pdfkit';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
+import { puedeCambiarEmpresa } from '../../helpers/puedeCambiarEmpresa';
 
 const ESTADOS_PERMITIDOS = [
   'BORRADOR',
@@ -561,6 +562,21 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
 
     const detalles = await validateDetalles(body.detalles);
     const totales = calcularTotales(detalles, body.descuento, body.impuesto);
+
+    // Check permission if cliente is changing
+    if (req.userId && req.userRole && req.userRole !== 'administrador') {
+      const actual = await firematPrisma.cotizacionFiremat.findUnique({
+        where: { id },
+        select: { cliente: true },
+      });
+      if (actual && cliente !== actual.cliente) {
+        const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'firemat');
+        if (!puede) {
+          res.status(403).json({ success: false, error: 'No tienes permiso para cambiar la empresa o cliente asociado.' });
+          return;
+        }
+      }
+    }
 
     const data = await firematPrisma.$transaction(async (tx) => {
       const actual = await tx.cotizacionFiremat.findUnique({

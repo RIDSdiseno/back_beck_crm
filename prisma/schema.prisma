@@ -7,31 +7,33 @@ datasource db {
 }
 
 model Usuario {
-  id                    String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                String                    @db.VarChar(255)
-  email                 String                    @unique @db.VarChar(255)
-  passwordHash          String?                   @map("password_hash") @db.VarChar(255)
-  rol                   RolUsuario
-  activo                Boolean                   @default(true)
-  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  azureId               String?                   @unique @map("azure_id") @db.VarChar(255)
-  alertasVistas         AlertaVista[]
-  cotizacionesCreadas   Cotizacion[]              @relation("CotizacionesCreadasPorUsuario")
-  fotos_registro        fotos_registro[]
-  historialEtapasBeck   HistorialEtapaBeck[]
-  itemizadosCreados     Itemizado[]               @relation("ItemizadosCreadosPorUsuario")
-  movimientosCrm        MovimientoCRM[]           @relation("MovimientosCrmPorUsuario")
-  movimientosInventario MovimientoInventario[]
-  notificaciones        Notificacion[]
-  obrasCreadas          Obra[]                    @relation("ObrasCreadasPorUsuario")
-  permisosModulo        PermisoUsuarioModulo[]
-  procesamientos        ProcesamientoIngenieria[]
-  registrosRechazados   RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
-  registrosTerreno      RegistroTerreno[]
-  usuarios_obras        usuarios_obras[]
-  registrosSeleccionadosInspeccion RegistroTerreno[]    @relation("RegistrosSeleccionadosInspeccion")
-  controlesInspeccion              ControlInspeccion[]  @relation("ControlesInspeccionPorUsuario")
+  id                               String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                           String                    @db.VarChar(255)
+  email                            String                    @unique @db.VarChar(255)
+  passwordHash                     String?                   @map("password_hash") @db.VarChar(255)
+  rol                              RolUsuario
+  activo                           Boolean                   @default(true)
+  createdAt                        DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                        DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  azureId                          String?                   @unique @map("azure_id") @db.VarChar(255)
+  alertasVistas                    AlertaVista[]
+  controlesInspeccion              ControlInspeccion[]       @relation("ControlesInspeccionPorUsuario")
+  cotizacionesCreadas              Cotizacion[]              @relation("CotizacionesCreadasPorUsuario")
+  fotos_registro                   fotos_registro[]
+  historialEtapasBeck              HistorialEtapaBeck[]
+  itemizadosCreados                Itemizado[]               @relation("ItemizadosCreadosPorUsuario")
+  movimientosCrm                   MovimientoCRM[]           @relation("MovimientosCrmPorUsuario")
+  movimientosInventario            MovimientoInventario[]
+  notificaciones                   Notificacion[]
+  obrasCreadas                     Obra[]                    @relation("ObrasCreadasPorUsuario")
+  permisosModulo                   PermisoUsuarioModulo[]
+  procesamientos                   ProcesamientoIngenieria[]
+  registrosRechazados              RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
+  registrosSeleccionadosInspeccion RegistroTerreno[]         @relation("RegistrosSeleccionadosInspeccion")
+  registrosValidadosCliente        RegistroTerreno[]         @relation("RegistrosValidadosClientePorUsuario")
+  registrosTerreno                 RegistroTerreno[]
+  usuarios_obras                   usuarios_obras[]
+  configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
 
   @@index([email])
   @@index([rol])
@@ -40,28 +42,26 @@ model Usuario {
 }
 
 model Obra {
-  id                             String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                         String                             @db.VarChar(255)
-  codigo                         String?                            @unique @db.VarChar(100)
-  descripcion                    String?
-  estado                         EstadoObra                         @default(activa)
-  creadoPorId                    String                             @map("creado_por_id") @db.Uuid
-  createdAt                      DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                      DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  cliente                        String?                            @db.VarChar(255)
-  direccion                      String?
-  clienteBeckId                  String?                            @map("cliente_beck_id") @db.Uuid
-  rendimientoSellosEsperadoDiario Int?                              @map("rendimiento_sellos_esperado_diario")
-  rendimientoReparacionEsperadoDiario Int? @map("rendimiento_reparacion_esperado_diario")
-  configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
-  configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
-  cotizaciones                   Cotizacion[]
-  oportunidades                  OperadorBeck[]
-  clienteBeck                    ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
-  creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
-  registrosTerreno               RegistroTerreno[]
-  usuarios_obras                 usuarios_obras[]
-  tiposRegistro ObraTipoRegistro[]
+  id                                  String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                              String                             @db.VarChar(255)
+  codigo                              String?                            @unique @db.VarChar(100)
+  descripcion                         String?
+  estado                              EstadoObra                         @default(activa)
+  creadoPorId                         String                             @map("creado_por_id") @db.Uuid
+  createdAt                           DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                           DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  cliente                             String?                            @db.VarChar(255)
+  direccion                           String?
+  clienteBeckId                       String?                            @map("cliente_beck_id") @db.Uuid
+  configuracionesCamposRegistro       ConfiguracionCamposRegistro[]
+  configuracionesItemizadoOpcion      ConfiguracionItemizadoOpcionObra[]
+  cotizaciones                        Cotizacion[]
+  oportunidades                       OperadorBeck[]
+  tiposRegistro                       ObraTipoRegistro[]
+  clienteBeck                         ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
+  creadoPor                           Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  registrosTerreno                    RegistroTerreno[]
+  usuarios_obras                      usuarios_obras[]
 
   @@index([codigo])
   @@index([estado])
@@ -101,62 +101,66 @@ model ItemizadoMandante {
 }
 
 model RegistroTerreno {
-  id                        String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  obraId                    String                   @map("obra_id") @db.Uuid
-  usuarioId                 String                   @map("usuario_id") @db.Uuid
-  fecha                     DateTime                 @db.Date
-  diaSemana                 String                   @map("dia_semana") @db.VarChar(20)
-  descripcionMaterial       String                   @map("descripcion_material") @db.VarChar(500)
-  modulo                    String                   @db.VarChar(100)
-  piso                      String                   @db.VarChar(50)
-  ejeNumerico               String                   @map("eje_numerico") @db.VarChar(50)
-  ejeAlfabetico             String                   @map("eje_alfabetico") @db.VarChar(10)
-  numeroSello               String                   @map("numero_sello") @db.VarChar(100)
-  cantidadSellos            Int                      @map("cantidad_sellos")
-  nombreSellador            String                   @map("nombre_sellador") @db.VarChar(255)
-  holgura                   Decimal                  @db.Decimal(3, 1)
-  observaciones             String?
-  fotosUrls                 String[]                 @map("fotos_urls")
-  createdAt                 DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  estado                    EstadoRegistroTerreno    @default(pendiente)
-  metrosLineales            Float?                   @map("metros_lineales")
-  tipoRegistro              String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
-  devuelto_a_tecnico        Boolean                  @default(false)
-  codigoBeck                String?                  @map("codigo_beck")
-  itemizadoMandanteId       String?                  @map("itemizado_mandante_id") @db.Uuid
-  itemizadoBeck             String?                  @map("itemizado_beck") @db.VarChar(500)
-  itemizadoMandanteTexto    String?                  @map("itemizado_mandante") @db.VarChar(255)
-  fotoUrl                   String?                  @map("foto_url")
-  recinto                   String?                  @db.VarChar(100)
-  factorPorHolguras         Decimal?                 @map("factor_por_holguras") @db.Decimal(6, 2)
-  accesibilidad             Int?
-  cantidadSellosConFactores Decimal?                 @map("cantidad_sellos_con_factores") @db.Decimal(12, 2)
-  aislacion                 Decimal?                 @db.Decimal(6, 2)
-  cantidadSellosAislacion   Decimal?                 @map("cantidad_sellos_aislacion") @db.Decimal(12, 2)
-  reparacionTabique         Decimal?                 @map("reparacion_tabique") @db.Decimal(6, 2)
-  cantidadFinal             Decimal?                 @map("cantidad_final") @db.Decimal(12, 2)
-  folio                     String?                  @db.VarChar(100)
-  corregidoAt               DateTime?                @map("corregido_at") @db.Timestamp(6)
-  fechaRechazo              DateTime?                @map("fecha_rechazo") @db.Timestamp(6)
-  motivoRechazo             String?                  @map("motivo_rechazo")
-  rechazadoPorId            String?                  @map("rechazado_por_id") @db.Uuid
-  reenviadoRevisionAt       DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
-  esCorreccion              Boolean                  @default(false) @map("es_correccion")
-  registroOrigenId          String?                  @map("registro_origen_id") @db.Uuid
-  seleccionadoParaInspeccion  Boolean   @default(false) @map("seleccionado_para_inspeccion")
-  fechaSeleccionInspeccion    DateTime? @map("fecha_seleccion_inspeccion") @db.Timestamp(6)
-  seleccionadoInspeccionPorId String?   @map("seleccionado_inspeccion_por_id") @db.Uuid
-  fotos_registro            fotos_registro[]
-  procesamiento             ProcesamientoIngenieria?
-  itemizadoMandante         ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
-  obra                      Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
-  rechazadoPor              Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
-  registroOrigen            RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
-  correcciones              RegistroTerreno[]        @relation("CorreccionesRegistro")
-  usuario                   Usuario                  @relation(fields: [usuarioId], references: [id])
-  seleccionadoInspeccionPor Usuario? @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
-  controlesInspeccion      ControlInspeccion[]
+  id                          String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId                      String                   @map("obra_id") @db.Uuid
+  usuarioId                   String                   @map("usuario_id") @db.Uuid
+  fecha                       DateTime                 @db.Date
+  diaSemana                   String                   @map("dia_semana") @db.VarChar(20)
+  descripcionMaterial         String                   @map("descripcion_material") @db.VarChar(500)
+  modulo                      String                   @db.VarChar(100)
+  piso                        String                   @db.VarChar(50)
+  ejeNumerico                 String                   @map("eje_numerico") @db.VarChar(50)
+  ejeAlfabetico               String                   @map("eje_alfabetico") @db.VarChar(10)
+  numeroSello                 String                   @map("numero_sello") @db.VarChar(100)
+  cantidadSellos              Int                      @map("cantidad_sellos")
+  nombreSellador              String                   @map("nombre_sellador") @db.VarChar(255)
+  holgura                     Decimal                  @db.Decimal(3, 1)
+  observaciones               String?
+  fotosUrls                   String[]                 @map("fotos_urls")
+  createdAt                   DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                   DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  estado                      EstadoRegistroTerreno    @default(pendiente)
+  metrosLineales              Float?                   @map("metros_lineales")
+  tipoRegistro                String                   @default("sello_cortafuego") @map("tipo_registro") @db.VarChar(50)
+  devuelto_a_tecnico          Boolean                  @default(false)
+  codigoBeck                  String?                  @map("codigo_beck")
+  itemizadoMandanteId         String?                  @map("itemizado_mandante_id") @db.Uuid
+  itemizadoBeck               String?                  @map("itemizado_beck") @db.VarChar(500)
+  itemizadoMandanteTexto      String?                  @map("itemizado_mandante") @db.VarChar(255)
+  fotoUrl                     String?                  @map("foto_url")
+  recinto                     String?                  @db.VarChar(100)
+  factorPorHolguras           Decimal?                 @map("factor_por_holguras") @db.Decimal(6, 2)
+  accesibilidad               Int?
+  cantidadSellosConFactores   Decimal?                 @map("cantidad_sellos_con_factores") @db.Decimal(12, 2)
+  aislacion                   Decimal?                 @db.Decimal(6, 2)
+  cantidadSellosAislacion     Decimal?                 @map("cantidad_sellos_aislacion") @db.Decimal(12, 2)
+  reparacionTabique           Decimal?                 @map("reparacion_tabique") @db.Decimal(6, 2)
+  cantidadFinal               Decimal?                 @map("cantidad_final") @db.Decimal(12, 2)
+  folio                       String?                  @db.VarChar(100)
+  corregidoAt                 DateTime?                @map("corregido_at") @db.Timestamp(6)
+  fechaRechazo                DateTime?                @map("fecha_rechazo") @db.Timestamp(6)
+  motivoRechazo               String?                  @map("motivo_rechazo")
+  rechazadoPorId              String?                  @map("rechazado_por_id") @db.Uuid
+  reenviadoRevisionAt         DateTime?                @map("reenviado_revision_at") @db.Timestamp(6)
+  esCorreccion                Boolean                  @default(false) @map("es_correccion")
+  registroOrigenId            String?                  @map("registro_origen_id") @db.Uuid
+  fechaSeleccionInspeccion    DateTime?                @map("fecha_seleccion_inspeccion") @db.Timestamp(6)
+  seleccionadoInspeccionPorId String?                  @map("seleccionado_inspeccion_por_id") @db.Uuid
+  seleccionadoParaInspeccion  Boolean                  @default(false) @map("seleccionado_para_inspeccion")
+  validadoCliente             Boolean                  @default(false) @map("validado_cliente")
+  validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
+  validadoClienteAt           DateTime?                @map("validado_cliente_at") @db.Timestamp(6)
+  controlesInspeccion         ControlInspeccion[]
+  fotos_registro              fotos_registro[]
+  procesamiento               ProcesamientoIngenieria?
+  itemizadoMandante           ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
+  obra                        Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  rechazadoPor                Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
+  registroOrigen              RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
+  correcciones                RegistroTerreno[]        @relation("CorreccionesRegistro")
+  seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
+  validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
+  usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
 
   @@index([rechazadoPorId])
   @@index([obraId])
@@ -170,6 +174,8 @@ model RegistroTerreno {
   @@index([esCorreccion])
   @@index([seleccionadoParaInspeccion])
   @@index([seleccionadoInspeccionPorId])
+  @@index([validadoCliente])
+  @@index([validadoClientePorId])
   @@map("registros_terreno")
 }
 
@@ -465,6 +471,52 @@ model usuarios_obras {
   @@index([usuario_id], map: "idx_usuarios_obras_usuario_id")
 }
 
+model ConfiguracionVistaClienteUsuario {
+  id                   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId            String   @map("usuario_id") @db.Uuid
+  clave                String   @db.VarChar(100)
+  visible              Boolean  @default(true)
+  tituloPersonalizado  String?  @map("titulo_personalizado") @db.VarChar(255)
+  orden                Int?
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  usuario              Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, clave])
+  @@index([usuarioId])
+  @@index([clave])
+  @@map("configuracion_vista_cliente_usuario")
+}
+
+model ConfiguracionVistaClienteGeneral {
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  clave               String   @unique @db.VarChar(100)
+  visible             Boolean  @default(true)
+  tituloPersonalizado String?  @map("titulo_personalizado") @db.VarChar(255)
+  orden               Int?
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@map("configuracion_vista_cliente_general")
+}
+
+model ConfiguracionVistaClienteBeck {
+  id                  String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  clienteBeckId       String      @map("cliente_beck_id") @db.Uuid
+  clave               String      @db.VarChar(100)
+  visible             Boolean     @default(true)
+  tituloPersonalizado String?     @map("titulo_personalizado") @db.VarChar(255)
+  orden               Int?
+  createdAt           DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  clienteBeck         ClienteBeck @relation(fields: [clienteBeckId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteBeckId, clave])
+  @@index([clienteBeckId])
+  @@index([clave])
+  @@map("configuracion_vista_cliente_beck")
+}
+
 model MovimientoCRM {
   id          String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   usuarioId   String              @map("usuario_id") @db.Uuid
@@ -520,7 +572,8 @@ model ClienteBeck {
   contactos     ContactoClienteBeck[]
   cotizaciones  Cotizacion[]
   oportunidades OperadorBeck[]
-  obras         Obra[]
+  obras                     Obra[]
+  configuracionVistaCliente ConfiguracionVistaClienteBeck[]
 
   @@index([rut])
   @@index([razonSocial])
@@ -643,9 +696,11 @@ model ItemizadoOpcion {
   elementoPasante        String?                            @map("elemento_pasante")
   elementoPenetra        String?                            @map("elemento_penetra")
   materialidad           String?                            @db.VarChar(150)
-  visible                Boolean                            @default(true)
+  visible                Boolean                            @default(false)
   createdAt              DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt              DateTime                           @updatedAt @map("updated_at") @db.Timestamp(6)
+  rendimientoSellosEsperadoDiario     Int?                  @map("rendimiento_sellos_esperado_diario")
+  rendimientoReparacionEsperadoDiario Int?                  @map("rendimiento_reparacion_esperado_diario")
   configuracionesPorObra ConfiguracionItemizadoOpcionObra[]
 
   @@index([codigoBeck])
@@ -655,14 +710,16 @@ model ItemizadoOpcion {
 }
 
 model ConfiguracionItemizadoOpcionObra {
-  id                String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  obraId            String          @map("obra_id") @db.Uuid
-  itemizadoOpcionId String          @map("itemizado_opcion_id") @db.Uuid
-  visible           Boolean         @default(true)
-  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
-  itemizadoOpcion   ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
-  obra              Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  id                  String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId              String          @map("obra_id") @db.Uuid
+  itemizadoOpcionId   String          @map("itemizado_opcion_id") @db.Uuid
+  visible             Boolean         @default(true)
+  orden               Int?
+  nombrePersonalizado String?         @map("nombre_personalizado") @db.VarChar(255)
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
+  itemizadoOpcion     ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
+  obra                Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
 
   @@unique([obraId, itemizadoOpcionId])
   @@index([obraId])
@@ -727,8 +784,7 @@ model ObraTipoRegistro {
   activo       Boolean  @default(true)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-
-  obra Obra @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  obra         Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
 
   @@unique([obraId, tipoRegistro])
   @@index([obraId])
@@ -740,21 +796,16 @@ model ControlInspeccion {
   id                   String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   registroTerrenoId    String                       @map("registro_terreno_id") @db.Uuid
   ingenieroId          String                       @map("ingeniero_id") @db.Uuid
-
   fecha                DateTime                     @db.Date
   ensayo               String                       @db.VarChar(255)
-
   observacion          String?
   conformidad          EstadoConformidadInspeccion?
   fotoInspeccionUrl    String?                      @map("foto_inspeccion_url")
   fotoNoConformidadUrl String?                      @map("foto_no_conformidad_url")
-
   createdAt            DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt            DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-
-  registroTerreno      RegistroTerreno              @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
   ingeniero            Usuario                      @relation("ControlesInspeccionPorUsuario", fields: [ingenieroId], references: [id])
-
+  registroTerreno      RegistroTerreno              @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
   parametros           ControlInspeccionParametro[]
 
   @@index([registroTerrenoId])
@@ -767,15 +818,12 @@ model ControlInspeccion {
 model ControlInspeccionParametro {
   id                  String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   controlInspeccionId String                       @map("control_inspeccion_id") @db.Uuid
-
   orden               Int
   parametro           String                       @db.VarChar(500)
   resultado           ResultadoParametroInspeccion
   observacion         String?
-
   createdAt           DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt           DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-
   controlInspeccion   ControlInspeccion            @relation(fields: [controlInspeccionId], references: [id], onDelete: Cascade)
 
   @@index([controlInspeccionId])

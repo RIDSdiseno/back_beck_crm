@@ -1,5 +1,5 @@
 export type ColorCampo = 'verde' | 'azul' | 'rojo';
-export type RolCampo = 'jefeobra' | 'trabajador';
+export type RolCampo = 'jefeobra' | 'trabajador' | 'cliente';
 
 export interface DefinicionCampo {
   campo: string;
@@ -16,6 +16,16 @@ const CAMPOS_AZULES = new Set([
   'factor_por_holguras',
   'cantidad_sellos_con_factores',
   'cielo_modular',
+  'codigoBeck',
+  'itemizadoBeck',
+  'itemizadoMandante',
+  'fechaEjecucionSello',
+  'diaSemana',
+  'piso',
+  'nombreSellador',
+  'foto',
+  'numeroSello',
+  'cantidadSellos',
   'aislacion',
   'cantidad_sellos_aislacion',
   'reparacion_tabique',
@@ -81,9 +91,36 @@ export const CAMPOS_TRABAJADOR: DefinicionCampo[] = [
   { campo: 'folio', label: 'FOLIO', color: 'rojo' },
 ];
 
+export const CAMPOS_CLIENTE: DefinicionCampo[] = [
+  { campo: 'codigoBeck', label: 'Codigo BECK', color: 'azul' },
+  { campo: 'itemizadoBeck', label: 'Itemizado BECK', color: 'azul' },
+  { campo: 'itemizadoMandante', label: 'Itemizado Mandante', color: 'azul' },
+  { campo: 'fechaEjecucionSello', label: 'Fecha ejecucion de sello', color: 'azul' },
+  { campo: 'diaSemana', label: 'Dia', color: 'azul' },
+  { campo: 'piso', label: 'Piso', color: 'azul' },
+  { campo: 'eje_alfabetico', label: 'Eje Alfabetico', color: 'azul' },
+  { campo: 'eje_numerico', label: 'Eje Numerico', color: 'azul' },
+  { campo: 'nombreSellador', label: 'Nombre sellador', color: 'azul' },
+  { campo: 'foto', label: 'Foto', color: 'azul' },
+  { campo: 'recinto', label: 'Recinto', color: 'azul' },
+  { campo: 'modulo', label: 'Modulo o edificio', color: 'azul' },
+  { campo: 'numeroSello', label: 'N del sello', color: 'azul' },
+  { campo: 'cantidadSellos', label: 'Cantidad de Sellos', color: 'azul' },
+  { campo: 'holgura', label: 'Separacion (cm)', color: 'azul' },
+  { campo: 'factor_por_holguras', label: 'Factor por separacion', color: 'azul' },
+  { campo: 'cielo_modular', label: 'Accesibilidad / Cielo modular', color: 'azul' },
+  { campo: 'cantidad_sellos_con_factores', label: 'Cantidad de Sellos con Factores (sin reparaciones)', color: 'azul' },
+  { campo: 'aislacion', label: 'Aislacion', color: 'azul' },
+  { campo: 'cantidad_sellos_aislacion', label: 'Cantidad de Sellos Aislacion', color: 'azul' },
+  { campo: 'reparacion_tabique', label: 'Reparacion de tabique (Aplica / No aplica)', color: 'azul' },
+  { campo: 'cantidad_final', label: 'Cantidad final', color: 'azul' },
+  { campo: 'folio', label: 'FOLIO', color: 'azul' },
+];
+
 export const CAMPOS_REGISTRO_POR_ROL: Record<RolCampo, DefinicionCampo[]> = {
   jefeobra: CAMPOS_JEFEOBRA,
   trabajador: CAMPOS_TRABAJADOR,
+  cliente: CAMPOS_CLIENTE,
 };
 
 export const CAMPOS_REGISTRO = CAMPOS_JEFEOBRA;
@@ -99,10 +136,15 @@ export const CAMPOS_POR_COLOR_POR_ROL: Record<RolCampo, Record<ColorCampo, strin
     azul: CAMPOS_TRABAJADOR.filter(c => c.color === 'azul' && CAMPOS_AZULES.has(c.campo)).map(c => c.campo),
     rojo: CAMPOS_TRABAJADOR.filter(c => c.color === 'rojo').map(c => c.campo),
   },
+  cliente: {
+    verde: CAMPOS_CLIENTE.filter(c => c.color === 'verde').map(c => c.campo),
+    azul: CAMPOS_CLIENTE.filter(c => c.color === 'azul' && CAMPOS_AZULES.has(c.campo)).map(c => c.campo),
+    rojo: CAMPOS_CLIENTE.filter(c => c.color === 'rojo').map(c => c.campo),
+  },
 };
 
 export const CAMPOS_POR_COLOR = CAMPOS_POR_COLOR_POR_ROL.jefeobra;
-export const ROLES_CON_RESTRICCIONES: RolCampo[] = ['jefeobra', 'trabajador'];
+export const ROLES_CON_RESTRICCIONES: RolCampo[] = ['jefeobra', 'trabajador', 'cliente'];
 
 export function normalizarRolConfiguracion(rol: string): RolCampo | null {
   if (rol === 'supervisor') return 'jefeobra';

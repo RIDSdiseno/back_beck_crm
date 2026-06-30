@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/prisma';
+import { resolveConfiguracionEfectiva } from '../helpers/configuracionVistaCliente';
+import {
+  obtenerConfiguracionCampos,
+  sanitizarRegistrosPorRol,
+} from '../services/configuracionCamposRegistro.service';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -49,6 +54,62 @@ async function getObrasPorClienteBeck(clienteBeckId: string): Promise<string[]> 
 async function getObrasFromScope(scope: ScopeOk): Promise<string[]> {
   if (scope.mode === 'clienteBeck') return scope.obraIds;
   return getObrasPermitidas(scope.targetId);
+}
+
+async function clienteTieneObraAsignada(userId: string, obraId: string): Promise<boolean> {
+  const asignacion = await prisma.usuarios_obras.findUnique({
+    where: { usuario_id_obra_id: { usuario_id: userId, obra_id: obraId } },
+    select: { usuario_id: true },
+  });
+  return Boolean(asignacion);
+}
+
+const SELECT_VISTA = {
+  clave: true,
+  visible: true,
+  tituloPersonalizado: true,
+  orden: true,
+} as const;
+
+async function getConfiguracionVistaFromScope(scope: ScopeOk) {
+  const generalRows = await prisma.configuracionVistaClienteGeneral.findMany({
+    select: SELECT_VISTA,
+  });
+
+  if (scope.mode === 'clienteBeck') {
+    const beckRows = await prisma.configuracionVistaClienteBeck.findMany({
+      where: { clienteBeckId: scope.clienteBeckId },
+      select: SELECT_VISTA,
+    });
+    return resolveConfiguracionEfectiva([], beckRows, generalRows);
+  }
+
+  // mode === 'usuario': resolve clienteBeckId from their obras, then merge all layers
+  const usuarioRows = await prisma.configuracionVistaClienteUsuario.findMany({
+    where: { usuarioId: scope.targetId },
+    select: SELECT_VISTA,
+  });
+
+  const obraIds = await getObrasPermitidas(scope.targetId);
+  let beckRows: { clave: string; visible: boolean; tituloPersonalizado: string | null; orden: number | null }[] = [];
+
+  if (obraIds.length > 0) {
+    const obras = await prisma.obra.findMany({
+      where: { id: { in: obraIds } },
+      select: { clienteBeckId: true },
+    });
+    const beckIds = [...new Set(
+      obras.map(o => o.clienteBeckId).filter((id): id is string => id !== null),
+    )];
+    if (beckIds.length === 1) {
+      beckRows = await prisma.configuracionVistaClienteBeck.findMany({
+        where: { clienteBeckId: beckIds[0] },
+        select: SELECT_VISTA,
+      });
+    }
+  }
+
+  return resolveConfiguracionEfectiva(usuarioRows, beckRows, generalRows);
 }
 
 /**
@@ -338,10 +399,7 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
 
     // Verificar acceso a la obra según el modo del scope
     if (scope.mode === 'usuario') {
-      const asignacion = await prisma.usuarios_obras.findUnique({
-        where: { usuario_id_obra_id: { usuario_id: scope.targetId, obra_id: obraId } },
-      });
-      if (!asignacion) {
+      if (!(await clienteTieneObraAsignada(scope.targetId, obraId))) {
         res.status(403).json({ success: false, error: 'No tienes acceso a esta obra' });
         return;
       }
@@ -357,7 +415,9 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
       where: { obraId, estado: 'validado' },
       select: {
         id: true,
+        obraId: true,
         fecha: true,
+        diaSemana: true,
         tipoRegistro: true,
         piso: true,
         modulo: true,
@@ -371,9 +431,36 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
         nombreSellador: true,
         itemizadoBeck: true,
         itemizadoMandanteTexto: true,
+        codigoBeck: true,
+        holgura: true,
+        factorPorHolguras: true,
+        accesibilidad: true,
+        cantidadSellosConFactores: true,
+        aislacion: true,
+        cantidadSellosAislacion: true,
+        reparacionTabique: true,
+        folio: true,
         observaciones: true,
         fotosUrls: true,
         fotoUrl: true,
+        validadoCliente: true,
+        validadoClienteAt: true,
+        validadoClientePor: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+          },
+        },
+        itemizadoMandante: {
+          select: {
+            id: true,
+            codigoBeck: true,
+            nombre: true,
+            descripcion: true,
+            activo: true,
+          },
+        },
         fotos_registro: {
           select: {
             id: true,
@@ -386,9 +473,179 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
       orderBy: { fecha: 'desc' },
     });
 
-    res.json({ success: true, data: registros });
+    const registrosSanitizados = await sanitizarRegistrosPorRol(
+      registros as unknown as Record<string, unknown>[],
+      'cliente',
+      obraId,
+    );
+
+    const data = registrosSanitizados.map((registro, index) => {
+      const original = registros[index];
+      const validadoCliente = original.validadoCliente === true;
+
+      return {
+        ...registro,
+        validadoCliente,
+        validadoClienteAt: original.validadoClienteAt,
+        validadoClientePor: original.validadoClientePor,
+        estado: validadoCliente ? 'Validado' : 'No validado',
+        acciones: {
+          puedeValidar: !validadoCliente,
+        },
+      };
+    });
+
+    const configuracionCampos = await obtenerConfiguracionCampos('cliente', obraId);
+
+    res.json({
+      success: true,
+      data,
+      configuracionCampos,
+      columnasFijas: [
+        { campo: 'estado', label: 'Estado', configurable: false },
+        { campo: 'acciones', label: 'Acciones', configurable: false },
+      ],
+    });
   } catch (error) {
     console.error('Error getRegistrosObra:', error);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+};
+
+// PATCH /api/cliente/registros/:registroId/validar
+export const validarRegistroCliente = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (req.userRole !== 'cliente' || !req.userId) {
+      res.status(403).json({ success: false, error: 'Solo usuarios cliente pueden validar registros' });
+      return;
+    }
+
+    const registroId = req.params.registroId as string;
+
+    const registro = await prisma.registroTerreno.findUnique({
+      where: { id: registroId },
+      select: {
+        id: true,
+        obraId: true,
+        estado: true,
+        validadoCliente: true,
+        validadoClienteAt: true,
+        validadoClientePor: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!registro) {
+      res.status(404).json({ success: false, error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (!(await clienteTieneObraAsignada(req.userId, registro.obraId))) {
+      res.status(403).json({ success: false, error: 'No tienes acceso a este registro' });
+      return;
+    }
+
+    if (registro.estado !== 'validado') {
+      res.status(400).json({ success: false, error: 'Solo se pueden validar registros previamente validados por el flujo interno' });
+      return;
+    }
+
+    if (registro.validadoCliente) {
+      res.status(409).json({
+        success: false,
+        error: 'El registro ya fue validado por el cliente',
+        data: {
+          id: registro.id,
+          validadoCliente: true,
+          validadoClienteAt: registro.validadoClienteAt,
+          validadoClientePor: registro.validadoClientePor,
+          estado: 'Validado',
+          acciones: { puedeValidar: false },
+        },
+      });
+      return;
+    }
+
+    const updatedCount = await prisma.registroTerreno.updateMany({
+      where: {
+        id: registroId,
+        validadoCliente: false,
+      },
+      data: {
+        validadoCliente: true,
+        validadoClientePorId: req.userId,
+        validadoClienteAt: new Date(),
+      },
+    });
+
+    if (updatedCount.count === 0) {
+      const actual = await prisma.registroTerreno.findUnique({
+        where: { id: registroId },
+        select: {
+          id: true,
+          validadoCliente: true,
+          validadoClienteAt: true,
+          validadoClientePor: {
+            select: {
+              id: true,
+              nombre: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      res.status(409).json({
+        success: false,
+        error: 'El registro ya fue validado por el cliente',
+        data: actual
+          ? {
+            id: actual.id,
+            validadoCliente: actual.validadoCliente,
+            validadoClienteAt: actual.validadoClienteAt,
+            validadoClientePor: actual.validadoClientePor,
+            estado: actual.validadoCliente ? 'Validado' : 'No validado',
+            acciones: { puedeValidar: !actual.validadoCliente },
+          }
+          : null,
+      });
+      return;
+    }
+
+    const actualizado = await prisma.registroTerreno.findUnique({
+      where: { id: registroId },
+      select: {
+        id: true,
+        validadoCliente: true,
+        validadoClienteAt: true,
+        validadoClientePor: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        id: actualizado?.id ?? registroId,
+        validadoCliente: actualizado?.validadoCliente ?? true,
+        validadoClienteAt: actualizado?.validadoClienteAt ?? null,
+        validadoClientePor: actualizado?.validadoClientePor ?? null,
+        estado: 'Validado',
+        acciones: { puedeValidar: false },
+      },
+    });
+  } catch (error) {
+    console.error('Error validarRegistroCliente:', error);
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
@@ -403,9 +660,17 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
     }
 
     const obrasIds = await getObrasFromScope(scope);
+    const configuracionVista = await getConfiguracionVistaFromScope(scope);
 
     console.log(`[getDashboardCliente] clienteBeckId recibido: ${req.query.clienteBeckId ?? '(rol cliente)'}`);
     console.log(`[getDashboardCliente] obraIds resueltos (${obrasIds.length}): ${obrasIds.join(', ') || '(vacío)'}`);
+
+    console.log('[getDashboardCliente] configuracionVista resuelta', configuracionVista.map(item => ({
+      clave: item.clave,
+      visible: item.visible,
+      tituloPersonalizado: item.tituloPersonalizado,
+      orden: item.orden,
+    })));
 
     const emptyDashboard = {
       kpis: {
@@ -419,10 +684,11 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
       registrosPorPiso: [],
       registrosPorFecha: [],
       ultimosRegistrosValidados: [],
+      configuracionVista,
     };
 
     if (obrasIds.length === 0) {
-      res.json({ success: true, data: emptyDashboard });
+      res.json({ success: true, configuracionVista, data: emptyDashboard });
       return;
     }
 
@@ -485,6 +751,7 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
 
     res.json({
       success: true,
+      configuracionVista,
       data: {
         kpis: {
           totalObras: obrasIds.length,
@@ -517,6 +784,7 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
           modulo: r.modulo,
           cantidadFinal: r.cantidadFinal,
         })),
+        configuracionVista,
       },
     });
   } catch (error) {

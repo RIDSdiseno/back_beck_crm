@@ -10,11 +10,23 @@ import { uploadPdfFile } from '../../middlewares/upload';
 
 const router = Router();
 
-// Static routes before parameter routes
-router.post('/importar-pdf', requirePermission('firemat_inventario', 'editar'), uploadPdfFile, importarInventarioPdf);
+// Lectura auxiliar permitida también desde dashboard (KPIs de stock y movimientos)
+const canSeeInventario = requirePermission(['firemat_inventario', 'firemat_dashboard'], 'ver');
+const canSeeMovimientos = requirePermission(['firemat_movimientos', 'firemat_dashboard'], 'ver');
+const canEditInventario = requirePermission('firemat_inventario', 'editar');
 
-router.get('/', requirePermission('firemat_inventario', 'ver'), getInventarioFiremat);
-router.get('/movimientos', requirePermission('firemat_movimientos', 'ver'), getMovimientosInventarioFiremat);
-router.patch('/:productoId', requirePermission('firemat_inventario', 'editar'), updateInventarioFiremat);
+const methodNotAllowed = (_req: import('express').Request, res: import('express').Response): void => {
+  res.status(405).json({ success: false, error: 'Metodo no permitido para inventario Firemat' });
+};
+
+// Static routes before parameter routes
+router.post('/importar-pdf', canEditInventario, uploadPdfFile, importarInventarioPdf);
+
+router.get('/', canSeeInventario, getInventarioFiremat);
+router.post('/', canEditInventario, methodNotAllowed);
+router.put('/', canEditInventario, methodNotAllowed);
+router.get('/movimientos', canSeeMovimientos, getMovimientosInventarioFiremat);
+router.patch('/:productoId', canEditInventario, updateInventarioFiremat);
+router.put('/:productoId', canEditInventario, methodNotAllowed);
 
 export default router;

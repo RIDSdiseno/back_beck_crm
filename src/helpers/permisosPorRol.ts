@@ -20,6 +20,7 @@ export const TODOS_LOS_MODULOS: string[] = [
   'beck_vista_cliente',
   'beck_usuarios_parametros',
   'beck_reglas_validacion',
+  'beck_cambiar_empresa',
   'firemat_dashboard',
   'firemat_funnel',
   'firemat_cotizaciones',
@@ -31,6 +32,7 @@ export const TODOS_LOS_MODULOS: string[] = [
   'firemat_movimientos',
   'firemat_reportes',
   'firemat_usuarios_parametros',
+  'firemat_cambiar_empresa',
 ];
 
 function buildPermisos(

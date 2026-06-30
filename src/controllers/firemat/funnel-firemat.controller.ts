@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 import { prisma } from '../../config/prisma';
+import { puedeCambiarEmpresa } from '../../helpers/puedeCambiarEmpresa';
 import {
   obtenerMapaReglasValidacion,
   clasificarResultadoValidacion,
@@ -60,6 +61,11 @@ const getNullableString = (value: unknown): string | null => {
   return getString(value);
 };
 
+const isBlank = (value: unknown): boolean =>
+  value === null ||
+  value === undefined ||
+  (typeof value === 'string' && value.trim() === '');
+
 const getNumber = (value: unknown): number | null => {
   if (value === null || value === undefined || value === '') return null;
   const n = Number(value);
@@ -112,6 +118,34 @@ interface CamposSnapshotFiremat {
   correo: string | null;
   responsable: string | null;
   unidadNegocio: string | null;
+  urgencia: string | null;
+  tipoUso: string | null;
+  necesidadSoporteTecnico: boolean | null;
+  lineaProducto: string | null;
+  productoId: number | null;
+  cantidadEstimada: number | null;
+  montoEstimado: number | null;
+  alternativaProducto: string | null;
+  comision: number | null;
+  margenEstimado: number | null;
+  fechaComprometidaEnvio: Date | null;
+  versionCotizacion: string | null;
+  comentariosCliente: string | null;
+  objeciones: string | null;
+  cotizacionId: number | null;
+  ordenCompra: string | null;
+  correoAceptacion: string | null;
+  condicionesComerciales: string | null;
+  coordinacionAdministrativa: string | null;
+  estadoDocumentacion: string | null;
+  traspasoAdministracion: boolean | null;
+  traspasoERP: boolean | null;
+  coordinacionDespacho: string | null;
+  estadoComercialOrden: string | null;
+  estadoDocumentacionVenta: string | null;
+  tipoBroker: string | null;
+  fechaEstimadaDespacho: Date | null;
+  fechaSeguimientoPostventa: Date | null;
   proximaAccion: string | null;
   fechaProximaAccion: Date | null;
   documentoRespaldo: string | null;
@@ -122,43 +156,84 @@ interface CamposSnapshotFiremat {
   motivoDescarte: string | null;
 }
 
+const isMissingBoolean = (value: unknown): boolean => typeof value !== 'boolean';
+const isMissingNumber = (value: unknown): boolean => value === null || value === undefined || !Number.isFinite(Number(value));
+const isMissingPositiveNumber = (value: unknown): boolean => isMissingNumber(value) || Number(value) <= 0;
+
 async function ejecutarValidacionDinamicaFiremat(
-  etapaParaReglas: string,
+  _etapaParaReglas: string,
   etapaDestino: string,
   c: CamposSnapshotFiremat
-): Promise<{ bloqueos: string[]; advertencias: string[]; puedeAvanzar: boolean }> {
-  // Reglas generales: se obtienen para la etapa actual (desde la que se sale)
-  const mapa = await obtenerMapaReglasValidacion('FIREMAT', etapaParaReglas);
+): Promise<{ bloqueos: string[]; advertencias: string[]; puedeAvanzar: boolean; reglasCargadas: string[] }> {
+  // Firemat valida requisitos de entrada de la etapa destino.
+  const mapa = await obtenerMapaReglasValidacion('FIREMAT', etapaDestino);
+  const mapaDestino = mapa;
   const resultado = { bloqueos: [] as string[], advertencias: [] as string[] };
 
-  clasificarResultadoValidacion('CLIENTE_REQUERIDO',              !c.cliente,                    mapa, resultado);
-  clasificarResultadoValidacion('RUT_EMPRESA_REQUERIDO',          !c.rutEmpresa,                 mapa, resultado);
-  clasificarResultadoValidacion('NOMBRE_OPORTUNIDAD_REQUERIDO',   !c.nombreOportunidad,          mapa, resultado);
-  clasificarResultadoValidacion('CONTACTO_REQUERIDO',             !c.contacto,                   mapa, resultado);
-  clasificarResultadoValidacion('TELEFONO_CORREO_REQUERIDO',      !c.telefono && !c.correo,      mapa, resultado);
-  clasificarResultadoValidacion('RESPONSABLE_REQUERIDO',          !c.responsable,                mapa, resultado);
-  clasificarResultadoValidacion('UNIDAD_NEGOCIO_REQUERIDA',       !c.unidadNegocio,              mapa, resultado);
-  clasificarResultadoValidacion('PROXIMA_ACCION_REQUERIDA',       !c.proximaAccion,              mapa, resultado);
-  clasificarResultadoValidacion('FECHA_PROXIMA_ACCION_REQUERIDA', !c.fechaProximaAccion,         mapa, resultado);
+  clasificarResultadoValidacion('CLIENTE_REQUERIDO',              isBlank(c.cliente),                       mapa, resultado);
+  clasificarResultadoValidacion('RUT_EMPRESA_REQUERIDO',          isBlank(c.rutEmpresa),                    mapa, resultado);
+  clasificarResultadoValidacion('NOMBRE_OPORTUNIDAD_REQUERIDO',   isBlank(c.nombreOportunidad),             mapa, resultado);
+  clasificarResultadoValidacion('CONTACTO_REQUERIDO',             isBlank(c.contacto),                      mapa, resultado);
+  clasificarResultadoValidacion('TELEFONO_CORREO_REQUERIDO',      isBlank(c.telefono) && isBlank(c.correo), mapa, resultado);
+  clasificarResultadoValidacion('RESPONSABLE_REQUERIDO',          isBlank(c.responsable),                   mapa, resultado);
+  clasificarResultadoValidacion('UNIDAD_NEGOCIO_REQUERIDA',       isBlank(c.unidadNegocio),                 mapa, resultado);
+  clasificarResultadoValidacion('URGENCIA_REQUERIDA',             isBlank(c.urgencia),                      mapa, resultado);
+  clasificarResultadoValidacion('TIPO_USO_REQUERIDO',             isBlank(c.tipoUso),                       mapa, resultado);
+  clasificarResultadoValidacion('SOPORTE_TECNICO_REQUERIDO',      isMissingBoolean(c.necesidadSoporteTecnico), mapa, resultado);
+  clasificarResultadoValidacion('LINEA_PRODUCTO_REQUERIDA',       isBlank(c.lineaProducto),                 mapa, resultado);
+  clasificarResultadoValidacion('PRODUCTO_REQUERIDO',             isMissingNumber(c.productoId),            mapa, resultado);
+  clasificarResultadoValidacion('CANTIDAD_ESTIMADA_REQUERIDA',    isMissingPositiveNumber(c.cantidadEstimada), mapa, resultado);
+  clasificarResultadoValidacion('MONTO_ESTIMADO_REQUERIDO',       isMissingPositiveNumber(c.montoEstimado), mapa, resultado);
+  clasificarResultadoValidacion('ALTERNATIVA_PRODUCTO_REQUERIDA', isBlank(c.alternativaProducto),           mapa, resultado);
+  clasificarResultadoValidacion('COMISION_REQUERIDA',             isMissingNumber(c.comision),              mapa, resultado);
+  clasificarResultadoValidacion('MARGEN_ESTIMADO_REQUERIDO',      isMissingNumber(c.margenEstimado),        mapa, resultado);
+  clasificarResultadoValidacion('FECHA_COMPROMETIDA_ENVIO_REQUERIDA', isBlank(c.fechaComprometidaEnvio),    mapa, resultado);
+  clasificarResultadoValidacion('VERSION_COTIZACION_REQUERIDA',   isBlank(c.versionCotizacion),             mapa, resultado);
+  clasificarResultadoValidacion('COMENTARIOS_CLIENTE_REQUERIDO',  isBlank(c.comentariosCliente),            mapa, resultado);
+  clasificarResultadoValidacion('OBJECIONES_REQUERIDAS',          isBlank(c.objeciones),                    mapa, resultado);
+  clasificarResultadoValidacion('COTIZACION_VINCULADA_REQUERIDA', isMissingNumber(c.cotizacionId),          mapa, resultado);
+  clasificarResultadoValidacion('ORDEN_COMPRA_REQUERIDA',         isBlank(c.ordenCompra),                   mapa, resultado);
+  clasificarResultadoValidacion('CORREO_ACEPTACION_REQUERIDO',    isBlank(c.correoAceptacion),              mapa, resultado);
+  clasificarResultadoValidacion('CONDICIONES_COMERCIALES_REQUERIDAS', isBlank(c.condicionesComerciales),    mapa, resultado);
+  clasificarResultadoValidacion('COORDINACION_ADMINISTRATIVA_REQUERIDA', isBlank(c.coordinacionAdministrativa), mapa, resultado);
+  clasificarResultadoValidacion('ESTADO_DOCUMENTACION_REQUERIDO', isBlank(c.estadoDocumentacion),           mapa, resultado);
+  clasificarResultadoValidacion('TRASPASO_ADMINISTRACION_REQUERIDO', isMissingBoolean(c.traspasoAdministracion), mapa, resultado);
+  clasificarResultadoValidacion('TRASPASO_ERP_REQUERIDO',         isMissingBoolean(c.traspasoERP),          mapa, resultado);
+  clasificarResultadoValidacion('COORDINACION_DESPACHO_REQUERIDA', isBlank(c.coordinacionDespacho),         mapa, resultado);
+  clasificarResultadoValidacion('ESTADO_COMERCIAL_ORDEN_REQUERIDO', isBlank(c.estadoComercialOrden),        mapa, resultado);
+  clasificarResultadoValidacion('ESTADO_DOCUMENTACION_VENTA_REQUERIDO', isBlank(c.estadoDocumentacionVenta), mapa, resultado);
+  clasificarResultadoValidacion('TIPO_BROKER_REQUERIDO',          isBlank(c.tipoBroker),                    mapa, resultado);
+  clasificarResultadoValidacion('FECHA_ESTIMADA_DESPACHO_REQUERIDA', isBlank(c.fechaEstimadaDespacho),      mapa, resultado);
+  clasificarResultadoValidacion('FECHA_SEGUIMIENTO_POSTVENTA_REQUERIDA', isBlank(c.fechaSeguimientoPostventa), mapa, resultado);
+  clasificarResultadoValidacion('PROXIMA_ACCION_REQUERIDA',       isBlank(c.proximaAccion),                 mapa, resultado);
+  clasificarResultadoValidacion('FECHA_PROXIMA_ACCION_REQUERIDA', isBlank(c.fechaProximaAccion),            mapa, resultado);
 
-  // Checks de cierre: se evalúan contra la etapa destino
+  // Checks de cierre: se evalúan contra el mapa de la etapa destino
   if (etapaDestino === 'GANADA') {
-    clasificarResultadoValidacion('GANADA_DOCUMENTO_RESPALDO',          !c.documentoRespaldo, mapa, resultado);
-    clasificarResultadoValidacion('GANADA_FLUJO_POSTERIOR_REQUERIDO',   !c.flujoPosterior,    mapa, resultado);
+    clasificarResultadoValidacion('GANADA_DOCUMENTO_RESPALDO',          isBlank(c.documentoRespaldo), mapaDestino, resultado);
+    clasificarResultadoValidacion('GANADA_FLUJO_POSTERIOR_REQUERIDO',   isBlank(c.flujoPosterior),    mapaDestino, resultado);
   }
   if (etapaDestino === 'PERDIDA') {
-    clasificarResultadoValidacion('PERDIDA_MOTIVO_REQUERIDO', !c.motivoPerdida, mapa, resultado);
+    clasificarResultadoValidacion('PERDIDA_MOTIVO_REQUERIDO', isBlank(c.motivoPerdida), mapaDestino, resultado);
     // PERDIDA_ETAPA_REQUERIDA: etapaPerdida no existe aún en el modelo Firemat
   }
   if (etapaDestino === 'POSTERGADA') {
-    clasificarResultadoValidacion('POSTERGADA_MOTIVO_REQUERIDO',             !c.motivoPostergacion, mapa, resultado);
-    clasificarResultadoValidacion('POSTERGADA_FECHA_REACTIVACION_REQUERIDA', !c.fechaReactivacion,  mapa, resultado);
+    clasificarResultadoValidacion('POSTERGADA_MOTIVO_REQUERIDO',             isBlank(c.motivoPostergacion), mapaDestino, resultado);
+    clasificarResultadoValidacion('POSTERGADA_FECHA_REACTIVACION_REQUERIDA', isBlank(c.fechaReactivacion),  mapaDestino, resultado);
   }
   if (etapaDestino === 'DESCARTADO') {
-    clasificarResultadoValidacion('DESCARTADA_MOTIVO_REQUERIDO', !c.motivoDescarte, mapa, resultado);
+    clasificarResultadoValidacion('DESCARTADA_MOTIVO_REQUERIDO', isBlank(c.motivoDescarte), mapaDestino, resultado);
   }
 
-  return construirResultadoValidacion(resultado.bloqueos, resultado.advertencias);
+  return {
+    ...construirResultadoValidacion(resultado.bloqueos, resultado.advertencias),
+    reglasCargadas: [
+      ...new Set([
+        ...Array.from(mapa.keys()),
+        ...(mapaDestino === mapa ? [] : Array.from(mapaDestino.keys())),
+      ]),
+    ].sort(),
+  };
 }
 
 const snapshotDesdeBody = (body: Record<string, unknown>): CamposSnapshotFiremat => ({
@@ -170,6 +245,36 @@ const snapshotDesdeBody = (body: Record<string, unknown>): CamposSnapshotFiremat
   correo:              getNullableString(body.correo),
   responsable:         getNullableString(body.responsable),
   unidadNegocio:       getNullableString(body.unidadNegocio),
+  urgencia:            getNullableString(body.urgencia),
+  tipoUso:             getNullableString(body.tipoUso),
+  necesidadSoporteTecnico:
+    typeof body.necesidadSoporteTecnico === 'boolean' ? body.necesidadSoporteTecnico : null,
+  lineaProducto:       getNullableString(body.lineaProducto),
+  productoId:          getInt(body.productoId),
+  cantidadEstimada:    getInt(body.cantidadEstimada),
+  montoEstimado:       getNumber(body.montoEstimado),
+  alternativaProducto: getNullableString(body.alternativaProducto),
+  comision:            getNumber(body.comision),
+  margenEstimado:      getNumber(body.margenEstimado),
+  fechaComprometidaEnvio: getDate(body.fechaComprometidaEnvio),
+  versionCotizacion:   getNullableString(body.versionCotizacion),
+  comentariosCliente:  getNullableString(body.comentariosCliente),
+  objeciones:          getNullableString(body.objeciones),
+  cotizacionId:        getInt(body.cotizacionId),
+  ordenCompra:         getNullableString(body.ordenCompra),
+  correoAceptacion:    getNullableString(body.correoAceptacion),
+  condicionesComerciales: getNullableString(body.condicionesComerciales),
+  coordinacionAdministrativa: getNullableString(body.coordinacionAdministrativa),
+  estadoDocumentacion: getNullableString(body.estadoDocumentacion),
+  traspasoAdministracion:
+    typeof body.traspasoAdministracion === 'boolean' ? body.traspasoAdministracion : null,
+  traspasoERP:         typeof body.traspasoERP === 'boolean' ? body.traspasoERP : null,
+  coordinacionDespacho: getNullableString(body.coordinacionDespacho),
+  estadoComercialOrden: getNullableString(body.estadoComercialOrden),
+  estadoDocumentacionVenta: getNullableString(body.estadoDocumentacionVenta),
+  tipoBroker:          getNullableString(body.tipoBroker),
+  fechaEstimadaDespacho: getDate(body.fechaEstimadaDespacho),
+  fechaSeguimientoPostventa: getDate(body.fechaSeguimientoPostventa),
   proximaAccion:       getNullableString(body.proximaAccion),
   fechaProximaAccion:  getDate(body.fechaProximaAccion),
   documentoRespaldo:   getNullableString(body.documentoRespaldo),
@@ -192,6 +297,40 @@ const snapshotDesdeCurrent = (
   correo:             hasOwn(body, 'correo')             ? getNullableString(body.correo)             : current.correo,
   responsable:        hasOwn(body, 'responsable')        ? getNullableString(body.responsable)        : current.responsable,
   unidadNegocio:      hasOwn(body, 'unidadNegocio')      ? getNullableString(body.unidadNegocio)      : current.unidadNegocio,
+  urgencia:           hasOwn(body, 'urgencia')           ? getNullableString(body.urgencia)           : current.urgencia,
+  tipoUso:            hasOwn(body, 'tipoUso')            ? getNullableString(body.tipoUso)            : current.tipoUso,
+  necesidadSoporteTecnico: hasOwn(body, 'necesidadSoporteTecnico')
+    ? (typeof body.necesidadSoporteTecnico === 'boolean' ? body.necesidadSoporteTecnico : null)
+    : current.necesidadSoporteTecnico,
+  lineaProducto:      hasOwn(body, 'lineaProducto')      ? getNullableString(body.lineaProducto)      : current.lineaProducto,
+  productoId:         hasOwn(body, 'productoId')         ? getInt(body.productoId)                    : current.productoId,
+  cantidadEstimada:   hasOwn(body, 'cantidadEstimada')   ? getInt(body.cantidadEstimada)              : current.cantidadEstimada,
+  montoEstimado:      hasOwn(body, 'montoEstimado')      ? getNumber(body.montoEstimado)              : current.montoEstimado,
+  alternativaProducto: hasOwn(body, 'alternativaProducto') ? getNullableString(body.alternativaProducto) : current.alternativaProducto,
+  comision:           hasOwn(body, 'comision')           ? getNumber(body.comision)                   : current.comision,
+  margenEstimado:     hasOwn(body, 'margenEstimado')     ? getNumber(body.margenEstimado)             : current.margenEstimado,
+  fechaComprometidaEnvio: hasOwn(body, 'fechaComprometidaEnvio') ? getDate(body.fechaComprometidaEnvio) : current.fechaComprometidaEnvio,
+  versionCotizacion:  hasOwn(body, 'versionCotizacion')  ? getNullableString(body.versionCotizacion)  : current.versionCotizacion,
+  comentariosCliente: hasOwn(body, 'comentariosCliente') ? getNullableString(body.comentariosCliente) : current.comentariosCliente,
+  objeciones:         hasOwn(body, 'objeciones')         ? getNullableString(body.objeciones)         : current.objeciones,
+  cotizacionId:       hasOwn(body, 'cotizacionId')       ? getInt(body.cotizacionId)                  : current.cotizacionId,
+  ordenCompra:        hasOwn(body, 'ordenCompra')        ? getNullableString(body.ordenCompra)        : current.ordenCompra,
+  correoAceptacion:   hasOwn(body, 'correoAceptacion')   ? getNullableString(body.correoAceptacion)   : current.correoAceptacion,
+  condicionesComerciales: hasOwn(body, 'condicionesComerciales') ? getNullableString(body.condicionesComerciales) : current.condicionesComerciales,
+  coordinacionAdministrativa: hasOwn(body, 'coordinacionAdministrativa') ? getNullableString(body.coordinacionAdministrativa) : current.coordinacionAdministrativa,
+  estadoDocumentacion: hasOwn(body, 'estadoDocumentacion') ? getNullableString(body.estadoDocumentacion) : current.estadoDocumentacion,
+  traspasoAdministracion: hasOwn(body, 'traspasoAdministracion')
+    ? (typeof body.traspasoAdministracion === 'boolean' ? body.traspasoAdministracion : null)
+    : current.traspasoAdministracion,
+  traspasoERP:        hasOwn(body, 'traspasoERP')
+    ? (typeof body.traspasoERP === 'boolean' ? body.traspasoERP : null)
+    : current.traspasoERP,
+  coordinacionDespacho: hasOwn(body, 'coordinacionDespacho') ? getNullableString(body.coordinacionDespacho) : current.coordinacionDespacho,
+  estadoComercialOrden: hasOwn(body, 'estadoComercialOrden') ? getNullableString(body.estadoComercialOrden) : current.estadoComercialOrden,
+  estadoDocumentacionVenta: hasOwn(body, 'estadoDocumentacionVenta') ? getNullableString(body.estadoDocumentacionVenta) : current.estadoDocumentacionVenta,
+  tipoBroker:         hasOwn(body, 'tipoBroker')         ? getNullableString(body.tipoBroker)         : current.tipoBroker,
+  fechaEstimadaDespacho: hasOwn(body, 'fechaEstimadaDespacho') ? getDate(body.fechaEstimadaDespacho) : current.fechaEstimadaDespacho,
+  fechaSeguimientoPostventa: hasOwn(body, 'fechaSeguimientoPostventa') ? getDate(body.fechaSeguimientoPostventa) : current.fechaSeguimientoPostventa,
   proximaAccion:      hasOwn(body, 'proximaAccion')      ? getNullableString(body.proximaAccion)      : current.proximaAccion,
   fechaProximaAccion: hasOwn(body, 'fechaProximaAccion') ? getDate(body.fechaProximaAccion)           : current.fechaProximaAccion,
   documentoRespaldo:  hasOwn(body, 'documentoRespaldo')  ? getNullableString(body.documentoRespaldo)  : current.documentoRespaldo,
@@ -669,18 +808,23 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
 
     const snapshot = snapshotDesdeBody(body);
     // Al crear, no hay etapa previa; etapaParaReglas = etapaDestino = etapa inicial
-    const validacion = await ejecutarValidacionDinamicaFiremat(etapa, etapa, snapshot);
+    const observacionCrear = getNullableString(body.observacionCamposFaltantes);
+    let advertenciasCrear: string[] = [];
+    if (!observacionCrear) {
+      const validacion = await ejecutarValidacionDinamicaFiremat(etapa, etapa, snapshot);
 
-    if (!validacion.puedeAvanzar) {
-      res.status(409).json({
-        message: 'Existen reglas bloqueantes pendientes.',
-        bloqueos: validacion.bloqueos,
-        advertencias: validacion.advertencias,
-        puedeAvanzar: false,
-        advertenciasCamposCriticos: validacion.bloqueos,
-        requiereObservacionCamposFaltantes: true,
-      });
-      return;
+      if (!validacion.puedeAvanzar) {
+        res.status(409).json({
+          message: 'Existen reglas bloqueantes pendientes.',
+          bloqueos: validacion.bloqueos,
+          advertencias: validacion.advertencias,
+          puedeAvanzar: false,
+          advertenciasCamposCriticos: validacion.bloqueos,
+          requiereObservacionCamposFaltantes: true,
+        });
+        return;
+      }
+      advertenciasCrear = validacion.advertencias;
     }
 
     const dataInput = buildCreateData(body);
@@ -710,7 +854,7 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
       success: true,
       data: { ...data, clienteRegistrado: esClienteRegistrado(data, clienteSets) },
       message: 'Oportunidad Firemat creada',
-      advertencias: validacion.advertencias,
+      advertencias: advertenciasCrear,
     });
   } catch (error) {
     handleError(res, error);
@@ -733,6 +877,19 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
 
     const body = req.body as Record<string, unknown>;
     validarMotivosEnBody(body);
+
+    // Check permission if cliente is changing
+    if (req.userId && req.userRole && req.userRole !== 'administrador' && hasOwn(body, 'cliente')) {
+      const nuevoCliente = getString(body.cliente);
+      if (nuevoCliente !== current.cliente) {
+        const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'firemat');
+        if (!puede) {
+          res.status(403).json({ success: false, error: 'No tienes permiso para cambiar la empresa o cliente asociado.' });
+          return;
+        }
+      }
+    }
+
     const dataInput = buildUpdateData(current, body);
 
     await assertLinkedRecordsExist(
@@ -748,22 +905,29 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
       const esRetrocesoUpd = idxActualUpd !== -1 && idxDestinoUpd !== -1 && idxDestinoUpd < idxActualUpd;
 
       if (!esRetrocesoUpd) {
-        const snapshot = snapshotDesdeCurrent(current, body);
-        const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, nuevaEtapa, snapshot);
+        const observacionFinalUpd = hasOwn(body, 'observacionCamposFaltantes')
+          ? getNullableString(body.observacionCamposFaltantes)
+          : current.observacionCamposFaltantes;
 
-        if (!validacion.puedeAvanzar) {
-          res.status(409).json({
-            message: 'Existen reglas bloqueantes pendientes.',
-            bloqueos: validacion.bloqueos,
-            advertencias: validacion.advertencias,
-            puedeAvanzar: false,
-            advertenciasCamposCriticos: validacion.bloqueos,
-            requiereObservacionCamposFaltantes: true,
-          });
-          return;
+        if (!observacionFinalUpd) {
+          const snapshot = snapshotDesdeCurrent(current, body);
+          const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, nuevaEtapa, snapshot);
+
+          if (validacion.bloqueos.length > 0 || validacion.advertencias.length > 0) {
+            res.status(409).json({
+              success: false,
+              message: 'Existen reglas de validacion pendientes.',
+              bloqueos: validacion.bloqueos,
+              advertencias: validacion.advertencias,
+              puedeAvanzar: false,
+              advertenciasCamposCriticos: validacion.bloqueos,
+              requiereObservacionCamposFaltantes: true,
+            });
+            return;
+          }
+
+          advertenciasUpdate = validacion.advertencias;
         }
-
-        advertenciasUpdate = validacion.advertencias;
       }
     }
 
@@ -839,26 +1003,78 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
         idxActual,
         idxDestino,
         esRetroceso,
-        etapaUsadaParaValidar: esRetroceso ? "(omitido — retroceso)" : current.etapa,
+        etapaUsadaParaValidar: esRetroceso ? "(omitido - retroceso)" : etapa,
       });
 
       if (!esRetroceso) {
-        const snapshot = snapshotDesdeCurrent(current, body);
-        const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, etapa, snapshot);
+        // Solo la observación enviada en este PATCH habilita el bypass.
+        // No leer current.observacionCamposFaltantes: si ese campo tiene valor
+        // guardado de antes, no debe evitar la validación en futuros avances.
+        const observacionFinalPatch = hasOwn(body, 'observacionCamposFaltantes')
+          ? getNullableString(body.observacionCamposFaltantes)
+          : null;
 
-        if (!validacion.puedeAvanzar) {
-          res.status(409).json({
-            message: 'Existen reglas bloqueantes pendientes.',
+        if (!observacionFinalPatch) {
+          const currentRecord = current as unknown as Record<string, unknown>;
+          console.log('[FIREMAT CAMPOS VALIDACION]', {
+            id: current.id,
+            etapa: current.etapa,
+            nombreOportunidad: current.nombreOportunidad,
+            empresa: currentRecord.empresa,
+            clienteId: currentRecord.clienteId,
+            clienteFirematId: currentRecord.clienteFirematId,
+            cliente: current.cliente,
+            rutEmpresa: current.rutEmpresa,
+            contacto: current.contacto,
+            nombreContacto: currentRecord.nombreContacto,
+            telefono: current.telefono,
+            correo: current.correo,
+            email: currentRecord.email,
+            responsable: current.responsable,
+            vendedor: currentRecord.vendedor,
+            unidadNegocio: current.unidadNegocio,
+            proximaAccion: current.proximaAccion,
+            fechaProximaAccion: current.fechaProximaAccion,
+          });
+
+          const snapshot = snapshotDesdeCurrent(current, body);
+          const validacion = await ejecutarValidacionDinamicaFiremat(current.etapa, etapa, snapshot);
+
+          console.log("[VALIDACION ETAPA RESULTADO]", {
+            modulo: "FIREMAT",
+            etapaActual: current.etapa,
+            etapaDestino: etapa,
+            etapaUsadaParaValidar: etapa,
+            reglasCargadas: validacion.reglasCargadas,
             bloqueos: validacion.bloqueos,
             advertencias: validacion.advertencias,
-            puedeAvanzar: false,
-            advertenciasCamposCriticos: validacion.bloqueos,
-            requiereObservacionCamposFaltantes: true,
+            puedeAvanzar: validacion.puedeAvanzar,
+            observacionCamposFaltantesBody: observacionFinalPatch,
           });
-          return;
-        }
 
-        advertenciasPatch = validacion.advertencias;
+          if (validacion.bloqueos.length > 0 || validacion.advertencias.length > 0) {
+            res.status(409).json({
+              success: false,
+              message: 'Existen reglas de validacion pendientes.',
+              bloqueos: validacion.bloqueos,
+              advertencias: validacion.advertencias,
+              reglasCargadas: validacion.reglasCargadas,
+              puedeAvanzar: false,
+              advertenciasCamposCriticos: validacion.bloqueos,
+              requiereObservacionCamposFaltantes: true,
+            });
+            return;
+          }
+
+          advertenciasPatch = validacion.advertencias;
+        } else {
+          console.log("[VALIDACION ETAPA OMITIDA]", {
+            modulo: "FIREMAT",
+            etapaActual: current.etapa,
+            etapaDestino: etapa,
+            razon: "observacionCamposFaltantes enviada en body — bypass autorizado",
+          });
+        }
       }
     }
 

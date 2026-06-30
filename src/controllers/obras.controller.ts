@@ -7,6 +7,7 @@ import {
   TIPOS_REGISTRO_VALIDOS,
   validarTiposRegistroSistema,
 } from '../helpers/tiposRegistro';
+import { puedeCambiarEmpresa } from '../helpers/puedeCambiarEmpresa';
 
 const estadosObraValidos: EstadoObra[] = [
   EstadoObra.activa,
@@ -89,8 +90,6 @@ type CrearObraBody = {
   estado?: unknown;
   funnelBeckId?: unknown;
   clienteBeckId?: unknown;
-  rendimientoSellosEsperadoDiario?: unknown;
-  rendimientoReparacionEsperadoDiario?: unknown;
 };
 
 type ActualizarObraBody = {
@@ -101,8 +100,6 @@ type ActualizarObraBody = {
   estado?: unknown;
   funnelBeckId?: unknown;
   clienteBeckId?: unknown;
-  rendimientoSellosEsperadoDiario?: unknown;
-  rendimientoReparacionEsperadoDiario?: unknown;
 };
 
 type CambiarEstadoObraBody = {
@@ -124,14 +121,6 @@ const getFunnelBeckId = (value: unknown): string | null => {
   return trimmed || null;
 };
 
-const parseRendimientoObra = (raw: unknown, nombreCampo: string): { value: number | null } | { error: string } => {
-  if (raw === null || raw === '') return { value: null };
-  const num = typeof raw === 'number' ? raw : Number(raw);
-  if (!Number.isFinite(num) || num < 0) {
-    return { error: `${nombreCampo} debe ser un número mayor o igual a 0` };
-  }
-  return { value: Math.floor(num) };
-};
 
 const sendFunnelBeckLinkError = (res: Response, error: unknown): boolean => {
   if (!(error instanceof Error)) return false;
@@ -229,7 +218,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
 
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId, rendimientoSellosEsperadoDiario, rendimientoReparacionEsperadoDiario } =
+    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId } =
       req.body as CrearObraBody;
 
     if (typeof nombre !== 'string' || !nombre.trim()) {
@@ -241,26 +230,6 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
     if (!estadoObra) {
       res.status(400).json({ error: 'Estado invalido' });
       return;
-    }
-
-    let rendimientoFinal: number | null | undefined = undefined;
-    if (rendimientoSellosEsperadoDiario !== undefined) {
-      const parsed = parseRendimientoObra(rendimientoSellosEsperadoDiario, 'rendimientoSellosEsperadoDiario');
-      if ('error' in parsed) {
-        res.status(400).json({ error: parsed.error });
-        return;
-      }
-      rendimientoFinal = parsed.value;
-    }
-
-    let rendimientoReparacionFinal: number | null | undefined = undefined;
-    if (rendimientoReparacionEsperadoDiario !== undefined) {
-      const parsed = parseRendimientoObra(rendimientoReparacionEsperadoDiario, 'Rendimiento Reparación Esperado diario');
-      if ('error' in parsed) {
-        res.status(400).json({ error: parsed.error });
-        return;
-      }
-      rendimientoReparacionFinal = parsed.value;
     }
 
     const codigoFinal =
@@ -314,8 +283,6 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
           estado: estadoObra,
           creadoPorId: req.userId ?? '',
           ...(clienteBeckIdFinal && { clienteBeckId: clienteBeckIdFinal }),
-          ...(rendimientoFinal !== undefined && { rendimientoSellosEsperadoDiario: rendimientoFinal }),
-          ...(rendimientoReparacionFinal !== undefined && { rendimientoReparacionEsperadoDiario: rendimientoReparacionFinal }),
         },
       });
 
@@ -361,7 +328,7 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId, rendimientoSellosEsperadoDiario, rendimientoReparacionEsperadoDiario } = req.body as ActualizarObraBody;
+    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId } = req.body as ActualizarObraBody;
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'ID de obra invalido' });
@@ -402,24 +369,17 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
       }
     }
 
-    let rendimientoUpdate: number | null | undefined = undefined;
-    if (rendimientoSellosEsperadoDiario !== undefined) {
-      const parsed = parseRendimientoObra(rendimientoSellosEsperadoDiario, 'rendimientoSellosEsperadoDiario');
-      if ('error' in parsed) {
-        res.status(400).json({ error: parsed.error });
-        return;
+    // Check permission if cliente or clienteBeckId is changing
+    if (req.userId && req.userRole && req.userRole !== 'administrador') {
+      const clienteCambia = typeof cliente === 'string' && cliente !== existente.cliente;
+      const clienteBeckCambia = clienteBeckIdUpdate !== undefined && clienteBeckIdUpdate !== existente.clienteBeckId;
+      if (clienteCambia || clienteBeckCambia) {
+        const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'beck');
+        if (!puede) {
+          res.status(403).json({ error: 'No tienes permiso para cambiar la empresa o cliente asociado.' });
+          return;
+        }
       }
-      rendimientoUpdate = parsed.value;
-    }
-
-    let rendimientoReparacionUpdate: number | null | undefined = undefined;
-    if (rendimientoReparacionEsperadoDiario !== undefined) {
-      const parsed = parseRendimientoObra(rendimientoReparacionEsperadoDiario, 'Rendimiento Reparación Esperado diario');
-      if ('error' in parsed) {
-        res.status(400).json({ error: parsed.error });
-        return;
-      }
-      rendimientoReparacionUpdate = parsed.value;
     }
 
     const obra = await prisma.$transaction(async (tx) => {
@@ -453,8 +413,6 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
               : {}),
           ...(estadoObra !== undefined && { estado: estadoObra }),
           ...(clienteBeckIdUpdate !== undefined && { clienteBeckId: clienteBeckIdUpdate }),
-          ...(rendimientoUpdate !== undefined && { rendimientoSellosEsperadoDiario: rendimientoUpdate }),
-          ...(rendimientoReparacionUpdate !== undefined && { rendimientoReparacionEsperadoDiario: rendimientoReparacionUpdate }),
         },
       });
 

@@ -24,6 +24,12 @@ const handleError = (res: Response, error: unknown): void => {
   res.status(500).json({ success: false, error: 'Error interno del servidor' });
 };
 
+const getNumber = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+};
+
 export const listarItemizadoOpciones = async (req: Request, res: Response): Promise<void> => {
   try {
     const { codigoBeck, tipo, elementoPasante, elementoPenetra, materialidad, visible, obraId } = req.query;
@@ -72,8 +78,7 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
 
     const data = opciones.map((op) => ({
       ...op,
-      // Si hay config por obra se usa ese valor, si no visible = true por defecto
-      visible: configMap.has(op.id) ? configMap.get(op.id)! : true,
+      visible: configMap.has(op.id) ? configMap.get(op.id)! : op.visible,
     }));
 
     // Aplicar filtro de visible después de resolver el efectivo
@@ -115,7 +120,9 @@ export const crearItemizadoOpcion = async (req: Request, res: Response): Promise
         elementoPasante: getString(body.elementoPasante),
         elementoPenetra: getString(body.elementoPenetra),
         materialidad: getString(body.materialidad),
-        visible: typeof body.visible === 'boolean' ? body.visible : true,
+        visible: typeof body.visible === 'boolean' ? body.visible : false,
+        rendimientoSellosEsperadoDiario: getNumber(body.rendimientoSellosEsperadoDiario),
+        rendimientoReparacionEsperadoDiario: getNumber(body.rendimientoReparacionEsperadoDiario),
       },
     });
 
@@ -139,6 +146,13 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
     if (hasOwn(body, 'materialidad')) updateData.materialidad = getString(body.materialidad);
     if (hasOwn(body, 'visible') && typeof body.visible === 'boolean') {
       updateData.visible = body.visible;
+    }
+    if (hasOwn(body, 'rendimientoSellosEsperadoDiario')) {
+      updateData.rendimientoSellosEsperadoDiario = getNumber(body.rendimientoSellosEsperadoDiario);
+    }
+
+    if (hasOwn(body, 'rendimientoReparacionEsperadoDiario')) {
+      updateData.rendimientoReparacionEsperadoDiario = getNumber(body.rendimientoReparacionEsperadoDiario);
     }
 
     const data = await prisma.itemizadoOpcion.update({
@@ -193,6 +207,298 @@ export const eliminarItemizadoOpcion = async (req: Request, res: Response): Prom
     const id = req.params.id as string;
     await prisma.itemizadoOpcion.delete({ where: { id } });
     res.json({ success: true, message: 'Opción eliminada' });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+// ─── Configuración de itemizados por obra ─────────────────────────────────────
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export const getConfiguracionItemizadosPorObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const obraId = req.params.obraId as string;
+
+    if (!UUID_REGEX.test(obraId)) {
+      res.status(400).json({ success: false, error: 'obraId debe ser un UUID válido' });
+      return;
+    }
+
+    const obra = await prisma.obra.findUnique({ where: { id: obraId }, select: { id: true } });
+    if (!obra) {
+      res.status(404).json({ success: false, error: 'Obra no encontrada' });
+      return;
+    }
+
+    // Configs explícitas de esta obra (visibles e invisibles)
+    const configs = await prisma.configuracionItemizadoOpcionObra.findMany({
+      where: { obraId },
+      include: {
+        itemizadoOpcion: {
+          select: {
+            id: true,
+            codigoBeck: true,
+            tipo: true,
+            elementoPasante: true,
+            elementoPenetra: true,
+            materialidad: true,
+            rendimientoSellosEsperadoDiario: true,
+            rendimientoReparacionEsperadoDiario: true,
+          },
+        },
+      },
+    });
+
+    const configuredIds = configs.map((c) => c.itemizadoOpcionId);
+
+    // Items globalmente visibles que no tienen config explícita para esta obra
+    const globalVisibles = await prisma.itemizadoOpcion.findMany({
+      where: {
+        visible: true,
+        ...(configuredIds.length > 0 ? { id: { notIn: configuredIds } } : {}),
+      },
+      select: {
+        id: true,
+        codigoBeck: true,
+        tipo: true,
+        elementoPasante: true,
+        elementoPenetra: true,
+        materialidad: true,
+        rendimientoSellosEsperadoDiario: true,
+        rendimientoReparacionEsperadoDiario: true,
+      },
+    });
+
+    type ItemResult = {
+      id: string | null;
+      obraId: string;
+      itemizadoOpcionId: string;
+      visible: boolean;
+      orden: number | null;
+      nombrePersonalizado: string | null;
+      itemizadoOpcion: {
+        id: string;
+        codigoBeck: string | null;
+        tipo: string | null;
+        elementoPasante: string | null;
+        elementoPenetra: string | null;
+        materialidad: string | null;
+        rendimientoSellosEsperadoDiario: number | null;
+        rendimientoReparacionEsperadoDiario: number | null;
+      };
+      nombreMostrar: string;
+    };
+
+    const fromConfigs: ItemResult[] = configs
+      .filter((c) => c.visible)
+      .map((c) => ({
+        id: c.id,
+        obraId: c.obraId,
+        itemizadoOpcionId: c.itemizadoOpcionId,
+        visible: c.visible,
+        orden: c.orden,
+        nombrePersonalizado: c.nombrePersonalizado,
+        itemizadoOpcion: c.itemizadoOpcion,
+        nombreMostrar:
+          c.nombrePersonalizado && c.nombrePersonalizado.trim()
+            ? c.nombrePersonalizado.trim()
+            : (c.itemizadoOpcion.elementoPasante ?? ''),
+      }));
+
+    const fromGlobal: ItemResult[] = globalVisibles.map((op) => ({
+      id: null,
+      obraId,
+      itemizadoOpcionId: op.id,
+      visible: true,
+      orden: null,
+      nombrePersonalizado: null,
+      itemizadoOpcion: op,
+      nombreMostrar: op.elementoPasante ?? '',
+    }));
+
+    const data = [...fromConfigs, ...fromGlobal].sort((a, b) => {
+      if (a.orden !== null && b.orden !== null) return a.orden - b.orden;
+      if (a.orden !== null) return -1;
+      if (b.orden !== null) return 1;
+      return (a.itemizadoOpcion.codigoBeck ?? '').localeCompare(
+        b.itemizadoOpcion.codigoBeck ?? '',
+        'es',
+      );
+    });
+
+    res.json({ success: true, data });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const obraId = req.params.obraId as string;
+    const body = req.body as { items?: unknown };
+
+    if (!UUID_REGEX.test(obraId)) {
+      res.status(400).json({ success: false, error: 'obraId debe ser un UUID válido' });
+      return;
+    }
+
+    const obra = await prisma.obra.findUnique({ where: { id: obraId }, select: { id: true } });
+    if (!obra) {
+      res.status(404).json({ success: false, error: 'Obra no encontrada' });
+      return;
+    }
+
+    if (!Array.isArray(body.items)) {
+      res.status(400).json({ success: false, error: 'items debe ser un arreglo' });
+      return;
+    }
+
+    for (const item of body.items as unknown[]) {
+      if (typeof item !== 'object' || item === null) {
+        res.status(400).json({ success: false, error: 'Cada item debe ser un objeto' });
+        return;
+      }
+      const { itemizadoOpcionId } = item as Record<string, unknown>;
+      if (typeof itemizadoOpcionId !== 'string' || !UUID_REGEX.test(itemizadoOpcionId)) {
+        res.status(400).json({
+          success: false,
+          error: `itemizadoOpcionId inválido: ${String(itemizadoOpcionId)}`,
+        });
+        return;
+      }
+    }
+
+    type ItemInput = {
+      itemizadoOpcionId: string;
+      orden?: number | null;
+      nombrePersonalizado?: string | null;
+    };
+
+    const items = body.items as ItemInput[];
+    const allIds = items.map((i) => i.itemizadoOpcionId);
+
+    // Verificar que todos los itemizadoOpcionIds existen
+    const found = await prisma.itemizadoOpcion.findMany({
+      where: { id: { in: allIds } },
+      select: { id: true, visible: true },
+    });
+    const foundMap = new Map(found.map((f) => [f.id, f.visible]));
+    const notFound = allIds.filter((id) => !foundMap.has(id));
+    if (notFound.length > 0) {
+      res.status(404).json({ success: false, error: 'Algunos itemizados no existen', ids: notFound });
+      return;
+    }
+
+    // Resolver visibilidad efectiva: config explícita > global
+    const explicitConfigs = await prisma.configuracionItemizadoOpcionObra.findMany({
+      where: { obraId, itemizadoOpcionId: { in: allIds } },
+      select: { itemizadoOpcionId: true, visible: true },
+    });
+    const configMap = new Map(explicitConfigs.map((c) => [c.itemizadoOpcionId, c.visible]));
+
+    const notVisible = allIds.filter((id) =>
+      configMap.has(id) ? !configMap.get(id) : !foundMap.get(id),
+    );
+    if (notVisible.length > 0) {
+      res.status(400).json({
+        success: false,
+        error: 'Algunos itemizados no están visibles para esta obra',
+        ids: notVisible,
+      });
+      return;
+    }
+
+    // Upsert: solo actualiza orden y nombrePersonalizado; nunca toca visible existente
+    const results = await Promise.all(
+      items.map((item) => {
+        const ordenVal =
+          typeof item.orden === 'number' && Number.isInteger(item.orden) && item.orden > 0
+            ? item.orden
+            : null;
+        const nombreVal =
+          typeof item.nombrePersonalizado === 'string' && item.nombrePersonalizado.trim()
+            ? item.nombrePersonalizado.trim()
+            : null;
+
+        return prisma.configuracionItemizadoOpcionObra.upsert({
+          where: {
+            obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId: item.itemizadoOpcionId },
+          },
+          create: {
+            obraId,
+            itemizadoOpcionId: item.itemizadoOpcionId,
+            visible: true,
+            orden: ordenVal,
+            nombrePersonalizado: nombreVal,
+          },
+          update: {
+            orden: ordenVal,
+            nombrePersonalizado: nombreVal,
+          },
+        });
+      }),
+    );
+
+    res.json({ success: true, data: results });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const patchVisibleMasivoObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const obraId = req.params.obraId as string;
+    const body = req.body as Record<string, unknown>;
+
+    if (typeof body.visible !== 'boolean') {
+      res.status(400).json({ success: false, error: 'visible debe ser boolean' });
+      return;
+    }
+    const visible = body.visible;
+
+    if (!UUID_REGEX.test(obraId)) {
+      res.status(400).json({ success: false, error: 'obraId debe ser un UUID válido' });
+      return;
+    }
+
+    const obra = await prisma.obra.findUnique({ where: { id: obraId }, select: { id: true } });
+    if (!obra) {
+      res.status(404).json({ success: false, error: 'Obra no encontrada' });
+      return;
+    }
+
+    const todasLasOpciones = await prisma.itemizadoOpcion.findMany({ select: { id: true } });
+    const todosLosIds = todasLasOpciones.map((op) => op.id);
+
+    if (todosLosIds.length === 0) {
+      res.json({ success: true, actualizados: 0, visible });
+      return;
+    }
+
+    const configsExistentes = await prisma.configuracionItemizadoOpcionObra.findMany({
+      where: { obraId, itemizadoOpcionId: { in: todosLosIds } },
+      select: { itemizadoOpcionId: true },
+    });
+    const idsConConfig = new Set(configsExistentes.map((c) => c.itemizadoOpcionId));
+    const idsSinConfig = todosLosIds.filter((id) => !idsConConfig.has(id));
+
+    await prisma.$transaction(async (tx) => {
+      if (idsConConfig.size > 0) {
+        await tx.configuracionItemizadoOpcionObra.updateMany({
+          where: { obraId, itemizadoOpcionId: { in: [...idsConConfig] } },
+          data: { visible },
+        });
+      }
+      if (idsSinConfig.length > 0) {
+        await tx.configuracionItemizadoOpcionObra.createMany({
+          data: idsSinConfig.map((itemizadoOpcionId) => ({ obraId, itemizadoOpcionId, visible })),
+          skipDuplicates: true,
+        });
+      }
+    });
+
+    res.json({ success: true, actualizados: todosLosIds.length, visible });
   } catch (error) {
     handleError(res, error);
   }
@@ -369,7 +675,7 @@ export const importarItemizadoOpciones = async (req: Request, res: Response): Pr
         elementoPasante: fila.elementoPasante,
         elementoPenetra: fila.elementoPenetra,
         materialidad: fila.materialidad,
-        visible: true,
+        visible: false,
       });
     }
 

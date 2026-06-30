@@ -4,6 +4,10 @@ import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 import { ROLES_BECK, ROLES_FIREMAT } from '../helpers/roles';
+import {
+  buildConfiguracionVistaCliente,
+  VISTA_CLIENTE_CLAVES,
+} from '../helpers/configuracionVistaCliente';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -87,6 +91,108 @@ async function validarObrasCliente(
 
 type ObraResumen = { id: string; nombre: string; codigo: string | null; clienteBeckId: string | null };
 type BeckResumen = { id: string; rut: string; razonSocial: string | null; nombreEmpresa: string | null };
+
+function parseObraIdsPayload(value: unknown): { obraIds?: string[]; error?: string } {
+  if (!Array.isArray(value)) {
+    return { error: 'obraIds debe ser un array de strings' };
+  }
+
+  if (!value.every((id): id is string => typeof id === 'string' && id.trim() !== '')) {
+    return { error: 'obraIds debe contener solo IDs de obra validos' };
+  }
+
+  const obraIds = value.map((id) => id.trim());
+  const uniqueIds = new Set(obraIds);
+
+  if (uniqueIds.size !== obraIds.length) {
+    return { error: 'obraIds no debe contener duplicados' };
+  }
+
+  return { obraIds };
+}
+
+type VistaClienteInputItem = {
+  clave?: unknown;
+  visible?: unknown;
+  tituloPersonalizado?: unknown;
+  orden?: unknown;
+};
+
+type VistaClienteParsedItem = {
+  clave: string;
+  visible: boolean;
+  tituloPersonalizado: string | null;
+  orden: number | null;
+};
+
+function parseVistaClienteItems(value: unknown): { items?: VistaClienteParsedItem[]; error?: string } {
+  if (!Array.isArray(value)) {
+    return { error: 'items debe ser un array' };
+  }
+
+  const seen = new Set<string>();
+  const items: VistaClienteParsedItem[] = [];
+
+  for (const raw of value as VistaClienteInputItem[]) {
+    if (!raw || typeof raw !== 'object') {
+      return { error: 'Cada item debe ser un objeto' };
+    }
+
+    if (typeof raw.clave !== 'string' || !VISTA_CLIENTE_CLAVES.has(raw.clave)) {
+      return { error: `Clave de vista cliente invalida: ${String(raw.clave ?? '')}` };
+    }
+
+    if (seen.has(raw.clave)) {
+      return { error: `Clave duplicada: ${raw.clave}` };
+    }
+    seen.add(raw.clave);
+
+    if (typeof raw.visible !== 'boolean') {
+      return { error: `visible debe ser boolean para ${raw.clave}` };
+    }
+
+    if (
+      raw.tituloPersonalizado !== undefined &&
+      raw.tituloPersonalizado !== null &&
+      typeof raw.tituloPersonalizado !== 'string'
+    ) {
+      return { error: `tituloPersonalizado debe ser string o null para ${raw.clave}` };
+    }
+
+    if (
+      raw.orden !== undefined &&
+      raw.orden !== null &&
+      (!Number.isInteger(Number(raw.orden)) || Number(raw.orden) < 0)
+    ) {
+      return { error: `orden debe ser un entero >= 0 para ${raw.clave}` };
+    }
+
+    const titulo = typeof raw.tituloPersonalizado === 'string'
+      ? raw.tituloPersonalizado.trim() || null
+      : null;
+
+    items.push({
+      clave: raw.clave,
+      visible: raw.visible,
+      tituloPersonalizado: titulo,
+      orden: raw.orden === undefined || raw.orden === null ? null : Number(raw.orden),
+    });
+  }
+
+  return { items };
+}
+
+async function findUsuarioCliente(
+  id: string,
+): Promise<{ id: string; nombre: string; email: string; rol: RolUsuario; activo: boolean } | null> {
+  const usuario = await prisma.usuario.findUnique({
+    where: { id },
+    select: { id: true, nombre: true, email: true, rol: true, activo: true },
+  });
+
+  if (!usuario || usuario.rol !== RolUsuario.cliente) return null;
+  return usuario;
+}
 
 /**
  * Enriquece usuarios con rol "cliente" con sus obras asignadas, clienteBeckId y clienteBeck.
@@ -287,6 +393,255 @@ export const obtenerUsuario = async (req: Request, res: Response): Promise<void>
   }
 };
 
+export const obtenerObrasUsuarioCliente = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario = await findUsuarioCliente(id);
+
+    if (!usuario) {
+      res.status(404).json({ error: 'Usuario cliente no encontrado' });
+      return;
+    }
+
+    const asignaciones = await prisma.usuarios_obras.findMany({
+      where: { usuario_id: id },
+      select: {
+        obras: {
+          select: {
+            id: true,
+            nombre: true,
+            codigo: true,
+            estado: true,
+            cliente: true,
+            direccion: true,
+            clienteBeckId: true,
+            clienteBeck: {
+              select: {
+                id: true,
+                rut: true,
+                razonSocial: true,
+                nombreEmpresa: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { asignado_en: 'asc' },
+    });
+
+    const obras = asignaciones.map((asignacion) => asignacion.obras);
+
+    res.json({
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        activo: usuario.activo,
+      },
+      obraIds: obras.map((obra) => obra.id),
+      obras,
+      cantidadObrasAsignadas: obras.length,
+    });
+  } catch (error) {
+    console.error('Error obteniendo obras de usuario cliente:', error);
+    res.status(500).json({ error: 'Error al obtener obras asignadas' });
+  }
+};
+
+export const actualizarObrasUsuarioCliente = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario = await findUsuarioCliente(id);
+
+    if (!usuario) {
+      res.status(404).json({ error: 'Usuario cliente no encontrado' });
+      return;
+    }
+
+    const parsed = parseObraIdsPayload((req.body as { obraIds?: unknown }).obraIds);
+    if (parsed.error || !parsed.obraIds) {
+      res.status(400).json({ error: parsed.error });
+      return;
+    }
+
+    const { obraIds } = parsed;
+
+    if (obraIds.length > 0) {
+      const obras = await prisma.obra.findMany({
+        where: { id: { in: obraIds } },
+        select: { id: true },
+      });
+      const existentes = new Set(obras.map((obra) => obra.id));
+      const faltantes = obraIds.filter((obraId) => !existentes.has(obraId));
+
+      if (faltantes.length > 0) {
+        res.status(404).json({ error: `Obras no encontradas: ${faltantes.join(', ')}` });
+        return;
+      }
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.usuarios_obras.deleteMany({ where: { usuario_id: id } });
+
+      if (obraIds.length > 0) {
+        await tx.usuarios_obras.createMany({
+          data: obraIds.map((obraId) => ({ usuario_id: id, obra_id: obraId })),
+        });
+      }
+    });
+
+    const asignaciones = await prisma.usuarios_obras.findMany({
+      where: { usuario_id: id },
+      select: {
+        obras: {
+          select: {
+            id: true,
+            nombre: true,
+            codigo: true,
+            estado: true,
+            cliente: true,
+            direccion: true,
+            clienteBeckId: true,
+            clienteBeck: {
+              select: {
+                id: true,
+                rut: true,
+                razonSocial: true,
+                nombreEmpresa: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { asignado_en: 'asc' },
+    });
+
+    const obras = asignaciones.map((asignacion) => asignacion.obras);
+
+    res.json({
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        activo: usuario.activo,
+      },
+      obraIds: obras.map((obra) => obra.id),
+      obras,
+      cantidadObrasAsignadas: obras.length,
+    });
+  } catch (error) {
+    console.error('Error actualizando obras de usuario cliente:', error);
+    res.status(500).json({ error: 'Error al actualizar obras asignadas' });
+  }
+};
+
+export const obtenerVistaClienteUsuario = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario = await findUsuarioCliente(id);
+
+    if (!usuario) {
+      res.status(404).json({ error: 'Usuario cliente no encontrado' });
+      return;
+    }
+
+    const rows = await prisma.configuracionVistaClienteUsuario.findMany({
+      where: { usuarioId: id },
+      select: {
+        clave: true,
+        visible: true,
+        tituloPersonalizado: true,
+        orden: true,
+      },
+    });
+
+    res.json({
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        activo: usuario.activo,
+      },
+      configuracionVista: buildConfiguracionVistaCliente(rows),
+    });
+  } catch (error) {
+    console.error('Error obteniendo configuracion de vista cliente:', error);
+    res.status(500).json({ error: 'Error al obtener configuracion de vista cliente' });
+  }
+};
+
+export const actualizarVistaClienteUsuario = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario = await findUsuarioCliente(id);
+
+    if (!usuario) {
+      res.status(404).json({ error: 'Usuario cliente no encontrado' });
+      return;
+    }
+
+    const parsed = parseVistaClienteItems((req.body as { items?: unknown }).items);
+    if (parsed.error || !parsed.items) {
+      res.status(400).json({ error: parsed.error });
+      return;
+    }
+
+    if (parsed.items.length > 0) {
+      await prisma.$transaction(
+        parsed.items.map((item) =>
+          prisma.configuracionVistaClienteUsuario.upsert({
+            where: {
+              usuarioId_clave: {
+                usuarioId: id,
+                clave: item.clave,
+              },
+            },
+            update: {
+              visible: item.visible,
+              tituloPersonalizado: item.tituloPersonalizado,
+              orden: item.orden,
+            },
+            create: {
+              usuarioId: id,
+              clave: item.clave,
+              visible: item.visible,
+              tituloPersonalizado: item.tituloPersonalizado,
+              orden: item.orden,
+            },
+          })
+        )
+      );
+    }
+
+    const rows = await prisma.configuracionVistaClienteUsuario.findMany({
+      where: { usuarioId: id },
+      select: {
+        clave: true,
+        visible: true,
+        tituloPersonalizado: true,
+        orden: true,
+      },
+    });
+
+    res.json({
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+        activo: usuario.activo,
+      },
+      configuracionVista: buildConfiguracionVistaCliente(rows),
+    });
+  } catch (error) {
+    console.error('Error actualizando configuracion de vista cliente:', error);
+    res.status(500).json({ error: 'Error al actualizar configuracion de vista cliente' });
+  }
+};
+
 export const crearUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -350,11 +705,14 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
     let beckIdFinal: string | undefined;
 
     if (rolFinal === RolUsuario.cliente) {
-      obraIdsFinales = Array.isArray(obraIds)
-        ? obraIds
-            .filter((oid): oid is string => typeof oid === 'string' && oid.trim() !== '')
-            .map(oid => oid.trim())
-        : [];
+      if (obraIds !== undefined) {
+        const parsed = parseObraIdsPayload(obraIds);
+        if (parsed.error || !parsed.obraIds) {
+          res.status(400).json({ error: parsed.error });
+          return;
+        }
+        obraIdsFinales = parsed.obraIds;
+      }
 
       beckIdFinal =
         typeof clienteBeckId === 'string' && clienteBeckId.trim()
@@ -394,7 +752,6 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
       if (rolFinal === RolUsuario.cliente && obraIdsFinales.length > 0) {
         await tx.usuarios_obras.createMany({
           data: obraIdsFinales.map(obra_id => ({ usuario_id: usuario.id, obra_id })),
-          skipDuplicates: true,
         });
       }
 
@@ -509,9 +866,12 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
     let beckIdFinal: string | undefined;
 
     if (sincronizarObras) {
-      obraIdsFinales = obraIds
-        .filter((oid): oid is string => typeof oid === 'string' && oid.trim() !== '')
-        .map(oid => oid.trim());
+      const parsed = parseObraIdsPayload(obraIds);
+      if (parsed.error || !parsed.obraIds) {
+        res.status(400).json({ error: parsed.error });
+        return;
+      }
+      obraIdsFinales = parsed.obraIds;
 
       beckIdFinal =
         typeof clienteBeckId === 'string' && clienteBeckId.trim()
@@ -545,7 +905,6 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
         if (obraIdsFinales.length > 0) {
           await tx.usuarios_obras.createMany({
             data: obraIdsFinales.map(obra_id => ({ usuario_id: id, obra_id })),
-            skipDuplicates: true,
           });
         }
       }

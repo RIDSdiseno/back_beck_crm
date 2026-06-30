@@ -374,8 +374,6 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
             id: true,
             nombre: true,
             codigo: true,
-            rendimientoSellosEsperadoDiario: true,
-            rendimientoReparacionEsperadoDiario: true,
           },
         },
         usuario: {
@@ -445,7 +443,6 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
 
     let query = `
       SELECT rt.*, o.nombre as obra_nombre,
-             o.rendimiento_sellos_esperado_diario, o.rendimiento_reparacion_esperado_diario,
              u.nombre as usuario_nombre,
              ui.nombre as seleccionado_inspeccion_por_nombre
       FROM registros_terreno rt
@@ -1002,7 +999,7 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     const registro = await prisma.registroTerreno.findUnique({
       where: { id },
       include: {
-        obra:           { select: { id: true, nombre: true, codigo: true, rendimientoSellosEsperadoDiario: true, rendimientoReparacionEsperadoDiario: true } },
+        obra:           { select: { id: true, nombre: true, codigo: true } },
         usuario:        { select: { id: true, nombre: true, email: true, rol: true } },
         fotos_registro: { select: { url: true }, orderBy: { created_at: 'asc' } },
       },
@@ -1295,7 +1292,7 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery(
-      `SELECT rt.*, o.nombre as obra_nombre, o.rendimiento_sellos_esperado_diario, o.rendimiento_reparacion_esperado_diario, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre
+      `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
@@ -1449,14 +1446,34 @@ export const rendimientoAcumulado = async (req: Request, res: Response): Promise
         cantidadSellosConFactores: true,
         cantidadSellos: true,
         metrosLineales: true,
-        obra: {
-          select: {
-            rendimientoSellosEsperadoDiario: true,
-            rendimientoReparacionEsperadoDiario: true,
-          },
-        },
+        codigoBeck: true,
       },
     });
+
+    const codigosBeck = Array.from(
+      new Set(
+        registros
+          .map((r) => r.codigoBeck)
+          .filter((c): c is string => typeof c === 'string' && c.trim().length > 0)
+      )
+    );
+
+    const itemizados = await prisma.itemizadoOpcion.findMany({
+      where: {
+        codigoBeck: { in: codigosBeck },
+      },
+      select: {
+        codigoBeck: true,
+        rendimientoSellosEsperadoDiario: true,
+        rendimientoReparacionEsperadoDiario: true,
+      },
+    });
+
+    const rendimientoPorCodigo = new Map(
+      itemizados
+        .filter((i) => i.codigoBeck)
+        .map((i) => [i.codigoBeck!, i])
+    );
 
     const agrupado = new Map<string, {
       totalRegistros: number;
@@ -1465,9 +1482,23 @@ export const rendimientoAcumulado = async (req: Request, res: Response): Promise
     }>();
 
     for (const reg of registros) {
-      const { cantidadEjecutada, rendimientoIndividual } = calcularRendimientoIndividual(
-        reg as unknown as Record<string, unknown>,
-      );
+     const rendimientoItemizado = reg.codigoBeck
+      ? rendimientoPorCodigo.get(reg.codigoBeck)
+      : null;
+
+    const registroConRendimiento = {
+      ...reg,
+      obra: rendimientoItemizado
+        ? { 
+          rendimientoSellosEsperadoDiario: rendimientoItemizado.rendimientoSellosEsperadoDiario,
+          rendimientoReparacionEsperadoDiario: rendimientoItemizado.rendimientoReparacionEsperadoDiario,
+            }
+        : null,
+    };
+
+    const { cantidadEjecutada, rendimientoIndividual } = calcularRendimientoIndividual(
+      registroConRendimiento as unknown as Record<string, unknown>,
+    );
       if (rendimientoIndividual === null) continue;
 
       const sellador = reg.nombreSellador ?? 'Sin asignar';

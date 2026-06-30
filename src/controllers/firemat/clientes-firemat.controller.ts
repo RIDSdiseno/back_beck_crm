@@ -143,6 +143,13 @@ export const cambiarEstadoCliente = async (req: Request, res: Response): Promise
   }
 };
 
+export const eliminarCliente = async (_req: Request, res: Response): Promise<void> => {
+  res.status(405).json({
+    success: false,
+    error: 'La eliminacion de clientes Firemat no esta habilitada.',
+  });
+};
+
 export const importarClientes = async (req: Request, res: Response): Promise<void> => {
   try {
     const file = req.file as Express.Multer.File | undefined;

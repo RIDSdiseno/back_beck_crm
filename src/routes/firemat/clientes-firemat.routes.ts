@@ -6,6 +6,7 @@ import {
   crearCliente,
   actualizarCliente,
   cambiarEstadoCliente,
+  eliminarCliente,
   agregarContacto,
   actualizarContacto,
   cambiarEstadoContacto,
@@ -37,6 +38,7 @@ router.get('/:id/oportunidades', canSee, obtenerOportunidadesCliente);
 router.get('/:id', canSeeOrCotizaciones, obtenerCliente);
 router.put('/:id', canEdit, actualizarCliente);
 router.patch('/:id/estado', canEdit, cambiarEstadoCliente);
+router.delete('/:id', canEdit, eliminarCliente);
 router.post('/:id/contactos', canEdit, agregarContacto);
 
 export default router;

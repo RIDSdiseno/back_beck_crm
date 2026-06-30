@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { authenticate, authorize } from '../../middlewares/auth';
+import { authenticate } from '../../middlewares/auth';
+import { requirePermission } from '../../middlewares/requirePermission';
 import {
   listarUsuariosParametros,
   crearUsuarioParametros,
@@ -17,9 +18,14 @@ router.use((_req: Request, _res: Response, next: NextFunction) => {
 
 router.use(authenticate);
 
-router.get('/', authorize('administrador'), listarUsuariosParametros);
-router.post('/', authorize('administrador'), crearUsuarioParametros);
-router.put('/:id', authorize('administrador'), actualizarUsuarioParametros);
-router.delete('/:id', authorize('administrador'), eliminarUsuarioParametros);
+const methodNotAllowed = (_req: Request, res: Response): void => {
+  res.status(405).json({ success: false, error: 'Metodo no permitido para usuarios y parametros Firemat' });
+};
+
+router.get('/', requirePermission('firemat_usuarios_parametros', 'ver'), listarUsuariosParametros);
+router.post('/', requirePermission('firemat_usuarios_parametros', 'editar'), crearUsuarioParametros);
+router.put('/:id', requirePermission('firemat_usuarios_parametros', 'editar'), actualizarUsuarioParametros);
+router.patch('/:id', requirePermission('firemat_usuarios_parametros', 'editar'), methodNotAllowed);
+router.delete('/:id', requirePermission('firemat_usuarios_parametros', 'editar'), eliminarUsuarioParametros);
 
 export default router;

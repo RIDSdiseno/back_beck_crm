@@ -8,8 +8,7 @@ import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
  *   requirePermission('beck_procesamiento_ingenieria', 'editar')
  *   requirePermission(['beck_registro', 'beck_reportes'], 'ver')  // OR: pasa si tiene cualquiera
  *
- * - Administrador siempre pasa.
- * - Para el resto aplica los permisos efectivos (custom o defaults del rol).
+ * - Aplica los permisos efectivos (custom o defaults del rol).
  * - Cuando se pasa un array de módulos, basta con que el usuario tenga acceso a UNO de ellos.
  */
 export const requirePermission = (modulo: string | string[], accion: 'ver' | 'editar') => {
@@ -18,11 +17,6 @@ export const requirePermission = (modulo: string | string[], accion: 'ver' | 'ed
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!req.userId || !req.userRole) {
       res.status(401).json({ success: false, error: 'No autenticado' });
-      return;
-    }
-
-    if (req.userRole === 'administrador') {
-      next();
       return;
     }
 

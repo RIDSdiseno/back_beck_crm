@@ -230,7 +230,7 @@ export async function deleteFunnelBeckArchivoController(req: Request, res: Respo
 export async function updateFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const { oportunidad, advertencias } = await updateFunnelBeck(id, req.body, req.userId ?? '');
+    const { oportunidad, advertencias } = await updateFunnelBeck(id, req.body, req.userId ?? '', req.userRole ?? undefined);
     return res.status(200).json({
       success: true,
       data: oportunidad,
@@ -253,6 +253,9 @@ export async function updateFunnelBeckController(req: Request, res: Response) {
         puedeAvanzar: false,
         message: 'Faltan campos críticos para avanzar de etapa.',
       });
+    }
+    if (error instanceof Error && (error as NodeJS.ErrnoException & { statusCode?: number }).statusCode === 403) {
+      return res.status(403).json({ success: false, error: error.message });
     }
     return res.status(400).json({
       success: false,
