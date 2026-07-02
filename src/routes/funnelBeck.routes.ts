@@ -11,6 +11,7 @@ import {
   getFunnelBeckByIdController,
   getGanadasSinObraFunnelBeckController,
   getHistorialEtapasBeckController,
+  updateEstadoCierreFunnelBeckController,
   updateEtapaFunnelBeckController,
   updateFunnelBeckController,
   updateObraFunnelBeckController,
@@ -36,6 +37,7 @@ router.get("/:id", authenticate, requirePermission('beck_funnel', 'ver'), getFun
 router.post("/", authenticate, requirePermission('beck_funnel', 'editar'), createFunnelBeckController);
 router.put("/:id", authenticate, requirePermission('beck_funnel', 'editar'), updateFunnelBeckController);
 router.patch("/:id/etapa", authenticate, requirePermission('beck_funnel', 'editar'), updateEtapaFunnelBeckController);
+router.patch("/:id/estado-cierre", authenticate, requirePermission('beck_funnel', 'editar'), updateEstadoCierreFunnelBeckController);
 router.patch("/:id/obra", authenticate, requirePermission('beck_funnel', 'editar'), updateObraFunnelBeckController);
 // DELETE oportunidad: solo administrador por diseño (acción destructiva de alto impacto)
 router.delete("/:id", authenticate, authorize("administrador"), requirePermission('beck_funnel', 'editar'), deleteFunnelBeckController);

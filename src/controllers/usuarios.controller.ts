@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
-import { ROLES_BECK, ROLES_FIREMAT } from '../helpers/roles';
+import { ROLES_BECK, ROLES_FIREMAT, ROLES_EXCLUIDOS_COMERCIALES_BECK } from '../helpers/roles';
 import {
   buildConfiguracionVistaCliente,
   VISTA_CLIENTE_CLAVES,
@@ -310,6 +310,35 @@ export const listarUsuarios = async (req: Request, res: Response): Promise<void>
   } catch (error) {
     console.error('Error listando usuarios:', error);
     res.status(500).json({ error: 'Error al listar usuarios' });
+  }
+};
+
+/**
+ * GET /api/usuarios/comerciales
+ * Usuarios activos habilitados como Vendedor/responsable comercial del Funnel Beck
+ * (administrador, vendedor, ingenieria). Excluye clientes y roles de solo lectura u operativos.
+ */
+export const listarUsuariosComerciales = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      where: {
+        activo: true,
+        rol: { notIn: ROLES_EXCLUIDOS_COMERCIALES_BECK },
+      },
+      select: { id: true, nombre: true, email: true, rol: true },
+      orderBy: { nombre: 'asc' },
+    });
+
+    // Log temporal de diagnóstico — remover una vez confirmado en el ambiente del frontend.
+    console.log(
+      '[usuarios/comerciales] total encontrados:', usuarios.length,
+      '- roles encontrados:', [...new Set(usuarios.map((u) => u.rol))],
+    );
+
+    res.json({ success: true, data: usuarios });
+  } catch (error) {
+    console.error('Error listando usuarios comerciales:', error);
+    res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales.' });
   }
 };
 

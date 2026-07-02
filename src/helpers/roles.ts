@@ -12,6 +12,24 @@ export const ROLES_BECK: RolUsuario[] = [
   RolUsuario.cliente,
 ];
 
+// Roles que NUNCA deben poder figurar como Vendedor/responsable comercial del Funnel Beck:
+// clientes, roles de solo lectura, roles operativos y roles Firemat.
+export const ROLES_EXCLUIDOS_COMERCIALES_BECK: RolUsuario[] = [
+  RolUsuario.cliente,
+  RolUsuario.visualizador,
+  RolUsuario.terreno,
+  RolUsuario.jefeobra,
+  RolUsuario.vendedor_firemat,
+  RolUsuario.bodeguero,
+  RolUsuario.visualizador_firemat,
+];
+
+// Roles Beck habilitados para figurar como Vendedor/responsable comercial del Funnel Beck:
+// cualquier rol que no esté explícitamente excluido arriba (hoy: administrador, vendedor, ingenieria).
+export const ROLES_COMERCIALES_BECK: RolUsuario[] = Object.values(RolUsuario).filter(
+  (rol) => !ROLES_EXCLUIDOS_COMERCIALES_BECK.includes(rol),
+);
+
 export const ROLES_FIREMAT: RolUsuario[] = [
   RolUsuario.administrador,
   RolUsuario.vendedor_firemat,

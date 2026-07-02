@@ -349,6 +349,46 @@ function validarEtapaYCierre(params: {
   }
 }
 
+/**
+ * "Perdida" y "Postergada" son estadoCierre, no etapas del kanban: la tarjeta debe
+ * permanecer en la etapa donde estaba. Esta función intercepta payloads (propios de
+ * flujos antiguos del frontend) que intentan mover la etapa a "cerrada" o a un literal
+ * inválido ("perdida"/"postergada") junto con un cierre no ganado, y fuerza a mantener
+ * la etapa previa de la oportunidad.
+ */
+function resolverEtapaAlCerrar(params: {
+  etapaSolicitada: string | undefined;
+  estadoCierreSolicitado: EstadoCierreFunnel | undefined;
+  etapaActual: EtapaFunnelBeck;
+}): { etapa: EtapaFunnelBeck; estadoCierre: EstadoCierreFunnel | undefined } {
+  const { etapaActual } = params;
+  let etapaSolicitada = params.etapaSolicitada;
+  let estadoCierreSolicitado = params.estadoCierreSolicitado;
+  let etapaInvalida = false;
+
+  // Compatibilidad: frontend/legacy enviando literalmente etapa "perdida"/"postergada"
+  // (valor inválido para el enum EtapaFunnelBeck) en vez de estadoCierre.
+  if (etapaSolicitada === "perdida" || etapaSolicitada === "postergada") {
+    if (!estadoCierreSolicitado) {
+      estadoCierreSolicitado = etapaSolicitada as EstadoCierreFunnel;
+    }
+    etapaInvalida = true;
+  }
+
+  const cierreNoGanado = estadoCierreSolicitado === "perdida" || estadoCierreSolicitado === "postergada";
+
+  // Si se pide cerrar como perdida/postergada, la etapa NO debe moverse a "cerrada":
+  // se mantiene la etapa donde estaba la oportunidad.
+  const debeMantenerEtapaActual =
+    etapaInvalida || (cierreNoGanado && (etapaSolicitada === undefined || etapaSolicitada === "cerrada"));
+
+  if (debeMantenerEtapaActual) {
+    return { etapa: etapaActual, estadoCierre: estadoCierreSolicitado };
+  }
+
+  return { etapa: (etapaSolicitada ?? etapaActual) as EtapaFunnelBeck, estadoCierre: estadoCierreSolicitado };
+}
+
 function validarOportunidadActiva(params: {
   etapa: EtapaFunnelBeck;
   estadoCierre?: EstadoCierreFunnel | null;
@@ -729,11 +769,65 @@ const FUNNEL_BECK_INCLUDE_WITH_ARCHIVOS = {
   },
 } as const;
 
+const ETAPAS_TABLERO_VALIDAS = new Set<string>([
+  "prospecto_identificado",
+  "visita_levantamiento",
+  "cotizacion_elaborada",
+  "cotizacion_enviada",
+  "en_negociacion",
+  "documentacion_venta",
+]);
+
+/**
+ * Compatibilidad con datos anteriores a este cambio: hasta ahora, cerrar como
+ * perdida/postergada movía la etapa a "cerrada" (perdiendo la etapa real donde
+ * estaba la tarjeta). Para esas oportunidades ya guardadas, se reconstruye la
+ * última etapa real desde el historial (o etapaPerdida, o un valor por defecto)
+ * y se expone como "etapaTablero" sin tocar la columna "etapa" original.
+ */
+async function resolverEtapasTablero<
+  T extends { id: string; etapa: string; estadoCierre: string | null; etapaPerdida: string | null },
+>(oportunidades: T[]): Promise<(T & { etapaTablero: string })[]> {
+  const necesitanFallback = oportunidades.filter(
+    (o) => o.etapa === "cerrada" && (o.estadoCierre === "perdida" || o.estadoCierre === "postergada"),
+  );
+
+  const ultimaEtapaRealPorOportunidad = new Map<string, string>();
+
+  if (necesitanFallback.length > 0) {
+    const historial = await prisma.historialEtapaBeck.findMany({
+      where: {
+        oportunidadId: { in: necesitanFallback.map((o) => o.id) },
+        etapaNueva: { not: "cerrada" },
+      },
+      orderBy: { createdAt: "desc" },
+      select: { oportunidadId: true, etapaNueva: true },
+    });
+    for (const h of historial) {
+      if (!ultimaEtapaRealPorOportunidad.has(h.oportunidadId) && ETAPAS_TABLERO_VALIDAS.has(h.etapaNueva)) {
+        ultimaEtapaRealPorOportunidad.set(h.oportunidadId, h.etapaNueva);
+      }
+    }
+  }
+
+  return oportunidades.map((o) => {
+    if (o.etapa !== "cerrada" || (o.estadoCierre !== "perdida" && o.estadoCierre !== "postergada")) {
+      return { ...o, etapaTablero: o.etapa };
+    }
+    const etapaTablero =
+      ultimaEtapaRealPorOportunidad.get(o.id)
+      ?? (o.etapaPerdida && ETAPAS_TABLERO_VALIDAS.has(o.etapaPerdida) ? o.etapaPerdida : null)
+      ?? "prospecto_identificado";
+    return { ...o, etapaTablero };
+  });
+}
+
 export async function getAllFunnelBeck() {
-  return prisma.operadorBeck.findMany({
+  const oportunidades = await prisma.operadorBeck.findMany({
     orderBy: { createdAt: "desc" },
     include: FUNNEL_BECK_INCLUDE,
   });
+  return resolverEtapasTablero(oportunidades);
 }
 
 export async function getFunnelBeckById(id: string) {
@@ -744,7 +838,8 @@ export async function getFunnelBeckById(id: string) {
 
   if (!oportunidad) throw new Error("Oportunidad no encontrada.");
 
-  return oportunidad;
+  const [conEtapaTablero] = await resolverEtapasTablero([oportunidad]);
+  return conEtapaTablero;
 }
 
 export async function getGanadasSinObraFunnelBeck() {
@@ -889,10 +984,18 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
   const valorOriginal = data.valorOriginal !== undefined
     ? toNumber(data.valorOriginal) : Number(existente.valorOriginal);
   const { valorClp, valorUf } = calcularValores(valorOriginal, monedaOriginal);
-  const etapa = data.etapa ?? existente.etapa;
-  const estadoCierre = data.estadoCierre !== undefined ? data.estadoCierre : existente.estadoCierre;
+  const resueltoCierre = resolverEtapaAlCerrar({
+    etapaSolicitada: data.etapa,
+    estadoCierreSolicitado: data.estadoCierre !== undefined ? data.estadoCierre : existente.estadoCierre ?? undefined,
+    etapaActual: existente.etapa,
+  });
+  const etapa = resueltoCierre.etapa;
+  const estadoCierre = resueltoCierre.estadoCierre;
   const motivoPerdida = data.motivoPerdida !== undefined
     ? optStr(data.motivoPerdida) : existente.motivoPerdida;
+  if (estadoCierre === "perdida" && data.etapaPerdida === undefined && !existente.etapaPerdida) {
+    data.etapaPerdida = formatEtapa(existente.etapa);
+  }
 
   if (!nombreProyecto) throw new Error("El nombre del proyecto es obligatorio.");
   if (!empresa) throw new Error("La empresa es obligatoria.");
@@ -1183,6 +1286,18 @@ export async function updateEtapaFunnelBeck(
 
   if (!payload.etapa) throw new Error("La etapa es obligatoria.");
 
+  const resuelto = resolverEtapaAlCerrar({
+    etapaSolicitada: payload.etapa,
+    estadoCierreSolicitado: payload.estadoCierre,
+    etapaActual: existente.etapa,
+  });
+  payload.etapa = resuelto.etapa;
+  payload.estadoCierre = resuelto.estadoCierre;
+  // Si se cierra como perdida y no se indicó explícitamente, dejamos registro de en qué etapa se perdió.
+  if (resuelto.estadoCierre === "perdida" && payload.etapaPerdida === undefined && !existente.etapaPerdida) {
+    payload.etapaPerdida = formatEtapa(existente.etapa);
+  }
+
   validarEtapaYCierre({
     etapa: payload.etapa,
     estadoCierre: payload.estadoCierre,
@@ -1313,6 +1428,117 @@ export async function updateEtapaFunnelBeck(
   }
 
   return { oportunidad, advertencias: advertenciasValidacion };
+}
+
+function pickField(raw: Record<string, unknown>, camel: string, snake: string): unknown {
+  return raw[camel] !== undefined ? raw[camel] : raw[snake];
+}
+
+function normalizarEstadoCierreInput(raw: unknown): EstadoCierreFunnel {
+  const valor = String(raw ?? "").trim().toLowerCase();
+  if (valor === "ganada" || valor === "perdida" || valor === "postergada") {
+    return valor as EstadoCierreFunnel;
+  }
+  throw new Error('El campo estadoCierre debe ser "GANADA", "PERDIDA" o "POSTERGADA".');
+}
+
+/**
+ * Marca una oportunidad como PERDIDA o POSTERGADA sin mover su etapa: la tarjeta
+ * permanece en la etapa donde estaba (ver resolverEtapaAlCerrar). Para GANADA se debe
+ * usar PATCH /:id/etapa o PUT /:id, que sí exigen los campos de cierre ganado
+ * (monto final, documento de respaldo, flujo posterior).
+ */
+export async function updateEstadoCierreFunnelBeck(
+  id: string,
+  rawPayload: Record<string, unknown>,
+  userId: string,
+) {
+  const existente = await prisma.operadorBeck.findUnique({ where: { id } });
+  if (!existente) throw new Error("Oportunidad no encontrada.");
+
+  const estadoCierre = normalizarEstadoCierreInput(pickField(rawPayload, "estadoCierre", "estado_cierre"));
+
+  if (estadoCierre === "ganada") {
+    throw new Error(
+      "Para marcar una oportunidad como ganada usa PATCH /:id/etapa o PUT /:id.",
+    );
+  }
+
+  const motivoCierreGenerico = optStr(pickField(rawPayload, "motivoCierre", "motivo_cierre"));
+  const observacionCierreInput = pickField(rawPayload, "observacionCierre", "observacion_cierre");
+  const fechaCierreInput = pickField(rawPayload, "fechaCierre", "fecha_cierre");
+  const fechaProximaAccionInput = pickField(rawPayload, "fechaProximaAccion", "fecha_proxima_accion");
+  const fechaReactivacionInput =
+    pickField(rawPayload, "fechaReactivacion", "fecha_reactivacion") ?? fechaProximaAccionInput;
+
+  const motivoPerdida = estadoCierre === "perdida"
+    ? optStr(pickField(rawPayload, "motivoPerdida", "motivo_perdida")) ?? motivoCierreGenerico
+    : existente.motivoPerdida;
+  const motivoPostergacion = estadoCierre === "postergada"
+    ? optStr(pickField(rawPayload, "motivoPostergacion", "motivo_postergacion")) ?? motivoCierreGenerico
+    : existente.motivoPostergacion;
+
+  validarEtapaYCierre({
+    etapa: existente.etapa,
+    estadoCierre,
+    motivoPerdida: motivoPerdida ?? undefined,
+    motivoPostergacion: motivoPostergacion ?? undefined,
+    fechaReactivacion: fechaReactivacionInput !== undefined
+      ? String(fechaReactivacionInput)
+      : existente.fechaReactivacion
+        ? existente.fechaReactivacion.toISOString()
+        : undefined,
+    montoFinalGanado: existente.montoFinalGanado,
+    fechaCierre: existente.fechaCierre ? existente.fechaCierre.toISOString() : undefined,
+    documentoRespaldo: existente.documentoRespaldo ?? undefined,
+    flujoPosterior: existente.flujoPosterior ?? undefined,
+  });
+
+  const etapaPerdida = estadoCierre === "perdida"
+    ? optStr(pickField(rawPayload, "etapaPerdida", "etapa_perdida"))
+      ?? existente.etapaPerdida
+      ?? formatEtapa(existente.etapa)
+    : existente.etapaPerdida;
+
+  const cierreCambio = estadoCierre !== existente.estadoCierre;
+  const motivoCierreFinal = estadoCierre === "perdida" ? motivoPerdida : motivoPostergacion;
+
+  const oportunidad = await prisma.operadorBeck.update({
+    where: { id },
+    data: {
+      // La etapa NO se toca: la oportunidad permanece donde estaba.
+      estadoCierre,
+      motivoPerdida,
+      motivoPostergacion,
+      etapaPerdida,
+      observacionCierre: observacionCierreInput !== undefined
+        ? optStr(observacionCierreInput)
+        : existente.observacionCierre,
+      fechaCierre: fechaCierreInput !== undefined
+        ? parseOptionalDate(fechaCierreInput)
+        : existente.fechaCierre ?? new Date(),
+      fechaReactivacion: fechaReactivacionInput !== undefined
+        ? parseOptionalDate(fechaReactivacionInput)
+        : existente.fechaReactivacion,
+      ...(fechaProximaAccionInput !== undefined && {
+        fechaProximaAccion: parseOptionalDate(fechaProximaAccionInput),
+      }),
+    },
+    include: FUNNEL_BECK_INCLUDE,
+  });
+
+  if (cierreCambio) {
+    await registrarMovimientoCRM({
+      usuarioId: userId,
+      modulo: "FUNNEL",
+      tipo: "OPORTUNIDAD_EDITADA",
+      entidadId: oportunidad.id,
+      descripcion: `Se marcó ${oportunidad.nombreProyecto} como ${estadoCierre.toUpperCase()}, manteniendo la etapa ${formatEtapa(existente.etapa)}`,
+      datos: { estadoCierre, motivoCierre: motivoCierreFinal, etapa: existente.etapa },
+    });
+  }
+
+  return oportunidad;
 }
 
 export async function getHistorialEtapasBeck(id: string) {

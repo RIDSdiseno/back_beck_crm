@@ -348,6 +348,7 @@ model OperadorBeck {
   fechaReactivacion                   DateTime?                 @map("fecha_reactivacion") @db.Date
   flujoPosterior                      String?                   @map("flujo_posterior")
   motivoPostergacion                  String?                   @map("motivo_postergacion")
+  observacionCierre                   String?                   @map("observacion_cierre")
   necesidadDetectada                  String?                   @map("necesidad_detectada")
   nivelInteres                        String?                   @map("nivel_interes") @db.VarChar(50)
   nombreContacto                      String?                   @map("nombre_contacto") @db.VarChar(255)

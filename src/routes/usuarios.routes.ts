@@ -3,6 +3,7 @@ import { authenticate, authorize } from '../middlewares/auth';
 import { requirePermission } from '../middlewares/requirePermission';
 import {
   listarUsuarios,
+  listarUsuariosComerciales,
   obtenerUsuario,
   obtenerObrasUsuarioCliente,
   obtenerVistaClienteUsuario,
@@ -23,6 +24,8 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', requirePermission('beck_usuarios_parametros', 'ver'), listarUsuarios);
+// Alimenta el desplegable de Vendedor/responsable comercial del Funnel Beck.
+router.get('/comerciales', requirePermission('beck_funnel', 'ver'), listarUsuariosComerciales);
 router.post('/', requirePermission('beck_usuarios_parametros', 'editar'), crearUsuario);
 router.patch('/:id/password', requirePermission('beck_usuarios_parametros', 'editar'), cambiarPassword);
 // Gestión de permisos individuales: solo administrador por diseño del sistema

@@ -10,6 +10,7 @@ import {
   getFunnelBeckById,
   getGanadasSinObraFunnelBeck,
   getHistorialEtapasBeck,
+  updateEstadoCierreFunnelBeck,
   updateEtapaFunnelBeck,
   updateFunnelBeck,
   updateObraFunnelBeck,
@@ -294,6 +295,32 @@ export async function updateEtapaFunnelBeckController(req: Request, res: Respons
     return res.status(400).json({
       success: false,
       error: error instanceof Error ? error.message : "Error al actualizar etapa.",
+    });
+  }
+}
+
+export async function updateEstadoCierreFunnelBeckController(req: Request, res: Response) {
+  try {
+    const id = req.params.id as string;
+    const oportunidad = await updateEstadoCierreFunnelBeck(id, req.body, req.userId ?? '');
+    return res.status(200).json({
+      success: true,
+      data: oportunidad,
+      message: "Estado de cierre actualizado correctamente.",
+    });
+  } catch (error) {
+    if (error instanceof MotivoInvalidoError) {
+      return res.status(400).json({
+        success: false,
+        error: "Motivo inválido",
+        detalles: error.detalles,
+      });
+    }
+    const message = error instanceof Error ? error.message : "Error al actualizar el estado de cierre.";
+    const statusCode = message === "Oportunidad no encontrada." ? 404 : 400;
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
     });
   }
 }
