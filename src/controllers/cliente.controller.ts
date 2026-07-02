@@ -496,15 +496,21 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
     });
 
     const configuracionCampos = await obtenerConfiguracionCampos('cliente', obraId);
+    const columnasConfigurables = configuracionCampos
+      .filter(campo => campo.visible)
+      .map(({ campo, label, configurable }) => ({ campo, label, configurable }));
+    const columnasFijas = [
+      { campo: 'estado', label: 'Estado', configurable: false },
+      { campo: 'acciones', label: 'Acciones', configurable: false },
+    ];
 
     res.json({
       success: true,
       data,
       configuracionCampos,
-      columnasFijas: [
-        { campo: 'estado', label: 'Estado', configurable: false },
-        { campo: 'acciones', label: 'Acciones', configurable: false },
-      ],
+      columnasConfigurables,
+      columnasFijas,
+      columnas: [...columnasConfigurables, ...columnasFijas],
     });
   } catch (error) {
     console.error('Error getRegistrosObra:', error);

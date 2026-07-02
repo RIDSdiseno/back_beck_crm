@@ -32,6 +32,21 @@ interface ConfiguracionRow {
   visible: boolean;
 }
 
+const ALIAS_CAMPO_CONFIGURACION: Record<string, string> = {
+  codigo_beck: 'codigoBeck',
+  itemizado_beck: 'itemizadoBeck',
+  itemizado_mandante: 'itemizadoMandante',
+  fecha_ejecucion_sello: 'fechaEjecucionSello',
+  dia_semana: 'diaSemana',
+  nombre_sellador: 'nombreSellador',
+  numero_sello: 'numeroSello',
+  cantidad_sellos: 'cantidadSellos',
+};
+
+function normalizarCampoConfiguracion(campo: string): string {
+  return ALIAS_CAMPO_CONFIGURACION[campo] ?? campo;
+}
+
 function obtenerCatalogoRol(rol: RolCampo) {
   return CAMPOS_REGISTRO_POR_ROL[rol];
 }
@@ -71,6 +86,7 @@ export async function obtenerConfiguracionCampos(
 
   const dbMap = new Map(
     dbConfigs
+      .map(c => ({ ...c, campo: normalizarCampoConfiguracion(c.campo) }))
       .filter(c => camposCatalogo.has(c.campo))
       .map(c => [c.campo, c.visible]),
   );
@@ -132,17 +148,19 @@ export async function actualizarConfiguracionCampos(
   const rolesValidos = new Set(ROLES_CON_RESTRICCIONES);
 
   const validUpdates = updates.filter((u) => {
+    const campo = normalizarCampoConfiguracion(u.campo);
     if (!rolesValidos.has(u.rol)) return false;
-    return CAMPOS_POR_COLOR_POR_ROL[u.rol].azul.includes(u.campo);
+    return CAMPOS_POR_COLOR_POR_ROL[u.rol].azul.includes(campo);
   });
 
   for (const u of validUpdates) {
+    const campo = normalizarCampoConfiguracion(u.campo);
     await prisma.configuracionCamposRegistro.upsert({
       where: {
         obraId_rol_campo: {
           obraId: u.obraId,
           rol: u.rol,
-          campo: u.campo,
+          campo,
         },
       },
       update: {
@@ -152,7 +170,7 @@ export async function actualizarConfiguracionCampos(
       create: {
         obraId: u.obraId,
         rol: u.rol,
-        campo: u.campo,
+        campo,
         visible: u.visible,
         updatedByUserId: updatedByUserId || null,
       },
@@ -210,7 +228,7 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
   const cantidadSellos = toNumber(getValue(registro, 'cantidadSellos', 'cantidad_sellos'));
   const holgura = toNumber(getValue(registro, 'holgura'));
   const factorHolguras = toNumber(
-    getValue(registro, 'factorHolguras', 'factor_holguras', 'factor_por_holguras')
+    getValue(registro, 'factorPorHolguras', 'factorHolguras', 'factor_holguras', 'factor_por_holguras')
   );
   const cantidadSellosConFactores = cantidadSellos !== null && factorHolguras !== null
     ? cantidadSellos * factorHolguras
