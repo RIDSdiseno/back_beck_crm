@@ -1304,7 +1304,11 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        ORDER BY rt.created_at ASC`
     );
 
-    res.json(result.rows.map((row) => ({ ...row, ...calcularRendimientoIndividual(row) })));
+    res.json(result.rows.map((row) => ({
+      ...row,
+      ...calcularRendimientoIndividual(row),
+      inspeccionEstado: row.inspeccion_estado,
+    })));
   } catch (error) {
     console.error('Error al listar pendientes:', error);
     res.status(500).json({ error: 'Error al listar pendientes' });
@@ -1877,24 +1881,26 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
     });
 
     res.json({
-      estado: registro.inspeccionEstado,
-      enviadoA: {
-        fecha: registro.fechaSeleccionInspeccion,
-        por: registro.seleccionadoInspeccionPor,
-      },
-      inspeccion: control
-        ? {
-            supervisor: control.ingeniero,
-            fecha: control.fecha,
-            resultado: control.conformidad,
-            observaciones: control.observacion,
-            fotos: [control.fotoInspeccionUrl, control.fotoNoConformidadUrl].filter(
-              (url): url is string => Boolean(url),
-            ),
-            ensayo: control.ensayo,
-            checklist: control.parametros,
-          }
-        : null,
+      inspeccionEstado: registro.inspeccionEstado,
+      seleccionadoParaInspeccion: registro.seleccionadoParaInspeccion,
+      seleccionadoInspeccionPorId: registro.seleccionadoInspeccionPor?.id ?? null,
+      seleccionadoInspeccionPor: registro.seleccionadoInspeccionPor,
+      fechaSeleccionInspeccion: registro.fechaSeleccionInspeccion,
+      supervisorInspeccionId: control?.ingeniero?.id ?? null,
+      supervisorInspeccion: control?.ingeniero ?? null,
+      fechaInspeccion: control?.fecha ?? null,
+      conformidad: control?.conformidad ?? null,
+      observacion: control?.observacion ?? null,
+      observaciones: control?.observacion ?? null,
+      ensayo: control?.ensayo ?? null,
+      fotoInspeccionUrl: control?.fotoInspeccionUrl ?? null,
+      fotoNoConformidadUrl: control?.fotoNoConformidadUrl ?? null,
+      fotos: control
+        ? [control.fotoInspeccionUrl, control.fotoNoConformidadUrl].filter(
+            (url): url is string => Boolean(url),
+          )
+        : [],
+      parametros: control?.parametros ?? null,
     });
   } catch (error) {
     console.error('Error al obtener detalle de inspección:', error);
