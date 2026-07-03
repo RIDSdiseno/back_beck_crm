@@ -5,7 +5,7 @@ import path from 'path';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
-import { EstadoConformidadInspeccion, EstadoRegistroTerreno, Prisma, ResultadoParametroInspeccion } from '@prisma/client';
+import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoValidacionObra, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
@@ -1284,8 +1284,11 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
 
 /**
  * GET /api/registros/pendientes
- * Retorna TODOS los registros de terreno (todos los estados) para que Ingeniería
+ * Retorna los registros de terreno YA VALIDADOS por Jefe de Obra/Supervisor
+ * (estadoValidacionObra = validado), en todos sus estados de Procesamiento
+ * Ingeniería (pendiente/en_revision/validado/rechazado), para que Ingeniería
  * pueda calcular KPIs correctos en el cliente.
+ * - Registros con validación de obra pendiente o rechazada NUNCA aparecen aquí.
  * - El frontend filtra la tabla a pendiente/en_revision client-side.
  * - El frontend calcula los contadores de todos los estados desde esta misma respuesta.
  */
@@ -1297,6 +1300,7 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
        LEFT JOIN usuarios ui ON rt.seleccionado_inspeccion_por_id = ui.id
+       WHERE rt.estado_validacion_obra = 'validado'
        ORDER BY rt.created_at ASC`
     );
 
@@ -1311,12 +1315,14 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
  * GET /api/registros/resumen
  * Devuelve conteos por estado para el módulo de Procesamiento Ingeniería.
  * Endpoint dedicado para KPIs — no depende del listado filtrado.
+ * Solo considera registros validados por Jefe de Obra/Supervisor.
  */
 export const getResumenRegistros = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery<{ estado: string; cantidad: string }>(
       `SELECT estado, COUNT(*) AS cantidad
        FROM registros_terreno
+       WHERE estado_validacion_obra = 'validado'
        GROUP BY estado`
     );
 
@@ -1365,6 +1371,13 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    if (existente.estadoValidacionObra !== EstadoValidacionObra.validado) {
+      res.status(400).json({
+        error: 'El registro aún no ha sido validado por Jefe de Obra/Supervisor. No puede ingresar a Procesamiento Ingeniería.',
+      });
+      return;
+    }
+
     const registro = await prisma.registroTerreno.update({
       where: { id },
       data: {
@@ -1388,6 +1401,80 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Error al iniciar revisión:', error);
     res.status(500).json({ error: 'Error al iniciar revisión del registro' });
+  }
+};
+
+/**
+ * PATCH /api/registros/:id/validacion-obra
+ * Jefe de Obra/Supervisor valida o rechaza un registro creado por Terreno.
+ * - Solo roles administrador y jefeobra pueden ejecutar esta acción.
+ * - Solo aplica sobre registros con estadoValidacionObra = pendiente.
+ * - Es el único paso que habilita el ingreso del registro a Procesamiento Ingeniería.
+ * Body: { estadoValidacionObra: 'validado' | 'rechazado', motivo? }
+ */
+export const actualizarValidacionObra = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario_id = req.userId;
+    const rol = req.userRole;
+
+    if (rol !== RolUsuario.administrador && rol !== RolUsuario.jefeobra) {
+      res.status(403).json({ error: 'Solo Jefe de Obra/Supervisor puede validar registros de terreno' });
+      return;
+    }
+
+    const { estadoValidacionObra, motivo } = req.body as {
+      estadoValidacionObra?: string;
+      motivo?: string;
+    };
+    const motivoRechazoObra: string | undefined =
+      typeof motivo === 'string' ? motivo
+      : typeof req.body.motivoRechazoObra === 'string' ? req.body.motivoRechazoObra
+      : undefined;
+
+    if (
+      estadoValidacionObra !== EstadoValidacionObra.validado &&
+      estadoValidacionObra !== EstadoValidacionObra.rechazado
+    ) {
+      res.status(400).json({ error: 'estadoValidacionObra inválido. Debe ser: validado o rechazado' });
+      return;
+    }
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (existente.estadoValidacionObra !== EstadoValidacionObra.pendiente) {
+      res.status(400).json({
+        error: `Este registro ya fue ${existente.estadoValidacionObra} por obra. No se puede volver a validar.`,
+      });
+      return;
+    }
+
+    if (estadoValidacionObra === EstadoValidacionObra.rechazado && !motivoRechazoObra?.trim()) {
+      res.status(400).json({ error: 'motivo es obligatorio al rechazar un registro' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: {
+        estadoValidacionObra: estadoValidacionObra as EstadoValidacionObra,
+        validacionObraPorId:  usuario_id ?? null,
+        validacionObraAt:     new Date(),
+        motivoRechazoObra:
+          estadoValidacionObra === EstadoValidacionObra.rechazado ? motivoRechazoObra!.trim() : null,
+      },
+    });
+
+    const [withCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
+    res.json(withItemizado);
+  } catch (error) {
+    console.error('Error al validar registro por obra:', error);
+    res.status(500).json({ error: 'Error al validar el registro' });
   }
 };
 
@@ -1528,7 +1615,9 @@ export const rendimientoAcumulado = async (req: Request, res: Response): Promise
 
 /**
  * PATCH /api/registros/:id/inspeccion
- * Marca o desmarca un registro para inspección.
+ * Acción exclusiva de la web: enviar un registro a inspección, o quitarlo de la cola
+ * mientras aún no haya sido inspeccionado. El control de inspección en sí (registrar
+ * resultado, checklist, fotos) lo hace el Supervisor desde la app — ver crearControlInspeccion.
  * Body: { seleccionadoParaInspeccion: boolean }
  */
 export const marcarInspeccion = async (req: Request, res: Response): Promise<void> => {
@@ -1547,6 +1636,26 @@ export const marcarInspeccion = async (req: Request, res: Response): Promise<voi
       return;
     }
 
+    if (seleccionadoParaInspeccion) {
+      if (existente.inspeccionEstado !== EstadoInspeccion.no_enviado) {
+        res.status(400).json({
+          error: existente.inspeccionEstado === EstadoInspeccion.inspeccionado
+            ? 'Este registro ya fue inspeccionado.'
+            : 'Este registro ya fue enviado a inspección.',
+        });
+        return;
+      }
+    } else {
+      if (existente.inspeccionEstado === EstadoInspeccion.inspeccionado) {
+        res.status(400).json({ error: 'No se puede quitar de inspección un registro ya inspeccionado.' });
+        return;
+      }
+      if (existente.inspeccionEstado === EstadoInspeccion.no_enviado) {
+        res.status(400).json({ error: 'Este registro no ha sido enviado a inspección.' });
+        return;
+      }
+    }
+
     const registro = await prisma.registroTerreno.update({
       where: { id },
       data: seleccionadoParaInspeccion
@@ -1554,11 +1663,13 @@ export const marcarInspeccion = async (req: Request, res: Response): Promise<voi
             seleccionadoParaInspeccion: true,
             fechaSeleccionInspeccion: new Date(),
             seleccionadoInspeccionPorId: req.userId,
+            inspeccionEstado: EstadoInspeccion.en_inspeccion,
           }
         : {
             seleccionadoParaInspeccion: false,
             fechaSeleccionInspeccion: null,
             seleccionadoInspeccionPorId: null,
+            inspeccionEstado: EstadoInspeccion.no_enviado,
           },
       include: {
         seleccionadoInspeccionPor: { select: { id: true, nombre: true } },
@@ -1608,12 +1719,23 @@ export const getControlInspeccion = async (req: Request, res: Response): Promise
 
 /**
  * POST /api/registros/:id/control-inspeccion
- * Crea un control de inspección para el registro.
+ * Registra el resultado del control de inspección de un registro.
+ * Endpoint pensado para la app del Supervisor — NO para la web. Solo lo puede ejecutar
+ * el Supervisor (rol jefeobra) o un administrador; la web únicamente envía/quita de la
+ * cola de inspección (ver marcarInspeccion) y luego puede consultar el resultado en
+ * GET /api/registros/:id/inspeccion, sin poder controlar la inspección.
  * Body: { fecha, ensayo, observacion?, conformidad?, fotoInspeccionUrl?, fotoNoConformidadUrl?, parametros? }
  */
 export const crearControlInspeccion = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
+    const rol = req.userRole;
+
+    if (rol !== RolUsuario.administrador && rol !== RolUsuario.jefeobra) {
+      res.status(403).json({ error: 'Solo el Supervisor puede registrar el control de inspección.' });
+      return;
+    }
+
     const {
       fecha,
       ensayo,
@@ -1652,6 +1774,15 @@ export const crearControlInspeccion = async (req: Request, res: Response): Promi
       return;
     }
 
+    if (registro.inspeccionEstado === EstadoInspeccion.inspeccionado) {
+      res.status(400).json({ error: 'Este registro ya fue inspeccionado.' });
+      return;
+    }
+    if (registro.inspeccionEstado === EstadoInspeccion.no_enviado) {
+      res.status(400).json({ error: 'Este registro no ha sido enviado a inspección.' });
+      return;
+    }
+
     const conformidadesValidas: string[] = Object.values(EstadoConformidadInspeccion);
     if (conformidad !== undefined && conformidad !== null && !conformidadesValidas.includes(conformidad)) {
       res.status(400).json({ error: 'conformidad debe ser: conforme o no_conforme' });
@@ -1669,36 +1800,104 @@ export const crearControlInspeccion = async (req: Request, res: Response): Promi
       }
     }
 
-    const control = await prisma.controlInspeccion.create({
-      data: {
-        registroTerrenoId: id,
-        ingenieroId: req.userId!,
-        fecha: new Date(fecha),
-        ensayo: ensayo.trim(),
-        observacion: observacion ?? null,
-        conformidad: conformidad ? (conformidad as EstadoConformidadInspeccion) : null,
-        fotoInspeccionUrl: fotoInspeccionUrl ?? null,
-        fotoNoConformidadUrl: fotoNoConformidadUrl ?? null,
-        parametros: parametrosArr.length > 0
-          ? {
-              create: parametrosArr.map((p, idx) => ({
-                orden: typeof p.orden === 'number' ? p.orden : idx + 1,
-                parametro: String(p.parametro).trim(),
-                resultado: p.resultado as ResultadoParametroInspeccion,
-                observacion: p.observacion ?? null,
-              })),
-            }
-          : undefined,
+    const [control] = await prisma.$transaction([
+      prisma.controlInspeccion.create({
+        data: {
+          registroTerrenoId: id,
+          ingenieroId: req.userId!,
+          fecha: new Date(fecha),
+          ensayo: ensayo.trim(),
+          observacion: observacion ?? null,
+          conformidad: conformidad ? (conformidad as EstadoConformidadInspeccion) : null,
+          fotoInspeccionUrl: fotoInspeccionUrl ?? null,
+          fotoNoConformidadUrl: fotoNoConformidadUrl ?? null,
+          parametros: parametrosArr.length > 0
+            ? {
+                create: parametrosArr.map((p, idx) => ({
+                  orden: typeof p.orden === 'number' ? p.orden : idx + 1,
+                  parametro: String(p.parametro).trim(),
+                  resultado: p.resultado as ResultadoParametroInspeccion,
+                  observacion: p.observacion ?? null,
+                })),
+              }
+            : undefined,
+        },
+        include: {
+          ingeniero: { select: { id: true, nombre: true, email: true } },
+          parametros: { orderBy: { orden: 'asc' } },
+        },
+      }),
+      prisma.registroTerreno.update({
+        where: { id },
+        data: { inspeccionEstado: EstadoInspeccion.inspeccionado },
+      }),
+    ]);
+
+    res.status(201).json(control);
+  } catch (error) {
+    console.error('Error al crear control de inspección:', error);
+    res.status(500).json({ error: 'Error al crear control de inspección' });
+  }
+};
+
+/**
+ * GET /api/registros/:id/inspeccion
+ * Detalle de inspección para la web: estado del flujo, quién y cuándo se envió,
+ * y —si ya fue inspeccionado por el Supervisor desde la app— el resultado completo
+ * (supervisor, fecha, resultado, observaciones, fotos y checklist). Solo lectura:
+ * la web nunca controla la inspección desde aquí.
+ */
+export const verDetalleInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+
+    const registro = await prisma.registroTerreno.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        inspeccionEstado: true,
+        seleccionadoParaInspeccion: true,
+        fechaSeleccionInspeccion: true,
+        seleccionadoInspeccionPor: { select: { id: true, nombre: true, email: true } },
       },
+    });
+
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const control = await prisma.controlInspeccion.findFirst({
+      where: { registroTerrenoId: id },
+      orderBy: { fecha: 'desc' },
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
         parametros: { orderBy: { orden: 'asc' } },
       },
     });
 
-    res.status(201).json(control);
+    res.json({
+      estado: registro.inspeccionEstado,
+      enviadoA: {
+        fecha: registro.fechaSeleccionInspeccion,
+        por: registro.seleccionadoInspeccionPor,
+      },
+      inspeccion: control
+        ? {
+            supervisor: control.ingeniero,
+            fecha: control.fecha,
+            resultado: control.conformidad,
+            observaciones: control.observacion,
+            fotos: [control.fotoInspeccionUrl, control.fotoNoConformidadUrl].filter(
+              (url): url is string => Boolean(url),
+            ),
+            ensayo: control.ensayo,
+            checklist: control.parametros,
+          }
+        : null,
+    });
   } catch (error) {
-    console.error('Error al crear control de inspección:', error);
-    res.status(500).json({ error: 'Error al crear control de inspección' });
+    console.error('Error al obtener detalle de inspección:', error);
+    res.status(500).json({ error: 'Error al obtener detalle de inspección' });
   }
 };

@@ -24,7 +24,7 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     // Obtener datos del registro
     const registroQuery = await dbQuery(
-      'SELECT cantidad_sellos, holgura, accesibilidad FROM registros_terreno WHERE id = $1',
+      'SELECT cantidad_sellos, holgura, accesibilidad, estado_validacion_obra FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
     );
 
@@ -34,6 +34,13 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     }
 
     const registro = registroQuery.rows[0];
+
+    if (registro.estado_validacion_obra !== 'validado') {
+      res.status(400).json({
+        error: 'El registro aún no ha sido validado por Jefe de Obra/Supervisor. No puede procesarse en Ingeniería.',
+      });
+      return;
+    }
 
     // Verificar que no exista ya un procesamiento para este registro
     const existeProcesamiento = await dbQuery(
@@ -130,7 +137,7 @@ export const listarProcesamientos = async (req: Request, res: Response): Promise
       LEFT JOIN itemizados i ON p.itemizado_id = i.id
       LEFT JOIN registros_terreno rt ON p.registro_terreno_id = rt.id
       LEFT JOIN itemizados_mandante im ON rt.itemizado_mandante_id = im.id
-      WHERE 1=1
+      WHERE rt.estado_validacion_obra = 'validado'
     `;
 
     const params: any[] = [];

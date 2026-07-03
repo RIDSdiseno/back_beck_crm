@@ -31,6 +31,7 @@ model Usuario {
   registrosRechazados              RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
   registrosSeleccionadosInspeccion RegistroTerreno[]         @relation("RegistrosSeleccionadosInspeccion")
   registrosValidadosCliente        RegistroTerreno[]         @relation("RegistrosValidadosClientePorUsuario")
+  registrosValidadosObra           RegistroTerreno[]         @relation("RegistrosValidadosObraPorUsuario")
   registrosTerreno                 RegistroTerreno[]
   usuarios_obras                   usuarios_obras[]
   configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
@@ -147,9 +148,14 @@ model RegistroTerreno {
   fechaSeleccionInspeccion    DateTime?                @map("fecha_seleccion_inspeccion") @db.Timestamp(6)
   seleccionadoInspeccionPorId String?                  @map("seleccionado_inspeccion_por_id") @db.Uuid
   seleccionadoParaInspeccion  Boolean                  @default(false) @map("seleccionado_para_inspeccion")
+  inspeccionEstado            EstadoInspeccion         @default(no_enviado) @map("inspeccion_estado")
   validadoCliente             Boolean                  @default(false) @map("validado_cliente")
   validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
   validadoClienteAt           DateTime?                @map("validado_cliente_at") @db.Timestamp(6)
+  estadoValidacionObra        EstadoValidacionObra     @default(pendiente) @map("estado_validacion_obra")
+  validacionObraPorId         String?                  @map("validacion_obra_por_id") @db.Uuid
+  validacionObraAt            DateTime?                @map("validacion_obra_at") @db.Timestamp(6)
+  motivoRechazoObra           String?                  @map("motivo_rechazo_obra")
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
@@ -160,6 +166,7 @@ model RegistroTerreno {
   correcciones                RegistroTerreno[]        @relation("CorreccionesRegistro")
   seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
   validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
+  validacionObraPor           Usuario?                 @relation("RegistrosValidadosObraPorUsuario", fields: [validacionObraPorId], references: [id])
   usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
 
   @@index([rechazadoPorId])
@@ -174,8 +181,11 @@ model RegistroTerreno {
   @@index([esCorreccion])
   @@index([seleccionadoParaInspeccion])
   @@index([seleccionadoInspeccionPorId])
+  @@index([inspeccionEstado])
   @@index([validadoCliente])
   @@index([validadoClientePorId])
+  @@index([estadoValidacionObra])
+  @@index([validacionObraPorId])
   @@map("registros_terreno")
 }
 
@@ -943,6 +953,18 @@ enum EstadoRegistroTerreno {
   en_revision
   validado
   rechazado
+}
+
+enum EstadoValidacionObra {
+  pendiente
+  validado
+  rechazado
+}
+
+enum EstadoInspeccion {
+  no_enviado
+  en_inspeccion
+  inspeccionado
 }
 
 enum ModuloMovimientoCRM {

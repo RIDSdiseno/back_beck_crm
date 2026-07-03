@@ -10,6 +10,7 @@ import itemizadosMandanteRoutes from './routes/itemizadosMandante.routes';
 import statsRoutes from './routes/stats.routes';
 import dashboardBeckRoutes from './routes/dashboard-beck.routes';
 import funnelBeckRoutes from './routes/funnelBeck.routes';
+import funnelUnificadoRoutes from './routes/funnelUnificado.routes';
 import indicadoresRoutes from "./routes/indicadores.routes";
 import usuariosRoutes from './routes/usuarios.routes';
 import cotizacionesRoutes from './routes/cotizaciones.routes';
@@ -128,6 +129,9 @@ app.use('/api/stats', blockBeckCommercial, statsRoutes);
 app.use('/api/procesamiento', blockBeckCommercial, procesamientoRoutes);
 app.use('/api/itemizados', blockBeckCommercial, itemizadosRoutes);
 app.use('/api/alertas', authenticate, alertasRoutes);
+// Vista unificada de lectura Beck + Firemat: no se agrupa con blockBeckCommercial
+// porque roles solo-Firemat (ej. vendedor_firemat) también deben poder consumirla.
+app.use('/api/funnel-unificado', funnelUnificadoRoutes);
 app.use('/api/configuracion-validacion', configuracionValidacionRoutes);
 
 app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);

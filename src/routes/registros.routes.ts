@@ -11,10 +11,12 @@ import {
   descargarRegistroPdf,
   reenviarRevision,
   iniciarRevision,
+  actualizarValidacionObra,
   rendimientoAcumulado,
   marcarInspeccion,
   getControlInspeccion,
   crearControlInspeccion,
+  verDetalleInspeccion,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
@@ -114,6 +116,18 @@ router.patch(
 );
 
 /**
+ * PATCH /api/registros/:id/validacion-obra
+ * Jefe de Obra/Supervisor valida o rechaza un registro creado por Terreno.
+ * Paso obligatorio previo a que el registro pueda entrar a Procesamiento Ingeniería.
+ */
+router.patch(
+  '/:id/validacion-obra',
+  authenticate,
+  requirePermission('beck_registro', 'editar'),
+  actualizarValidacionObra,
+);
+
+/**
  * PATCH /api/registros/:id/reenviar-revision
  * Reenviar corrección (o registro pendiente) a revisión de Ingeniería
  */
@@ -150,7 +164,8 @@ router.get(
 
 /**
  * PATCH /api/registros/:id/inspeccion
- * Marca o desmarca un registro para inspección.
+ * Acción de la web: enviar un registro a inspección, o quitarlo mientras no haya
+ * sido inspeccionado todavía. La web nunca controla la inspección en sí.
  * Body: { seleccionadoParaInspeccion: boolean }
  */
 router.patch(
@@ -161,8 +176,20 @@ router.patch(
 );
 
 /**
+ * GET /api/registros/:id/inspeccion
+ * Detalle de inspección de solo lectura para la web: estado, quién/cuándo se envió
+ * y, si ya fue inspeccionado por el Supervisor desde la app, el resultado completo.
+ */
+router.get(
+  '/:id/inspeccion',
+  authenticate,
+  requirePermission(['beck_procesamiento_ingenieria', 'beck_registro'], 'ver'),
+  verDetalleInspeccion,
+);
+
+/**
  * GET /api/registros/:id/control-inspeccion
- * Devuelve el control de inspección asociado al registro.
+ * Devuelve el control de inspección asociado al registro (registro crudo).
  */
 router.get(
   '/:id/control-inspeccion',
@@ -173,12 +200,14 @@ router.get(
 
 /**
  * POST /api/registros/:id/control-inspeccion
- * Crea el control de inspección para el registro.
+ * Registra el resultado del control de inspección. Pensado para la app del
+ * Supervisor: el controller exige rol jefeobra o administrador, aunque el gate
+ * de módulo usa 'beck_registro' (permiso que el Supervisor sí tiene).
  */
 router.post(
   '/:id/control-inspeccion',
   authenticate,
-  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  requirePermission('beck_registro', 'editar'),
   crearControlInspeccion,
 );
 
