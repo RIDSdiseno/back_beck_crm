@@ -153,6 +153,8 @@ model RegistroTerreno {
   validadoCliente             Boolean                  @default(false) @map("validado_cliente")
   validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
   validadoClienteAt           DateTime?                @map("validado_cliente_at") @db.Timestamp(6)
+  firmaClienteUrl             String?                  @map("firma_cliente_url")
+  pdfFirmadoUrl               String?                  @map("pdf_firmado_url")
   estadoValidacionObra        EstadoValidacionObra     @default(pendiente) @map("estado_validacion_obra")
   validacionObraPorId         String?                  @map("validacion_obra_por_id") @db.Uuid
   validacionObraAt            DateTime?                @map("validacion_obra_at") @db.Timestamp(6)
