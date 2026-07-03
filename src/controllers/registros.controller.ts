@@ -5,7 +5,7 @@ import path from 'path';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
-import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoValidacionObra, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
+import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoRevisionInspeccion, EstadoValidacionObra, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
@@ -1308,6 +1308,7 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
       ...row,
       ...calcularRendimientoIndividual(row),
       inspeccionEstado: row.inspeccion_estado,
+      inspeccionRevisionEstado: row.inspeccion_revision_estado,
     })));
   } catch (error) {
     console.error('Error al listar pendientes:', error);
@@ -1833,7 +1834,13 @@ export const crearControlInspeccion = async (req: Request, res: Response): Promi
       }),
       prisma.registroTerreno.update({
         where: { id },
-        data: { inspeccionEstado: EstadoInspeccion.inspeccionado },
+        data: {
+          inspeccionEstado: EstadoInspeccion.inspeccionado,
+          inspeccionRevisionEstado: EstadoRevisionInspeccion.pendiente,
+          inspeccionRevisionPorId: null,
+          inspeccionRevisionAt: null,
+          motivoRechazoInspeccion: null,
+        },
       }),
     ]);
 
@@ -1863,6 +1870,10 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
         seleccionadoParaInspeccion: true,
         fechaSeleccionInspeccion: true,
         seleccionadoInspeccionPor: { select: { id: true, nombre: true, email: true } },
+        inspeccionRevisionEstado: true,
+        inspeccionRevisionAt: true,
+        motivoRechazoInspeccion: true,
+        inspeccionRevisionPor: { select: { id: true, nombre: true, email: true } },
       },
     });
 
@@ -1901,9 +1912,80 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
           )
         : [],
       parametros: control?.parametros ?? null,
+      inspeccionRevisionEstado: registro.inspeccionRevisionEstado,
+      inspeccionRevisionAt: registro.inspeccionRevisionAt,
+      inspeccionRevisionPor: registro.inspeccionRevisionPor,
+      motivoRechazoInspeccion: registro.motivoRechazoInspeccion,
     });
   } catch (error) {
     console.error('Error al obtener detalle de inspección:', error);
     res.status(500).json({ error: 'Error al obtener detalle de inspección' });
+  }
+};
+
+/**
+ * PATCH /api/registros/:id/inspeccion/revision
+ * Ingeniería (web) valida o rechaza el resultado de una inspección ya registrada
+ * por el Supervisor. Rechazar devuelve el registro a la cola del supervisor
+ * (inspeccionEstado vuelve a en_inspeccion) para que se genere un nuevo control.
+ * Solo aplica sobre registros con inspeccionEstado = inspeccionado.
+ * Body: { accion: 'validar' | 'rechazar', motivo? }
+ */
+export const revisarInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario_id = req.userId;
+
+    const { accion, motivo } = req.body as { accion?: string; motivo?: string };
+
+    if (accion !== 'validar' && accion !== 'rechazar') {
+      res.status(400).json({ error: 'accion inválida. Debe ser: validar o rechazar' });
+      return;
+    }
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    if (existente.inspeccionEstado !== EstadoInspeccion.inspeccionado) {
+      res.status(400).json({ error: 'Este registro todavía no tiene un resultado de inspección para revisar.' });
+      return;
+    }
+
+    if (accion === 'rechazar' && !motivo?.trim()) {
+      res.status(400).json({ error: 'motivo es obligatorio al rechazar una inspección' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.update({
+      where: { id },
+      data: accion === 'validar'
+        ? {
+            inspeccionRevisionEstado: EstadoRevisionInspeccion.validado,
+            inspeccionRevisionPorId: usuario_id ?? null,
+            inspeccionRevisionAt: new Date(),
+            motivoRechazoInspeccion: null,
+          }
+        : {
+            inspeccionEstado: EstadoInspeccion.en_inspeccion,
+            inspeccionRevisionEstado: EstadoRevisionInspeccion.rechazado,
+            inspeccionRevisionPorId: usuario_id ?? null,
+            inspeccionRevisionAt: new Date(),
+            motivoRechazoInspeccion: motivo!.trim(),
+          },
+    });
+
+    res.json({
+      id: registro.id,
+      inspeccionEstado: registro.inspeccionEstado,
+      inspeccionRevisionEstado: registro.inspeccionRevisionEstado,
+      inspeccionRevisionAt: registro.inspeccionRevisionAt,
+      motivoRechazoInspeccion: registro.motivoRechazoInspeccion,
+    });
+  } catch (error) {
+    console.error('Error al revisar inspección:', error);
+    res.status(500).json({ error: 'Error al revisar la inspección' });
   }
 };

@@ -17,6 +17,7 @@ import {
   getControlInspeccion,
   crearControlInspeccion,
   verDetalleInspeccion,
+  revisarInspeccion,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
@@ -185,6 +186,19 @@ router.get(
   authenticate,
   requirePermission(['beck_procesamiento_ingenieria', 'beck_registro'], 'ver'),
   verDetalleInspeccion,
+);
+
+/**
+ * PATCH /api/registros/:id/inspeccion/revision
+ * Ingeniería (web) valida o rechaza el resultado de la inspección ya registrada
+ * por el Supervisor. Rechazar devuelve el registro a la cola del supervisor.
+ * Body: { accion: 'validar' | 'rechazar', motivo? }
+ */
+router.patch(
+  '/:id/inspeccion/revision',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  revisarInspeccion,
 );
 
 /**

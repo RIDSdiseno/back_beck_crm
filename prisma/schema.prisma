@@ -32,6 +32,7 @@ model Usuario {
   registrosSeleccionadosInspeccion RegistroTerreno[]         @relation("RegistrosSeleccionadosInspeccion")
   registrosValidadosCliente        RegistroTerreno[]         @relation("RegistrosValidadosClientePorUsuario")
   registrosValidadosObra           RegistroTerreno[]         @relation("RegistrosValidadosObraPorUsuario")
+  registrosRevisionInspeccion      RegistroTerreno[]         @relation("RegistrosRevisionInspeccionPorUsuario")
   registrosTerreno                 RegistroTerreno[]
   usuarios_obras                   usuarios_obras[]
   configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
@@ -156,6 +157,10 @@ model RegistroTerreno {
   validacionObraPorId         String?                  @map("validacion_obra_por_id") @db.Uuid
   validacionObraAt            DateTime?                @map("validacion_obra_at") @db.Timestamp(6)
   motivoRechazoObra           String?                  @map("motivo_rechazo_obra")
+  inspeccionRevisionEstado    EstadoRevisionInspeccion @default(pendiente) @map("inspeccion_revision_estado")
+  inspeccionRevisionPorId     String?                  @map("inspeccion_revision_por_id") @db.Uuid
+  inspeccionRevisionAt        DateTime?                @map("inspeccion_revision_at") @db.Timestamp(6)
+  motivoRechazoInspeccion     String?                  @map("motivo_rechazo_inspeccion")
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
@@ -167,6 +172,7 @@ model RegistroTerreno {
   seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
   validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
   validacionObraPor           Usuario?                 @relation("RegistrosValidadosObraPorUsuario", fields: [validacionObraPorId], references: [id])
+  inspeccionRevisionPor       Usuario?                 @relation("RegistrosRevisionInspeccionPorUsuario", fields: [inspeccionRevisionPorId], references: [id])
   usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
 
   @@index([rechazadoPorId])
@@ -186,6 +192,8 @@ model RegistroTerreno {
   @@index([validadoClientePorId])
   @@index([estadoValidacionObra])
   @@index([validacionObraPorId])
+  @@index([inspeccionRevisionEstado])
+  @@index([inspeccionRevisionPorId])
   @@map("registros_terreno")
 }
 
@@ -956,6 +964,12 @@ enum EstadoRegistroTerreno {
 }
 
 enum EstadoValidacionObra {
+  pendiente
+  validado
+  rechazado
+}
+
+enum EstadoRevisionInspeccion {
   pendiente
   validado
   rechazado
