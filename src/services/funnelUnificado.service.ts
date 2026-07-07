@@ -3,7 +3,7 @@ import { getAllFunnelBeck } from "./funnelBeck.service";
 
 export type OrigenFunnel = "BECK" | "FIREMAT";
 export type EstadoCierreUnificado = "ganada" | "perdida" | "postergada" | "descartada" | null;
-export type FiltroUnidadNegocio = "beck" | "firemat" | "todas";
+export type FiltroUnidadNegocio = "beck" | "firemat" | "mixto" | "todas";
 export type FiltroEstadoCierre = "activa" | "ganada" | "perdida" | "postergada" | "descartada" | "todas";
 
 export interface OportunidadUnificada {
@@ -16,6 +16,7 @@ export interface OportunidadUnificada {
   etapa: string;
   etapaTablero: string;
   unidadNegocio: "Beck" | "Firemat";
+  unidadNegocioBeck: string | null;
   monto: number;
   probabilidad: number | null;
   proximaAccion: string | null;
@@ -122,6 +123,7 @@ async function obtenerOportunidadesBeckNormalizadas(): Promise<OportunidadUnific
       etapa: o.etapa,
       etapaTablero: o.etapaTablero,
       unidadNegocio: "Beck",
+      unidadNegocioBeck: o.unidadNegocio ?? null,
       monto,
       probabilidad: o.probabilidadCierre,
       proximaAccion: o.proximaAccion,
@@ -171,6 +173,7 @@ async function obtenerOportunidadesFirematNormalizadas(): Promise<OportunidadUni
     etapa: o.etapa,
     etapaTablero: etapaTableroPorId.get(o.id) ?? ETAPA_TABLERO_POR_DEFECTO,
     unidadNegocio: "Firemat",
+    unidadNegocioBeck: null,
     monto: o.montoEstimado,
     probabilidad: o.probabilidadCierre ?? o.probabilidad,
     proximaAccion: o.proximaAccion,
@@ -190,6 +193,11 @@ function coincideEstadoCierre(o: OportunidadUnificada, filtro: FiltroEstadoCierr
   return o.estadoCierre === filtro;
 }
 
+function coincideUnidadNegocio(o: OportunidadUnificada, filtro: FiltroUnidadNegocio): boolean {
+  if (filtro !== "mixto") return true;
+  return o.origen === "BECK" && o.unidadNegocioBeck?.trim().toLowerCase() === "mixto";
+}
+
 export async function obtenerFunnelUnificado(params: {
   incluirBeck: boolean;
   incluirFiremat: boolean;
@@ -199,7 +207,7 @@ export async function obtenerFunnelUnificado(params: {
   const { incluirBeck, incluirFiremat, unidadNegocio, estadoCierre } = params;
 
   const consultarBeck = incluirBeck && unidadNegocio !== "firemat";
-  const consultarFiremat = incluirFiremat && unidadNegocio !== "beck";
+  const consultarFiremat = incluirFiremat && (unidadNegocio === "todas" || unidadNegocio === "firemat");
 
   const [beck, firemat] = await Promise.all([
     consultarBeck ? obtenerOportunidadesBeckNormalizadas() : Promise.resolve([]),
@@ -208,5 +216,6 @@ export async function obtenerFunnelUnificado(params: {
 
   return [...beck, ...firemat]
     .filter((o) => coincideEstadoCierre(o, estadoCierre))
+    .filter((o) => coincideUnidadNegocio(o, unidadNegocio))
     .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 }

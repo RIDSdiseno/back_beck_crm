@@ -37,6 +37,16 @@ export const ROLES_FIREMAT: RolUsuario[] = [
   RolUsuario.visualizador_firemat,
 ];
 
+// Roles Firemat habilitados como Responsable comercial del Funnel Firemat por
+// defecto (equivalente a ROLES_COMERCIALES_BECK): administrador y
+// vendedor_firemat. Cualquier otro usuario activo con permiso efectivo para
+// editar firemat_funnel o cambiar empresa en Firemat tambien se incluye (ver
+// listarUsuariosComercialesFiremat en usuarios.controller.ts).
+export const ROLES_COMERCIALES_FIREMAT: RolUsuario[] = [
+  RolUsuario.administrador,
+  RolUsuario.vendedor_firemat,
+];
+
 // Roles que se pueden crear por contexto — administrador NO creble desde Firemat
 export const ROLES_CREABLES_BECK: RolUsuario[] = [
   RolUsuario.administrador,

@@ -7,35 +7,35 @@ datasource db {
 }
 
 model Usuario {
-  id                               String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                           String                    @db.VarChar(255)
-  email                            String                    @unique @db.VarChar(255)
-  passwordHash                     String?                   @map("password_hash") @db.VarChar(255)
+  id                               String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                           String                             @db.VarChar(255)
+  email                            String                             @unique @db.VarChar(255)
+  passwordHash                     String?                            @map("password_hash") @db.VarChar(255)
   rol                              RolUsuario
-  activo                           Boolean                   @default(true)
-  createdAt                        DateTime                  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                        DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  azureId                          String?                   @unique @map("azure_id") @db.VarChar(255)
+  activo                           Boolean                            @default(true)
+  createdAt                        DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                        DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  azureId                          String?                            @unique @map("azure_id") @db.VarChar(255)
   alertasVistas                    AlertaVista[]
-  controlesInspeccion              ControlInspeccion[]       @relation("ControlesInspeccionPorUsuario")
-  cotizacionesCreadas              Cotizacion[]              @relation("CotizacionesCreadasPorUsuario")
+  configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
+  controlesInspeccion              ControlInspeccion[]                @relation("ControlesInspeccionPorUsuario")
+  cotizacionesCreadas              Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
   fotos_registro                   fotos_registro[]
   historialEtapasBeck              HistorialEtapaBeck[]
-  itemizadosCreados                Itemizado[]               @relation("ItemizadosCreadosPorUsuario")
-  movimientosCrm                   MovimientoCRM[]           @relation("MovimientosCrmPorUsuario")
+  itemizadosCreados                Itemizado[]                        @relation("ItemizadosCreadosPorUsuario")
+  movimientosCrm                   MovimientoCRM[]                    @relation("MovimientosCrmPorUsuario")
   movimientosInventario            MovimientoInventario[]
   notificaciones                   Notificacion[]
-  obrasCreadas                     Obra[]                    @relation("ObrasCreadasPorUsuario")
+  obrasCreadas                     Obra[]                             @relation("ObrasCreadasPorUsuario")
   permisosModulo                   PermisoUsuarioModulo[]
   procesamientos                   ProcesamientoIngenieria[]
-  registrosRechazados              RegistroTerreno[]         @relation("RegistrosRechazadosPorUsuario")
-  registrosSeleccionadosInspeccion RegistroTerreno[]         @relation("RegistrosSeleccionadosInspeccion")
-  registrosValidadosCliente        RegistroTerreno[]         @relation("RegistrosValidadosClientePorUsuario")
-  registrosValidadosObra           RegistroTerreno[]         @relation("RegistrosValidadosObraPorUsuario")
-  registrosRevisionInspeccion      RegistroTerreno[]         @relation("RegistrosRevisionInspeccionPorUsuario")
+  registrosRevisionInspeccion      RegistroTerreno[]                  @relation("RegistrosRevisionInspeccionPorUsuario")
+  registrosRechazados              RegistroTerreno[]                  @relation("RegistrosRechazadosPorUsuario")
+  registrosSeleccionadosInspeccion RegistroTerreno[]                  @relation("RegistrosSeleccionadosInspeccion")
   registrosTerreno                 RegistroTerreno[]
+  registrosValidadosObra           RegistroTerreno[]                  @relation("RegistrosValidadosObraPorUsuario")
+  registrosValidadosCliente        RegistroTerreno[]                  @relation("RegistrosValidadosClientePorUsuario")
   usuarios_obras                   usuarios_obras[]
-  configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
 
   @@index([email])
   @@index([rol])
@@ -44,26 +44,26 @@ model Usuario {
 }
 
 model Obra {
-  id                                  String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                              String                             @db.VarChar(255)
-  codigo                              String?                            @unique @db.VarChar(100)
-  descripcion                         String?
-  estado                              EstadoObra                         @default(activa)
-  creadoPorId                         String                             @map("creado_por_id") @db.Uuid
-  createdAt                           DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                           DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  cliente                             String?                            @db.VarChar(255)
-  direccion                           String?
-  clienteBeckId                       String?                            @map("cliente_beck_id") @db.Uuid
-  configuracionesCamposRegistro       ConfiguracionCamposRegistro[]
-  configuracionesItemizadoOpcion      ConfiguracionItemizadoOpcionObra[]
-  cotizaciones                        Cotizacion[]
-  oportunidades                       OperadorBeck[]
-  tiposRegistro                       ObraTipoRegistro[]
-  clienteBeck                         ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
-  creadoPor                           Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
-  registrosTerreno                    RegistroTerreno[]
-  usuarios_obras                      usuarios_obras[]
+  id                             String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                         String                             @db.VarChar(255)
+  codigo                         String?                            @unique @db.VarChar(100)
+  descripcion                    String?
+  estado                         EstadoObra                         @default(activa)
+  creadoPorId                    String                             @map("creado_por_id") @db.Uuid
+  createdAt                      DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                      DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  cliente                        String?                            @db.VarChar(255)
+  direccion                      String?
+  clienteBeckId                  String?                            @map("cliente_beck_id") @db.Uuid
+  configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
+  configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
+  cotizaciones                   Cotizacion[]
+  oportunidades                  OperadorBeck[]
+  tiposRegistro                  ObraTipoRegistro[]
+  clienteBeck                    ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
+  creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  registrosTerreno               RegistroTerreno[]
+  usuarios_obras                 usuarios_obras[]
 
   @@index([codigo])
   @@index([estado])
@@ -149,33 +149,33 @@ model RegistroTerreno {
   fechaSeleccionInspeccion    DateTime?                @map("fecha_seleccion_inspeccion") @db.Timestamp(6)
   seleccionadoInspeccionPorId String?                  @map("seleccionado_inspeccion_por_id") @db.Uuid
   seleccionadoParaInspeccion  Boolean                  @default(false) @map("seleccionado_para_inspeccion")
-  inspeccionEstado            EstadoInspeccion         @default(no_enviado) @map("inspeccion_estado")
   validadoCliente             Boolean                  @default(false) @map("validado_cliente")
-  validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
   validadoClienteAt           DateTime?                @map("validado_cliente_at") @db.Timestamp(6)
-  firmaClienteUrl             String?                  @map("firma_cliente_url")
-  pdfFirmadoUrl               String?                  @map("pdf_firmado_url")
+  validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
   estadoValidacionObra        EstadoValidacionObra     @default(pendiente) @map("estado_validacion_obra")
   validacionObraPorId         String?                  @map("validacion_obra_por_id") @db.Uuid
   validacionObraAt            DateTime?                @map("validacion_obra_at") @db.Timestamp(6)
   motivoRechazoObra           String?                  @map("motivo_rechazo_obra")
+  inspeccionEstado            EstadoInspeccion         @default(no_enviado) @map("inspeccion_estado")
+  inspeccionRevisionAt        DateTime?                @map("inspeccion_revision_at") @db.Timestamp(6)
   inspeccionRevisionEstado    EstadoRevisionInspeccion @default(pendiente) @map("inspeccion_revision_estado")
   inspeccionRevisionPorId     String?                  @map("inspeccion_revision_por_id") @db.Uuid
-  inspeccionRevisionAt        DateTime?                @map("inspeccion_revision_at") @db.Timestamp(6)
   motivoRechazoInspeccion     String?                  @map("motivo_rechazo_inspeccion")
+  firmaClienteUrl             String?                  @map("firma_cliente_url")
+  pdfFirmadoUrl               String?                  @map("pdf_firmado_url")
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
+  inspeccionRevisionPor       Usuario?                 @relation("RegistrosRevisionInspeccionPorUsuario", fields: [inspeccionRevisionPorId], references: [id])
   itemizadoMandante           ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
   obra                        Obra                     @relation(fields: [obraId], references: [id], onDelete: Cascade)
   rechazadoPor                Usuario?                 @relation("RegistrosRechazadosPorUsuario", fields: [rechazadoPorId], references: [id])
   registroOrigen              RegistroTerreno?         @relation("CorreccionesRegistro", fields: [registroOrigenId], references: [id])
   correcciones                RegistroTerreno[]        @relation("CorreccionesRegistro")
   seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
-  validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
-  validacionObraPor           Usuario?                 @relation("RegistrosValidadosObraPorUsuario", fields: [validacionObraPorId], references: [id])
-  inspeccionRevisionPor       Usuario?                 @relation("RegistrosRevisionInspeccionPorUsuario", fields: [inspeccionRevisionPorId], references: [id])
   usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
+  validacionObraPor           Usuario?                 @relation("RegistrosValidadosObraPorUsuario", fields: [validacionObraPorId], references: [id])
+  validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
 
   @@index([rechazadoPorId])
   @@index([obraId])
@@ -368,7 +368,6 @@ model OperadorBeck {
   fechaReactivacion                   DateTime?                 @map("fecha_reactivacion") @db.Date
   flujoPosterior                      String?                   @map("flujo_posterior")
   motivoPostergacion                  String?                   @map("motivo_postergacion")
-  observacionCierre                   String?                   @map("observacion_cierre")
   necesidadDetectada                  String?                   @map("necesidad_detectada")
   nivelInteres                        String?                   @map("nivel_interes") @db.VarChar(50)
   nombreContacto                      String?                   @map("nombre_contacto") @db.VarChar(255)
@@ -447,6 +446,7 @@ model OperadorBeck {
   reprogramacionesCount               Int                       @default(0) @map("reprogramaciones_count")
   fechaUltimoCambioEtapa              DateTime?                 @map("fecha_ultimo_cambio_etapa") @db.Timestamp(6)
   esReactivacion                      Boolean                   @default(false) @map("es_reactivacion")
+  observacionCierre                   String?                   @map("observacion_cierre")
   cotizaciones                        Cotizacion[]
   clienteBeck                         ClienteBeck?              @relation(fields: [clienteBeckId], references: [id])
   contactoBeck                        ContactoClienteBeck?      @relation(fields: [contactoBeckId], references: [id])
@@ -493,15 +493,15 @@ model usuarios_obras {
 }
 
 model ConfiguracionVistaClienteUsuario {
-  id                   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  usuarioId            String   @map("usuario_id") @db.Uuid
-  clave                String   @db.VarChar(100)
-  visible              Boolean  @default(true)
-  tituloPersonalizado  String?  @map("titulo_personalizado") @db.VarChar(255)
-  orden                Int?
-  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  usuario              Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  usuarioId           String   @map("usuario_id") @db.Uuid
+  clave               String   @db.VarChar(100)
+  visible             Boolean  @default(true)
+  tituloPersonalizado String?  @map("titulo_personalizado") @db.VarChar(255)
+  orden               Int?
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  usuario             Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, clave])
   @@index([usuarioId])
@@ -575,26 +575,26 @@ model fotos_registro {
 }
 
 model ClienteBeck {
-  id            String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  rut           String                @unique @db.VarChar(20)
-  razonSocial   String                @map("razon_social") @db.VarChar(255)
-  direccion     String?
-  telefono      String?               @db.VarChar(50)
-  correo        String?               @db.VarChar(255)
-  region        String?               @db.VarChar(150)
-  comuna        String?               @db.VarChar(150)
-  tipoCliente   String?               @map("tipo_cliente") @db.VarChar(100)
-  origen        String?               @db.VarChar(100)
-  activo        Boolean               @default(true)
-  observaciones String?
-  createdAt     DateTime              @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  nombreEmpresa String?               @map("nombre_empresa") @db.VarChar(255)
-  contactos     ContactoClienteBeck[]
-  cotizaciones  Cotizacion[]
-  oportunidades OperadorBeck[]
-  obras                     Obra[]
+  id                        String                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  rut                       String                          @unique @db.VarChar(20)
+  razonSocial               String                          @map("razon_social") @db.VarChar(255)
+  direccion                 String?
+  telefono                  String?                         @db.VarChar(50)
+  correo                    String?                         @db.VarChar(255)
+  region                    String?                         @db.VarChar(150)
+  comuna                    String?                         @db.VarChar(150)
+  tipoCliente               String?                         @map("tipo_cliente") @db.VarChar(100)
+  origen                    String?                         @db.VarChar(100)
+  activo                    Boolean                         @default(true)
+  observaciones             String?
+  createdAt                 DateTime                        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                 DateTime                        @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  nombreEmpresa             String?                         @map("nombre_empresa") @db.VarChar(255)
   configuracionVistaCliente ConfiguracionVistaClienteBeck[]
+  contactos                 ContactoClienteBeck[]
+  cotizaciones              Cotizacion[]
+  oportunidades             OperadorBeck[]
+  obras                     Obra[]
 
   @@index([rut])
   @@index([razonSocial])
@@ -711,18 +711,18 @@ model HistorialEtapaBeck {
 }
 
 model ItemizadoOpcion {
-  id                     String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  codigoBeck             String?                            @map("codigo_beck") @db.VarChar(100)
-  tipo                   String?                            @db.VarChar(100)
-  elementoPasante        String?                            @map("elemento_pasante")
-  elementoPenetra        String?                            @map("elemento_penetra")
-  materialidad           String?                            @db.VarChar(150)
-  visible                Boolean                            @default(false)
-  createdAt              DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt              DateTime                           @updatedAt @map("updated_at") @db.Timestamp(6)
-  rendimientoSellosEsperadoDiario     Int?                  @map("rendimiento_sellos_esperado_diario")
-  rendimientoReparacionEsperadoDiario Int?                  @map("rendimiento_reparacion_esperado_diario")
-  configuracionesPorObra ConfiguracionItemizadoOpcionObra[]
+  id                                  String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  codigoBeck                          String?                            @map("codigo_beck") @db.VarChar(100)
+  tipo                                String?                            @db.VarChar(100)
+  elementoPasante                     String?                            @map("elemento_pasante")
+  elementoPenetra                     String?                            @map("elemento_penetra")
+  materialidad                        String?                            @db.VarChar(150)
+  visible                             Boolean                            @default(false)
+  createdAt                           DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                           DateTime                           @updatedAt @map("updated_at") @db.Timestamp(6)
+  rendimientoReparacionEsperadoDiario Int?                               @map("rendimiento_reparacion_esperado_diario")
+  rendimientoSellosEsperadoDiario     Int?                               @map("rendimiento_sellos_esperado_diario")
+  configuracionesPorObra              ConfiguracionItemizadoOpcionObra[]
 
   @@index([codigoBeck])
   @@index([materialidad])
@@ -735,10 +735,10 @@ model ConfiguracionItemizadoOpcionObra {
   obraId              String          @map("obra_id") @db.Uuid
   itemizadoOpcionId   String          @map("itemizado_opcion_id") @db.Uuid
   visible             Boolean         @default(true)
-  orden               Int?
-  nombrePersonalizado String?         @map("nombre_personalizado") @db.VarChar(255)
   createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
+  nombrePersonalizado String?         @map("nombre_personalizado") @db.VarChar(255)
+  orden               Int?
   itemizadoOpcion     ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
   obra                Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
 

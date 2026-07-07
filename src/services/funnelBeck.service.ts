@@ -433,65 +433,152 @@ const ORDEN_ETAPAS_BECK = [
   "cerrada",
 ] as const;
 
-interface CamposCriticosBeckInput {
-  empresa: string | null;
-  rutEmpresa: string | null;
-  nombreProyecto: string | null;
-  nombreContacto: string | null;
-  telefonoContacto: string | null;
-  correoContacto: string | null;
-  vendedor: string | null;
-  unidadNegocio: string | null;
-  etapa: string;
-  estadoCierre?: string | null;
-  proximaAccion: string | null;
-  fechaProximaAccion: Date | string | null;
-  documentoRespaldo?: string | null;
-  flujoPosterior?: string | null;
-  motivoPerdida?: string | null;
-  etapaPerdida?: string | null;
-  motivoPostergacion?: string | null;
-  fechaReactivacion?: Date | string | null;
+// Reglas cuyo campo es una condicion de cierre: solo se evaluan si el estadoCierre
+// destino coincide; de lo contrario se omiten (no aplica ni como bloqueo ni advertencia).
+const REGLAS_CONDICION_ESTADO_CIERRE: Record<string, string> = {
+  GANADA_DOCUMENTO_RESPALDO: 'ganada',
+  GANADA_FLUJO_POSTERIOR_REQUERIDO: 'ganada',
+  GANADA_MONTO_FINAL_REQUERIDO: 'ganada',
+  GANADA_FECHA_CIERRE_REQUERIDA: 'ganada',
+  PERDIDA_MOTIVO_REQUERIDO: 'perdida',
+  PERDIDA_ETAPA_REQUERIDA: 'perdida',
+  POSTERGADA_MOTIVO_REQUERIDO: 'postergada',
+  POSTERGADA_FECHA_REACTIVACION_REQUERIDA: 'postergada',
+  DESCARTADA_MOTIVO_REQUERIDO: 'descartada',
+};
+
+function esValorVacioBeck(valor: unknown): boolean {
+  if (valor === null || valor === undefined) return true;
+  if (typeof valor === 'string') return normalizeString(valor) === '';
+  if (valor instanceof Date) return Number.isNaN(valor.getTime());
+  if (typeof valor === 'number') return Number.isNaN(valor);
+  return false;
+}
+
+// Resuelve el valor real en `datos` para el `campo` configurado en configuracion_validacion.
+// Soporta campos compuestos (ej. "telefonoContacto_correoContacto") donde basta con que
+// uno de los sub-campos tenga valor para considerar la regla satisfecha.
+function resolverValorCampoBeck(
+  datos: Record<string, unknown>,
+  campo: string,
+): { valor: unknown; vacio: boolean } {
+  if (!(campo in datos) && campo.includes('_')) {
+    const subCampos = campo.split('_');
+    const valores = subCampos.map((c) => datos[c]);
+    const vacio = valores.every((v) => esValorVacioBeck(v));
+    return { valor: Object.fromEntries(subCampos.map((c, i) => [c, valores[i]])), vacio };
+  }
+  return { valor: datos[campo], vacio: esValorVacioBeck(datos[campo]) };
+}
+
+// Construye el objeto de datos "efectivos" (el estado que tendria la oportunidad luego
+// de aplicar el cambio) mezclando el registro existente con el payload y overrides ya
+// normalizados/derivados por el caller. Se usa para evaluar TODAS las reglas activas de
+// configuracion_validacion para la etapa destino, no solo un subconjunto hardcodeado.
+function construirDatosParaValidacionBeck(
+  existente: Record<string, unknown>,
+  payload: Record<string, unknown>,
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
+  const datos: Record<string, unknown> = { ...existente };
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== undefined) datos[key] = value;
+  }
+  Object.assign(datos, overrides);
+  return datos;
 }
 
 async function validarCamposCriticosBeck(
-  o: CamposCriticosBeckInput,
+  etapa: string,
+  datos: Record<string, unknown>,
 ): Promise<{ bloqueos: string[]; advertencias: string[] }> {
-  const reglas = await obtenerMapaReglasValidacion('BECK', o.etapa);
+  const reglas = await obtenerMapaReglasValidacion('BECK', etapa);
+  const estadoCierre = datos.estadoCierre as string | null | undefined;
+
+  // TEMP DEBUG — remover una vez confirmado en producción.
+  console.log('[DEBUG validarCamposCriticosBeck]', {
+    etapaDestino: etapa,
+    estadoCierre,
+    reglasEncontradas: reglas.size,
+    reglaKeys: Array.from(reglas.keys()),
+  });
+
   const resultado = { bloqueos: [] as string[], advertencias: [] as string[] };
 
-  const check = (key: string, condicionFallida: boolean) =>
-    clasificarResultadoValidacion(key, condicionFallida, reglas, resultado);
+  for (const regla of reglas.values()) {
+    if (!regla.activo) continue;
 
-  check('EMPRESA_REQUERIDA', !o.empresa);
-  check('CONTACTO_REQUERIDO', !o.nombreContacto);
-  check('TELEFONO_CORREO_REQUERIDO', !o.telefonoContacto && !o.correoContacto);
-  check('RESPONSABLE_COMERCIAL_REQUERIDO', !o.vendedor);
-  check('UNIDAD_NEGOCIO_REQUERIDA', !o.unidadNegocio);
-  check('PROXIMA_ACCION_REQUERIDA', !o.proximaAccion);
-  check('FECHA_PROXIMA_ACCION_REQUERIDA', !o.fechaProximaAccion);
+    const estadoRequerido = REGLAS_CONDICION_ESTADO_CIERRE[regla.regla];
+    if (estadoRequerido && estadoCierre !== estadoRequerido) {
+      console.log('[DEBUG regla omitida]', {
+        reglaKey: regla.regla,
+        motivo: `requiere estadoCierre=${estadoRequerido}`,
+        estadoCierreActual: estadoCierre ?? null,
+      });
+      continue;
+    }
 
-  if (o.estadoCierre === 'ganada') {
-    check('GANADA_DOCUMENTO_RESPALDO', !normalizeString(o.documentoRespaldo));
-    check('GANADA_FLUJO_POSTERIOR_REQUERIDO', !normalizeString(o.flujoPosterior));
-  }
-  if (o.estadoCierre === 'perdida') {
-    check('PERDIDA_MOTIVO_REQUERIDO', !normalizeString(o.motivoPerdida));
-    check('PERDIDA_ETAPA_REQUERIDA', !normalizeString(o.etapaPerdida));
-  }
-  if (o.estadoCierre === 'postergada') {
-    check('POSTERGADA_MOTIVO_REQUERIDO', !normalizeString(o.motivoPostergacion));
-    check('POSTERGADA_FECHA_REACTIVACION_REQUERIDA', !o.fechaReactivacion);
+    const { valor, vacio } = resolverValorCampoBeck(datos, regla.campo);
+
+    // TEMP DEBUG — remover una vez confirmado en producción.
+    console.log('[DEBUG regla evaluada]', {
+      reglaKey: regla.regla,
+      campo: regla.campo,
+      valor,
+      consideradoVacio: vacio,
+      nivel: regla.nivel,
+    });
+
+    clasificarResultadoValidacion(regla.regla, vacio, reglas, resultado);
   }
 
-  if (o.etapa === 'cotizacion_enviada') {
-    check('COTIZACION_ENVIADA_PROXIMA_ACCION', !o.proximaAccion);
-  }
-  if (o.etapa === 'propuesta_enviada') {
-    check('PROPUESTA_ENVIADA_PROXIMA_ACCION', !o.proximaAccion);
-  }
+  // TEMP DEBUG — remover junto con los logs de arriba.
+  console.log('[DEBUG validarCamposCriticosBeck] resultado', resultado);
 
   return resultado;
+}
+
+// Cuando se avanza saltando etapas (ej. prospecto_identificado -> documentacion_venta),
+// hay que exigir tambien las reglas de cada etapa intermedia que se esta saltando, no solo
+// las de la etapa destino. Retorna el listado de etapas a validar, en orden:
+// - Si la etapa no cambia (solo cambia estadoCierre) o los indices no se pueden resolver,
+//   se valida unicamente la etapa destino (comportamiento previo, sin rango).
+// - Si es un avance, el rango va desde la etapa siguiente a la de origen hasta la destino
+//   (ambas incluidas).
+// El caller es responsable de no invocar esto en un retroceso (idxDestino < idxActual).
+function calcularRangoEtapasBeck(
+  idxActual: number,
+  idxDestino: number,
+  etapaDestino: string,
+): string[] {
+  if (idxActual === -1 || idxDestino === -1 || idxDestino <= idxActual) {
+    return [etapaDestino];
+  }
+  return ORDEN_ETAPAS_BECK.slice(idxActual + 1, idxDestino + 1);
+}
+
+// Valida cada etapa del rango por separado (misma "foto" de datos, distintas reglas por
+// etapa) y acumula bloqueos/advertencias. Cuando el rango abarca mas de una etapa, cada
+// mensaje se prefija con la etapa de origen de esa regla para que el usuario entienda de
+// donde viene cada bloqueo/advertencia; si es una sola etapa (caso normal, avance de a un
+// paso) se deja el mensaje tal cual, sin prefijo, igual que antes.
+async function validarRangoEtapasBeck(
+  etapas: string[],
+  datos: Record<string, unknown>,
+): Promise<{ bloqueos: string[]; advertencias: string[] }> {
+  const bloqueos: string[] = [];
+  const advertencias: string[] = [];
+
+  console.log('[DEBUG validarRangoEtapasBeck]', { etapas });
+
+  for (const etapa of etapas) {
+    const resultado = await validarCamposCriticosBeck(etapa, datos);
+    const prefijo = etapas.length > 1 ? `[${formatEtapa(etapa)}] ` : '';
+    bloqueos.push(...resultado.bloqueos.map((b) => `${prefijo}${b}`));
+    advertencias.push(...resultado.advertencias.map((a) => `${prefijo}${a}`));
+  }
+
+  return { bloqueos, advertencias };
 }
 
 function validarCamposObligatorios(data: NormalizedInput) {
@@ -1066,17 +1153,17 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       : existente.observacionCamposFaltantes;
 
     if (!observacionFinal) {
-      const { bloqueos, advertencias } = await validarCamposCriticosBeck({
-        empresa,
-        rutEmpresa: data.rutEmpresa !== undefined ? procesarRut(data.rutEmpresa) : existente.rutEmpresa,
+      const datosParaValidar = construirDatosParaValidacionBeck(existente, data, {
         nombreProyecto,
+        empresa,
+        vendedor,
+        etapa,
+        estadoCierre: estadoCierre ?? null,
+        rutEmpresa: data.rutEmpresa !== undefined ? procesarRut(data.rutEmpresa) : existente.rutEmpresa,
         nombreContacto: data.nombreContacto !== undefined ? optStr(data.nombreContacto) : existente.nombreContacto,
         telefonoContacto: data.telefonoContacto !== undefined ? procesarTelefono(data.telefonoContacto) : existente.telefonoContacto,
         correoContacto: data.correoContacto !== undefined ? procesarCorreo(data.correoContacto) : existente.correoContacto,
-        vendedor,
         unidadNegocio: data.unidadNegocio !== undefined ? optStr(data.unidadNegocio) : existente.unidadNegocio,
-        etapa,
-        estadoCierre: estadoCierre ?? null,
         proximaAccion: proximaAccionFinal ?? null,
         fechaProximaAccion: fechaProximaAccionFinal ?? null,
         documentoRespaldo: data.documentoRespaldo !== undefined ? optStr(data.documentoRespaldo) : existente.documentoRespaldo,
@@ -1086,6 +1173,7 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
         motivoPostergacion: motivoPostergacion ?? null,
         fechaReactivacion: fechaReactivacion ?? null,
       });
+      const { bloqueos, advertencias } = await validarCamposCriticosBeck(etapa, datosParaValidar);
       if (bloqueos.length > 0) {
         throw new AdvertenciaCamposCriticosError(bloqueos, advertencias);
       }
@@ -1333,32 +1421,24 @@ export async function updateEtapaFunnelBeck(
       const idxDestino = ORDEN_ETAPAS_BECK.indexOf((payload.etapa ?? '') as typeof ORDEN_ETAPAS_BECK[number]);
       // Retroceso: solo aplica cuando la etapa en sí cambia hacia atrás
       const esRetroceso = etapaCambio && idxActual !== -1 && idxDestino !== -1 && idxDestino < idxActual;
-      const etapaUsadaParaValidar = existente.etapa;
+      const etapaUsadaParaValidar = payload.etapa!;
 
-      console.log("[VALIDACION ETAPA]", {
-        modulo: "BECK",
-        etapaActual: existente.etapa,
-        etapaDestino: payload.etapa,
-        idxActual,
-        idxDestino,
-        esRetroceso,
+      const etapasAValidar = esRetroceso ? [] : calcularRangoEtapasBeck(idxActual, idxDestino, etapaUsadaParaValidar);
+
+      // TEMP DEBUG — remover una vez confirmado en producción.
+      console.log('[DEBUG updateEtapaFunnelBeck]', {
+        oportunidadId: id,
+        etapaOrigen: existente.etapa,
+        etapaDestinoRecibida: payload.etapa,
         etapaUsadaParaValidar,
+        esRetroceso,
+        etapasAValidar,
       });
 
       if (!esRetroceso) {
-        const { bloqueos, advertencias } = await validarCamposCriticosBeck({
-          empresa: existente.empresa,
-          rutEmpresa: existente.rutEmpresa,
-          nombreProyecto: existente.nombreProyecto,
-          nombreContacto: existente.nombreContacto,
-          telefonoContacto: existente.telefonoContacto,
-          correoContacto: existente.correoContacto,
-          vendedor: existente.vendedor,
-          unidadNegocio: existente.unidadNegocio,
+        const datosParaValidar = construirDatosParaValidacionBeck(existente, payload, {
           etapa: etapaUsadaParaValidar,
           estadoCierre: payload.estadoCierre !== undefined ? payload.estadoCierre : existente.estadoCierre,
-          proximaAccion: existente.proximaAccion,
-          fechaProximaAccion: existente.fechaProximaAccion,
           documentoRespaldo: payload.documentoRespaldo !== undefined ? optStr(payload.documentoRespaldo) : existente.documentoRespaldo,
           flujoPosterior: payload.flujoPosterior !== undefined ? optStr(payload.flujoPosterior) : existente.flujoPosterior,
           motivoPerdida: payload.motivoPerdida !== undefined ? optStr(payload.motivoPerdida) : existente.motivoPerdida,
@@ -1366,6 +1446,7 @@ export async function updateEtapaFunnelBeck(
           motivoPostergacion: payload.motivoPostergacion !== undefined ? optStr(payload.motivoPostergacion) : existente.motivoPostergacion,
           fechaReactivacion: payload.fechaReactivacion !== undefined ? parseOptionalDate(payload.fechaReactivacion) : existente.fechaReactivacion,
         });
+        const { bloqueos, advertencias } = await validarRangoEtapasBeck(etapasAValidar, datosParaValidar);
         if (bloqueos.length > 0) {
           throw new AdvertenciaCamposCriticosError(bloqueos, advertencias);
         }

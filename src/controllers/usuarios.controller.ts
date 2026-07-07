@@ -3,11 +3,12 @@ import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
-import { ROLES_BECK, ROLES_FIREMAT, ROLES_EXCLUIDOS_COMERCIALES_BECK } from '../helpers/roles';
+import { ROLES_BECK, ROLES_FIREMAT, ROLES_EXCLUIDOS_COMERCIALES_BECK, ROLES_COMERCIALES_FIREMAT } from '../helpers/roles';
 import {
   buildConfiguracionVistaCliente,
   VISTA_CLIENTE_CLAVES,
 } from '../helpers/configuracionVistaCliente';
+import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -339,6 +340,45 @@ export const listarUsuariosComerciales = async (_req: Request, res: Response): P
   } catch (error) {
     console.error('Error listando usuarios comerciales:', error);
     res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales.' });
+  }
+};
+
+/**
+ * GET /api/usuarios/comerciales-firemat
+ * Usuarios activos habilitados como Responsable comercial del Funnel Firemat:
+ * administrador y vendedor_firemat (ver ROLES_COMERCIALES_FIREMAT), mas
+ * cualquier otro usuario activo con permiso efectivo para editar
+ * firemat_funnel o para cambiar empresa en Firemat (permisos individuales u
+ * override de rol, ver getPermisosEfectivos), igual que
+ * listarUsuariosComerciales hace para Beck.
+ */
+export const listarUsuariosComercialesFiremat = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      where: { activo: true },
+      select: { id: true, nombre: true, email: true, rol: true },
+      orderBy: { nombre: 'asc' },
+    });
+
+    const base = usuarios.filter((usuario) => ROLES_COMERCIALES_FIREMAT.includes(usuario.rol));
+    const baseIds = new Set(base.map((usuario) => usuario.id));
+
+    const extras: typeof usuarios = [];
+    for (const usuario of usuarios) {
+      if (baseIds.has(usuario.id)) continue;
+      const permisos = await getPermisosEfectivos(usuario.id, usuario.rol);
+      const puedeEditarFunnel = permisos.some((p) => p.modulo === 'firemat_funnel' && p.puedeEditar);
+      const puedeCambiarEmpresaFiremat = permisos.some(
+        (p) => p.modulo === 'firemat_cambiar_empresa' && (p.puedeVer || p.puedeEditar),
+      );
+      if (puedeEditarFunnel || puedeCambiarEmpresaFiremat) extras.push(usuario);
+    }
+
+    const data = [...base, ...extras].sort((a, b) => a.nombre.localeCompare(b.nombre));
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error listando usuarios comerciales Firemat:', error);
+    res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales Firemat.' });
   }
 };
 

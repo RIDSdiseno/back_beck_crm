@@ -8,7 +8,7 @@ import {
 
 function parseUnidadNegocio(raw: unknown): FiltroUnidadNegocio {
   const valor = typeof raw === "string" ? raw.trim().toLowerCase() : "";
-  return valor === "beck" || valor === "firemat" ? valor : "todas";
+  return valor === "beck" || valor === "firemat" || valor === "mixto" ? valor : "todas";
 }
 
 function parseEstadoCierre(raw: unknown): FiltroEstadoCierre {
@@ -39,8 +39,8 @@ export async function getFunnelUnificadoController(req: Request, res: Response) 
       success: true,
       data,
       meta: {
-        beckIncluido: puedeVerBeck && unidadNegocio !== "firemat",
-        firematIncluido: puedeVerFiremat && unidadNegocio !== "beck",
+        beckIncluido: puedeVerBeck && data.some((o) => o.origen === "BECK"),
+        firematIncluido: puedeVerFiremat && data.some((o) => o.origen === "FIREMAT"),
         total: data.length,
       },
     });
