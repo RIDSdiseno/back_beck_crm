@@ -5,6 +5,7 @@ export const TIPOS_REGISTRO_VALIDOS = [
   'sello_cortafuego',
   'tabiqueria',
   'junta_lineal_espuma',
+  'otros',
 ] as const;
 
 export type TipoRegistroPermitido = (typeof TIPOS_REGISTRO_VALIDOS)[number];

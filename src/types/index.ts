@@ -49,8 +49,7 @@ export interface Itemizado {
 export type FactorHolgura = 1 | 1.2 | 1.4 | 1.8;
 export type FactorAccesibilidad = 1 | 2 | 3;
 export type EstadoRegistroTerreno = 'pendiente' | 'en_revision' | 'validado' | 'rechazado';
-export type EstadoValidacionObra = 'pendiente' | 'validado' | 'rechazado';
-export type TipoRegistroTerreno = 'sello_cortafuego' | 'junta_lineal_espuma';
+export type TipoRegistroTerreno = 'sello_cortafuego' | 'junta_lineal_espuma' | 'tabiqueria' | 'otros';
 
 export interface RegistroTerreno {
   id: string;
@@ -82,10 +81,6 @@ export interface RegistroTerreno {
   reparacion_tabique?: number | null;
   cantidad_final?: number | null;
   estado: EstadoRegistroTerreno;
-  estado_validacion_obra?: EstadoValidacionObra;
-  validacion_obra_por_id?: string | null;
-  validacion_obra_at?: Date | null;
-  motivo_rechazo_obra?: string | null;
   created_at: Date;
   updated_at?: Date;
 }

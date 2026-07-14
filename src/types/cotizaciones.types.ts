@@ -31,6 +31,7 @@ export type CreateCotizacionInput = {
   funnelBeckId: string | null;
   clienteBeckId?: string | null;
   contactoBeckId?: string | null;
+  responsableId?: string | null;
   descuento: number;
   aplicaImpuesto: boolean;
   vigencia: Date;
@@ -46,6 +47,7 @@ export type UpdateCotizacionInput = {
   funnelBeckId?: string | null;
   clienteBeckId?: string | null;
   contactoBeckId?: string | null;
+  responsableId?: string | null;
   estado?: EstadoCotizacion;
   descuento?: number;
   aplicaImpuesto?: boolean;

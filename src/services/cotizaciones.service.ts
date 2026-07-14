@@ -2,6 +2,7 @@ import { EstadoCotizacion, Prisma, TipoLineaCotizacion, TipoMovimientoCRM } from
 import { prisma } from '../config/prisma';
 import { firematPrisma } from '../config/firematPrisma';
 import { registrarMovimientoCRM } from './movimientoCrm.service';
+import { ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES } from '../helpers/roles';
 import {
   CotizacionError,
   CotizacionTotals,
@@ -317,6 +318,25 @@ const validateFunnelBeck = async (funnelBeckId: string | null): Promise<void> =>
   }
 };
 
+const validateResponsable = async (responsableId: string | null | undefined): Promise<void> => {
+  if (!responsableId) return;
+
+  const usuario = await prisma.usuario.findUnique({
+    where: { id: responsableId },
+    select: { id: true, activo: true, rol: true },
+  });
+
+  if (!usuario) {
+    throw new CotizacionError('El responsable indicado no existe', 400);
+  }
+  if (!usuario.activo) {
+    throw new CotizacionError('El responsable indicado no está activo', 400);
+  }
+  if (ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES.includes(usuario.rol)) {
+    throw new CotizacionError('El usuario indicado no puede ser responsable de una cotización', 400);
+  }
+};
+
 type ClienteBeckBasic = { razonSocial: string; nombreEmpresa: string | null };
 
 const validateClienteBeckRelacion = async (
@@ -394,6 +414,13 @@ const INCLUDE_FULL = {
       activo: true,
     },
   },
+  responsable: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+    },
+  },
 } as const;
 
 const ESTADO_TIPO_MAP: Partial<Record<EstadoCotizacion, TipoMovimientoCRM>> = {
@@ -407,6 +434,7 @@ const ESTADO_TIPO_MAP: Partial<Record<EstadoCotizacion, TipoMovimientoCRM>> = {
 export const createCotizacion = async (input: CreateCotizacionInput, userId: string) => {
   await validateObra(input.obraId);
   await validateFunnelBeck(input.funnelBeckId);
+  await validateResponsable(input.responsableId ?? null);
   validateDescuentoPct(input.descuento);
 
   const clienteBeckId = input.clienteBeckId ?? null;
@@ -440,6 +468,7 @@ export const createCotizacion = async (input: CreateCotizacionInput, userId: str
         funnelBeckId: input.funnelBeckId ?? null,
         clienteBeckId,
         contactoBeckId,
+        responsableId: input.responsableId ?? null,
         estado: EstadoCotizacion.BORRADOR,
         subtotal: toDecimal(subtotal),
         descuento: toDecimal(input.descuento),
@@ -565,6 +594,13 @@ export const getCotizacionVersiones = async (id: string) => {
           activo: true,
         },
       },
+      responsable: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+        },
+      },
     },
   });
 };
@@ -583,6 +619,7 @@ export const updateCotizacion = async (
 
   if (input.obraId !== undefined) await validateObra(input.obraId);
   if (input.funnelBeckId !== undefined) await validateFunnelBeck(input.funnelBeckId);
+  if (input.responsableId !== undefined) await validateResponsable(input.responsableId);
   if (input.descuento !== undefined) validateDescuentoPct(input.descuento);
 
   const numeroCotizacion =
@@ -613,6 +650,8 @@ export const updateCotizacion = async (
     input.clienteBeckId !== undefined ? input.clienteBeckId : existing.clienteBeckId;
   const contactoBeckIdFinal =
     input.contactoBeckId !== undefined ? input.contactoBeckId : existing.contactoBeckId;
+  const responsableIdFinal =
+    input.responsableId !== undefined ? input.responsableId : existing.responsableId;
 
   if (!clienteBeckIdFinal && contactoBeckIdFinal) {
     throw new CotizacionError('No se puede quitar clienteBeckId mientras contactoBeckId está asignado', 400);
@@ -693,6 +732,7 @@ export const updateCotizacion = async (
         funnelBeckId: funnelBeckIdFinal,
         clienteBeckId: clienteBeckIdFinal,
         contactoBeckId: contactoBeckIdFinal,
+        responsableId: responsableIdFinal,
 
         estado: input.estado !== undefined ? input.estado : existing.estado,
 

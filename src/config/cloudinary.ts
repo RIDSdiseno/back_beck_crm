@@ -76,17 +76,22 @@ export const uploadImage = async (fileBuffer: Uint8Array, folder: string = 'beck
 };
 
 /**
- * Sube un archivo genérico a Cloudinary usando detección automática del tipo.
+ * Sube un archivo genérico a Cloudinary usando detección automática del tipo
+ * por defecto. Acepta `resourceType`/`publicId` opcionales (ej. PDFs firmados
+ * con `resource_type: 'raw'` y un publicId controlado) sin alterar el
+ * comportamiento por defecto de los callers existentes.
  */
 export const uploadFileDetailed = async (
   fileBuffer: Uint8Array,
-  folder: string
+  folder: string,
+  options?: { resourceType?: 'auto' | 'image' | 'raw' | 'video'; publicId?: string }
 ): Promise<UploadedFileDetails> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'auto',
+        resource_type: options?.resourceType ?? 'auto',
+        public_id: options?.publicId,
       },
       (error, result) => {
         if (error) {

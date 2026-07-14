@@ -1,6 +1,6 @@
 ﻿// src/controllers/obras.controller.ts
 import { Request, Response } from 'express';
-import { EstadoObra, Prisma } from '@prisma/client';
+import { EstadoObra, EstadoPreparacionItemizado, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 import {
@@ -8,6 +8,7 @@ import {
   validarTiposRegistroSistema,
 } from '../helpers/tiposRegistro';
 import { puedeCambiarEmpresa } from '../helpers/puedeCambiarEmpresa';
+import { existeItemizadoPropuestoParaObra } from '../services/itemizadoPreparacionObra.service';
 
 const estadosObraValidos: EstadoObra[] = [
   EstadoObra.activa,
@@ -38,6 +39,17 @@ const obraUsuariosInclude = {
       estadoCierre: true,
       montoFinalGanado: true,
       fechaCierre: true,
+      region: true,
+      comuna: true,
+      clienteBeckId: true,
+      clienteBeck: {
+        select: {
+          id: true,
+          rut: true,
+          razonSocial: true,
+          nombreEmpresa: true,
+        },
+      },
     },
   },
   clienteBeck: {
@@ -48,21 +60,40 @@ const obraUsuariosInclude = {
       nombreEmpresa: true,
     },
   },
+  itemizadoFinalizadoPor: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+    },
+  },
+  tiposRegistro: {
+    where: { activo: true },
+    select: { tipoRegistro: true },
+    orderBy: { tipoRegistro: 'asc' },
+  },
 } satisfies Prisma.ObraInclude;
 
 type ObraConUsuarios = Prisma.ObraGetPayload<{
   include: typeof obraUsuariosInclude;
 }>;
 
-type ObraResponse = Omit<ObraConUsuarios, 'usuarios_obras'> & {
+type ObraResponse = Omit<ObraConUsuarios, 'usuarios_obras' | 'tiposRegistro'> & {
   usuarios: ObraConUsuarios['usuarios_obras'][number]['usuarios'][];
+  funnelBeckId: string | null;
+  funnelBeck: ObraConUsuarios['oportunidades'][number] | null;
+  tiposRegistro: string[];
 };
 
 const formatObraResponse = (obra: ObraConUsuarios): ObraResponse => {
   const { usuarios_obras, ...obraData } = obra;
+  const oportunidadVinculada = obra.oportunidades[0] ?? null;
   return {
     ...obraData,
     usuarios: usuarios_obras.map((asignacion) => asignacion.usuarios),
+    funnelBeckId: oportunidadVinculada?.id ?? null,
+    funnelBeck: oportunidadVinculada,
+    tiposRegistro: obra.tiposRegistro.map((t) => t.tipoRegistro),
   };
 };
 
@@ -86,6 +117,8 @@ type CrearObraBody = {
   nombre?: unknown;
   descripcion?: unknown;
   direccion?: unknown;
+  region?: unknown;
+  comuna?: unknown;
   cliente?: unknown;
   estado?: unknown;
   funnelBeckId?: unknown;
@@ -96,6 +129,8 @@ type ActualizarObraBody = {
   codigo?: unknown;
   nombre?: unknown;
   direccion?: unknown;
+  region?: unknown;
+  comuna?: unknown;
   cliente?: unknown;
   estado?: unknown;
   funnelBeckId?: unknown;
@@ -218,7 +253,7 @@ export const obtenerObra = async (req: Request, res: Response): Promise<void> =>
 
 export const crearObra = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { codigo, nombre, descripcion, direccion, cliente, estado, funnelBeckId, clienteBeckId } =
+    const { codigo, nombre, descripcion, direccion, region, comuna, cliente, estado, funnelBeckId, clienteBeckId } =
       req.body as CrearObraBody;
 
     if (typeof nombre !== 'string' || !nombre.trim()) {
@@ -279,6 +314,8 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
           codigo: codigoFinal,
           descripcion: typeof descripcion === 'string' ? descripcion : undefined,
           direccion: typeof direccion === 'string' ? direccion : undefined,
+          region: typeof region === 'string' && region.trim() ? region.trim() : undefined,
+          comuna: typeof comuna === 'string' && comuna.trim() ? comuna.trim() : undefined,
           cliente: clienteTexto,
           estado: estadoObra,
           creadoPorId: req.userId ?? '',
@@ -328,7 +365,7 @@ export const crearObra = async (req: Request, res: Response): Promise<void> => {
 export const actualizarObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const { nombre, codigo, direccion, cliente, estado, funnelBeckId, clienteBeckId } = req.body as ActualizarObraBody;
+    const { nombre, codigo, direccion, region, comuna, cliente, estado, funnelBeckId, clienteBeckId } = req.body as ActualizarObraBody;
 
     if (typeof id !== 'string') {
       res.status(400).json({ error: 'ID de obra invalido' });
@@ -406,6 +443,8 @@ export const actualizarObra = async (req: Request, res: Response): Promise<void>
             codigo: typeof codigo === 'string' && codigo.trim() ? codigo.trim() : null,
           }),
           ...(typeof direccion === 'string' && { direccion }),
+          ...(typeof region === 'string' && { region: region.trim() || null }),
+          ...(typeof comuna === 'string' && { comuna: comuna.trim() || null }),
           ...(typeof cliente === 'string'
             ? { cliente }
             : clienteBeckRecord
@@ -844,5 +883,81 @@ export const misObras = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error('Error al obtener mis obras:', error);
     res.status(500).json({ error: 'Error al obtener mis obras' });
+  }
+};
+
+/**
+ * Beck envía la propuesta de itemizado al cliente: PREPARACION → EN_REVISION_CLIENTE.
+ * A partir de aquí Beck ya no puede modificar la configuración (ver
+ * assertItemizadoObraEditable) y el cliente puede ver/seleccionar/nombrar los
+ * itemizados propuestos hasta que confirme (ver confirmarItemizadoCliente en
+ * cliente.controller.ts). Exige al menos un itemizado con propuestoAlCliente=true.
+ */
+export const enviarItemizadoARevisionCliente = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const obraId = req.params.obraId;
+
+    if (typeof obraId !== 'string') {
+      res.status(400).json({ error: 'ID de obra invalido' });
+      return;
+    }
+
+    const existente = await prisma.obra.findUnique({
+      where: { id: obraId },
+      select: { id: true, estadoPreparacionItemizado: true },
+    });
+
+    if (!existente) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    if (existente.estadoPreparacionItemizado === EstadoPreparacionItemizado.EN_REVISION_CLIENTE) {
+      res.status(409).json({
+        error: 'La propuesta de itemizado ya fue enviada a revisión del cliente.',
+      });
+      return;
+    }
+
+    if (existente.estadoPreparacionItemizado === EstadoPreparacionItemizado.FINALIZADO) {
+      res.status(409).json({
+        error: 'El itemizado ya fue confirmado y no puede reenviarse.',
+      });
+      return;
+    }
+
+    const tieneItemizadoPropuesto = await existeItemizadoPropuestoParaObra(obraId);
+    if (!tieneItemizadoPropuesto) {
+      res.status(409).json({
+        error: 'No se puede enviar al cliente: la obra no tiene ningún itemizado incluido en la propuesta.',
+      });
+      return;
+    }
+
+    const obra = await prisma.obra.update({
+      where: { id: obraId },
+      data: {
+        estadoPreparacionItemizado: EstadoPreparacionItemizado.EN_REVISION_CLIENTE,
+        itemizadoFinalizadoAt: new Date(),
+        itemizadoFinalizadoPorId: req.userId ?? '',
+      },
+      include: obraUsuariosInclude,
+    });
+
+    await registrarMovimientoCRM({
+      usuarioId: req.userId ?? '',
+      modulo: 'OBRA',
+      tipo: 'OBRA_EDITADA',
+      entidadId: obra.id,
+      descripcion: `Se envió a revisión del cliente el itemizado de la obra ${obra.nombre}`,
+    });
+
+    res.json(formatObraResponse(obra));
+  } catch (error) {
+    console.error('Error al enviar itemizado a revisión del cliente:', error);
+    res.status(500).json({ error: 'Error al enviar itemizado a revisión del cliente' });
   }
 };

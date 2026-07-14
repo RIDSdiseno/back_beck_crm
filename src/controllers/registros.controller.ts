@@ -1,13 +1,10 @@
 // src/controllers/registros.controller.ts
 import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
-import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoRevisionInspeccion, EstadoValidacionObra, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
+import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoRevisionInspeccion, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
-import PDFDocument from 'pdfkit';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import {
@@ -20,6 +17,8 @@ import {
 import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
+import { calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
+import { generateRegistroPdfBuffer } from '../services/registroPdf.service';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -123,7 +122,8 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         : 'sello_cortafuego';
 
     // Validar campos obligatorios
-    // cantidad_sellos es obligatorio solo para sello_cortafuego
+    // cantidad_sellos ("Cantidad") es obligatorio para todos los tipos salvo
+    // junta_lineal_espuma, que usa metros_lineales en su lugar.
     if (
       !obra_id ||
       !descripcion_material ||
@@ -132,7 +132,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       !eje_numerico ||
       !eje_alfabetico ||
       !numero_sello ||
-      (tipoIntentado === 'sello_cortafuego' && !cantidad_sellos) ||
+      (tipoIntentado !== 'junta_lineal_espuma' && !cantidad_sellos) ||
       !nombre_sellador ||
       !holgura ||
       accesibilidadFinal == null
@@ -194,9 +194,9 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     const dia_semana = dias[fecha.getDay()];
     const eje_numerico_norm = parseEjeNumericoTexto(eje_numerico);
 
-    // Para tipos distintos de sello_cortafuego, cantidad_sellos es opcional (default 0)
+    // Solo junta_lineal_espuma no usa cantidad_sellos (usa metros_lineales); el resto lo requiere.
     const cantidadSellosNorm =
-      tipoRegistroFinal !== 'sello_cortafuego'
+      tipoRegistroFinal === 'junta_lineal_espuma'
         ? Number(cantidad_sellos ?? 0)
         : Number(cantidad_sellos);
 
@@ -209,6 +209,8 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         accesibilidad: accesibilidadFinal ?? 1,
         aislacion: aislacion_raw,
         reparacion_tabique: reparacion_tabique_raw,
+        piso: String(piso),
+        tipoRegistro: tipoRegistroFinal,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -722,6 +724,7 @@ interface ActualizarRegistroTerrenoBody {
 
 const estadosEditables: EstadoRegistroTerreno[] = [
   EstadoRegistroTerreno.pendiente,
+  EstadoRegistroTerreno.en_revision,
   EstadoRegistroTerreno.validado,
   EstadoRegistroTerreno.rechazado,
 ];
@@ -747,8 +750,40 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     if (body.estado !== undefined && !estadosEditables.includes(body.estado as EstadoRegistroTerreno)) {
-      res.status(400).json({ error: 'Estado invalido. Debe ser: pendiente, validado o rechazado' });
+      res.status(400).json({ error: 'Estado inválido. Debe ser: pendiente, en_revision, validado o rechazado' });
       return;
+    }
+
+    // Cierra el bypass del flujo formal: este endpoint genérico de edición no
+    // debe permitir saltar directo a validado/rechazado sin pasar antes por
+    // en_revision — misma regla que ya exige el endpoint dedicado
+    // actualizarEstadoRegistro para estas dos transiciones. Solo se evalúa
+    // cuando el body pide una TRANSICIÓN real (estado destino distinto del
+    // actual): reenviar el mismo valor sin cambios (ej. al editar otros
+    // campos de una corrección ya validada/rechazada) no debe bloquearse.
+    const pideTransicionDeEstado = body.estado !== undefined && body.estado !== existente.estado;
+
+    if (
+      pideTransicionDeEstado &&
+      (body.estado === EstadoRegistroTerreno.validado || body.estado === EstadoRegistroTerreno.rechazado) &&
+      existente.estado !== EstadoRegistroTerreno.en_revision
+    ) {
+      res.status(409).json({
+        error: 'El registro debe estar en revisión antes de poder validarse o rechazarse.',
+      });
+      return;
+    }
+
+    if (pideTransicionDeEstado && body.estado === EstadoRegistroTerreno.rechazado) {
+      const bodyUnknown = body as Record<string, unknown>;
+      const motivoRechazo =
+        typeof bodyUnknown.motivoRechazo === 'string' ? bodyUnknown.motivoRechazo
+        : typeof bodyUnknown.motivo_rechazo === 'string' ? bodyUnknown.motivo_rechazo
+        : undefined;
+      if (!motivoRechazo || !motivoRechazo.trim()) {
+        res.status(400).json({ error: 'motivoRechazo es obligatorio al rechazar un registro' });
+        return;
+      }
     }
 
     const data: Prisma.RegistroTerrenoUpdateInput = {};
@@ -835,6 +870,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     const reparacionRaw = getBodyValue(body as Record<string, unknown>, 'reparacion_tabique', 'reparacionTabique');
     const aislacionBase = aislacionRaw !== undefined ? aislacionRaw : existente.aislacion;
     const reparacionBase = reparacionRaw !== undefined ? reparacionRaw : existente.reparacionTabique;
+    const pisoFinal = body.piso !== undefined ? String(body.piso) : existente.piso;
 
     let calcResult!: CalcRegistroResult;
     try {
@@ -844,6 +880,8 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
         accesibilidad: accesibilidadBase,
         aislacion: aislacionBase,
         reparacion_tabique: reparacionBase,
+        piso: pisoFinal,
+        tipoRegistro: existente.tipoRegistro,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -907,86 +945,14 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
   }
 };
 
-// ─── PDF constants ─────────────────────────────────────────────────────────────
-const PDF_MARGIN = 40;
-const PDF_W = 595;
-const PDF_CONTENT_W = PDF_W - PDF_MARGIN * 2;
-
-const BECK_YELLOW = '#f5c400';
-const BECK_DARK   = '#111827';
-const TEXT_DARK   = '#1e293b';
-const TEXT_MUTED  = '#64748b';
-
-const ESTADO_COLORS: Record<string, string> = {
-  validado:    '#16a34a',
-  en_revision: '#2563eb',
-  rechazado:   '#dc2626',
-  pendiente:   '#d97706',
-};
-
-// ─── PDF helpers ────────────────────────────────────────────────────────────────
-
-const formatRegistroDate = (fecha: Date): string =>
-  new Intl.DateTimeFormat('es-CL', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(fecha);
-
-async function fetchImageBuffer(url: string): Promise<Buffer | null> {
-  try {
-    const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(t);
-    if (!res.ok) return null;
-    return Buffer.from(await res.arrayBuffer());
-  } catch {
-    return null;
-  }
-}
-
-function pdfHRule(doc: PDFKit.PDFDocument, color = '#e2e8f0'): void {
-  doc
-    .strokeColor(color)
-    .lineWidth(0.5)
-    .moveTo(PDF_MARGIN, doc.y)
-    .lineTo(PDF_W - PDF_MARGIN, doc.y)
-    .stroke();
-  doc.y += 6;
-}
-
-function pdfSectionHeader(doc: PDFKit.PDFDocument, title: string): void {
-  doc.y += 4;
-  const y = doc.y;
-  doc.rect(PDF_MARGIN, y, PDF_CONTENT_W, 18).fill(BECK_DARK);
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(8)
-    .fillColor('#ffffff')
-    .text(title, PDF_MARGIN + 8, y + 5, { width: PDF_CONTENT_W - 16, lineBreak: false });
-  doc.y = y + 18 + 7;
-}
-
-function pdfFieldRow(
-  doc: PDFKit.PDFDocument,
-  label: string,
-  value: string | number | null | undefined,
-): void {
-  const y = doc.y;
-  const labelW = 140;
-  const valW   = PDF_CONTENT_W - labelW;
-  const valStr = value == null || value === '' ? '-' : String(value);
-
-  doc.font('Helvetica-Bold').fontSize(9).fillColor(TEXT_MUTED)
-    .text(label, PDF_MARGIN, y, { width: labelW, lineBreak: false });
-  doc.font('Helvetica').fontSize(9).fillColor(TEXT_DARK)
-    .text(valStr, PDF_MARGIN + labelW, y, { width: valW });
-
-  if (doc.y < y + 13) doc.y = y + 13;
-}
-
 // ─── descargarRegistroPdf ───────────────────────────────────────────────────────
 
 /**
  * GET /api/registros/:id/pdf
  * Genera un PDF técnico con logo Beck, datos del registro y fotos reales.
+ * Usa el mismo núcleo de generación (registroPdf.service.ts) que el flujo de
+ * validación con firma de la Vista Cliente — este endpoint nunca pasa
+ * `signatureOptions`, por lo que el PDF sale exactamente igual que antes.
  */
 export const descargarRegistroPdf = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -1014,205 +980,13 @@ export const descargarRegistroPdf = async (req: Request, res: Response): Promise
     const codigoBeckPdf = typeof registroExcel.codigoBeck === 'string' && registroExcel.codigoBeck
       ? registroExcel.codigoBeck
       : null;
-
-    // URLs reales: prioridad fotos_registro, fallback fotosUrls de columna
-    const fotoUrls: string[] =
-      registro.fotos_registro.length > 0
-        ? registro.fotos_registro.map((f) => f.url)
-        : registro.fotosUrls;
-
-    // Descargar imágenes en paralelo
-    const imageBuffers = await Promise.all(fotoUrls.map(fetchImageBuffer));
-    const validImages  = imageBuffers.filter((b): b is Buffer => b !== null);
-
-    // Logo Beck
-    const logoPath   = path.join(process.cwd(), 'public', 'logo-beck.png');
-    const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
-
-    // Campos dinámicos por tipo
-    const esTipo = registro.tipoRegistro;
     const codigoRegistro = codigoBeckPdf ?? `REG-${registro.id.slice(0, 6).toUpperCase()}`;
-    const tituloTipo =
-      esTipo === 'junta_lineal_espuma'
-        ? 'Registro de Junta Lineal Espuma'
-        : 'Registro de Sello Cortafuego';
-    const cantLabel =
-      esTipo === 'junta_lineal_espuma' ? 'Longitud ejecutada (m)' : 'Cantidad de sellos';
-    // Acceder a metrosLineales vía cast hasta que prisma generate actualice el cliente
-    const regRaw = registro as unknown as Record<string, unknown>;
-    const cantValor =
-      esTipo === 'junta_lineal_espuma'
-        ? (regRaw['metrosLineales'] != null ? String(regRaw['metrosLineales']) : '-')
-        : String(registro.cantidadSellos);
 
-    // ── Abrir documento ─────────────────────────────────────────────────────────
-    const doc = new PDFDocument({ size: 'A4', margin: PDF_MARGIN });
+    const pdfBuffer = await generateRegistroPdfBuffer({ ...registro, codigoBeck: codigoBeckPdf });
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${codigoRegistro}.pdf"`);
-    doc.pipe(res);
-
-    // ══════════════════════════════════════════════════════════════
-    // ENCABEZADO
-    // ══════════════════════════════════════════════════════════════
-
-    // Barra amarilla superior
-    doc.rect(0, 0, PDF_W, 5).fill(BECK_YELLOW);
-    doc.y = 14;
-
-    const headerY = doc.y;
-
-    // Logo
-    if (logoBuffer) {
-      doc.image(logoBuffer, PDF_MARGIN, headerY, { height: 38 });
-    }
-    const textStartX = logoBuffer ? PDF_MARGIN + 52 : PDF_MARGIN;
-
-    doc.font('Helvetica-Bold').fontSize(15).fillColor(BECK_DARK)
-      .text('BECK Soluciones', textStartX, headerY, { lineBreak: false });
-    doc.font('Helvetica').fontSize(9).fillColor(TEXT_MUTED)
-      .text('Informe Técnico de Registro', textStartX, headerY + 20, { lineBreak: false });
-
-    // Fecha de generación (derecha)
-    const genDate = new Intl.DateTimeFormat('es-CL', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
-    }).format(new Date());
-    doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
-      .text(`Generado: ${genDate}`, PDF_MARGIN, headerY + 32, {
-        width: PDF_CONTENT_W,
-        align: 'right',
-        lineBreak: false,
-      });
-
-    doc.y = headerY + 50;
-
-    // Línea amarilla separadora
-    doc.rect(PDF_MARGIN, doc.y, PDF_CONTENT_W, 1.5).fill(BECK_YELLOW);
-    doc.y += 10;
-
-    // ══════════════════════════════════════════════════════════════
-    // TÍTULO
-    // ══════════════════════════════════════════════════════════════
-
-    doc.font('Helvetica-Bold').fontSize(14).fillColor(BECK_DARK)
-      .text(tituloTipo);
-    doc.y += 3;
-    doc.font('Helvetica').fontSize(10).fillColor(TEXT_MUTED)
-      .text(`Código: ${codigoRegistro}   ·   Fecha ejecución: ${formatRegistroDate(registro.fecha)}`);
-    doc.y += 8;
-
-    // Badge de estado
-    const estadoColor = ESTADO_COLORS[registro.estado] ?? '#64748b';
-    const badgeY = doc.y;
-    doc.rect(PDF_MARGIN, badgeY, 100, 15).fill(estadoColor);
-    doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
-      .text(
-        registro.estado.replace(/_/g, ' ').toUpperCase(),
-        PDF_MARGIN + 5, badgeY + 4,
-        { width: 90, lineBreak: false },
-      );
-    doc.y = badgeY + 22;
-
-    pdfHRule(doc);
-
-    // ══════════════════════════════════════════════════════════════
-    // INFORMACIÓN GENERAL
-    // ══════════════════════════════════════════════════════════════
-
-    pdfSectionHeader(doc, 'INFORMACIÓN GENERAL');
-    pdfFieldRow(doc, 'Código BECK:', codigoRegistro);
-    pdfFieldRow(doc, 'Obra:', `${registro.obra.nombre}${registro.obra.codigo ? ` (${registro.obra.codigo})` : ''}`);
-    pdfFieldRow(doc, 'Ejecutado por:', `${registro.usuario.nombre} — ${registro.usuario.email}`);
-    pdfFieldRow(doc, 'Día semana:', registro.diaSemana);
-
-    pdfHRule(doc);
-
-    // ══════════════════════════════════════════════════════════════
-    // DATOS TÉCNICOS
-    // ══════════════════════════════════════════════════════════════
-
-    pdfSectionHeader(doc, 'DATOS TÉCNICOS');
-    pdfFieldRow(doc, 'Descripción material:', registro.descripcionMaterial);
-    pdfFieldRow(doc, 'Módulo / Recinto:',     registro.modulo);
-    pdfFieldRow(doc, 'Piso:',                 registro.piso);
-    pdfFieldRow(doc, 'Eje alfabético:',       registro.ejeAlfabetico);
-    pdfFieldRow(doc, 'Eje numérico:',         registro.ejeNumerico);
-    if (esTipo !== 'junta_lineal_espuma') {
-      pdfFieldRow(doc, 'N° de sello:',        registro.numeroSello);
-    }
-    pdfFieldRow(doc, `${cantLabel}:`,         cantValor);
-    pdfFieldRow(doc, 'Sellador:',             registro.nombreSellador);
-    pdfFieldRow(doc, 'Holgura:',              registro.holgura.toString());
-    pdfFieldRow(doc, 'Factor por holguras:',  regRaw['factor_por_holguras'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Accesibilidad:',        regRaw['accesibilidad'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Cantidad sellos con factores:', regRaw['cantidad_sellos_con_factores'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Aislacion:',            regRaw['aislacion'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Cantidad sellos aislacion:', regRaw['cantidad_sellos_aislacion'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Reparacion tabique:',   regRaw['reparacion_tabique'] as string | number | null | undefined);
-    pdfFieldRow(doc, 'Cantidad final:',       regRaw['cantidad_final'] as string | number | null | undefined);
-
-    pdfHRule(doc);
-
-    // ══════════════════════════════════════════════════════════════
-    // OBSERVACIONES
-    // ══════════════════════════════════════════════════════════════
-
-    pdfSectionHeader(doc, 'OBSERVACIONES');
-    doc.font('Helvetica').fontSize(9).fillColor(TEXT_DARK)
-      .text(registro.observaciones || 'Sin observaciones.', PDF_MARGIN, doc.y, {
-        width: PDF_CONTENT_W,
-      });
-    doc.y += 6;
-
-    pdfHRule(doc);
-
-    // ══════════════════════════════════════════════════════════════
-    // FOTOGRAFÍAS
-    // ══════════════════════════════════════════════════════════════
-
-    pdfSectionHeader(doc, 'FOTOGRAFÍAS DE REGISTRO');
-
-    if (validImages.length === 0) {
-      doc.font('Helvetica').fontSize(9).fillColor('#94a3b8')
-        .text('Sin fotos asociadas.', PDF_MARGIN, doc.y);
-    } else {
-      const imgW  = Math.floor((PDF_CONTENT_W - 10) / 2); // ~252 px
-      const imgH  = 175;
-      const gap   = 10;
-      let rowY    = doc.y + 4;
-      let colIdx  = 0;
-
-      validImages.forEach((buf, imgIndex) => {
-        // Nueva fila: verificar espacio en página
-        if (colIdx === 0 && rowY + imgH > 800) {
-          doc.addPage();
-          rowY = PDF_MARGIN;
-        }
-
-        // Si la imagen está sola en su fila, centrarla horizontalmente
-        const isAloneInRow = colIdx === 0 && imgIndex === validImages.length - 1;
-        const imgX = isAloneInRow
-          ? PDF_MARGIN + (PDF_CONTENT_W - imgW) / 2
-          : PDF_MARGIN + colIdx * (imgW + gap);
-
-        try {
-          doc.image(buf, imgX, rowY, { fit: [imgW, imgH] });
-        } catch {
-          // Imagen no procesable, se omite
-        }
-
-        colIdx++;
-        if (colIdx >= 2) {
-          colIdx = 0;
-          rowY  += imgH + 10;
-        }
-      });
-
-      // Avanzar cursor después de las imágenes
-      doc.y = rowY + (colIdx > 0 ? imgH : 0) + 12;
-    }
-
-    doc.end();
+    res.send(pdfBuffer);
   } catch (error) {
     console.error('Error al descargar PDF de registro:', error);
     if (!res.headersSent) {
@@ -1284,11 +1058,9 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
 
 /**
  * GET /api/registros/pendientes
- * Retorna los registros de terreno YA VALIDADOS por Jefe de Obra/Supervisor
- * (estadoValidacionObra = validado), en todos sus estados de Procesamiento
+ * Retorna los registros de terreno en todos sus estados de Procesamiento
  * Ingeniería (pendiente/en_revision/validado/rechazado), para que Ingeniería
  * pueda calcular KPIs correctos en el cliente.
- * - Registros con validación de obra pendiente o rechazada NUNCA aparecen aquí.
  * - El frontend filtra la tabla a pendiente/en_revision client-side.
  * - El frontend calcula los contadores de todos los estados desde esta misma respuesta.
  */
@@ -1300,7 +1072,6 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
        LEFT JOIN usuarios ui ON rt.seleccionado_inspeccion_por_id = ui.id
-       WHERE rt.estado_validacion_obra = 'validado'
        ORDER BY rt.created_at ASC`
     );
 
@@ -1320,14 +1091,12 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
  * GET /api/registros/resumen
  * Devuelve conteos por estado para el módulo de Procesamiento Ingeniería.
  * Endpoint dedicado para KPIs — no depende del listado filtrado.
- * Solo considera registros validados por Jefe de Obra/Supervisor.
  */
 export const getResumenRegistros = async (_req: Request, res: Response): Promise<void> => {
   try {
     const result = await dbQuery<{ estado: string; cantidad: string }>(
       `SELECT estado, COUNT(*) AS cantidad
        FROM registros_terreno
-       WHERE estado_validacion_obra = 'validado'
        GROUP BY estado`
     );
 
@@ -1376,13 +1145,6 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
       return;
     }
 
-    if (existente.estadoValidacionObra !== EstadoValidacionObra.validado) {
-      res.status(400).json({
-        error: 'El registro aún no ha sido validado por Jefe de Obra/Supervisor. No puede ingresar a Procesamiento Ingeniería.',
-      });
-      return;
-    }
-
     const registro = await prisma.registroTerreno.update({
       where: { id },
       data: {
@@ -1406,80 +1168,6 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Error al iniciar revisión:', error);
     res.status(500).json({ error: 'Error al iniciar revisión del registro' });
-  }
-};
-
-/**
- * PATCH /api/registros/:id/validacion-obra
- * Jefe de Obra/Supervisor valida o rechaza un registro creado por Terreno.
- * - Solo roles administrador y jefeobra pueden ejecutar esta acción.
- * - Solo aplica sobre registros con estadoValidacionObra = pendiente.
- * - Es el único paso que habilita el ingreso del registro a Procesamiento Ingeniería.
- * Body: { estadoValidacionObra: 'validado' | 'rechazado', motivo? }
- */
-export const actualizarValidacionObra = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const id = req.params.id as string;
-    const usuario_id = req.userId;
-    const rol = req.userRole;
-
-    if (rol !== RolUsuario.administrador && rol !== RolUsuario.jefeobra) {
-      res.status(403).json({ error: 'Solo Jefe de Obra/Supervisor puede validar registros de terreno' });
-      return;
-    }
-
-    const { estadoValidacionObra, motivo } = req.body as {
-      estadoValidacionObra?: string;
-      motivo?: string;
-    };
-    const motivoRechazoObra: string | undefined =
-      typeof motivo === 'string' ? motivo
-      : typeof req.body.motivoRechazoObra === 'string' ? req.body.motivoRechazoObra
-      : undefined;
-
-    if (
-      estadoValidacionObra !== EstadoValidacionObra.validado &&
-      estadoValidacionObra !== EstadoValidacionObra.rechazado
-    ) {
-      res.status(400).json({ error: 'estadoValidacionObra inválido. Debe ser: validado o rechazado' });
-      return;
-    }
-
-    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
-    if (!existente) {
-      res.status(404).json({ error: 'Registro no encontrado' });
-      return;
-    }
-
-    if (existente.estadoValidacionObra !== EstadoValidacionObra.pendiente) {
-      res.status(400).json({
-        error: `Este registro ya fue ${existente.estadoValidacionObra} por obra. No se puede volver a validar.`,
-      });
-      return;
-    }
-
-    if (estadoValidacionObra === EstadoValidacionObra.rechazado && !motivoRechazoObra?.trim()) {
-      res.status(400).json({ error: 'motivo es obligatorio al rechazar un registro' });
-      return;
-    }
-
-    const registro = await prisma.registroTerreno.update({
-      where: { id },
-      data: {
-        estadoValidacionObra: estadoValidacionObra as EstadoValidacionObra,
-        validacionObraPorId:  usuario_id ?? null,
-        validacionObraAt:     new Date(),
-        motivoRechazoObra:
-          estadoValidacionObra === EstadoValidacionObra.rechazado ? motivoRechazoObra!.trim() : null,
-      },
-    });
-
-    const [withCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
-    const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
-    res.json(withItemizado);
-  } catch (error) {
-    console.error('Error al validar registro por obra:', error);
-    res.status(500).json({ error: 'Error al validar el registro' });
   }
 };
 
@@ -1534,82 +1222,14 @@ export const rendimientoAcumulado = async (req: Request, res: Response): Promise
       select: {
         tipoRegistro: true,
         nombreSellador: true,
-        cantidadFinal: true,
-        cantidadSellosConFactores: true,
         cantidadSellos: true,
         metrosLineales: true,
         codigoBeck: true,
+        obraId: true,
       },
     });
 
-    const codigosBeck = Array.from(
-      new Set(
-        registros
-          .map((r) => r.codigoBeck)
-          .filter((c): c is string => typeof c === 'string' && c.trim().length > 0)
-      )
-    );
-
-    const itemizados = await prisma.itemizadoOpcion.findMany({
-      where: {
-        codigoBeck: { in: codigosBeck },
-      },
-      select: {
-        codigoBeck: true,
-        rendimientoSellosEsperadoDiario: true,
-        rendimientoReparacionEsperadoDiario: true,
-      },
-    });
-
-    const rendimientoPorCodigo = new Map(
-      itemizados
-        .filter((i) => i.codigoBeck)
-        .map((i) => [i.codigoBeck!, i])
-    );
-
-    const agrupado = new Map<string, {
-      totalRegistros: number;
-      cantidadEjecutadaTotal: number;
-      sumaRendimiento: number;
-    }>();
-
-    for (const reg of registros) {
-     const rendimientoItemizado = reg.codigoBeck
-      ? rendimientoPorCodigo.get(reg.codigoBeck)
-      : null;
-
-    const registroConRendimiento = {
-      ...reg,
-      obra: rendimientoItemizado
-        ? { 
-          rendimientoSellosEsperadoDiario: rendimientoItemizado.rendimientoSellosEsperadoDiario,
-          rendimientoReparacionEsperadoDiario: rendimientoItemizado.rendimientoReparacionEsperadoDiario,
-            }
-        : null,
-    };
-
-    const { cantidadEjecutada, rendimientoIndividual } = calcularRendimientoIndividual(
-      registroConRendimiento as unknown as Record<string, unknown>,
-    );
-      if (rendimientoIndividual === null) continue;
-
-      const sellador = reg.nombreSellador ?? 'Sin asignar';
-      const acc = agrupado.get(sellador) ?? { totalRegistros: 0, cantidadEjecutadaTotal: 0, sumaRendimiento: 0 };
-
-      acc.totalRegistros++;
-      acc.cantidadEjecutadaTotal += cantidadEjecutada ?? 0;
-      acc.sumaRendimiento += rendimientoIndividual;
-
-      agrupado.set(sellador, acc);
-    }
-
-    const resultado = Array.from(agrupado.entries()).map(([sellador, data]) => ({
-      nombreSellador: sellador,
-      totalRegistros: data.totalRegistros,
-      cantidadEjecutadaTotal: data.cantidadEjecutadaTotal,
-      rendimientoAcumulado: Math.round(data.sumaRendimiento * 10000) / 10000,
-      rendimientoAcumuladoPct: Math.round(data.sumaRendimiento * 10000) / 100,
-    }));
+    const resultado = await calcularRendimientoPorTrabajador(registros);
 
     res.json(resultado);
   } catch (error) {

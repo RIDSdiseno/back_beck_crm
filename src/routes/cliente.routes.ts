@@ -8,6 +8,12 @@ import {
   getRegistrosObra,
   getDashboardCliente,
   validarRegistroCliente,
+  validarRegistrosClienteMultiple,
+  obtenerPdfFirmadoCliente,
+  descargarPdfConsolidadoCliente,
+  getItemizadosPropuestosObraCliente,
+  actualizarItemizadoClienteObra,
+  confirmarItemizadoCliente,
 } from '../controllers/cliente.controller';
 
 const router = Router();
@@ -24,6 +30,19 @@ router.get('/usuarios-clientes', soloAdmin, getUsuariosClientes);
 router.get('/obras', vistaCliente, getObrasCliente);
 router.get('/obras/:obraId/registros', vistaCliente, getRegistrosObra);
 router.patch('/registros/:registroId/validar', vistaCliente, validarRegistroCliente);
+router.patch('/registros/validar-multiple', vistaCliente, validarRegistrosClienteMultiple);
+router.get('/registros/:id/pdf', vistaCliente, obtenerPdfFirmadoCliente);
+router.post('/registros/pdf-consolidado', vistaCliente, descargarPdfConsolidadoCliente);
 router.get('/dashboard', vistaCliente, getDashboardCliente);
+
+// Itemizado por obra: revisión y confirmación del cliente (solo rol cliente,
+// verificado dentro del controller — vistaCliente solo exige el permiso de módulo)
+router.get('/obras/:obraId/itemizados', vistaCliente, getItemizadosPropuestosObraCliente);
+router.patch(
+  '/obras/:obraId/itemizados/:itemizadoOpcionId',
+  vistaCliente,
+  actualizarItemizadoClienteObra,
+);
+router.patch('/obras/:obraId/itemizado/confirmar', vistaCliente, confirmarItemizadoCliente);
 
 export default router;

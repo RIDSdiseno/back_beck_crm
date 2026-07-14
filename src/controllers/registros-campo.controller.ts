@@ -1,6 +1,7 @@
 // src/controllers/registros-campo.controller.ts
-// Endpoints de lectura de registros para roles terreno y jefeobra.
-// Aplica sanitización de campos según configuración por rol.
+// Endpoints de lectura de registros para roles terreno, jefeobra e ingenieria.
+// Aplica sanitización de campos según configuración por rol (fuente única de verdad:
+// src/config/camposRegistro.config.ts).
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
@@ -10,20 +11,18 @@ import {
   sanitizarRegistroPorRol,
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
+import { normalizarRolConfiguracion } from '../config/camposRegistro.config';
 
-const ROLES_CON_RESTRICCIONES = ['terreno', 'trabajador', 'jefeobra'] as const;
-type RolRestringido = typeof ROLES_CON_RESTRICCIONES[number];
-
-function tieneRestriccion(rol: string): rol is RolRestringido {
-  return ROLES_CON_RESTRICCIONES.includes(rol as RolRestringido);
+function tieneRestriccion(rol: string): boolean {
+  return normalizarRolConfiguracion(rol) !== null;
 }
 
 /**
  * GET /api/registros-campo
  * Query params opcionales: obra_id (uuid)
  * - terreno: solo ve sus propios registros
- * - jefeobra: ve todos los de la obra si se pasa obra_id, o todos
- * - admin/ingenieria: ven todo, sin filtrado de campos
+ * - jefeobra/ingenieria: ven todos los de la obra si se pasa obra_id, o todos
+ * - admin/visualizador: ven todo, sin filtrado de campos
  */
 export const listarRegistrosCampo = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -73,7 +72,7 @@ export const listarRegistrosCampo = async (req: Request, res: Response): Promise
 /**
  * GET /api/registros-campo/:id
  * - terreno: solo puede ver su propio registro
- * - jefeobra/admin/ingenieria: cualquier registro
+ * - jefeobra/ingenieria/admin/visualizador: cualquier registro
  */
 export const obtenerRegistroCampo = async (req: Request, res: Response): Promise<void> => {
   try {

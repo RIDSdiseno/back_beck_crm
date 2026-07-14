@@ -47,6 +47,16 @@ export const ROLES_COMERCIALES_FIREMAT: RolUsuario[] = [
   RolUsuario.vendedor_firemat,
 ];
 
+// Roles que NUNCA deben poder figurar como Responsable de una Cotizacion Beck:
+// clientes y roles de solo lectura/operativos sin acceso real al sistema de
+// cotizaciones. A diferencia de ROLES_EXCLUIDOS_COMERCIALES_BECK, aqui NO se
+// excluye jefeobra (puede ser responsable de una cotizacion).
+export const ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES: RolUsuario[] = [
+  RolUsuario.cliente,
+  RolUsuario.visualizador,
+  RolUsuario.terreno,
+];
+
 // Roles que se pueden crear por contexto — administrador NO creble desde Firemat
 export const ROLES_CREABLES_BECK: RolUsuario[] = [
   RolUsuario.administrador,

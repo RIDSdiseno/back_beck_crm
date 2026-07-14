@@ -11,6 +11,8 @@ import {
   getFunnelBeckByIdController,
   getGanadasSinObraFunnelBeckController,
   getHistorialEtapasBeckController,
+  getHistorialCombinadoBeckController,
+  cambiarVendedorFunnelBeckController,
   updateEstadoCierreFunnelBeckController,
   updateEtapaFunnelBeckController,
   updateFunnelBeckController,
@@ -33,9 +35,13 @@ router.get("/:id/archivos", authenticate, requirePermission('beck_funnel', 'ver'
 router.post("/:id/archivos", authenticate, requirePermission('beck_funnel', 'editar'), uploadFunnelBeckFiles, createFunnelBeckArchivosController);
 router.get("/:id/cotizaciones", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizacionesByFunnelBeckController);
 router.get("/:id/historial-etapas", authenticate, requirePermission('beck_funnel', 'ver'), getHistorialEtapasBeckController);
+// Línea de tiempo combinada (etapas + cambios de vendedor) para el Funnel.
+router.get("/:id/historial", authenticate, requirePermission('beck_funnel', 'ver'), getHistorialCombinadoBeckController);
 router.get("/:id", authenticate, requirePermission('beck_funnel', 'ver'), getFunnelBeckByIdController);
 router.post("/", authenticate, requirePermission('beck_funnel', 'editar'), createFunnelBeckController);
 router.put("/:id", authenticate, requirePermission('beck_funnel', 'editar'), updateFunnelBeckController);
+// Cambio puntual de vendedor (no exige los campos del formulario completo).
+router.patch("/:id/vendedor", authenticate, requirePermission('beck_funnel', 'editar'), cambiarVendedorFunnelBeckController);
 router.patch("/:id/etapa", authenticate, requirePermission('beck_funnel', 'editar'), updateEtapaFunnelBeckController);
 router.patch("/:id/estado-cierre", authenticate, requirePermission('beck_funnel', 'editar'), updateEstadoCierreFunnelBeckController);
 router.patch("/:id/obra", authenticate, requirePermission('beck_funnel', 'editar'), updateObraFunnelBeckController);

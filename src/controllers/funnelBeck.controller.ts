@@ -10,6 +10,8 @@ import {
   getFunnelBeckById,
   getGanadasSinObraFunnelBeck,
   getHistorialEtapasBeck,
+  getHistorialCombinadoBeck,
+  cambiarVendedorFunnelBeck,
   updateEstadoCierreFunnelBeck,
   updateEtapaFunnelBeck,
   updateFunnelBeck,
@@ -265,6 +267,31 @@ export async function updateFunnelBeckController(req: Request, res: Response) {
   }
 }
 
+/**
+ * PATCH /api/funnel-beck/:id/vendedor
+ * Cambia únicamente el vendedor — no acepta ni valida ningún otro campo de
+ * la oportunidad. Pensado para el botón "Cambiar vendedor" del detalle.
+ */
+export async function cambiarVendedorFunnelBeckController(req: Request, res: Response) {
+  try {
+    const id = req.params.id as string;
+    const { oportunidad } = await cambiarVendedorFunnelBeck(id, req.body?.vendedor, req.userId ?? '');
+    return res.status(200).json({
+      success: true,
+      data: oportunidad,
+      message: "Vendedor actualizado correctamente.",
+    });
+  } catch (error) {
+    const statusCode = error instanceof Error && (error as NodeJS.ErrnoException & { statusCode?: number }).statusCode
+      ? (error as NodeJS.ErrnoException & { statusCode?: number }).statusCode!
+      : (error instanceof Error && error.message === "Oportunidad no encontrada." ? 404 : 400);
+    return res.status(statusCode).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Error al cambiar el vendedor.",
+    });
+  }
+}
+
 export async function updateEtapaFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
@@ -376,6 +403,31 @@ export async function getHistorialEtapasBeckController(req: Request, res: Respon
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error al obtener historial de etapas.";
+    const statusCode = message === "Oportunidad no encontrada." ? 404 : 500;
+    return res.status(statusCode).json({
+      success: false,
+      error: message,
+    });
+  }
+}
+
+/**
+ * GET /api/funnel-beck/:id/historial
+ * Línea de tiempo combinada: cambios de etapa (HistorialEtapaBeck) + cambios
+ * de vendedor (MovimientoCRM, tipo VENDEDOR_MODIFICADO), ordenados por fecha.
+ * No reemplaza /historial-etapas — ese endpoint sigue existiendo tal cual
+ * para no romper a otros consumidores.
+ */
+export async function getHistorialCombinadoBeckController(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id || "").trim();
+    const historial = await getHistorialCombinadoBeck(id);
+    return res.status(200).json({
+      success: true,
+      data: historial,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error al obtener historial de la oportunidad.";
     const statusCode = message === "Oportunidad no encontrada." ? 404 : 500;
     return res.status(statusCode).json({
       success: false,

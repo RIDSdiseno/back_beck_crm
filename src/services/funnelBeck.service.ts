@@ -15,6 +15,7 @@ import {
 import { validarMotivoCierre, MotivoInvalidoError } from "../constants/motivosCierre";
 import { RolUsuario } from "../types";
 import { puedeCambiarEmpresa } from "../helpers/puedeCambiarEmpresa";
+import { getVendedoresFunnelBeckElegibles } from "../helpers/vendedoresFunnelBeck";
 
 // De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
@@ -950,6 +951,8 @@ export async function getGanadasSinObraFunnelBeck() {
       flujoPosterior: true,
       urgencia: true,
       observacionCamposFaltantes: true,
+      region: true,
+      comuna: true,
       clienteBeckId: true,
       contactoBeckId: true,
       clienteBeck: {
@@ -1144,6 +1147,11 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
 
   const etapaCambio = etapa !== existente.etapa;
   const cierreCambio = data.estadoCierre !== undefined && data.estadoCierre !== existente.estadoCierre;
+  // Normalizado con trim en ambos lados (existente.vendedor puede tener
+  // espacios residuales de datos históricos) para no registrar un cambio
+  // falso por diferencias puramente de espacios.
+  const vendedorAnterior = normalizeString(existente.vendedor);
+  const vendedorCambio = vendedorAnterior !== vendedor;
 
   let advertenciasValidacion: string[] = [];
 
@@ -1313,6 +1321,24 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       usuarioId: userId,
     });
   }
+  if (vendedorCambio && userId) {
+    // Se crea con tx (no con registrarMovimientoCRM, que usa el cliente
+    // global) para que quede en la MISMA transacción que el update de la
+    // oportunidad: si esto falla, se revierte también el cambio de vendedor.
+    await tx.movimientoCRM.create({
+      data: {
+        usuarioId: userId,
+        modulo: 'FUNNEL',
+        tipo: 'VENDEDOR_MODIFICADO',
+        entidadId: id,
+        descripcion: `Se cambió el vendedor de ${existente.nombreProyecto} de "${vendedorAnterior}" a "${vendedor}"`,
+        datos: {
+          vendedorAnterior: vendedorAnterior || null,
+          vendedorNuevo: vendedor,
+        },
+      },
+    });
+  }
   return updated;
   });
 
@@ -1360,6 +1386,76 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
   }
 
   return { oportunidad, advertencias: advertenciasValidacion };
+}
+
+/**
+ * PATCH /api/funnel-beck/:id/vendedor
+ * Cambia ÚNICAMENTE el vendedor de una oportunidad — no toca ningún otro
+ * campo, a diferencia de updateFunnelBeck (edición completa). Pensado para
+ * el botón "Cambiar vendedor" del modal de detalle, que no debe forzar a
+ * completar campos de etapas posteriores del Funnel.
+ *
+ * Reutiliza:
+ *  - getVendedoresFunnelBeckElegibles (misma fuente de verdad que alimenta
+ *    el Select de vendedores, para no duplicar la lógica de permisos).
+ *  - el mismo patrón de detección de cambio + registro de MovimientoCRM
+ *    (tipo VENDEDOR_MODIFICADO) que updateFunnelBeck, dentro de una
+ *    transacción para garantizar atomicidad.
+ */
+export async function cambiarVendedorFunnelBeck(
+  id: string,
+  vendedorNuevoRaw: unknown,
+  userId: string,
+) {
+  const existente = await prisma.operadorBeck.findUnique({ where: { id } });
+  if (!existente) throw new Error("Oportunidad no encontrada.");
+
+  const vendedorNuevo = normalizeString(vendedorNuevoRaw);
+  if (!vendedorNuevo) throw new Error("El vendedor es obligatorio.");
+
+  const elegibles = await getVendedoresFunnelBeckElegibles();
+  const esVendedorValido = elegibles.some(
+    (u) => u.nombre === vendedorNuevo || u.email === vendedorNuevo,
+  );
+  if (!esVendedorValido) {
+    throw Object.assign(
+      new Error("El vendedor seleccionado no tiene permiso para editar el Funnel."),
+      { statusCode: 400 },
+    );
+  }
+
+  const vendedorAnterior = normalizeString(existente.vendedor);
+  const vendedorCambio = vendedorAnterior !== vendedorNuevo;
+
+  if (!vendedorCambio) {
+    return { oportunidad: await getFunnelBeckById(id) };
+  }
+
+  const oportunidad = await prisma.$transaction(async (tx) => {
+    const updated = await tx.operadorBeck.update({
+      where: { id },
+      data: { vendedor: vendedorNuevo },
+      include: FUNNEL_BECK_INCLUDE,
+    });
+
+    await tx.movimientoCRM.create({
+      data: {
+        usuarioId: userId,
+        modulo: 'FUNNEL',
+        tipo: 'VENDEDOR_MODIFICADO',
+        entidadId: id,
+        descripcion: `Se cambió el vendedor de ${existente.nombreProyecto} de "${vendedorAnterior}" a "${vendedorNuevo}"`,
+        datos: {
+          vendedorAnterior: vendedorAnterior || null,
+          vendedorNuevo,
+        },
+      },
+    });
+
+    return updated;
+  });
+
+  return { oportunidad };
 }
 
 export async function updateEtapaFunnelBeck(
@@ -1649,6 +1745,73 @@ export async function getHistorialEtapasBeck(id: string) {
       },
     },
   });
+}
+
+// Historial combinado para la línea de tiempo del Funnel: cambios de etapa
+// (HistorialEtapaBeck, sin tocar) + cambios de vendedor (MovimientoCRM,
+// tipo VENDEDOR_MODIFICADO), ordenados cronológicamente. No reemplaza ni
+// modifica getHistorialEtapasBeck/el endpoint de historial-etapas existente.
+export type HistorialCombinadoBeckItem = {
+  tipo: 'ETAPA' | 'CAMBIO_VENDEDOR';
+  createdAt: string;
+  usuario: { id: string; nombre: string } | null;
+  etapaAnterior?: string | null;
+  etapaNueva?: string | null;
+  vendedorAnterior?: string | null;
+  vendedorNuevo?: string | null;
+};
+
+export async function getHistorialCombinadoBeck(id: string): Promise<HistorialCombinadoBeckItem[]> {
+  const oportunidad = await prisma.operadorBeck.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+  if (!oportunidad) throw new Error("Oportunidad no encontrada.");
+
+  const [etapas, movimientosVendedor] = await Promise.all([
+    prisma.historialEtapaBeck.findMany({
+      where: { oportunidadId: id },
+      orderBy: { createdAt: "asc" },
+      select: {
+        etapaAnterior: true,
+        etapaNueva: true,
+        createdAt: true,
+        usuario: { select: { id: true, nombre: true } },
+      },
+    }),
+    prisma.movimientoCRM.findMany({
+      where: { entidadId: id, modulo: 'FUNNEL', tipo: 'VENDEDOR_MODIFICADO' },
+      orderBy: { createdAt: "asc" },
+      select: {
+        datos: true,
+        createdAt: true,
+        usuario: { select: { id: true, nombre: true } },
+      },
+    }),
+  ]);
+
+  const eventosEtapa: HistorialCombinadoBeckItem[] = etapas.map((e) => ({
+    tipo: 'ETAPA',
+    createdAt: e.createdAt.toISOString(),
+    usuario: e.usuario ? { id: e.usuario.id, nombre: e.usuario.nombre } : null,
+    etapaAnterior: e.etapaAnterior,
+    etapaNueva: e.etapaNueva,
+  }));
+
+  const eventosVendedor: HistorialCombinadoBeckItem[] = movimientosVendedor.map((m) => {
+    const datos = (m.datos ?? {}) as { vendedorAnterior?: string | null; vendedorNuevo?: string | null };
+    return {
+      tipo: 'CAMBIO_VENDEDOR',
+      createdAt: m.createdAt.toISOString(),
+      usuario: m.usuario ? { id: m.usuario.id, nombre: m.usuario.nombre } : null,
+      vendedorAnterior: datos.vendedorAnterior ?? null,
+      vendedorNuevo: datos.vendedorNuevo ?? null,
+    };
+  });
+
+  return [...eventosEtapa, ...eventosVendedor].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
 }
 
 export async function deleteFunnelBeck(id: string, userId: string) {

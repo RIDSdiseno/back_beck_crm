@@ -5,6 +5,8 @@ import {
   listarUsuarios,
   listarUsuariosComerciales,
   listarUsuariosComercialesFiremat,
+  listarUsuariosVendedoresFunnelBeck,
+  listarUsuariosResponsablesCotizaciones,
   obtenerUsuario,
   obtenerObrasUsuarioCliente,
   obtenerVistaClienteUsuario,
@@ -27,8 +29,13 @@ router.use(authenticate);
 router.get('/', requirePermission('beck_usuarios_parametros', 'ver'), listarUsuarios);
 // Alimenta el desplegable de Vendedor/responsable comercial del Funnel Beck.
 router.get('/comerciales', requirePermission('beck_funnel', 'ver'), listarUsuariosComerciales);
+// Alimenta el Select de Vendedor del Funnel Beck filtrando por permiso
+// efectivo (beck_funnel.puedeEditar), no por rol fijo.
+router.get('/vendedores-funnel-beck', requirePermission('beck_funnel', 'ver'), listarUsuariosVendedoresFunnelBeck);
 // Alimenta el desplegable de Responsable comercial del Funnel Firemat.
 router.get('/comerciales-firemat', requirePermission('firemat_funnel', 'ver'), listarUsuariosComercialesFiremat);
+// Alimenta el Select buscable de Responsable de una Cotizacion Beck.
+router.get('/responsables-cotizaciones', requirePermission('beck_cotizaciones', 'ver'), listarUsuariosResponsablesCotizaciones);
 router.post('/', requirePermission('beck_usuarios_parametros', 'editar'), crearUsuario);
 router.patch('/:id/password', requirePermission('beck_usuarios_parametros', 'editar'), cambiarPassword);
 // Gestión de permisos individuales: solo administrador por diseño del sistema

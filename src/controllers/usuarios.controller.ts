@@ -3,12 +3,19 @@ import { Request, Response } from 'express';
 import { RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from '../services/movimientoCrm.service';
-import { ROLES_BECK, ROLES_FIREMAT, ROLES_EXCLUIDOS_COMERCIALES_BECK, ROLES_COMERCIALES_FIREMAT } from '../helpers/roles';
+import {
+  ROLES_BECK,
+  ROLES_FIREMAT,
+  ROLES_EXCLUIDOS_COMERCIALES_BECK,
+  ROLES_COMERCIALES_FIREMAT,
+  ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES,
+} from '../helpers/roles';
 import {
   buildConfiguracionVistaCliente,
   VISTA_CLIENTE_CLAVES,
 } from '../helpers/configuracionVistaCliente';
 import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
+import { getVendedoresFunnelBeckElegibles } from '../helpers/vendedoresFunnelBeck';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -379,6 +386,51 @@ export const listarUsuariosComercialesFiremat = async (_req: Request, res: Respo
   } catch (error) {
     console.error('Error listando usuarios comerciales Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales Firemat.' });
+  }
+};
+
+/**
+ * GET /api/usuarios/vendedores-funnel-beck
+ * Alimenta el Select de "Vendedor" del Funnel Beck. A diferencia de
+ * listarUsuariosComerciales (que filtra por una lista fija de roles
+ * excluidos), aquí la fuente de verdad es exclusivamente el permiso
+ * efectivo: cualquier usuario activo con permiso para EDITAR beck_funnel
+ * (override individual > override de rol > default de código, ver
+ * getPermisosEfectivos) aparece como vendedor seleccionable, sin importar
+ * su rol. No se excluyen roles manualmente.
+ */
+export const listarUsuariosVendedoresFunnelBeck = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const data = await getVendedoresFunnelBeckElegibles();
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error listando vendedores del Funnel Beck:', error);
+    res.status(500).json({ success: false, error: 'Error al listar vendedores del Funnel Beck.' });
+  }
+};
+
+/**
+ * GET /api/usuarios/responsables-cotizaciones
+ * Alimenta el Select buscable de Responsable de una Cotizacion Beck.
+ * Usuarios activos, excluyendo cliente, visualizador y terreno (ver
+ * ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES). No filtra por permisos de
+ * cotizaciones: cualquier otro rol interno activo puede ser responsable.
+ */
+export const listarUsuariosResponsablesCotizaciones = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      where: {
+        activo: true,
+        rol: { notIn: ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES },
+      },
+      select: { id: true, nombre: true, email: true, rol: true },
+      orderBy: { nombre: 'asc' },
+    });
+
+    res.json({ success: true, data: usuarios });
+  } catch (error) {
+    console.error('Error listando responsables de cotizaciones:', error);
+    res.status(500).json({ success: false, error: 'Error al listar responsables de cotizaciones.' });
   }
 };
 

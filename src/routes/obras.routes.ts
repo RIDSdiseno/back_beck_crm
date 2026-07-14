@@ -12,6 +12,7 @@ import {
   misObras,
   obtenerTiposRegistroObra,
   actualizarTiposRegistroObra,
+  enviarItemizadoARevisionCliente,
 } from '../controllers/obras.controller';
 import { authenticate } from '../middlewares/auth';
 import { requirePermission } from '../middlewares/requirePermission';
@@ -66,6 +67,15 @@ router.patch(
   authenticate,
   requirePermission('beck_obras', 'editar'),
   cambiarEstadoObra,
+);
+
+// Enviar propuesta de itemizado al cliente (PREPARACION → EN_REVISION_CLIENTE):
+// solo roles internos con edición sobre beck_obras
+router.patch(
+  '/:obraId/itemizado/enviar-a-cliente',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  enviarItemizadoARevisionCliente,
 );
 
 router.put(

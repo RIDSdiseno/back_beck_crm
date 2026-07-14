@@ -205,6 +205,7 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
 
     const clienteBeckId = optStr(b.clienteBeckId ?? b.cliente_beck_id);
     const contactoBeckId = optStr(b.contactoBeckId ?? b.contacto_beck_id);
+    const responsableId = optStr(b.responsableId ?? b.responsable_id);
 
     const clienteNombre = optStr(b.clienteNombre);
     if (!clienteNombre && !clienteBeckId) {
@@ -242,6 +243,7 @@ export const createCotizacion = async (req: Request, res: Response): Promise<voi
         funnelBeckId: optStr(b.funnelBeckId),
         clienteBeckId,
         contactoBeckId,
+        responsableId,
         descuento,
         aplicaImpuesto,
         vigencia,
@@ -335,6 +337,8 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
     const rawClienteBeckId = has('clienteBeckId') ? b.clienteBeckId : b.cliente_beck_id;
     const hasContactoBeckId = has('contactoBeckId') || has('contacto_beck_id');
     const rawContactoBeckId = has('contactoBeckId') ? b.contactoBeckId : b.contacto_beck_id;
+    const hasResponsableId = has('responsableId') || has('responsable_id');
+    const rawResponsableId = has('responsableId') ? b.responsableId : b.responsable_id;
 
     if (has('clienteNombre') && !optStr(b.clienteNombre)) {
       res.status(400).json({ success: false, error: 'clienteNombre no puede estar vacío' });
@@ -396,6 +400,7 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
         ...(has('funnelBeckId') && { funnelBeckId: optStr(b.funnelBeckId) }),
         ...(hasClienteBeckId && { clienteBeckId: optStr(rawClienteBeckId) }),
         ...(hasContactoBeckId && { contactoBeckId: optStr(rawContactoBeckId) }),
+        ...(hasResponsableId && { responsableId: optStr(rawResponsableId) }),
         ...(estado !== undefined && { estado }),
         ...(descuento !== undefined && { descuento }),
         ...(aplicaImpuesto !== undefined && { aplicaImpuesto }),
@@ -632,7 +637,7 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
     ]);
 
     drawInfoBox(BINFO_RX, BINFO_RW, 'DATOS DE COTIZACIÓN', [
-      ['Responsable:',   '—'],
+      ['Responsable:',   val(cotizacion.responsable?.nombre)],
       ['Fecha emisión:', formatCotDate(new Date(cotizacion.createdAt))],
       ['Vigencia:',      formatCotDate(new Date(cotizacion.vigencia))],
       ['Estado:',        cotizacion.estado],

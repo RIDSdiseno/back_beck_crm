@@ -607,6 +607,8 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               accesibilidad: accesibilidad ?? 1,
               aislacion: aislacion_raw,
               reparacion_tabique: reparacion_tabique_raw,
+              piso,
+              tipoRegistro,
             });
           } catch (err) {
             if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {

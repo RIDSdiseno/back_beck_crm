@@ -20,9 +20,11 @@ model Usuario {
   configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
   controlesInspeccion              ControlInspeccion[]                @relation("ControlesInspeccionPorUsuario")
   cotizacionesCreadas              Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
+  cotizacionesResponsable          Cotizacion[]                       @relation("CotizacionesResponsable")
   fotos_registro                   fotos_registro[]
   historialEtapasBeck              HistorialEtapaBeck[]
   itemizadosCreados                Itemizado[]                        @relation("ItemizadosCreadosPorUsuario")
+  itemizadosFinalizados            Obra[]                             @relation("ItemizadoFinalizadoPorUsuario")
   movimientosCrm                   MovimientoCRM[]                    @relation("MovimientosCrmPorUsuario")
   movimientosInventario            MovimientoInventario[]
   notificaciones                   Notificacion[]
@@ -33,7 +35,6 @@ model Usuario {
   registrosRechazados              RegistroTerreno[]                  @relation("RegistrosRechazadosPorUsuario")
   registrosSeleccionadosInspeccion RegistroTerreno[]                  @relation("RegistrosSeleccionadosInspeccion")
   registrosTerreno                 RegistroTerreno[]
-  registrosValidadosObra           RegistroTerreno[]                  @relation("RegistrosValidadosObraPorUsuario")
   registrosValidadosCliente        RegistroTerreno[]                  @relation("RegistrosValidadosClientePorUsuario")
   usuarios_obras                   usuarios_obras[]
 
@@ -54,7 +55,12 @@ model Obra {
   updatedAt                      DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   cliente                        String?                            @db.VarChar(255)
   direccion                      String?
+  region                         String?                            @db.VarChar(150)
+  comuna                         String?                            @db.VarChar(150)
   clienteBeckId                  String?                            @map("cliente_beck_id") @db.Uuid
+  estadoPreparacionItemizado     EstadoPreparacionItemizado         @default(PREPARACION) @map("estado_preparacion_itemizado")
+  itemizadoFinalizadoAt          DateTime?                          @map("itemizado_finalizado_at") @db.Timestamp(6)
+  itemizadoFinalizadoPorId       String?                            @map("itemizado_finalizado_por_id") @db.Uuid
   configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
   configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
   cotizaciones                   Cotizacion[]
@@ -62,6 +68,7 @@ model Obra {
   tiposRegistro                  ObraTipoRegistro[]
   clienteBeck                    ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
   creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  itemizadoFinalizadoPor         Usuario?                           @relation("ItemizadoFinalizadoPorUsuario", fields: [itemizadoFinalizadoPorId], references: [id])
   registrosTerreno               RegistroTerreno[]
   usuarios_obras                 usuarios_obras[]
 
@@ -69,6 +76,8 @@ model Obra {
   @@index([estado])
   @@index([creadoPorId])
   @@index([clienteBeckId])
+  @@index([estadoPreparacionItemizado])
+  @@index([itemizadoFinalizadoPorId])
   @@map("obras")
 }
 
@@ -152,10 +161,6 @@ model RegistroTerreno {
   validadoCliente             Boolean                  @default(false) @map("validado_cliente")
   validadoClienteAt           DateTime?                @map("validado_cliente_at") @db.Timestamp(6)
   validadoClientePorId        String?                  @map("validado_cliente_por_id") @db.Uuid
-  estadoValidacionObra        EstadoValidacionObra     @default(pendiente) @map("estado_validacion_obra")
-  validacionObraPorId         String?                  @map("validacion_obra_por_id") @db.Uuid
-  validacionObraAt            DateTime?                @map("validacion_obra_at") @db.Timestamp(6)
-  motivoRechazoObra           String?                  @map("motivo_rechazo_obra")
   inspeccionEstado            EstadoInspeccion         @default(no_enviado) @map("inspeccion_estado")
   inspeccionRevisionAt        DateTime?                @map("inspeccion_revision_at") @db.Timestamp(6)
   inspeccionRevisionEstado    EstadoRevisionInspeccion @default(pendiente) @map("inspeccion_revision_estado")
@@ -174,7 +179,6 @@ model RegistroTerreno {
   correcciones                RegistroTerreno[]        @relation("CorreccionesRegistro")
   seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
   usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
-  validacionObraPor           Usuario?                 @relation("RegistrosValidadosObraPorUsuario", fields: [validacionObraPorId], references: [id])
   validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
 
   @@index([rechazadoPorId])
@@ -192,8 +196,6 @@ model RegistroTerreno {
   @@index([inspeccionEstado])
   @@index([validadoCliente])
   @@index([validadoClientePorId])
-  @@index([estadoValidacionObra])
-  @@index([validacionObraPorId])
   @@index([inspeccionRevisionEstado])
   @@index([inspeccionRevisionPorId])
   @@map("registros_terreno")
@@ -291,11 +293,13 @@ model Cotizacion {
   version          Int                  @default(1)
   clienteBeckId    String?              @map("cliente_beck_id") @db.Uuid
   contactoBeckId   String?              @map("contacto_beck_id") @db.Uuid
+  responsableId    String?              @map("responsable_id") @db.Uuid
   clienteBeck      ClienteBeck?         @relation(fields: [clienteBeckId], references: [id])
   contactoBeck     ContactoClienteBeck? @relation(fields: [contactoBeckId], references: [id])
   cotizacionBase   Cotizacion?          @relation("HistorialCotizaciones", fields: [cotizacionBaseId], references: [id])
   versiones        Cotizacion[]         @relation("HistorialCotizaciones")
   creadoPor        Usuario              @relation("CotizacionesCreadasPorUsuario", fields: [creadoPorId], references: [id])
+  responsable      Usuario?             @relation("CotizacionesResponsable", fields: [responsableId], references: [id])
   funnelBeck       OperadorBeck?        @relation(fields: [funnelBeckId], references: [id])
   obra             Obra?                @relation(fields: [obraId], references: [id])
   lineas           LineaCotizacion[]
@@ -312,6 +316,7 @@ model Cotizacion {
   @@index([cotizacionBaseId])
   @@index([clienteBeckId])
   @@index([contactoBeckId])
+  @@index([responsableId])
   @@map("cotizaciones")
 }
 
@@ -731,16 +736,27 @@ model ItemizadoOpcion {
 }
 
 model ConfiguracionItemizadoOpcionObra {
-  id                  String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  obraId              String          @map("obra_id") @db.Uuid
-  itemizadoOpcionId   String          @map("itemizado_opcion_id") @db.Uuid
-  visible             Boolean         @default(true)
-  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
-  nombrePersonalizado String?         @map("nombre_personalizado") @db.VarChar(255)
-  orden               Int?
-  itemizadoOpcion     ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
-  obra                Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  id                                  String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId                              String          @map("obra_id") @db.Uuid
+  itemizadoOpcionId                   String          @map("itemizado_opcion_id") @db.Uuid
+  // Activo definitivamente para la obra. Solo se actualiza cuando el cliente
+  // confirma el itemizado (confirmarItemizadoCliente): visible = seleccionadoPorCliente
+  // para los propuestos, false para el resto. No usar como equivalente de "incluido en propuesta".
+  visible                             Boolean         @default(true)
+  // Beck incluyó este itemizado en la propuesta enviada al cliente. Solo lo
+  // escribe Beck mientras la obra está en PREPARACION.
+  propuestoAlCliente                  Boolean         @default(false) @map("propuesto_al_cliente")
+  // El cliente marcó este itemizado (ya propuesto) como aceptado. Solo lo escribe
+  // el cliente mientras la obra está en EN_REVISION_CLIENTE.
+  seleccionadoPorCliente              Boolean         @default(false) @map("seleccionado_por_cliente")
+  createdAt                           DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                           DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
+  nombrePersonalizado                 String?         @map("nombre_personalizado") @db.VarChar(255)
+  orden                               Int?
+  rendimientoSellosEsperadoDiario     Int?            @map("rendimiento_sellos_esperado_diario")
+  rendimientoReparacionEsperadoDiario Int?            @map("rendimiento_reparacion_esperado_diario")
+  itemizadoOpcion                     ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
+  obra                                Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
 
   @@unique([obraId, itemizadoOpcionId])
   @@index([obraId])
@@ -965,12 +981,6 @@ enum EstadoRegistroTerreno {
   rechazado
 }
 
-enum EstadoValidacionObra {
-  pendiente
-  validado
-  rechazado
-}
-
 enum EstadoRevisionInspeccion {
   pendiente
   validado
@@ -994,6 +1004,7 @@ enum TipoMovimientoCRM {
   OPORTUNIDAD_CREADA
   OPORTUNIDAD_EDITADA
   ETAPA_MODIFICADA
+  VENDEDOR_MODIFICADO
   OPORTUNIDAD_ELIMINADA
   COTIZACION_CREADA
   COTIZACION_EDITADA
@@ -1021,4 +1032,10 @@ enum ResultadoParametroInspeccion {
   cumple
   no_cumple
   no_aplica
+}
+
+enum EstadoPreparacionItemizado {
+  PREPARACION
+  EN_REVISION_CLIENTE
+  FINALIZADO
 }

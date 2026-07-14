@@ -11,7 +11,6 @@ import {
   descargarRegistroPdf,
   reenviarRevision,
   iniciarRevision,
-  actualizarValidacionObra,
   rendimientoAcumulado,
   marcarInspeccion,
   getControlInspeccion,
@@ -23,9 +22,11 @@ import {
   importarRegistrosExcel,
   descargarEjemploExcel,
 } from '../controllers/importar-registros.controller';
+import { descargarPdfConsolidadoCliente } from '../controllers/cliente.controller';
 import { authenticate } from '../middlewares/auth';
 import { requirePermission } from '../middlewares/requirePermission';
 import { upload, uploadExcelFile } from '../middlewares/upload';
+import type { Request, Response, NextFunction } from 'express';
 
 const router = Router();
 
@@ -72,6 +73,25 @@ router.get(
 router.get('/', authenticate, requirePermission(['beck_registro', 'beck_reportes'], 'ver'), listarRegistros);
 
 /**
+ * POST /api/registros/pdf-consolidado
+ * Descarga consolidada para el módulo Registro (staff interno) — reutiliza
+ * exactamente el mismo controller que /api/cliente/registros/pdf-consolidado
+ * (misma validación, misma generación/unión de PDFs). Solo cambia la
+ * autorización: aquí basta el permiso de ver Registro (visibilidad org-wide,
+ * no acotada a un cliente/obra), en vez del scope de Vista Cliente.
+ */
+router.post(
+  '/pdf-consolidado',
+  authenticate,
+  requirePermission(['beck_registro', 'beck_reportes'], 'ver'),
+  (req: Request, _res: Response, next: NextFunction) => {
+    (req as Request & { accesoInternoRegistros?: boolean }).accesoInternoRegistros = true;
+    next();
+  },
+  descargarPdfConsolidadoCliente,
+);
+
+/**
  * GET /api/registros/pendientes
  * Listar registros para Procesamiento Ingeniería (todos los estados).
  * El cliente filtra la tabla a pendiente/en_revision y usa todos los estados para KPIs.
@@ -114,18 +134,6 @@ router.patch(
   authenticate,
   requirePermission('beck_procesamiento_ingenieria', 'editar'),
   iniciarRevision,
-);
-
-/**
- * PATCH /api/registros/:id/validacion-obra
- * Jefe de Obra/Supervisor valida o rechaza un registro creado por Terreno.
- * Paso obligatorio previo a que el registro pueda entrar a Procesamiento Ingeniería.
- */
-router.patch(
-  '/:id/validacion-obra',
-  authenticate,
-  requirePermission('beck_registro', 'editar'),
-  actualizarValidacionObra,
 );
 
 /**

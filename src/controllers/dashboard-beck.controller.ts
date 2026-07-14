@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
 
 type RangoDashboard = 'hoy' | 'semana' | 'mes' | 'completa';
 
@@ -133,6 +134,8 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
           estado: true,
           tipoRegistro: true,
           createdAt: true,
+          codigoBeck: true,
+          obraId: true,
           obra: {
             select: {
               nombre: true,
@@ -165,8 +168,11 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     registros.forEach((registro) => {
       const piso = normalizePiso(registro.piso);
       const nombreSellador = normalizeNombreSellador(registro.nombreSellador);
-      const sellos = registro.tipoRegistro === 'sello_cortafuego' ? registro.cantidadSellos : 0;
-      const metrosLineales = registro.tipoRegistro === 'junta_lineal_espuma' ? registro.metrosLineales ?? 0 : 0;
+      // junta_lineal_espuma se mide en metros lineales; el resto de los tipos
+      // (sello_cortafuego, tabiqueria, otros) comparten la unidad "Cantidad".
+      const esMetrosLineales = registro.tipoRegistro === 'junta_lineal_espuma';
+      const sellos = esMetrosLineales ? 0 : registro.cantidadSellos;
+      const metrosLineales = esMetrosLineales ? registro.metrosLineales ?? 0 : 0;
 
       kpis.sellosEjecutados += sellos;
       kpis.metrosLineales += metrosLineales;
@@ -200,6 +206,11 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     kpis.pisosConRegistros = pisosConRegistros.size;
     kpis.selladoresDistintos = selladoresDistintos.size;
 
+    // Rendimiento por trabajador: respeta los mismos filtros obraId/rango ya
+    // aplicados arriba (misma consulta `registros`), resolviendo el rendimiento
+    // esperado por obra cuando exista override.
+    const rendimientoPorTrabajador = await calcularRendimientoPorTrabajador(registros);
+
     res.json({
       obras,
       filtros: {
@@ -211,6 +222,7 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
       kpis,
       produccionPorPiso: Array.from(produccionPorPiso.values()),
       produccionPorPersona: Array.from(produccionPorPersona.values()),
+      rendimientoPorTrabajador,
       ultimosRegistros: registros.slice(0, 10).map((registro) => ({
         id: registro.id,
         fecha: registro.fecha,

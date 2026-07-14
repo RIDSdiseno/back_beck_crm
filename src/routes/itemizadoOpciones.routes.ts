@@ -12,6 +12,8 @@ import {
   importarItemizadoOpciones,
   getConfiguracionItemizadosPorObra,
   guardarConfiguracionItemizadosPorObra,
+  guardarPropuestaItemizadosPorObra,
+  getPropuestaItemizadosPorObra,
 } from '../controllers/itemizadoOpciones.controller';
 
 const router = Router();
@@ -22,6 +24,8 @@ const ROLES_ESCRITURA = ['administrador', 'ingenieria', 'jefeobra'] as const;
 router.get('/', authenticate, authorize(...ROLES_LECTURA), listarItemizadoOpciones);
 router.get('/obra/:obraId/configuracion', authenticate, authorize(...ROLES_LECTURA), getConfiguracionItemizadosPorObra);
 router.put('/obra/:obraId/configuracion', authenticate, authorize(...ROLES_ESCRITURA), guardarConfiguracionItemizadosPorObra);
+router.put('/obra/:obraId/propuesta', authenticate, authorize(...ROLES_ESCRITURA), guardarPropuestaItemizadosPorObra);
+router.get('/obra/:obraId/propuesta', authenticate, authorize(...ROLES_LECTURA), getPropuestaItemizadosPorObra);
 router.get('/:id', authenticate, authorize(...ROLES_LECTURA), getItemizadoOpcionById);
 router.post('/importar', authenticate, authorize(...ROLES_ESCRITURA), uploadExcelMacrosFile, importarItemizadoOpciones);
 router.post('/', authenticate, authorize(...ROLES_ESCRITURA), crearItemizadoOpcion);
