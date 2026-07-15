@@ -1342,6 +1342,7 @@ export const getControlInspeccion = async (req: Request, res: Response): Promise
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
         parametros: { orderBy: { orden: 'asc' } },
+        fotos: { orderBy: { created_at: 'asc' } },
       },
     });
 
@@ -1523,6 +1524,7 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
         parametros: { orderBy: { orden: 'asc' } },
+        fotos: { orderBy: { created_at: 'asc' } },
       },
     });
 
@@ -1542,9 +1544,11 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
       fotoInspeccionUrl: control?.fotoInspeccionUrl ?? null,
       fotoNoConformidadUrl: control?.fotoNoConformidadUrl ?? null,
       fotos: control
-        ? [control.fotoInspeccionUrl, control.fotoNoConformidadUrl].filter(
-            (url): url is string => Boolean(url),
-          )
+        ? [
+            control.fotoInspeccionUrl,
+            control.fotoNoConformidadUrl,
+            ...control.fotos.map((foto) => foto.url),
+          ].filter((url): url is string => Boolean(url))
         : [],
       parametros: control?.parametros ?? null,
       inspeccionRevisionEstado: registro.inspeccionRevisionEstado,
