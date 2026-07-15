@@ -1341,8 +1341,12 @@ export const getControlInspeccion = async (req: Request, res: Response): Promise
       where: { registroTerrenoId: id },
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
-        parametros: { orderBy: { orden: 'asc' } },
+        parametros: {
+          orderBy: { orden: 'asc' },
+          include: { fotos: { orderBy: { created_at: 'asc' } } },
+        },
         fotos: { orderBy: { created_at: 'asc' } },
+        correccionEnviadaPor: { select: { id: true, nombre: true, email: true } },
       },
     });
 
@@ -1523,8 +1527,12 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
       orderBy: { fecha: 'desc' },
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
-        parametros: { orderBy: { orden: 'asc' } },
+        parametros: {
+          orderBy: { orden: 'asc' },
+          include: { fotos: { orderBy: { created_at: 'asc' } } },
+        },
         fotos: { orderBy: { created_at: 'asc' } },
+        correccionEnviadaPor: { select: { id: true, nombre: true, email: true } },
       },
     });
 
@@ -1551,6 +1559,8 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
           ].filter((url): url is string => Boolean(url))
         : [],
       parametros: control?.parametros ?? null,
+      correccionEnviadaAt: control?.correccionEnviadaAt ?? null,
+      correccionEnviadaPor: control?.correccionEnviadaPor ?? null,
       inspeccionRevisionEstado: registro.inspeccionRevisionEstado,
       inspeccionRevisionAt: registro.inspeccionRevisionAt,
       inspeccionRevisionPor: registro.inspeccionRevisionPor,

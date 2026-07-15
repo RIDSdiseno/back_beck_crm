@@ -19,6 +19,9 @@ model Usuario {
   alertasVistas                    AlertaVista[]
   configuracionVistaCliente        ConfiguracionVistaClienteUsuario[]
   controlesInspeccion              ControlInspeccion[]                @relation("ControlesInspeccionPorUsuario")
+  controlesInspeccionCorreccionEnviada ControlInspeccion[]             @relation("CorreccionEnviadaPorUsuario")
+  controlesInspeccionParametrosCorregidos ControlInspeccionParametro[]
+  fotos_correccion_parametro        fotos_correccion_parametro[]
   cotizacionesCreadas              Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
   cotizacionesResponsable          Cotizacion[]                       @relation("CotizacionesResponsable")
   fotos_registro                   fotos_registro[]
@@ -859,8 +862,11 @@ model ControlInspeccion {
   fotoNoConformidadUrl String?                      @map("foto_no_conformidad_url")
   createdAt            DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt            DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  correccionEnviadaAt   DateTime?                    @map("correccion_enviada_at") @db.Timestamp(6)
+  correccionEnviadaPorId String?                     @map("correccion_enviada_por_id") @db.Uuid
   ingeniero            Usuario                      @relation("ControlesInspeccionPorUsuario", fields: [ingenieroId], references: [id])
   registroTerreno      RegistroTerreno              @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
+  correccionEnviadaPor Usuario?                      @relation("CorreccionEnviadaPorUsuario", fields: [correccionEnviadaPorId], references: [id])
   parametros           ControlInspeccionParametro[]
   fotos                fotos_control_inspeccion[]
 
@@ -872,20 +878,42 @@ model ControlInspeccion {
 }
 
 model ControlInspeccionParametro {
-  id                  String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  controlInspeccionId String                       @map("control_inspeccion_id") @db.Uuid
-  orden               Int
-  parametro           String                       @db.VarChar(500)
-  resultado           ResultadoParametroInspeccion
-  observacion         String?
-  createdAt           DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt           DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  controlInspeccion   ControlInspeccion            @relation(fields: [controlInspeccionId], references: [id], onDelete: Cascade)
+  id                    String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  controlInspeccionId   String                       @map("control_inspeccion_id") @db.Uuid
+  orden                 Int
+  parametro             String                       @db.VarChar(500)
+  resultado             ResultadoParametroInspeccion
+  observacion           String?
+  correccionObservacion String?                      @map("correccion_observacion")
+  corregidoAt           DateTime?                    @map("corregido_at") @db.Timestamp(6)
+  corregidoPorId        String?                      @map("corregido_por_id") @db.Uuid
+  createdAt             DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  controlInspeccion     ControlInspeccion            @relation(fields: [controlInspeccionId], references: [id], onDelete: Cascade)
+  corregidoPor          Usuario?                     @relation(fields: [corregidoPorId], references: [id], map: "fk_controles_inspeccion_parametros_corregido_por")
+  fotos                 fotos_correccion_parametro[]
 
   @@index([controlInspeccionId])
   @@index([resultado])
   @@index([orden])
   @@map("controles_inspeccion_parametros")
+}
+
+model fotos_correccion_parametro {
+  id             String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  parametro_id   String                     @db.Uuid
+  url            String
+  public_id      String                     @db.VarChar(255)
+  nombre_archivo String?                    @db.VarChar(255)
+  formato        String?                    @db.VarChar(50)
+  bytes          Int?
+  subido_por_id  String?                    @db.Uuid
+  created_at     DateTime                   @default(now()) @db.Timestamp(6)
+  parametro      ControlInspeccionParametro @relation(fields: [parametro_id], references: [id], onDelete: Cascade, map: "fk_fotos_correccion_parametro_parametro")
+  usuarios       Usuario?                   @relation(fields: [subido_por_id], references: [id], map: "fk_fotos_correccion_parametro_usuario")
+
+  @@index([parametro_id], map: "idx_fotos_correccion_parametro_parametro_id")
+  @@index([subido_por_id], map: "idx_fotos_correccion_parametro_subido_por_id")
 }
 
 enum RolUsuario {
