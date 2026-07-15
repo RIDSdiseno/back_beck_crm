@@ -22,6 +22,7 @@ model Usuario {
   cotizacionesCreadas              Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
   cotizacionesResponsable          Cotizacion[]                       @relation("CotizacionesResponsable")
   fotos_registro                   fotos_registro[]
+  fotos_control_inspeccion         fotos_control_inspeccion[]
   historialEtapasBeck              HistorialEtapaBeck[]
   itemizadosCreados                Itemizado[]                        @relation("ItemizadosCreadosPorUsuario")
   itemizadosFinalizados            Obra[]                             @relation("ItemizadoFinalizadoPorUsuario")
@@ -579,6 +580,23 @@ model fotos_registro {
   @@index([subido_por_id], map: "idx_fotos_registro_subido_por_id")
 }
 
+model fotos_control_inspeccion {
+  id                    String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  control_inspeccion_id String            @db.Uuid
+  url                   String
+  public_id             String            @db.VarChar(255)
+  nombre_archivo        String?           @db.VarChar(255)
+  formato               String?           @db.VarChar(50)
+  bytes                 Int?
+  subido_por_id         String?           @db.Uuid
+  created_at            DateTime          @default(now()) @db.Timestamp(6)
+  controlInspeccion     ControlInspeccion @relation(fields: [control_inspeccion_id], references: [id], onDelete: Cascade, map: "fk_fotos_control_inspeccion_control")
+  usuarios              Usuario?          @relation(fields: [subido_por_id], references: [id], map: "fk_fotos_control_inspeccion_usuario")
+
+  @@index([control_inspeccion_id], map: "idx_fotos_control_inspeccion_control_id")
+  @@index([subido_por_id], map: "idx_fotos_control_inspeccion_subido_por_id")
+}
+
 model ClienteBeck {
   id                        String                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   rut                       String                          @unique @db.VarChar(20)
@@ -844,6 +862,7 @@ model ControlInspeccion {
   ingeniero            Usuario                      @relation("ControlesInspeccionPorUsuario", fields: [ingenieroId], references: [id])
   registroTerreno      RegistroTerreno              @relation(fields: [registroTerrenoId], references: [id], onDelete: Cascade)
   parametros           ControlInspeccionParametro[]
+  fotos                fotos_control_inspeccion[]
 
   @@index([registroTerrenoId])
   @@index([ingenieroId])
