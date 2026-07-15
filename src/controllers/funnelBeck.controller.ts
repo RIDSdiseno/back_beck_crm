@@ -233,11 +233,14 @@ export async function deleteFunnelBeckArchivoController(req: Request, res: Respo
 export async function updateFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const { oportunidad, advertencias } = await updateFunnelBeck(id, req.body, req.userId ?? '', req.userRole ?? undefined);
+    const { oportunidad, advertencias, cambioVendedor } = await updateFunnelBeck(id, req.body, req.userId ?? '', req.userRole ?? undefined);
     return res.status(200).json({
       success: true,
       data: oportunidad,
       ...(advertencias.length > 0 && { advertencias }),
+      cambioVendedor: cambioVendedor
+        ? { anterior: cambioVendedor.vendedorAnterior, nuevo: cambioVendedor.vendedorNuevo, motivo: cambioVendedor.motivo, automatico: true }
+        : null,
       message: "Oportunidad actualizada correctamente.",
     });
   } catch (error) {
@@ -295,11 +298,14 @@ export async function cambiarVendedorFunnelBeckController(req: Request, res: Res
 export async function updateEtapaFunnelBeckController(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const { oportunidad, advertencias } = await updateEtapaFunnelBeck(id, req.body, req.userId ?? '');
+    const { oportunidad, advertencias, cambioVendedor } = await updateEtapaFunnelBeck(id, req.body, req.userId ?? '');
     return res.status(200).json({
       success: true,
       data: oportunidad,
       ...(advertencias.length > 0 && { advertencias }),
+      cambioVendedor: cambioVendedor
+        ? { anterior: cambioVendedor.vendedorAnterior, nuevo: cambioVendedor.vendedorNuevo, motivo: cambioVendedor.motivo, automatico: true }
+        : null,
       message: "Etapa actualizada correctamente.",
     });
   } catch (error) {

@@ -15,7 +15,7 @@ import {
 import { validarMotivoCierre, MotivoInvalidoError } from "../constants/motivosCierre";
 import { RolUsuario } from "../types";
 import { puedeCambiarEmpresa } from "../helpers/puedeCambiarEmpresa";
-import { getVendedoresFunnelBeckElegibles } from "../helpers/vendedoresFunnelBeck";
+import { getVendedoresFunnelBeckElegibles, reasignarVendedorAutomaticamente, ReasignacionVendedorAutomaticaResultado } from "../helpers/vendedoresFunnelBeck";
 
 // De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
@@ -1020,6 +1020,14 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
 
   const data = extractInput(rawData);
 
+  // Señal explícita que envía el frontend solo desde los botones "Rellenar
+  // <etapa>" (guardado enfocado en la sección de la etapa actual). El botón
+  // general "Editar" no la envía. No se infiere por los campos del payload.
+  const origenEdicion = rawData.origenEdicion;
+  if (origenEdicion !== undefined && origenEdicion !== 'ETAPA_ENFOCADA') {
+    throw new Error('Valor de origenEdicion no reconocido.');
+  }
+
   // Resolve final clienteBeckId / contactoBeckId
   const newClienteBeckId  = data.clienteBeckId  !== undefined ? data.clienteBeckId  : existente.clienteBeckId;
   const newContactoBeckId = data.contactoBeckId !== undefined ? data.contactoBeckId : existente.contactoBeckId;
@@ -1189,7 +1197,7 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     }
   }
 
-  const oportunidad = await prisma.$transaction(async (tx) => {
+  const { updated: oportunidad, cambioVendedor } = await prisma.$transaction(async (tx) => {
   const updated = await tx.operadorBeck.update({
     where: { id },
     data: {
@@ -1339,8 +1347,25 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       },
     });
   }
-  return updated;
+  // Solo aplica cuando el cambio de vendedor NO ya vino explícito en el
+  // payload (vendedorCambio) — evita registrar dos movimientos por la misma
+  // acción. El backend no infiere el origen: solo reasigna si el frontend
+  // envió la señal explícita 'ETAPA_ENFOCADA' desde un botón "Rellenar <etapa>".
+  let cambioVendedor: ReasignacionVendedorAutomaticaResultado = null;
+  if (origenEdicion === 'ETAPA_ENFOCADA' && !vendedorCambio) {
+    cambioVendedor = await reasignarVendedorAutomaticamente({
+      tx,
+      oportunidad: { id, nombreProyecto: existente.nombreProyecto, vendedor: updated.vendedor },
+      userId,
+      motivo: `Actualización de etapa: ${formatEtapa(etapa)}`,
+    });
+  }
+  return { updated, cambioVendedor };
   });
+
+  if (cambioVendedor) {
+    oportunidad.vendedor = cambioVendedor.vendedorNuevo;
+  }
 
   const cambios: string[] = [];
   if (existente.nombreProyecto !== nombreProyecto)
@@ -1385,7 +1410,7 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     });
   }
 
-  return { oportunidad, advertencias: advertenciasValidacion };
+  return { oportunidad, advertencias: advertenciasValidacion, cambioVendedor };
 }
 
 /**
@@ -1551,7 +1576,7 @@ export async function updateEtapaFunnelBeck(
     }
   }
 
-  const oportunidad = await prisma.$transaction(async (tx) => {
+  const { updated: oportunidad, cambioVendedor } = await prisma.$transaction(async (tx) => {
   const updated = await tx.operadorBeck.update({
     where: { id },
     data: {
@@ -1590,8 +1615,21 @@ export async function updateEtapaFunnelBeck(
       usuarioId: userId,
     });
   }
-  return updated;
+  let cambioVendedor: ReasignacionVendedorAutomaticaResultado = null;
+  if (etapaCambio) {
+    cambioVendedor = await reasignarVendedorAutomaticamente({
+      tx,
+      oportunidad: { id, nombreProyecto: existente.nombreProyecto, vendedor: updated.vendedor },
+      userId,
+      motivo: `Cambio de etapa: ${formatEtapa(existente.etapa)} → ${formatEtapa(payload.etapa!)}`,
+    });
+  }
+  return { updated, cambioVendedor };
   });
+
+  if (cambioVendedor) {
+    oportunidad.vendedor = cambioVendedor.vendedorNuevo;
+  }
 
   if (payload.etapa !== existente.etapa) {
     await registrarMovimientoCRM({
@@ -1604,7 +1642,7 @@ export async function updateEtapaFunnelBeck(
     });
   }
 
-  return { oportunidad, advertencias: advertenciasValidacion };
+  return { oportunidad, advertencias: advertenciasValidacion, cambioVendedor };
 }
 
 function pickField(raw: Record<string, unknown>, camel: string, snake: string): unknown {
@@ -1759,6 +1797,8 @@ export type HistorialCombinadoBeckItem = {
   etapaNueva?: string | null;
   vendedorAnterior?: string | null;
   vendedorNuevo?: string | null;
+  motivo?: string | null;
+  automatico?: boolean;
 };
 
 export async function getHistorialCombinadoBeck(id: string): Promise<HistorialCombinadoBeckItem[]> {
@@ -1799,13 +1839,20 @@ export async function getHistorialCombinadoBeck(id: string): Promise<HistorialCo
   }));
 
   const eventosVendedor: HistorialCombinadoBeckItem[] = movimientosVendedor.map((m) => {
-    const datos = (m.datos ?? {}) as { vendedorAnterior?: string | null; vendedorNuevo?: string | null };
+    const datos = (m.datos ?? {}) as {
+      vendedorAnterior?: string | null;
+      vendedorNuevo?: string | null;
+      motivo?: string | null;
+      automatico?: boolean;
+    };
     return {
       tipo: 'CAMBIO_VENDEDOR',
       createdAt: m.createdAt.toISOString(),
       usuario: m.usuario ? { id: m.usuario.id, nombre: m.usuario.nombre } : null,
       vendedorAnterior: datos.vendedorAnterior ?? null,
       vendedorNuevo: datos.vendedorNuevo ?? null,
+      motivo: datos.motivo ?? null,
+      automatico: datos.automatico === true,
     };
   });
 

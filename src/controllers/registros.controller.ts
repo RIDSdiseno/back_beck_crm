@@ -443,10 +443,17 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
     const usuario_id = req.userId;
     const user_rol = req.userRole;
 
+    // fotos_registro se trae con la misma subconsulta agregada que
+    // listarPendientes/listarRegistros — sin esto, el detalle por ID solo
+    // devolvía la columna legacy rt.fotos_urls (a veces incompleta).
     let query = `
       SELECT rt.*, o.nombre as obra_nombre,
              u.nombre as usuario_nombre,
-             ui.nombre as seleccionado_inspeccion_por_nombre
+             ui.nombre as seleccionado_inspeccion_por_nombre,
+             COALESCE(
+               (SELECT json_agg(json_build_object('url', fr.url) ORDER BY fr.created_at ASC) FROM fotos_registro fr WHERE fr.registro_id = rt.id),
+               '[]'
+             ) AS fotos_registro
       FROM registros_terreno rt
       LEFT JOIN obras o ON rt.obra_id = o.id
       LEFT JOIN usuarios u ON rt.usuario_id = u.id
@@ -1066,8 +1073,16 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
  */
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
+    // fotos_registro se trae con una subconsulta agregada (igual fuente que
+    // usa listarRegistros vía include de Prisma) porque la columna legacy
+    // rt.fotos_urls puede tener menos fotos que la tabla relacional
+    // fotos_registro para el mismo registro.
     const result = await dbQuery(
-      `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre
+      `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre,
+              COALESCE(
+                (SELECT json_agg(json_build_object('url', fr.url) ORDER BY fr.created_at ASC) FROM fotos_registro fr WHERE fr.registro_id = rt.id),
+                '[]'
+              ) AS fotos_registro
        FROM registros_terreno rt
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
