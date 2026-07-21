@@ -1314,7 +1314,12 @@ export const getControlInspeccion = async (req: Request, res: Response): Promise
       where: { registroTerrenoId: id },
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
-        parametros: { orderBy: { orden: 'asc' } },
+        parametros: {
+          orderBy: { orden: 'asc' },
+          include: { fotos: { orderBy: { created_at: 'asc' } } },
+        },
+        fotos: { orderBy: { created_at: 'asc' } },
+        correccionEnviadaPor: { select: { id: true, nombre: true, email: true } },
       },
     });
 
@@ -1495,7 +1500,12 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
       orderBy: { fecha: 'desc' },
       include: {
         ingeniero: { select: { id: true, nombre: true, email: true } },
-        parametros: { orderBy: { orden: 'asc' } },
+        parametros: {
+          orderBy: { orden: 'asc' },
+          include: { fotos: { orderBy: { created_at: 'asc' } } },
+        },
+        fotos: { orderBy: { created_at: 'asc' } },
+        correccionEnviadaPor: { select: { id: true, nombre: true, email: true } },
       },
     });
 
@@ -1515,11 +1525,15 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
       fotoInspeccionUrl: control?.fotoInspeccionUrl ?? null,
       fotoNoConformidadUrl: control?.fotoNoConformidadUrl ?? null,
       fotos: control
-        ? [control.fotoInspeccionUrl, control.fotoNoConformidadUrl].filter(
-            (url): url is string => Boolean(url),
-          )
+        ? [
+            control.fotoInspeccionUrl,
+            control.fotoNoConformidadUrl,
+            ...control.fotos.map((foto) => foto.url),
+          ].filter((url): url is string => Boolean(url))
         : [],
       parametros: control?.parametros ?? null,
+      correccionEnviadaAt: control?.correccionEnviadaAt ?? null,
+      correccionEnviadaPor: control?.correccionEnviadaPor ?? null,
       inspeccionRevisionEstado: registro.inspeccionRevisionEstado,
       inspeccionRevisionAt: registro.inspeccionRevisionAt,
       inspeccionRevisionPor: registro.inspeccionRevisionPor,
@@ -1595,5 +1609,92 @@ export const revisarInspeccion = async (req: Request, res: Response): Promise<vo
   } catch (error) {
     console.error('Error al revisar inspección:', error);
     res.status(500).json({ error: 'Error al revisar la inspección' });
+  }
+};
+
+/**
+ * PATCH /api/registros/:id/inspeccion/correccion
+ * Ingeniería (web) confirma o rechaza la corrección que el Supervisor envió
+ * desde la app móvil para un control "no conforme".
+ * confirmar: marca el control como conforme y todos sus parámetros "cumple".
+ * rechazar: vuelve a dejar el control en la cola de corrección del Supervisor
+ * (limpia correccionEnviadaAt/Por) para que lo corrija de nuevo.
+ * Body: { accion: 'confirmar' | 'rechazar', motivo? }
+ */
+export const revisarCorreccionInspeccion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const usuario_id = req.userId;
+
+    const { accion, motivo } = req.body as { accion?: string; motivo?: string };
+
+    if (accion !== 'confirmar' && accion !== 'rechazar') {
+      res.status(400).json({ error: 'accion inválida. Debe ser: confirmar o rechazar' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const control = await prisma.controlInspeccion.findFirst({
+      where: { registroTerrenoId: id },
+      orderBy: { fecha: 'desc' },
+    });
+
+    if (!control || !control.correccionEnviadaAt) {
+      res.status(400).json({ error: 'No hay una corrección del Supervisor pendiente de revisión' });
+      return;
+    }
+
+    if (accion === 'rechazar' && !motivo?.trim()) {
+      res.status(400).json({ error: 'motivo es obligatorio al rechazar una corrección' });
+      return;
+    }
+
+    if (accion === 'confirmar') {
+      await prisma.$transaction([
+        prisma.controlInspeccionParametro.updateMany({
+          where: { controlInspeccionId: control.id },
+          data: { resultado: ResultadoParametroInspeccion.cumple },
+        }),
+        prisma.controlInspeccion.update({
+          where: { id: control.id },
+          data: { conformidad: EstadoConformidadInspeccion.conforme },
+        }),
+        prisma.registroTerreno.update({
+          where: { id },
+          data: {
+            inspeccionRevisionEstado: EstadoRevisionInspeccion.validado,
+            inspeccionRevisionPorId: usuario_id ?? null,
+            inspeccionRevisionAt: new Date(),
+            motivoRechazoInspeccion: null,
+          },
+        }),
+      ]);
+    } else {
+      await prisma.$transaction([
+        prisma.controlInspeccion.update({
+          where: { id: control.id },
+          data: { correccionEnviadaAt: null, correccionEnviadaPorId: null },
+        }),
+        prisma.registroTerreno.update({
+          where: { id },
+          data: {
+            inspeccionRevisionEstado: EstadoRevisionInspeccion.rechazado,
+            inspeccionRevisionPorId: usuario_id ?? null,
+            inspeccionRevisionAt: new Date(),
+            motivoRechazoInspeccion: motivo!.trim(),
+          },
+        }),
+      ]);
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error al revisar la corrección de inspección:', error);
+    res.status(500).json({ error: 'Error al revisar la corrección de inspección' });
   }
 };

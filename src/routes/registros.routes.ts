@@ -16,6 +16,7 @@ import {
   crearControlInspeccion,
   verDetalleInspeccion,
   revisarInspeccion,
+  revisarCorreccionInspeccion,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
@@ -206,6 +207,20 @@ router.patch(
   authenticate,
   requirePermission('beck_procesamiento_ingenieria', 'editar'),
   revisarInspeccion,
+);
+
+/**
+ * PATCH /api/registros/:id/inspeccion/correccion
+ * Ingeniería (web) confirma o rechaza la corrección enviada por el Supervisor
+ * desde la app móvil. Rechazar devuelve el control a la cola de corrección
+ * del Supervisor.
+ * Body: { accion: 'confirmar' | 'rechazar', motivo? }
+ */
+router.patch(
+  '/:id/inspeccion/correccion',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  revisarCorreccionInspeccion,
 );
 
 /**
