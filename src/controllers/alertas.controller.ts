@@ -68,7 +68,6 @@ export async function marcarAlertasVistasController(req: Request, res: Response)
       return;
     }
 
-    // Validar scope: el vendedor solo puede marcar alertas que le corresponden
     const filtroVendedor = await resolverFiltroVendedor(userId, rol);
     const alertasPermitidas = await generarAlertasBeck(filtroVendedor);
     const keysPermitidas = new Set(alertasPermitidas.map((a) => a.alertaKey));

@@ -19,7 +19,6 @@ import { uploadExcelOrCsvFile } from '../middlewares/upload';
 
 const router = Router();
 
-// Rutas estáticas antes de /:id para evitar colisión con parámetro
 router.post('/importar', authenticate, requirePermission('beck_clientes', 'editar'), uploadExcelOrCsvFile, importarClientes);
 
 router.get('/buscar', authenticate, requirePermission('beck_clientes', 'ver'), buscarClientes);

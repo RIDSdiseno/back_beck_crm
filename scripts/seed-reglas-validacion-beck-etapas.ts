@@ -1,11 +1,3 @@
-// Script de datos (NO es una migracion de Prisma; este proyecto usa `db push` para el
-// esquema). Inserta en configuracion_validacion las reglas BECK faltantes para los campos
-// de detalle por etapa (Primer contacto, Visita/Levantamiento, Desarrollo de propuesta,
-// Propuesta enviada/Negociacion, Documentacion de venta, Cierre) que hoy no tienen ninguna
-// regla configurada. Es idempotente: usa ON CONFLICT (modulo, regla, etapa) DO NOTHING, por
-// lo que nunca duplica ni modifica una regla ya existente (las 13 reglas base no se tocan).
-//
-// Ejecutar una sola vez con: npx tsx scripts/seed-reglas-validacion-beck-etapas.ts
 
 import { prisma } from "../src/config/prisma";
 
@@ -17,11 +9,7 @@ type NuevaRegla = {
   nivel: "BLOQUEANTE" | "ADVERTENCIA";
 };
 
-// Nivel por grupo, replicando EXACTAMENTE el criterio ya usado por las reglas existentes:
-// - prospecto_identificado / visita_levantamiento -> ADVERTENCIA
-// - cotizacion_elaborada / cotizacion_enviada / en_negociacion / documentacion_venta / cerrada -> BLOQUEANTE
 const NUEVAS_REGLAS: NuevaRegla[] = [
-  // ── PRIMER CONTACTO — exigido para entrar a "Visita / Levantamiento" ──────────
   { etapa: "visita_levantamiento", regla: "FECHA_PRIMER_CONTACTO_REQUERIDA", campo: "fechaPrimerContacto", etiqueta: "La fecha de primer contacto es obligatoria para avanzar.", nivel: "ADVERTENCIA" },
   { etapa: "visita_levantamiento", regla: "TIPO_CONTACTO_REQUERIDO", campo: "tipoContacto", etiqueta: "El tipo de contacto es obligatorio para avanzar.", nivel: "ADVERTENCIA" },
   { etapa: "visita_levantamiento", regla: "TIPO_CLIENTE_REQUERIDO", campo: "tipoCliente", etiqueta: "El tipo de cliente es obligatorio para avanzar.", nivel: "ADVERTENCIA" },
@@ -29,7 +17,6 @@ const NUEVAS_REGLAS: NuevaRegla[] = [
   { etapa: "visita_levantamiento", regla: "NECESIDAD_DETECTADA_REQUERIDA", campo: "necesidadDetectada", etiqueta: "La necesidad detectada es obligatoria para avanzar.", nivel: "ADVERTENCIA" },
   { etapa: "visita_levantamiento", regla: "TIMING_ESTIMADO_REQUERIDO", campo: "timingEstimado", etiqueta: "El timing estimado es obligatorio para avanzar.", nivel: "ADVERTENCIA" },
 
-  // ── VISITA / LEVANTAMIENTO — exigido para entrar a "Cotizacion elaborada" ─────
   { etapa: "cotizacion_elaborada", regla: "FECHA_VISITA_REQUERIDA", campo: "fechaVisita", etiqueta: "La fecha de visita es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_elaborada", regla: "RESPONSABLE_TECNICO_REQUERIDO", campo: "responsableTecnico", etiqueta: "El responsable tecnico es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_elaborada", regla: "LUGAR_VISITA_REQUERIDO", campo: "lugarVisita", etiqueta: "El lugar de la visita es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
@@ -40,7 +27,6 @@ const NUEVAS_REGLAS: NuevaRegla[] = [
   { etapa: "cotizacion_elaborada", regla: "PLANOS_REQUERIDOS", campo: "planos", etiqueta: "Los planos son obligatorios para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_elaborada", regla: "FOTOGRAFIAS_REQUERIDAS", campo: "fotografias", etiqueta: "Las fotografias son obligatorias para avanzar.", nivel: "BLOQUEANTE" },
 
-  // ── DESARROLLO DE PROPUESTA — exigido para entrar a "Cotizacion enviada" ──────
   { etapa: "cotizacion_enviada", regla: "ESTADO_DESARROLLO_PROPUESTA_REQUERIDO", campo: "estadoDesarrolloPropuesta", etiqueta: "El estado de desarrollo de la propuesta es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_enviada", regla: "INFORMACION_PENDIENTE_REQUERIDA", campo: "informacionPendiente", etiqueta: "La informacion pendiente es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_enviada", regla: "DOCUMENTOS_REQUERIDOS_DEFINIDOS", campo: "documentosRequeridos", etiqueta: "Los documentos requeridos son obligatorios para avanzar.", nivel: "BLOQUEANTE" },
@@ -48,7 +34,6 @@ const NUEVAS_REGLAS: NuevaRegla[] = [
   { etapa: "cotizacion_enviada", regla: "CONDICIONES_ESPECIALES_REQUERIDAS", campo: "condicionesEspeciales", etiqueta: "Las condiciones especiales son obligatorias para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "cotizacion_enviada", regla: "FECHA_COMPROMETIDA_ENVIO_REQUERIDA", campo: "fechaComprometidaEnvio", etiqueta: "La fecha comprometida de envio es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
 
-  // ── PROPUESTA ENVIADA / NEGOCIACION — exigido para entrar a "En negociacion" ──
   { etapa: "en_negociacion", regla: "FECHA_ENVIO_PROPUESTA_REQUERIDA", campo: "fechaEnvioPropuesta", etiqueta: "La fecha de envio de la propuesta es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "en_negociacion", regla: "VERSION_PROPUESTA_REQUERIDA", campo: "versionPropuesta", etiqueta: "La version de la propuesta es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "en_negociacion", regla: "NUMERO_PROPUESTA_REQUERIDO", campo: "numeroPropuesta", etiqueta: "El numero de propuesta es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
@@ -60,7 +45,6 @@ const NUEVAS_REGLAS: NuevaRegla[] = [
   { etapa: "en_negociacion", regla: "CONTRAPROPUESTAS_REQUERIDAS", campo: "contrapropuestas", etiqueta: "Las contrapropuestas son obligatorias para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "en_negociacion", regla: "AJUSTES_SOLICITADOS_REQUERIDOS", campo: "ajustesSolicitados", etiqueta: "Los ajustes solicitados son obligatorios para avanzar.", nivel: "BLOQUEANTE" },
 
-  // ── DOCUMENTACION DE VENTA — exigido para entrar a "Documentacion de venta" ──
   { etapa: "documentacion_venta", regla: "ORDEN_COMPRA_REQUERIDA", campo: "ordenCompra", etiqueta: "La orden de compra es obligatoria para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "documentacion_venta", regla: "CONTRATO_REQUERIDO", campo: "contrato", etiqueta: "El contrato es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "documentacion_venta", regla: "CORREO_ACEPTACION_REQUERIDO", campo: "correoAceptacion", etiqueta: "El correo de aceptacion es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
@@ -74,8 +58,6 @@ const NUEVAS_REGLAS: NuevaRegla[] = [
   { etapa: "documentacion_venta", regla: "TRASPASADO_OPERACIONES_REQUERIDO", campo: "traspasadoOperaciones", etiqueta: "El traspaso a operaciones es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
   { etapa: "documentacion_venta", regla: "TRASPASADO_ADMINISTRACION_REQUERIDO", campo: "traspasadoAdministracion", etiqueta: "El traspaso a administracion es obligatorio para avanzar.", nivel: "BLOQUEANTE" },
 
-  // ── CIERRE — campos nuevos de cierre GANADA (documentoRespaldo, flujoPosterior,
-  // motivoPerdida, motivoPostergacion, etapaPerdida y fechaReactivacion YA existen). ─
   { etapa: "cerrada", regla: "GANADA_MONTO_FINAL_REQUERIDO", campo: "montoFinalGanado", etiqueta: "El monto final ganado es obligatorio para marcar como Ganada.", nivel: "BLOQUEANTE" },
   { etapa: "cerrada", regla: "GANADA_FECHA_CIERRE_REQUERIDA", campo: "fechaCierre", etiqueta: "La fecha de cierre es obligatoria para marcar como Ganada.", nivel: "BLOQUEANTE" },
 ];

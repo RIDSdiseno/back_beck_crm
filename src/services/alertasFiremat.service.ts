@@ -78,7 +78,6 @@ export async function generarAlertasFiremat(
     const estaActiva = !ETAPAS_NO_ACTIVAS.has(op.etapa);
     const nombreMostrar = op.nombreOportunidad ?? op.cliente;
 
-    // --- 1. SIN_PROXIMA_ACCION ---
     if (estaActiva && (!op.proximaAccion || !op.fechaProximaAccion)) {
       alertas.push({
         alertaKey: `FIREMAT-SIN_PROXIMA_ACCION-${op.id}`,
@@ -92,10 +91,8 @@ export async function generarAlertasFiremat(
       });
     }
 
-    // --- 2. PROXIMA_ACCION_* ---
     if (estaActiva && op.fechaProximaAccion) {
       const fechaAccion = toStartOfDay(new Date(op.fechaProximaAccion));
-      // diasDiff > 0: faltan días, == 0: hoy, < 0: vencida
       const diasDiff = diffDias(fechaAccion, hoy);
 
       if (diasDiff < 0) {
@@ -147,7 +144,6 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 3. COTIZACION_ENVIADA_SIN_SEGUIMIENTO ---
     if (estaActiva && op.etapa === "COTIZACION_ENVIADA") {
       const diasSinMovimiento = diffDias(hoy, toStartOfDay(new Date(op.updatedAt)));
       if (diasSinMovimiento > cfg.diasCotizacionEnviadaSinSeguimiento) {
@@ -165,7 +161,6 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 4. DESARROLLO_COTIZACION_DETENIDO ---
     if (estaActiva && op.etapa === "DESARROLLO_COTIZACION") {
       const diasSinMovimiento = diffDias(hoy, toStartOfDay(new Date(op.updatedAt)));
       if (diasSinMovimiento > cfg.diasDesarrolloCotizacion) {
@@ -183,7 +178,6 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 5. DOCUMENTACION_VENTA_PENDIENTE ---
     if (estaActiva && op.etapa === "ORDEN_CONFIRMADA") {
       const documentacionPendiente =
         !op.estadoDocumentacionVenta ||
@@ -206,10 +200,8 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 6. POSTERGADA_REACTIVAR ---
     if (op.etapa === "POSTERGADA" && op.fechaReactivacion) {
       const fechaReac = toStartOfDay(new Date(op.fechaReactivacion));
-      // diasHastaReac > 0: quedan días, <= 0: hoy o vencida
       const diasHastaReac = diffDias(fechaReac, hoy);
 
       if (diasHastaReac <= cfg.diasAvisoReactivacion) {
@@ -235,7 +227,6 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 7. ALTO_MONTO_DETENIDA ---
     if (estaActiva && op.montoEstimado >= cfg.montoAltoClp) {
       const diasSinMovimiento = diffDias(hoy, toStartOfDay(new Date(op.updatedAt)));
       if (diasSinMovimiento > cfg.diasAltoMontoDetenida) {
@@ -253,7 +244,6 @@ export async function generarAlertasFiremat(
       }
     }
 
-    // --- 8. MULTIPLES_REPROGRAMACIONES ---
     if (op.reprogramacionesCount >= 3) {
       alertas.push({
         alertaKey: `FIREMAT-MULTIPLES_REPROGRAMACIONES-${op.id}`,

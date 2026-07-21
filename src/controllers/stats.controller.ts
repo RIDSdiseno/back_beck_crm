@@ -7,10 +7,8 @@ import { prisma } from '../config/prisma';
  */
 export const getDashboardStats = async (_req: Request, res: Response): Promise<void> => {
   try {
-    // Total de registros de terreno
     const totalRegistros = await prisma.registroTerreno.count();
 
-    // Total de registros procesados
     const registrosProcesados = await prisma.registroTerreno.count({
       where: {
         estado: {
@@ -19,12 +17,10 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
       },
     });
 
-    // Total de registros pendientes
     const registrosPendientes = await prisma.registroTerreno.count({
       where: { estado: 'pendiente' },
     });
 
-    // Suma de cantidad de sellos
     const totalSellosResult = await prisma.registroTerreno.aggregate({
       _sum: {
         cantidadSellos: true,
@@ -33,7 +29,6 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
     const totalSellos = totalSellosResult._sum.cantidadSellos || 0;
 
-    // Sellos ponderados (suma de total_sellos_calculado)
     const sellosPonderadosResult = await prisma.procesamientoIngenieria.aggregate({
       _sum: {
         totalSellosCalculado: true,
@@ -42,12 +37,10 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
     const sellosPonderados = Number(sellosPonderadosResult._sum.totalSellosCalculado || 0);
 
-    // Total de obras activas
     const obrasActivas = await prisma.obra.count({
       where: { estado: 'activa' },
     });
 
-    // Registros de hoy
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const manana = new Date(hoy);
@@ -62,7 +55,6 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
       },
     });
 
-    // Registros por obra (top 5)
     const registrosPorObra = await prisma.registroTerreno.groupBy({
       by: ['obraId'],
       _count: {
@@ -76,7 +68,6 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
       take: 5,
     });
 
-    // Obtener nombres de obras
     const obraIds = registrosPorObra.map((r) => r.obraId);
     const obras = await prisma.obra.findMany({
       where: {

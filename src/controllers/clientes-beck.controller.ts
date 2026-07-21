@@ -231,8 +231,6 @@ export const importarClientes = async (req: Request, res: Response): Promise<voi
   }
 };
 
-// GET /api/clientes-beck/:id/obras
-// Devuelve obras asociadas directamente a un Cliente Beck (Obra.clienteBeckId = id).
 export const getObrasPorClienteBeck = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;

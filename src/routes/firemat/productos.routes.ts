@@ -13,11 +13,9 @@ import { uploadPdfFile, uploadFirematProductoImage } from '../../middlewares/upl
 
 const router = Router();
 
-// Lectura auxiliar permitida también desde cotizaciones y funnel (selección de productos en formularios)
 const canSee = requirePermission(['firemat_productos', 'firemat_cotizaciones', 'firemat_funnel', 'firemat_dashboard'], 'ver');
 const canEdit = requirePermission('firemat_productos', 'editar');
 
-// Static routes before parameter routes
 router.post('/importar-lista-precios-pdf', canEdit, uploadPdfFile, importarListaPreciosPdf);
 router.patch('/asignar-categoria', canEdit, asignarCategoriaProductosFiremat);
 

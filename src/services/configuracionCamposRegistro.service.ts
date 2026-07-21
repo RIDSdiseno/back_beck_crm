@@ -296,7 +296,6 @@ function filtrarRegistroConConfig<T extends Record<string, unknown>>(
     Object.entries(registroExcel).filter(([key]) => camposVisibles.has(key)),
   ) as Record<string, unknown>;
 
-  // id siempre se incluye para que el frontend pueda navegar al detalle del registro
   if (registro.id !== undefined) filtered.id = registro.id;
 
   return filtered as Partial<T>;

@@ -53,7 +53,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
 
     const dateRange = buildDateRange(desde, hasta);
 
-    // ── Build where objects ──────────────────────────────────────────────
 
     const ventasWhere: Prisma.VentaWhereInput = {};
     if (dateRange) ventasWhere.createdAt = dateRange;
@@ -79,7 +78,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
     if (dateRange) movimientosWhere.createdAt = dateRange;
     if (prodId) movimientosWhere.productoId = prodId;
 
-    // ── Parallel queries ─────────────────────────────────────────────────
 
     const [ventas, productos, cotizaciones, oportunidades, movimientos] = await Promise.all([
       firematPrisma.venta.findMany({
@@ -110,7 +108,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       }),
     ]);
 
-    // ── KPIs ─────────────────────────────────────────────────────────────
 
     const totalVentas = ventas.length;
     const montoVendido = ventas.reduce((s, v) => s + v.total, 0);
@@ -138,7 +135,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       ETAPAS_ACTIVAS_OP.has(o.etapa),
     ).length;
 
-    // ── Ventas por mes ────────────────────────────────────────────────────
 
     const vxmMap = new Map<string, { cantidad: number; monto: number }>();
     for (const v of ventas) {
@@ -153,7 +149,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([mes, e]) => ({ mes, cantidad: e.cantidad, monto: e.monto }));
 
-    // ── Ventas por producto ───────────────────────────────────────────────
 
     const vxpMap = new Map<
       number,
@@ -177,7 +172,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       (a, b) => b.montoVendido - a.montoVendido,
     );
 
-    // ── Inventario crítico ────────────────────────────────────────────────
 
     const inventarioCritico = productos
       .filter((p) => p.activo && p.stock <= p.minStock)
@@ -193,7 +187,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       }))
       .sort((a, b) => a.stock - b.stock);
 
-    // ── Cotizaciones por estado ───────────────────────────────────────────
 
     const cxeMap = new Map<string, { cantidad: number; monto: number }>();
     for (const c of cotizaciones) {
@@ -206,7 +199,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       .map(([estado, e]) => ({ estado, cantidad: e.cantidad, monto: e.monto }))
       .sort((a, b) => b.cantidad - a.cantidad);
 
-    // ── Oportunidades por etapa ───────────────────────────────────────────
 
     const oxeMap = new Map<string, { cantidad: number; monto: number }>();
     for (const o of oportunidades) {
@@ -219,7 +211,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       .map(([etapa, e]) => ({ etapa, cantidad: e.cantidad, monto: e.monto }))
       .sort((a, b) => b.cantidad - a.cantidad);
 
-    // ── Movimientos recientes ─────────────────────────────────────────────
 
     const movimientosRecientes = movimientos.map((m) => ({
       id: m.id,
@@ -233,7 +224,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       motivo: m.motivo ?? null,
     }));
 
-    // ── Ventas detalle ────────────────────────────────────────────────────
 
     const ventasDetalle = ventas.map((v) => ({
       id: v.id,
@@ -252,7 +242,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       })),
     }));
 
-    // ── Productos resumen ─────────────────────────────────────────────────
 
     const productosResumen = productos.map((p) => ({
       id: p.id,
@@ -268,7 +257,6 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
       precioSugerido: p.precioSugerido ?? null,
     }));
 
-    // ── Response ──────────────────────────────────────────────────────────
 
     res.json({
       success: true,

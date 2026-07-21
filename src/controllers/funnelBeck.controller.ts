@@ -31,7 +31,6 @@ import {
 } from "../services/funnelBeckArchivos.service";
 import { maskCotizacionGanancia } from "./cotizaciones.controller";
 
-// ── Helpers para exportación Excel ────────────────────────────────────────────
 
 const ETAPA_EXCEL_LABELS: Record<string, string> = {
   prospecto_identificado: "Prospecto identificado",
@@ -541,7 +540,6 @@ export async function exportarFunnelBeck(req: Request, res: Response): Promise<v
       },
     });
 
-    // ── Construir workbook ─────────────────────────────────────────────────────
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Pipeline Beck");
 
@@ -564,13 +562,11 @@ export async function exportarFunnelBeck(req: Request, res: Response): Promise<v
       { header: "Fecha creación",        key: "fechaCreacion",      width: 20 },
     ];
 
-    // Encabezados en negrita
     const headerRow = sheet.getRow(1);
     headerRow.font = { bold: true };
     headerRow.alignment = { vertical: "middle" };
     headerRow.height = 18;
 
-    // Filas de datos
     for (const opp of oportunidades) {
       const clienteNombre =
         opp.clienteBeck?.razonSocial ??
@@ -609,11 +605,9 @@ export async function exportarFunnelBeck(req: Request, res: Response): Promise<v
       });
     }
 
-    // Formato numérico nativo para montos (permite sumas y filtros en Excel)
     sheet.getColumn("montoEstimado").numFmt = "#,##0";
     sheet.getColumn("montoFinal").numFmt    = "#,##0";
 
-    // ── Respuesta HTTP ─────────────────────────────────────────────────────────
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

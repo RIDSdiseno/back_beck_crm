@@ -29,8 +29,6 @@ export interface OportunidadUnificada {
   updatedAt: Date;
 }
 
-// Mapeo de las etapas Firemat (etapa string libre, incluye estados de cierre) a las
-// columnas reales del kanban Beck, para que ambos orígenes convivan en un solo tablero.
 const FIREMAT_ETAPA_A_TABLERO_BECK: Record<string, string> = {
   PROSPECTO: "prospecto_identificado",
   PRIMER_CONTACTO: "visita_levantamiento",

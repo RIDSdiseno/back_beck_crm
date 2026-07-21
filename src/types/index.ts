@@ -1,4 +1,3 @@
-// Tipos principales del sistema BECK
 
 export type RolUsuario =
   | 'administrador'
@@ -157,7 +156,6 @@ export interface Cotizacion {
   updated_at?: Date;
 }
 
-// DTOs para API
 export interface LoginDTO {
   email: string;
   password: string;

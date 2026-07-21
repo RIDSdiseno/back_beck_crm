@@ -1,4 +1,3 @@
-// src/routes/itemizados.routes.ts
 import { Router } from 'express';
 import {
   listarItemizados,

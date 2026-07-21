@@ -12,7 +12,6 @@ const router = Router();
 
 router.use(authenticate);
 
-// requirePermission es la autoridad final (permite overrides individuales)
 router.post("/", requirePermission('beck_oficina_tecnica', 'editar'), crearSolicitud);
 router.get("/", requirePermission('beck_oficina_tecnica', 'ver'), listarSolicitudes);
 router.get("/:id", requirePermission('beck_oficina_tecnica', 'ver'), obtenerSolicitud);

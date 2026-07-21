@@ -1,4 +1,3 @@
-// src/controllers/procesamiento.controller.ts
 import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
 import { ProcesamientoIngenieria } from '../types';
@@ -14,7 +13,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
     const { registro_terreno_id, codigo, itemizado_id, notas } = req.body;
     const usuario_id = req.userId;
 
-    // Validar campos obligatorios
     if (!registro_terreno_id || !codigo || !itemizado_id) {
       res.status(400).json({
         error: 'Faltan campos obligatorios: registro_terreno_id, codigo, itemizado_id',
@@ -22,7 +20,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    // Obtener datos del registro
     const registroQuery = await dbQuery(
       'SELECT cantidad_sellos, holgura, accesibilidad FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
@@ -35,7 +32,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     const registro = registroQuery.rows[0];
 
-    // Verificar que no exista ya un procesamiento para este registro
     const existeProcesamiento = await dbQuery(
       'SELECT id FROM procesamiento_ingenieria WHERE registro_terreno_id = $1',
       [registro_terreno_id]
@@ -47,10 +43,8 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     const { cantidad_sellos, holgura, accesibilidad } = registro;
 
-    // CÁLCULO AUTOMÁTICO DE TOTAL DE SELLOS
     const total_sellos_calculado = cantidad_sellos * holgura * (accesibilidad ?? 1);
 
-    // Verificar que el itemizado exista
     const itemizadoCheck = await dbQuery(
       'SELECT id FROM itemizados WHERE id = $1',
       [itemizado_id]
@@ -60,7 +54,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    // Insertar procesamiento (el trigger marcará automáticamente el registro como procesado)
     const result = await dbQuery<ProcesamientoIngenieria>(
       `INSERT INTO procesamiento_ingenieria (
         registro_terreno_id, usuario_id, codigo, itemizado_id, total_sellos_calculado, notas
@@ -71,7 +64,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
 
     const procesamiento = result.rows[0];
 
-    // Crear notificación para el usuario que creó el registro
     const registroUsuario = await dbQuery(
       'SELECT usuario_id FROM registros_terreno WHERE id = $1',
       [registro_terreno_id]
@@ -96,7 +88,6 @@ export const procesarRegistro = async (req: Request, res: Response): Promise<voi
   } catch (error: any) {
     console.error('Error al procesar registro:', error);
 
-    // Verificar si es error de código duplicado
     if (error.code === '23505' && error.constraint === 'procesamiento_ingenieria_codigo_key') {
       res.status(400).json({ error: 'El código ya existe. Use un código único.' });
       return;

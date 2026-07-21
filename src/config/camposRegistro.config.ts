@@ -117,10 +117,6 @@ export const CAMPOS_CLIENTE: DefinicionCampo[] = [
   { campo: 'folio', label: 'FOLIO', color: 'azul' },
 ];
 
-// Ingenieria no tiene campos configurables (azul): todo queda fijo en verde u rojo.
-// aislacion, cantidad_sellos_aislacion, reparacion_tabique y metros_lineales no fueron
-// especificados explicitamente para este rol; se dejan en verde (visible) por ser el
-// rol con mayor nivel de detalle tecnico entre los tres.
 export const CAMPOS_INGENIERIA: DefinicionCampo[] = [
   { campo: 'tipo_registro', label: 'Tipo de Registro', color: 'verde' },
   { campo: 'codigoBeck', label: 'Codigo BECK', color: 'verde' },

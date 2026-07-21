@@ -1,4 +1,3 @@
-// src/config/firematPrisma.ts
 
 import 'dotenv/config';
 import { PrismaClient } from '../generated/firemat-client';

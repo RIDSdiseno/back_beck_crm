@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { RolUsuario } from "../types";
 import { prisma } from "../config/prisma";
 
-// Extender el tipo Request para incluir userId y userRole
 declare global {
   namespace Express {
     interface Request {

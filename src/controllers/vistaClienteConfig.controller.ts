@@ -6,7 +6,6 @@ import {
   VISTA_CLIENTE_CLAVES,
 } from '../helpers/configuracionVistaCliente';
 
-// ─── Shared parsing ──────────────────────────────────────────────────────────
 
 type VistaClienteInputItem = {
   clave?: unknown;
@@ -80,7 +79,6 @@ const SELECT_FIELDS = {
   orden: true,
 } as const;
 
-// ─── General ─────────────────────────────────────────────────────────────────
 
 /**
  * GET /api/vista-cliente/configuracion/general
@@ -156,7 +154,6 @@ export const putConfiguracionGeneral = async (req: Request, res: Response): Prom
   }
 };
 
-// ─── Por Cliente Beck ─────────────────────────────────────────────────────────
 
 /**
  * GET /api/vista-cliente/configuracion/cliente/:clienteBeckId

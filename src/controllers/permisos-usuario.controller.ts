@@ -4,7 +4,6 @@ import { RolUsuario } from '../types';
 import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
 import { TODOS_LOS_MODULOS } from '../helpers/permisosPorRol';
 
-// GET /api/usuarios/:id/permisos  (admin only)
 export const obtenerPermisosUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
     const usuarioId = req.params['id'] as string;
@@ -50,7 +49,6 @@ export const obtenerPermisosUsuario = async (req: Request, res: Response): Promi
   }
 };
 
-// PUT /api/usuarios/:id/permisos  (admin only)
 export const actualizarPermisosUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
     const usuarioId = req.params['id'] as string;
@@ -105,7 +103,6 @@ export const actualizarPermisosUsuario = async (req: Request, res: Response): Pr
   }
 };
 
-// GET /api/me/permisos  (cualquier usuario autenticado)
 export const obtenerMisPermisos = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.userId!;

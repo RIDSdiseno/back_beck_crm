@@ -57,8 +57,6 @@ function validarGestionIngenieria(
   return true;
 }
 
-// Valida clienteBeckId + obraIds para usuarios con rol cliente.
-// Retorna null si todo está OK, o { status, error } si falla.
 async function validarObrasCliente(
   clienteBeckId: string | undefined,
   obraIds: string[],
@@ -337,7 +335,6 @@ export const listarUsuariosComerciales = async (_req: Request, res: Response): P
       orderBy: { nombre: 'asc' },
     });
 
-    // Log temporal de diagnóstico — remover una vez confirmado en el ambiente del frontend.
     console.log(
       '[usuarios/comerciales] total encontrados:', usuarios.length,
       '- roles encontrados:', [...new Set(usuarios.map((u) => u.rol))],
@@ -821,7 +818,6 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    // Validar clienteBeckId + obraIds solo para rol=cliente
     let obraIdsFinales: string[] = [];
     let beckIdFinal: string | undefined;
 
@@ -979,7 +975,6 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
       data.activo = activo;
     }
 
-    // Sincronizar obras solo si se envía obraIds y el rol es (o pasa a ser) cliente
     const rolEfectivo = (rolFinal ?? usuarioExistente.rol) as RolUsuario;
     const sincronizarObras = Array.isArray(obraIds) && rolEfectivo === RolUsuario.cliente;
 

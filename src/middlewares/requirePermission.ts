@@ -23,7 +23,6 @@ export const requirePermission = (modulo: string | string[], accion: 'ver' | 'ed
     try {
       const permisos = await getPermisosEfectivos(req.userId, req.userRole);
 
-      // Busca el primer módulo que satisfaga la acción requerida
       const permiso = permisos.find((p) => {
         if (!modulos.includes(p.modulo)) return false;
         if (!p.puedeVer) return false;

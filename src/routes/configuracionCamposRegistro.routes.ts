@@ -8,10 +8,8 @@ import {
 
 const router = Router();
 
-// Cualquier usuario autenticado puede consultar la configuración de campos para un rol
 router.get('/', authenticate, obtenerConfiguracion);
 
-// requirePermission es la autoridad final para escritura
 router.put(
   '/',
   authenticate,

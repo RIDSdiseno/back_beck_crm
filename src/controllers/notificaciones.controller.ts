@@ -1,4 +1,3 @@
-// src/controllers/notificaciones.controller.ts
 import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
 import { Notificacion } from '../types';
@@ -40,7 +39,6 @@ export const marcarLeida = async (req: Request, res: Response): Promise<void> =>
     const { id } = req.params;
     const usuario_id = req.userId;
 
-    // Verificar que la notificación pertenezca al usuario
     const checkQuery = await dbQuery(
       'SELECT id FROM notificaciones WHERE id = $1 AND usuario_id = $2',
       [id, usuario_id]
@@ -51,7 +49,6 @@ export const marcarLeida = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    // Marcar como leída
     const result = await dbQuery<Notificacion>(
       'UPDATE notificaciones SET leido = TRUE WHERE id = $1 RETURNING *',
       [id]

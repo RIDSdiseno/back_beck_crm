@@ -42,8 +42,6 @@ const parseInventoryPdfDate = (value: string | null): Date | null => {
     : null;
 };
 
-// POST /api/firemat/productos/importar-lista-precios-pdf
-// Query: ?dryRun=true  →  parse only, no DB writes
 export const importarListaPreciosPdf = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).json({
@@ -75,7 +73,6 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
     return;
   }
 
-  // ── Dry-run: return parsed data without writing ──
   if (dryRun) {
     res.json({
       success: true,
@@ -99,7 +96,6 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
     return;
   }
 
-  // ── Write to DB ──
   const categoriaDefaultId = await obtenerOCrearCategoriaDefault();
 
   let creados    = 0;
@@ -136,7 +132,6 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
         });
         actualizados++;
       } else {
-        // Create product with precio=0 when precioClp is null/N/A (per PDF rules)
         await firematPrisma.producto.create({
           data: {
             sku:            prod.sku,
@@ -175,7 +170,6 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
   });
 };
 
-// POST /api/firemat/inventario/importar-pdf
 export const importarInventarioPdf = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).json({

@@ -1,4 +1,3 @@
-// src/helpers/tiposRegistro.ts
 import { prisma } from '../config/prisma';
 
 export const TIPOS_REGISTRO_VALIDOS = [

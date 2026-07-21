@@ -142,7 +142,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
     const parsedDias = parseInt(rawDias, 10);
     const diasSinSeguimiento = Math.max(1, isNaN(parsedDias) ? 7 : parsedDias);
 
-    // ── Filtro base ───────────────────────────────────────────────────────────
     const where: Prisma.FunnelFirematOpportunityWhereInput = {};
 
     if (typeof unidadNegocio === 'string' && unidadNegocio.trim()) {
@@ -174,7 +173,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       if (!isNaN(pid) && pid > 0) where.productoId = pid;
     }
 
-    // estado solo si etapa no está ya fijado
     const estadoParam = typeof estado === 'string' ? estado.trim().toLowerCase() : '';
     if (!where.etapa && estadoParam) {
       if (estadoParam === 'activa') {
@@ -206,7 +204,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       where.fechaProbableCierre = f;
     }
 
-    // ── Consulta principal ────────────────────────────────────────────────────
     const opps: OppRow[] = await firematPrisma.funnelFirematOpportunity.findMany({
       where,
       select: {
@@ -234,14 +231,12 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       },
     });
 
-    // ── Sets por estado ───────────────────────────────────────────────────────
     const activasSet     = opps.filter(o => isActiva(o.etapa));
     const ganadasSet     = opps.filter(o => o.etapa === 'GANADA');
     const perdidasSet    = opps.filter(o => o.etapa === 'PERDIDA');
     const postergadasSet = opps.filter(o => o.etapa === 'POSTERGADA');
     const descartadasSet = opps.filter(o => o.etapa === 'DESCARTADO');
 
-    // ── KPIs ──────────────────────────────────────────────────────────────────
     const totalOportunidades       = opps.length;
     const oportunidadesActivas     = activasSet.length;
     const oportunidadesGanadas     = ganadasSet.length;
@@ -265,7 +260,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
 
     const clientesReactivados = opps.filter(o => o.esReactivacion).length;
 
-    // ── Distribución estado ───────────────────────────────────────────────────
     const distribucionEstado = {
       activas:     oportunidadesActivas,
       ganadas:     oportunidadesGanadas,
@@ -274,7 +268,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       descartadas: oportunidadesDescartadas,
     };
 
-    // ── Por etapa ─────────────────────────────────────────────────────────────
     const porEtapa = Object.fromEntries(
       ETAPAS_TODAS.map(e => {
         const g = opps.filter(o => o.etapa === e);
@@ -282,7 +275,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       }),
     );
 
-    // ── Ranking responsables ──────────────────────────────────────────────────
     const respMap = new Map<string, {
       total: number; ganadas: number; perdidas: number;
       postergadas: number; activas: number; montoTotal: number; montoGanado: number;
@@ -304,7 +296,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       .map(([responsable, s]) => ({ responsable, ...s }))
       .sort((a, b) => b.montoTotal - a.montoTotal);
 
-    // ── Sin seguimiento (query separada) ──────────────────────────────────────
     const ahora = new Date();
     const limiteUpdatedAt = new Date(ahora);
     limiteUpdatedAt.setDate(limiteUpdatedAt.getDate() - diasSinSeguimiento);
@@ -334,7 +325,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       firematPrisma.funnelFirematOpportunity.count({ where: whereSinSeg }),
     ]);
 
-    // ── Próximas acciones ─────────────────────────────────────────────────────
     const hoyStart = startOfDay(new Date());
     const hoyEnd   = endOfDay(new Date());
     const manana   = new Date(hoyStart); manana.setDate(manana.getDate() + 1);
@@ -347,7 +337,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       proximos7Dias: activasConAccion.filter(o => o.fechaProximaAccion! >= manana && o.fechaProximaAccion! <= en7Dias).length,
     };
 
-    // ── Prospectos ────────────────────────────────────────────────────────────
     const hace7Dias  = new Date(ahora); hace7Dias.setDate(hace7Dias.getDate() - 7);
     const hace30Dias = new Date(ahora); hace30Dias.setDate(hace30Dias.getDate() - 30);
     const prospectosSet = opps.filter(o => o.etapa === 'PROSPECTO');
@@ -362,7 +351,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       porResponsable:  respProspRaw.map(({ _k: responsable, cantidad }) => ({ responsable, cantidad })),
     };
 
-    // ── Pipeline avanzado ─────────────────────────────────────────────────────
     const ppRespRaw     = agruparMonto(activasSet, o => o.responsable   || 'SIN_RESPONSABLE');
     const ppUnidadRaw   = agruparMonto(activasSet, o => o.unidadNegocio || 'SIN_UNIDAD');
     const ppOrigenRaw   = agruparMonto(activasSet, o => o.origen        || 'SIN_ORIGEN');
@@ -387,7 +375,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
         })),
     };
 
-    // ── Forecast 30 / 60 / 90 días ────────────────────────────────────────────
     const hoyF = startOfDay(new Date());
     const fin30 = endOfDay(new Date(hoyF)); fin30.setDate(fin30.getDate() + 30);
     const fin60 = endOfDay(new Date(hoyF)); fin60.setDate(fin60.getDate() + 60);
@@ -417,7 +404,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       dias90: calcForecast(fin90),
     };
 
-    // ── Ganadas: mes actual y últimos 12 meses ────────────────────────────────
     const ahoraG    = new Date();
     const anoActual = ahoraG.getFullYear();
     const mesActual = ahoraG.getMonth();
@@ -450,14 +436,12 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       .map(([mes, s]) => ({ mes, ...s }))
       .sort((a, b) => a.mes.localeCompare(b.mes));
 
-    // ── Motivos ───────────────────────────────────────────────────────────────
     const motivos = {
       perdida:      agruparMotivos(perdidasSet,    'motivoPerdida'),
       postergacion: agruparMotivos(postergadasSet, 'motivoPostergacion'),
       descarte:     agruparMotivos(descartadasSet, 'motivoDescarte'),
     };
 
-    // ── Riesgo comercial ──────────────────────────────────────────────────────
     const DIAS_DETENIDAS = 7;
     const limiteDetenidas = new Date();
     limiteDetenidas.setDate(limiteDetenidas.getDate() - DIAS_DETENIDAS);
@@ -500,7 +484,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       },
     };
 
-    // ── Conversión por etapa ──────────────────────────────────────────────────
     const etapasCant = ETAPAS_FUNNEL.map(e => opps.filter(o => o.etapa === e).length);
 
     const conversionEtapas = {
@@ -530,7 +513,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       }),
     };
 
-    // ── Tiempos promedio desde historial_etapas_firemat ───────────────────────
     let tiempoPromedioDesarrolloCotizacion = 0;
     let tiempoPromedioCotizacionEnviada    = 0;
 
@@ -566,7 +548,6 @@ export async function getDashboardFunnelFiremat(req: Request, res: Response): Pr
       tiempoPromedioCotizacionEnviada    = calcAvgDias('DESARROLLO_COTIZACION', 'COTIZACION_ENVIADA');
     }
 
-    // ── Respuesta ─────────────────────────────────────────────────────────────
     res.json({
       success: true,
       data: {

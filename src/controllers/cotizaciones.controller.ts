@@ -8,7 +8,6 @@ import { puedeCambiarEmpresa } from '../helpers/puedeCambiarEmpresa';
 
 const PDFDocument = require('pdfkit');
 
-// ─── Helpers de parseo HTTP ───────────────────────────────────────────────────
 
 const getUserId = (req: Request, res: Response): string | null => {
   if (!req.userId) {
@@ -117,7 +116,6 @@ export const maskCotizacionGanancia = <T>(value: T, showGanancia: boolean): T =>
   return masked as T;
 };
 
-// ─── PDF constants & helpers ──────────────────────────────────────────────────
 
 const PDF_MARGIN    = 40;
 const PDF_W         = 595;
@@ -141,7 +139,6 @@ const BECK_DIRECCION = 'Jorge Alessandri 180, galpón 4, La Reina';
 const BORDER_COLOR   = '#e2e8f0';
 const ROW_ALT        = '#f8fafc';
 
-// CLP sin decimales: $240.000
 const formatCLP = (value: number): string =>
   new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -194,7 +191,6 @@ function cotFieldRow(
   if (doc.y < y + 13) doc.y = y + 13;
 }
 
-// ─── Controllers ─────────────────────────────────────────────────────────────
 
 export const createCotizacion = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -374,7 +370,6 @@ export const updateCotizacion = async (req: Request, res: Response): Promise<voi
       )
       : undefined;
 
-    // Check permission if client fields are changing
     if (req.userId && req.userRole && req.userRole !== 'administrador') {
       if (has('clienteNombre') || hasClienteBeckId || hasContactoBeckId) {
         const existing = await CotizacionService.findCotizacion(id);
@@ -485,8 +480,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
 
     const cotizacion = await CotizacionService.findCotizacion(id);
 
-    // Precio unitario cliente = costo base + ganancia aplicada
-    // El subtotal en DB ya incluye la ganancia — solo corregimos la columna P.UNIT.
     const lineas: LineaInput[] = cotizacion.lineas.map((l) => {
       const precioCosto   = Number(l.precioUnitario);
       const gananciaPct   = Number(l.gananciaPct);
@@ -514,11 +507,9 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
 
-    // ── Documento ─────────────────────────────────────────────────────────────
     const doc = new PDFDocument({ size: 'A4', margin: PDF_MARGIN });
     doc.pipe(res);
 
-    // Logo
     const logoPath   = path.join(process.cwd(), 'public', 'logo-beck.png');
     const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
 
@@ -530,7 +521,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
 
     const badgeColor = ESTADO_COT_COLORS[cotizacion.estado] ?? '#64748b';
 
-    // ══════════════════════ A) ENCABEZADO ══════════════════════
 
     doc.rect(0, 0, PDF_W, 4).fill(BECK_YELLOW);
 
@@ -540,7 +530,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
     const RBOX_H     = 76;
     const RBOX_HDRH  = 15;
 
-    // Bloque empresa (izquierda)
     if (logoBuffer) {
       doc.image(logoBuffer, PDF_MARGIN, HDR_TOP + 2, { height: 34 });
     }
@@ -554,7 +543,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
       .text('Correo: —',          CMP_X, HDR_TOP + 36, { lineBreak: false })
       .text('Teléfono: —',        CMP_X, HDR_TOP + 46, { lineBreak: false });
 
-    // Recuadro cotización (derecha)
     doc.lineWidth(0.8).rect(RBOX_X, HDR_TOP - 1, RBOX_W, RBOX_H).stroke(BORDER_COLOR);
     doc.rect(RBOX_X, HDR_TOP - 1, RBOX_W, RBOX_HDRH).fill(BECK_DARK);
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#ffffff')
@@ -582,11 +570,9 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
 
     doc.y = HDR_TOP + RBOX_H + 4;
 
-    // Línea separadora amarilla
     doc.rect(PDF_MARGIN, doc.y, PDF_CONTENT_W, 1.5).fill(BECK_YELLOW);
     doc.y += 8;
 
-    // ══════════════════════ B+C) BLOQUES DE INFORMACIÓN ══════════════════════
 
     const BINFO_TOP = doc.y;
     const BINFO_LX  = PDF_MARGIN;
@@ -647,7 +633,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
 
     doc.y = BINFO_TOP + BI_TOTAL + 10;
 
-    // ══════════════════════ D) TABLA DE DETALLE ══════════════════════
 
     const TC_NUM  = { x: PDF_MARGIN,       w: 22  };
     const TC_DESC = { x: PDF_MARGIN + 22,  w: 218 };
@@ -699,7 +684,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
       .moveTo(PDF_MARGIN, doc.y).lineTo(PDF_W - PDF_MARGIN, doc.y).stroke(BORDER_COLOR);
     doc.y += 12;
 
-    // ══════════════════════ E) TOTALES ══════════════════════
 
     const TT_X  = 358;
     const TT_LW = 112;
@@ -738,7 +722,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
     drawTotRow('TOTAL:', formatCLP(total), { bold: true, highlight: true });
     doc.y = totY + 10;
 
-    // ══════════════════════ F) OBSERVACIONES ══════════════════════
 
     if (cotizacion.observaciones) {
       if (doc.y > 720) { doc.addPage(); doc.y = PDF_MARGIN; }
@@ -762,7 +745,6 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
       doc.y += 8;
     }
 
-    // ══════════════════════ G) FIRMA ══════════════════════
 
     if (doc.y > 760) { doc.addPage(); doc.y = PDF_MARGIN; }
 

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { PDFDocument } from 'pdf-lib';
-import { EstadoPreparacionItemizado } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { resolveConfiguracionEfectiva } from '../helpers/configuracionVistaCliente';
 import {
@@ -9,13 +8,7 @@ import {
 } from '../services/configuracionCamposRegistro.service';
 import { generateRegistroPdfBuffer } from '../services/registroPdf.service';
 import { uploadFileDetailed } from '../config/cloudinary';
-import {
-  assertItemizadoObraEditablePorCliente,
-  ItemizadoObraError,
-  listarItemizadosPropuestosParaObra,
-} from '../services/itemizadoPreparacionObra.service';
 
-// ─── Tipos ────────────────────────────────────────────────────────────────────
 
 type ScopeOk =
   | { mode: 'usuario'; targetId: string }
@@ -25,7 +18,6 @@ type ScopeResult =
   | ({ ok: true } & ScopeOk)
   | { ok: false; status: number; error: string };
 
-// ─── Helpers de resolución de scope ──────────────────────────────────────────
 
 async function getObrasPermitidas(userId: string): Promise<string[]> {
   const asignaciones = await prisma.usuarios_obras.findMany({
@@ -93,7 +85,6 @@ async function getConfiguracionVistaFromScope(scope: ScopeOk) {
     return resolveConfiguracionEfectiva([], beckRows, generalRows);
   }
 
-  // mode === 'usuario': resolve clienteBeckId from their obras, then merge all layers
   const usuarioRows = await prisma.configuracionVistaClienteUsuario.findMany({
     where: { usuarioId: scope.targetId },
     select: SELECT_VISTA,
@@ -131,17 +122,14 @@ async function resolverScope(req: Request): Promise<ScopeResult> {
   const rol = req.userRole;
   const selfId = req.userId!;
 
-  // ── Rol cliente: siempre se filtra por su propio userId ──────────────────
   if (rol === 'cliente') {
     return { ok: true, mode: 'usuario', targetId: selfId };
   }
 
-  // ── Administrador: puede seleccionar un cliente Beck o un usuario cliente ─
   if (rol === 'administrador') {
     const clienteBeckId = req.query.clienteBeckId as string | undefined;
     const clienteUsuarioId = req.query.clienteUsuarioId as string | undefined;
 
-    // Prioridad 1: clienteBeckId
     if (clienteBeckId) {
       const beck = await prisma.clienteBeck.findUnique({
         where: { id: clienteBeckId },
@@ -157,7 +145,6 @@ async function resolverScope(req: Request): Promise<ScopeResult> {
       return { ok: true, mode: 'clienteBeck', clienteBeckId, obraIds };
     }
 
-    // Prioridad 2: clienteUsuarioId (compatibilidad anterior)
     if (clienteUsuarioId) {
       const usuarioObjetivo = await prisma.usuario.findUnique({
         where: { id: clienteUsuarioId },
@@ -179,9 +166,6 @@ async function resolverScope(req: Request): Promise<ScopeResult> {
     };
   }
 
-  // ── Usuario interno (ingenieria, vendedor, jefeobra, etc.) con permiso beck_vista_cliente ─
-  // El guard requirePermission ya verificó el permiso; aquí solo resolvemos el scope.
-  // Se requiere clienteBeckId para delimitar el acceso — no se permite vista global.
   const clienteBeckId = req.query.clienteBeckId as string | undefined;
 
   if (!clienteBeckId) {
@@ -206,9 +190,7 @@ async function resolverScope(req: Request): Promise<ScopeResult> {
   return { ok: true, mode: 'clienteBeck', clienteBeckId, obraIds };
 }
 
-// ─── Handlers ─────────────────────────────────────────────────────────────────
 
-// GET /api/cliente/clientes-beck  (solo administrador)
 export const getClientesBeck = async (_req: Request, res: Response): Promise<void> => {
   try {
     const clientes = await prisma.clienteBeck.findMany({
@@ -232,7 +214,6 @@ export const getClientesBeck = async (_req: Request, res: Response): Promise<voi
       return;
     }
 
-    // Obras asociadas: directas (Obra.clienteBeckId) + legado (OperadorBeck → obraId)
     const clienteIds = clientes.map(c => c.id);
     const [obrasDirectas, oportunidades] = await Promise.all([
       prisma.obra.findMany({
@@ -263,7 +244,6 @@ export const getClientesBeck = async (_req: Request, res: Response): Promise<voi
       obrasPorCliente.get(op.clienteBeckId)!.add(op.obraId);
     }
 
-    // Conteo de registros validados por obra (una sola query)
     const allObraIds = [...new Set([...obrasPorCliente.values()].flatMap(s => [...s]))];
     const registrosMap = new Map<string, number>();
 
@@ -306,7 +286,6 @@ export const getClientesBeck = async (_req: Request, res: Response): Promise<voi
   }
 };
 
-// GET /api/cliente/usuarios-clientes  (solo administrador)
 export const getUsuariosClientes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const usuarios = await prisma.usuario.findMany({
@@ -336,7 +315,6 @@ export const getUsuariosClientes = async (_req: Request, res: Response): Promise
   }
 };
 
-// GET /api/cliente/obras
 export const getObrasCliente = async (req: Request, res: Response): Promise<void> => {
   try {
     const scope = await resolverScope(req);
@@ -395,7 +373,6 @@ export const getObrasCliente = async (req: Request, res: Response): Promise<void
   }
 };
 
-// GET /api/cliente/obras/:obraId/registros
 export const getRegistrosObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const scope = await resolverScope(req);
@@ -406,14 +383,12 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
 
     const obraId = req.params.obraId as string;
 
-    // Verificar acceso a la obra según el modo del scope
     if (scope.mode === 'usuario') {
       if (!(await clienteTieneObraAsignada(scope.targetId, obraId))) {
         res.status(403).json({ success: false, error: 'No tienes acceso a esta obra' });
         return;
       }
     } else {
-      // clienteBeck: la obra debe estar en la lista ya resuelta desde OperadorBeck
       if (!scope.obraIds.includes(obraId)) {
         res.status(403).json({ success: false, error: 'Esta obra no pertenece al cliente seleccionado' });
         return;
@@ -529,7 +504,6 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
   }
 };
 
-// Límites de firma — idénticos a los de beck-mobile-backend (cliente.controller.ts)
 function validarFirmaBody(body: unknown): { ok: true; pathData: string; canvasWidth: number; canvasHeight: number } | { ok: false; error: string } {
   const { pathData, canvasWidth, canvasHeight } = (body ?? {}) as Record<string, unknown>;
 
@@ -563,7 +537,29 @@ const VALIDADO_CLIENTE_SELECT = {
   },
 } as const;
 
-// PATCH /api/cliente/registros/:registroId/validar
+function getMissingCloudinaryEnv(): string[] {
+  return ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET']
+    .filter((key) => !process.env[key]);
+}
+
+function safeCloudinaryPublicId(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_.-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 120) || 'registro';
+}
+
+function pdfFirmadoPublicId(codigoBeck: string, registroId: string): string {
+  return `${safeCloudinaryPublicId(codigoBeck)}-firmado-${registroId.slice(0, 8)}`;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 export const validarRegistroCliente = async (req: Request, res: Response): Promise<void> => {
   try {
     if (req.userRole !== 'cliente' || !req.userId) {
@@ -631,7 +627,6 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
       return;
     }
 
-    // Cargar detalle completo (obra, usuario ejecutor, fotos) para generar el PDF
     const registroFull = await prisma.registroTerreno.findUnique({
       where: { id: registroId },
       include: {
@@ -654,32 +649,67 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
     const firmadoAt = new Date();
     const firmadoPor = firmante?.nombre || 'Cliente';
 
-    // Generar PDF con firma incrustada (mismo núcleo que descargarRegistroPdf)
-    const pdfBuffer = await generateRegistroPdfBuffer(registroFull, {
-      pathData: firma.pathData,
-      canvasWidth: firma.canvasWidth,
-      canvasHeight: firma.canvasHeight,
-      firmadoPor,
-      firmadoAt,
-    });
+    let pdfBuffer: Buffer;
+    try {
+      pdfBuffer = await generateRegistroPdfBuffer(registroFull, {
+        pathData: firma.pathData,
+        canvasWidth: firma.canvasWidth,
+        canvasHeight: firma.canvasHeight,
+        firmadoPor,
+        firmadoAt,
+      });
+    } catch (error) {
+      console.error('Error generando PDF firmado cliente:', {
+        registroId,
+        error: errorMessage(error),
+      });
+      res.status(500).json({
+        success: false,
+        error: 'No se pudo generar el PDF firmado del registro',
+        code: 'PDF_GENERATION_FAILED',
+      });
+      return;
+    }
 
     const codigoBeck = registro.codigoBeck ?? `REG-${registroId.slice(0, 6).toUpperCase()}`;
 
-    // Subir PDF firmado a Cloudinary como raw — mismo folder/convención de publicId que beck-mobile-backend
-    const pdfResult = await uploadFileDetailed(pdfBuffer, 'beck/pdfs-firmados', {
-      resourceType: 'raw',
-      publicId: `${codigoBeck}-firmado-${registroId.slice(0, 8)}`,
-    });
+    const missingCloudinaryEnv = getMissingCloudinaryEnv();
+    if (missingCloudinaryEnv.length > 0) {
+      console.error('Cloudinary no configurado para PDF firmado cliente:', {
+        registroId,
+        missing: missingCloudinaryEnv,
+      });
+      res.status(503).json({
+        success: false,
+        error: 'Cloudinary no está configurado en el backend de producción',
+        code: 'CLOUDINARY_NOT_CONFIGURED',
+        missing: missingCloudinaryEnv,
+      });
+      return;
+    }
 
-    // Nota sobre condición de carrera: el PDF ya se generó y subió a Cloudinary en
-    // este punto. Si dos requests concurrentes llegan aquí (ambos pasaron el chequeo
-    // de `validadoCliente` de arriba), ambos subirán un PDF a Cloudinary, pero el
-    // `updateMany` de abajo con `where: { validadoCliente: false }` solo puede
-    // aplicar a UNO de los dos — el que pierde la carrera cae en `count === 0` y
-    // responde 409 con el estado real ya persistido por el ganador, sin sobrescribir
-    // nada. El registro nunca queda validado sin PDF ni con doble firma persistida;
-    // el único costo posible es un PDF huérfano en Cloudinary del request perdedor
-    // (no afecta la integridad de datos, solo almacenamiento).
+    let pdfResult: Awaited<ReturnType<typeof uploadFileDetailed>>;
+    try {
+      pdfResult = await uploadFileDetailed(pdfBuffer, 'beck/pdfs-firmados', {
+        resourceType: 'raw',
+        publicId: pdfFirmadoPublicId(codigoBeck, registroId),
+      });
+    } catch (error) {
+      console.error('Error subiendo PDF firmado cliente a Cloudinary:', {
+        registroId,
+        codigoBeck,
+        publicId: pdfFirmadoPublicId(codigoBeck, registroId),
+        bytes: pdfBuffer.length,
+        error: errorMessage(error),
+      });
+      res.status(502).json({
+        success: false,
+        error: 'No se pudo subir el PDF firmado a Cloudinary',
+        code: 'PDF_UPLOAD_FAILED',
+      });
+      return;
+    }
+
     const updatedCount = await prisma.registroTerreno.updateMany({
       where: {
         id: registroId,
@@ -740,11 +770,6 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
   }
 };
 
-// GET /api/cliente/registros/:id/pdf
-// Si el registro ya tiene PDF firmado, redirige a esa URL (conserva firma y
-// sello). Si no lo tiene pero ya está validado, genera su PDF normal al
-// vuelo (mismo núcleo que descargarRegistroPdf), sin persistir ni subir
-// nada — un registro validado sin firma es un caso válido, nunca un error.
 export const obtenerPdfFirmadoCliente = async (req: Request, res: Response): Promise<void> => {
   try {
     const scope = await resolverScope(req);
@@ -788,7 +813,17 @@ export const obtenerPdfFirmadoCliente = async (req: Request, res: Response): Pro
     }
 
     if (registro.pdfFirmadoUrl) {
-      res.redirect(registro.pdfFirmadoUrl);
+      const pdfFirmadoBuffer = await fetchPdfBuffer(registro.pdfFirmadoUrl);
+      if (!pdfFirmadoBuffer) {
+        res.redirect(registro.pdfFirmadoUrl);
+        return;
+      }
+
+      const pdfNormalizado = await compactarPdfFirmadoLegacy(pdfFirmadoBuffer);
+      const codigoRegistro = registro.codigoBeck ?? `REG-${registro.id.slice(0, 6).toUpperCase()}`;
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${codigoRegistro}.pdf"`);
+      res.send(pdfNormalizado);
       return;
     }
 
@@ -802,7 +837,6 @@ export const obtenerPdfFirmadoCliente = async (req: Request, res: Response): Pro
   }
 };
 
-// ─── Firma masiva ─────────────────────────────────────────────────────────────
 
 const MAX_REGISTROS_FIRMA_MASIVA = 20;
 
@@ -829,17 +863,6 @@ function validarRegistroIdsBody(
   return { ok: true, registroIds: registroIds as string[] };
 }
 
-// PATCH /api/cliente/registros/validar-multiple
-// Firma varios registros con una sola firma. La selección puede ser mixta
-// (pendientes + ya firmados): los ya firmados se reportan como "omitidos" y
-// jamás se tocan — no se regenera su PDF, no se re-sube nada a Cloudinary y
-// no se sobrescribe validadoCliente/validadoClienteAt/validadoClientePorId/
-// pdfFirmadoUrl. Solo los pendientes se procesan, cada uno genera y sube su
-// propio PDF de forma independiente y secuencial (mismo núcleo que
-// validarRegistroCliente) — un fallo puntual no afecta a los demás ni deja
-// ningún registro en un estado ambiguo (mismo guard updateMany +
-// validadoCliente:false que el endpoint individual, aplicado uno por uno,
-// como defensa adicional ante condiciones de carrera).
 export const validarRegistrosClienteMultiple = async (req: Request, res: Response): Promise<void> => {
   try {
     if (req.userRole !== 'cliente' || !req.userId) {
@@ -900,10 +923,6 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
       return;
     }
 
-    // Selección mixta permitida: los registros ya firmados por el cliente se
-    // omiten (nunca se regenera su PDF ni se tocan sus campos) y solo se
-    // procesan los pendientes. Si NINGUNO está pendiente no hay nada que
-    // firmar y se rechaza explícitamente.
     const yaFirmados = registrosBase.filter((r) => r.validadoCliente);
     const pendientes = registrosBase.filter((r) => !r.validadoCliente);
 
@@ -930,11 +949,20 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
 
     const exitosos: Array<{ id: string; pdfFirmadoUrl: string }> = [];
     const fallidos: Array<{ id: string; motivo: string }> = [];
+    const missingCloudinaryEnv = getMissingCloudinaryEnv();
+    if (missingCloudinaryEnv.length > 0) {
+      console.error('Cloudinary no configurado para firma masiva cliente:', {
+        missing: missingCloudinaryEnv,
+      });
+      res.status(503).json({
+        success: false,
+        error: 'Cloudinary no está configurado en el backend de producción',
+        code: 'CLOUDINARY_NOT_CONFIGURED',
+        missing: missingCloudinaryEnv,
+      });
+      return;
+    }
 
-    // Solo se procesan los pendientes — los ya firmados quedaron en
-    // `omitidos` arriba y nunca entran a este loop, así que jamás se genera
-    // ni se sube un PDF nuevo para ellos, ni se toca validadoCliente /
-    // validadoClienteAt / validadoClientePorId / pdfFirmadoUrl existentes.
     for (const registroBase of pendientes) {
       try {
         const registroFull = await prisma.registroTerreno.findUnique({
@@ -961,12 +989,9 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
         const codigoBeck = registroBase.codigoBeck ?? `REG-${registroBase.id.slice(0, 6).toUpperCase()}`;
         const pdfResult = await uploadFileDetailed(pdfBuffer, 'beck/pdfs-firmados', {
           resourceType: 'raw',
-          publicId: `${codigoBeck}-firmado-${registroBase.id.slice(0, 8)}`,
+          publicId: pdfFirmadoPublicId(codigoBeck, registroBase.id),
         });
 
-        // Mismo guard de condición de carrera que validarRegistroCliente: si
-        // el registro ya fue firmado entre la validación previa y este punto,
-        // el update no aplica y se reporta como fallido sin sobrescribir nada.
         const updatedCount = await prisma.registroTerreno.updateMany({
           where: { id: registroBase.id, validadoCliente: false },
           data: {
@@ -1007,7 +1032,6 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
   }
 };
 
-// ─── Descarga consolidada ───────────────────────────────────────────────────────
 
 const MAX_REGISTROS_PDF_CONSOLIDADO = 20;
 
@@ -1024,26 +1048,55 @@ async function fetchPdfBuffer(url: string): Promise<Buffer | null> {
   }
 }
 
-// POST /api/cliente/registros/pdf-consolidado
-// Genera un único PDF con las páginas de todos los registros seleccionados,
-// respetando el orden de selección. Cada registro se resuelve de forma
-// independiente: si tiene pdfFirmadoUrl se reutiliza (conserva firma y
-// sello); si no lo tiene, se genera su PDF normal al vuelo (mismo núcleo que
-// descargarRegistroPdf), sin persistir ni subir nada. La selección puede
-// mezclar libremente registros firmados y no firmados — un registro
-// validado sin firma NUNCA es un error, es un caso válido. Único requisito:
-// todos deben tener estado==='validado'. No es tolerante a fallos de red al
-// obtener un PDF firmado ya existente: si eso falla, se aborta toda la
-// operación en vez de entregar un documento consolidado incompleto sin
-// avisar.
+async function compactarPdfFirmadoLegacy(pdfBytes: Buffer): Promise<Buffer> {
+  const sourcePdf = await PDFDocument.load(pdfBytes);
+  if (sourcePdf.getPageCount() !== 2) return pdfBytes;
+
+  const [registroPage, firmaPage] = sourcePdf.getPages();
+  const pageW = registroPage.getWidth();
+  const pageH = registroPage.getHeight();
+  const firmaW = firmaPage.getWidth();
+  const firmaH = firmaPage.getHeight();
+  const isA4 =
+    Math.abs(pageW - 595.28) < 2 &&
+    Math.abs(pageH - 841.89) < 2 &&
+    Math.abs(firmaW - pageW) < 2 &&
+    Math.abs(firmaH - pageH) < 2;
+
+  if (!isA4) return pdfBytes;
+
+  const outPdf = await PDFDocument.create();
+  const outPage = outPdf.addPage([pageW, pageH]);
+  const firmaCompactH = 190;
+  const registroCompactH = pageH - firmaCompactH;
+  const firmaCropH = 330;
+
+  const embeddedRegistro = await outPdf.embedPage(registroPage);
+  outPage.drawPage(embeddedRegistro, {
+    x: 0,
+    y: firmaCompactH,
+    width: pageW,
+    height: registroCompactH,
+  });
+
+  const embeddedFirma = await outPdf.embedPage(firmaPage, {
+    left: 0,
+    bottom: firmaH - firmaCropH,
+    right: firmaW,
+    top: firmaH,
+  });
+  outPage.drawPage(embeddedFirma, {
+    x: 0,
+    y: 0,
+    width: pageW,
+    height: firmaCompactH,
+  });
+
+  return Buffer.from(await outPdf.save());
+}
+
 export const descargarPdfConsolidadoCliente = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Acceso de staff interno (montado en /api/registros/pdf-consolidado, ver
-    // registros.routes.ts): ya quedó autorizado por requirePermission antes de
-    // llegar aquí, con la misma visibilidad de registros que ya tiene en
-    // /beck/registro (org-wide, no acotada a un cliente/obra específico) — no
-    // aplica el scope de Vista Cliente (clienteBeckId), que exige seleccionar
-    // un cliente y no tiene sentido para esta vista.
     const accesoInterno = (req as Request & { accesoInternoRegistros?: boolean }).accesoInternoRegistros === true;
 
     let scope: Awaited<ReturnType<typeof resolverScope>> | null = null;
@@ -1101,13 +1154,6 @@ export const descargarPdfConsolidadoCliente = async (req: Request, res: Response
       return;
     }
 
-    // Cada registro se resuelve de forma independiente, sin importar si el
-    // resto de la selección está firmado o no: un registro validado siempre
-    // puede incluirse. Si tiene pdfFirmadoUrl se reutiliza (conserva firma y
-    // sello); si no lo tiene, se genera su PDF normal al vuelo (sin firma),
-    // sin persistir ni subir nada a Cloudinary. Nunca se mezcla lo firmado y
-    // lo no firmado en documentos separados ni se bloquea la operación por
-    // ausencia de firma — eso es un caso válido, no un error.
     const registrosPorId = new Map(registros.map((r) => [r.id, r]));
     const registrosEnOrden = idsOrdenados.map((id) => registrosPorId.get(id)!);
 
@@ -1125,10 +1171,8 @@ export const descargarPdfConsolidadoCliente = async (req: Request, res: Response
           });
           return;
         }
+        pdfBytes = await compactarPdfFirmadoLegacy(pdfBytes);
       } else {
-        // Sin pdfFirmadoUrl (validado pero aún no firmado por el cliente):
-        // se genera su PDF normal al vuelo, sin signatureOptions (sin firma
-        // ni sello), sin persistir ni subir nada.
         pdfBytes = await generateRegistroPdfBuffer(registro);
       }
 
@@ -1140,8 +1184,6 @@ export const descargarPdfConsolidadoCliente = async (req: Request, res: Response
     const mergedBytes = await mergedPdf.save();
 
     res.setHeader('Content-Type', 'application/pdf');
-    // inline (no attachment): el frontend abre este PDF en una pestaña nueva
-    // vía blob + window.open, no dispara una descarga automática del navegador.
     res.setHeader('Content-Disposition', 'inline; filename="registros-validados.pdf"');
     res.send(Buffer.from(mergedBytes));
   } catch (error) {
@@ -1150,7 +1192,6 @@ export const descargarPdfConsolidadoCliente = async (req: Request, res: Response
   }
 };
 
-// GET /api/cliente/dashboard
 export const getDashboardCliente = async (req: Request, res: Response): Promise<void> => {
   try {
     const scope = await resolverScope(req);
@@ -1289,243 +1330,6 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
     });
   } catch (error) {
     console.error('Error getDashboardCliente:', error);
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
-  }
-};
-
-// ─── Itemizado por obra: revisión y confirmación del cliente ─────────────────
-
-function handleItemizadoObraError(res: Response, error: unknown): void {
-  if (error instanceof ItemizadoObraError) {
-    res.status(error.statusCode).json({ success: false, error: error.message });
-    return;
-  }
-  console.error('Error en itemizado de cliente:', error);
-  res.status(500).json({ success: false, error: 'Error interno del servidor' });
-}
-
-// GET /api/cliente/obras/:obraId/itemizados
-// Solo itemizados incluidos en la propuesta (propuestoAlCliente=true); nada de los
-// que Beck no propuso ni campos internos (orden, rendimientos, etc.). Requiere que
-// Beck ya haya enviado la propuesta (EN_REVISION_CLIENTE o FINALIZADO) — en
-// PREPARACION el cliente aún no debe verla.
-export const getItemizadosPropuestosObraCliente = async (req: Request, res: Response): Promise<void> => {
-  try {
-    if (req.userRole !== 'cliente' || !req.userId) {
-      res.status(403).json({ success: false, error: 'Solo usuarios cliente pueden ver esta información' });
-      return;
-    }
-
-    const obraId = req.params.obraId as string;
-
-    if (!(await clienteTieneObraAsignada(req.userId, obraId))) {
-      res.status(403).json({ success: false, error: 'No tienes acceso a esta obra' });
-      return;
-    }
-
-    const obra = await prisma.obra.findUnique({
-      where: { id: obraId },
-      select: { id: true, estadoPreparacionItemizado: true },
-    });
-    if (!obra) {
-      res.status(404).json({ success: false, error: 'Obra no encontrada' });
-      return;
-    }
-
-    if (obra.estadoPreparacionItemizado === EstadoPreparacionItemizado.PREPARACION) {
-      res.status(409).json({
-        success: false,
-        error: 'La propuesta de itemizado aún no fue enviada para revisión.',
-      });
-      return;
-    }
-
-    const data = await listarItemizadosPropuestosParaObra(obraId);
-
-    res.json({
-      success: true,
-      obra: { id: obra.id, estadoPreparacionItemizado: obra.estadoPreparacionItemizado },
-      data,
-    });
-  } catch (error) {
-    console.error('Error getItemizadosPropuestosObraCliente:', error);
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
-  }
-};
-
-// PATCH /api/cliente/obras/:obraId/itemizados/:itemizadoOpcionId
-// El cliente solo puede editar nombrePersonalizado y/o seleccionadoPorCliente, sobre
-// un itemizado que Beck ya incluyó en la propuesta (propuestoAlCliente=true), y solo
-// mientras la obra está EN_REVISION_CLIENTE. Cualquier otro campo en el body → 400.
-// No permite tocar visible, propuestoAlCliente, orden, rendimientos ni código/nombre
-// Beck (ninguno de esos campos se lee del body).
-export const actualizarItemizadoClienteObra = async (req: Request, res: Response): Promise<void> => {
-  try {
-    if (req.userRole !== 'cliente' || !req.userId) {
-      res.status(403).json({ success: false, error: 'Solo usuarios cliente pueden editar este campo' });
-      return;
-    }
-
-    const obraId = req.params.obraId as string;
-    const itemizadoOpcionId = req.params.itemizadoOpcionId as string;
-    const body = (req.body ?? {}) as Record<string, unknown>;
-
-    const CAMPOS_PERMITIDOS = new Set(['nombrePersonalizado', 'seleccionadoPorCliente']);
-    const camposRecibidos = Object.keys(body);
-    const camposNoPermitidos = camposRecibidos.filter((campo) => !CAMPOS_PERMITIDOS.has(campo));
-    if (camposNoPermitidos.length > 0) {
-      res.status(400).json({
-        success: false,
-        error: `No está permitido modificar: ${camposNoPermitidos.join(', ')}`,
-      });
-      return;
-    }
-    if (camposRecibidos.length === 0) {
-      res.status(400).json({
-        success: false,
-        error: 'Debe enviar al menos nombrePersonalizado o seleccionadoPorCliente',
-      });
-      return;
-    }
-
-    const tieneNombre = Object.prototype.hasOwnProperty.call(body, 'nombrePersonalizado');
-    const tieneSeleccion = Object.prototype.hasOwnProperty.call(body, 'seleccionadoPorCliente');
-
-    const { nombrePersonalizado, seleccionadoPorCliente } = body;
-    if (tieneNombre && nombrePersonalizado !== null && typeof nombrePersonalizado !== 'string') {
-      res.status(400).json({ success: false, error: 'nombrePersonalizado debe ser string o null' });
-      return;
-    }
-    if (tieneSeleccion && typeof seleccionadoPorCliente !== 'boolean') {
-      res.status(400).json({ success: false, error: 'seleccionadoPorCliente debe ser boolean' });
-      return;
-    }
-
-    if (!(await clienteTieneObraAsignada(req.userId, obraId))) {
-      res.status(403).json({ success: false, error: 'No tienes acceso a esta obra' });
-      return;
-    }
-
-    await assertItemizadoObraEditablePorCliente(obraId);
-
-    // Solo se puede editar un itemizado que Beck efectivamente incluyó en la
-    // propuesta (propuestoAlCliente=true) para esta obra — sin fallback a catálogo
-    // global, porque la propuesta solo existe a nivel de configuración por obra.
-    const config = await prisma.configuracionItemizadoOpcionObra.findUnique({
-      where: { obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId } },
-      select: { propuestoAlCliente: true },
-    });
-    if (!config || !config.propuestoAlCliente) {
-      res.status(404).json({ success: false, error: 'Itemizado no encontrado para esta obra' });
-      return;
-    }
-
-    const updateData: { nombrePersonalizado?: string | null; seleccionadoPorCliente?: boolean } = {};
-    if (tieneNombre) {
-      updateData.nombrePersonalizado =
-        typeof nombrePersonalizado === 'string' && nombrePersonalizado.trim()
-          ? nombrePersonalizado.trim()
-          : null;
-    }
-    if (tieneSeleccion) {
-      updateData.seleccionadoPorCliente = seleccionadoPorCliente as boolean;
-    }
-
-    const actualizado = await prisma.configuracionItemizadoOpcionObra.update({
-      where: { obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId } },
-      data: updateData,
-    });
-
-    res.json({
-      success: true,
-      data: {
-        itemizadoOpcionId,
-        nombrePersonalizado: actualizado.nombrePersonalizado,
-        seleccionadoPorCliente: actualizado.seleccionadoPorCliente,
-      },
-    });
-  } catch (error) {
-    handleItemizadoObraError(res, error);
-  }
-};
-
-// PATCH /api/cliente/obras/:obraId/itemizado/confirmar
-// Confirmación final del cliente: EN_REVISION_CLIENTE → FINALIZADO. Transacción
-// atómica: los itemizados propuestos quedan visible=seleccionadoPorCliente, el
-// resto queda visible=false, y la obra pasa a FINALIZADO. Solo a partir de aquí
-// los itemizados seleccionados quedan activos para la obra; nadie (ni Beck ni el
-// cliente) puede modificar la configuración después de esto.
-export const confirmarItemizadoCliente = async (req: Request, res: Response): Promise<void> => {
-  try {
-    if (req.userRole !== 'cliente' || !req.userId) {
-      res.status(403).json({ success: false, error: 'Solo usuarios cliente pueden confirmar el itemizado' });
-      return;
-    }
-
-    const obraId = req.params.obraId as string;
-
-    if (!(await clienteTieneObraAsignada(req.userId, obraId))) {
-      res.status(403).json({ success: false, error: 'No tienes acceso a esta obra' });
-      return;
-    }
-
-    const obra = await prisma.obra.findUnique({
-      where: { id: obraId },
-      select: { id: true, nombre: true, estadoPreparacionItemizado: true },
-    });
-    if (!obra) {
-      res.status(404).json({ success: false, error: 'Obra no encontrada' });
-      return;
-    }
-
-    if (obra.estadoPreparacionItemizado === EstadoPreparacionItemizado.PREPARACION) {
-      res.status(409).json({
-        success: false,
-        error: 'La propuesta de itemizado aún no fue enviada para revisión.',
-      });
-      return;
-    }
-
-    if (obra.estadoPreparacionItemizado === EstadoPreparacionItemizado.FINALIZADO) {
-      res.status(409).json({ success: false, error: 'El itemizado ya fue confirmado.' });
-      return;
-    }
-
-    const [, , , actualizado] = await prisma.$transaction([
-      // Propuestos y aceptados por el cliente → quedan activos para la obra.
-      prisma.configuracionItemizadoOpcionObra.updateMany({
-        where: { obraId, propuestoAlCliente: true, seleccionadoPorCliente: true },
-        data: { visible: true },
-      }),
-      // Propuestos pero rechazados por el cliente → quedan inactivos.
-      prisma.configuracionItemizadoOpcionObra.updateMany({
-        where: { obraId, propuestoAlCliente: true, seleccionadoPorCliente: false },
-        data: { visible: false },
-      }),
-      // No propuestos → inactivos (nunca llegaron a mostrarse al cliente).
-      prisma.configuracionItemizadoOpcionObra.updateMany({
-        where: { obraId, propuestoAlCliente: false },
-        data: { visible: false },
-      }),
-      prisma.obra.update({
-        where: { id: obraId },
-        data: {
-          estadoPreparacionItemizado: EstadoPreparacionItemizado.FINALIZADO,
-          itemizadoFinalizadoAt: new Date(),
-          itemizadoFinalizadoPorId: req.userId,
-        },
-        select: {
-          id: true,
-          estadoPreparacionItemizado: true,
-          itemizadoFinalizadoAt: true,
-          itemizadoFinalizadoPorId: true,
-        },
-      }),
-    ]);
-
-    res.json({ success: true, data: actualizado });
-  } catch (error) {
-    console.error('Error confirmarItemizadoCliente:', error);
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };

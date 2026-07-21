@@ -1,6 +1,5 @@
 import pdfParse from 'pdf-parse';
 
-// ── Interfaces ────────────────────────────────────────────────────────────────
 
 export interface ProductoExtraido {
   sku: string;
@@ -25,7 +24,6 @@ export interface ItemInventarioExtraido {
   total: number | null;
 }
 
-// ── SKU validation ────────────────────────────────────────────────────────────
 
 /**
  * Valid FIREMAT SKUs:
@@ -38,7 +36,6 @@ export function esSkuValido(token: string): boolean {
   return false;
 }
 
-// ── Number normalization ──────────────────────────────────────────────────────
 
 const VALOR_NULO_RE = /^(n[_\/]?a|a[\s_]pedido|#[\s\S]*|valor[\s\S]*|-{1,3}|s\/d|sd)$/i;
 
@@ -73,7 +70,6 @@ export function normalizarNumeroChileno(raw: string): number | null {
   return isNaN(n) ? null : n;
 }
 
-// ── Header / section line filters ─────────────────────────────────────────────
 
 const LINEAS_IGNORAR = new Set([
   'SKU', 'DESCRIPCIÓN', 'DESCRIPCION', 'DISPONIBILIDAD', 'FORMATO',
@@ -88,15 +84,12 @@ function esLineaIgnorable(linea: string): boolean {
   const trim = linea.trim();
   if (trim.length === 0) return true;
   if (LINEAS_IGNORAR.has(trim.toUpperCase())) return true;
-  // All-uppercase lines with no prices (section separators)
   if (/^[A-ZÁÉÍÓÚÑ\s\/\-·]{4,80}$/.test(trim) && !/\d{4,}/.test(trim)) return true;
   return false;
 }
 
-// ── Multi-word token normalization ────────────────────────────────────────────
 
 /** Replaces multi-word field values with underscore-joined tokens so they survive split(). */
-// Separates columns that pdf-parse commonly concatenates in FIREMAT price lists.
 const SKUS_TRIM_TEX = new Set([
   '093X-V',
   '9250',
@@ -215,7 +208,6 @@ function normalizarMultipalabras(linea: string): string {
     .replace(/(?<!\w)stock(?!\w)/gi, 'En_stock');
 }
 
-// Canonical disponibilidad tokens (lower-cased for comparison)
 const DISP_TOKENS_LC = new Set([
   'en_stock', 'a_pedido', 'sin_stock', 'stock_limitado',
   'disponible', 'agotado', 'consultar',
@@ -233,7 +225,6 @@ function restaurar(t: string): string {
     .replace(/VALOR ERR/g, '#¡VALOR!');
 }
 
-// ── Price helpers ─────────────────────────────────────────────────────────────
 
 function rawDePrecio(t: string): string {
   return t.replace(/N_A/g, 'n/a').replace(/VALOR_ERR/g, '#valor');
@@ -244,7 +235,6 @@ function esPrecioToken(t: string): boolean {
   return normalizarNumeroChileno(r) !== null || esValorNulo(r);
 }
 
-// ── Description validation ────────────────────────────────────────────────────
 
 const PALABRAS_DESC_INVALIDAS = new Set([
   'type', 'rod', 'gasket', 'fire', 'rated', 'expansion', 'coil', 'wrap',
@@ -256,12 +246,10 @@ const PALABRAS_DESC_INVALIDAS = new Set([
 function esDescripcionValida(desc: string): boolean {
   if (!desc || desc.trim().length < 3) return false;
   const lower = desc.trim().toLowerCase();
-  // Reject single-word descriptions that are known junk words
   if (!lower.includes(' ') && PALABRAS_DESC_INVALIDAS.has(lower)) return false;
   return true;
 }
 
-// ── Product line parser ───────────────────────────────────────────────────────
 
 interface ParseLineResult {
   prod?: ProductoExtraido;
@@ -343,7 +331,6 @@ export function parsearLineaProducto(
     return { omitida: true, razon: `Línea ${numLinea}: SKU inválido "${sku}"` };
   }
 
-  // ── Pull 3 prices from the right ──
   let idx = tokens.length - 1;
   const preciosRaw: string[] = [];
   while (idx >= 1 && preciosRaw.length < 3 && esPrecioToken(tokens[idx])) {
@@ -357,8 +344,6 @@ export function parsearLineaProducto(
   });
   const [precioUsd, precioClp, precioSugerido] = precios;
 
-  // ── Find disponibilidad scanning backward from idx (the token just before the 3 prices) ──
-  // Do this BEFORE extracting cantidadCaja so disponibilidad at that position isn't consumed.
   let dispIdx = -1;
   for (let i = idx; i >= 1; i--) {
     if (esTokenDisponibilidad(tokens[i])) {
@@ -376,15 +361,12 @@ export function parsearLineaProducto(
     disponibilidad = restaurar(tokens[dispIdx]);
     descripcionFin = dispIdx;
 
-    // Tokens between disponibilidad and the price block contain formato + cantidadCaja
     const midTokens = tokens.slice(dispIdx + 1, idx + 1);
 
-    // Preserve the quantity column as text while keeping preceding tokens as formato.
     const campos = extraerFormatoYCantidad(midTokens);
     formatoStr = campos.formato;
     cantidadCaja = campos.cantidadCaja;
   } else {
-    // disponibilidad not found — use the remaining right token as formato best-effort
     descripcionFin = idx + 1;
   }
 
@@ -417,14 +399,12 @@ export function parsearLineaProducto(
   };
 }
 
-// ── Category detection ────────────────────────────────────────────────────────
 
 function extraerCategoria(linea: string): string | null {
   const m = linea.match(/^(?:categor[ií]a|secci[oó]n|grupo|familia|linea)[:\s]+(.+)$/i);
   return m ? m[1].trim() : null;
 }
 
-// ── Public: price list ────────────────────────────────────────────────────────
 
 export async function parsearListaPreciosPdf(buffer: Buffer): Promise<{
   productos: ProductoExtraido[];
@@ -445,7 +425,6 @@ export async function parsearListaPreciosPdf(buffer: Buffer): Promise<{
 
   const text = pdfData.text ?? '';
 
-  // ── Temporal debug logs ──
   console.log('[PDF-IMPORT] Texto extraído (primeros 800 chars):\n', text.substring(0, 800));
   console.log('[PDF-IMPORT] Total caracteres extraídos:', text.length);
 
@@ -455,7 +434,6 @@ export async function parsearListaPreciosPdf(buffer: Buffer): Promise<{
 
   const lineas = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-  // Find header row (first 30 lines containing "SKU" + "PRECIO")
   let headerIndex = -1;
   for (let i = 0; i < Math.min(lineas.length, 30); i++) {
     const upper = lineas[i].toUpperCase();
@@ -476,11 +454,9 @@ export async function parsearListaPreciosPdf(buffer: Buffer): Promise<{
     const linea = lineas[i];
     if (esLineaIgnorable(linea)) continue;
 
-    // Category section headers
     const cat = extraerCategoria(linea);
     if (cat) { categoriaActual = cat; continue; }
 
-    // Quick pre-filter: first token must pass SKU validation before expensive parsing
     const lineaPreSeparada = preSepararColumnasPdf(linea);
     const primerToken = lineaPreSeparada.split(/\s+/)[0] ?? '';
     if (!esSkuValido(primerToken)) continue;
@@ -539,7 +515,6 @@ export async function parsearListaPreciosPdf(buffer: Buffer): Promise<{
   return { productos, advertencias, noTexto: false };
 }
 
-// ── Public: inventory ─────────────────────────────────────────────────────────
 
 const DATE_RE = /^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/;
 
@@ -563,7 +538,6 @@ function parsearLineaInventario(tokens: string[]): ItemInventarioExtraido | null
   const sku = tokens[0];
   if (!esSkuValido(sku)) return null;
 
-  // Find rightmost numeric value (total), skipping date tokens
   let totalIdx = tokens.length - 1;
   while (
     totalIdx > 0 &&
@@ -576,7 +550,6 @@ function parsearLineaInventario(tokens: string[]): ItemInventarioExtraido | null
   const total  = normalizarNumeroChileno(tokens[totalIdx]);
   const middle = tokens.slice(1, totalIdx);
 
-  // Leading text tokens → description; remaining → numeric/date data
   let splitIdx = 0;
   while (splitIdx < middle.length && /^[A-Za-záéíóúñÁÉÍÓÚÑ]/.test(middle[splitIdx])) {
     splitIdx++;

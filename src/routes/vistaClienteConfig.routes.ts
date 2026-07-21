@@ -9,7 +9,6 @@ import {
 
 const router = Router();
 
-// Solo administrador puede gestionar la configuración de vista cliente
 router.get('/configuracion/general', authorize('administrador'), getConfiguracionGeneral);
 router.put('/configuracion/general', authorize('administrador'), putConfiguracionGeneral);
 router.get('/configuracion/cliente/:clienteBeckId', authorize('administrador'), getConfiguracionBeck);

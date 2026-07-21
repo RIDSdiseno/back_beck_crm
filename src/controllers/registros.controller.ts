@@ -1,4 +1,3 @@
-// src/controllers/registros.controller.ts
 import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
 import { uploadImage } from '../config/cloudinary';
@@ -15,9 +14,10 @@ import {
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
 import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
+import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
-import { calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
+import { adjuntarRendimientoRegistros, calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
 import { generateRegistroPdfBuffer } from '../services/registroPdf.service';
 
 function parseEjeNumericoTexto(value: unknown): string {
@@ -94,7 +94,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       codigoBeckFinal = itemizadoMandante.codigoBeck;
     }
 
-    // Aceptar snake_case y camelCase
     const metros_lineales: number | null =
       req.body.metros_lineales != null ? Number(req.body.metros_lineales)
       : req.body.metrosLineales != null ? Number(req.body.metrosLineales)
@@ -115,15 +114,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
     const usuario_id = req.userId; // Del middleware auth
 
-    // Determinar tipo intentado (backward compat: default 'sello_cortafuego')
     const tipoIntentado =
       typeof tipo_registro === 'string' && tipo_registro.trim()
         ? tipo_registro.trim()
         : 'sello_cortafuego';
 
-    // Validar campos obligatorios
-    // cantidad_sellos ("Cantidad") es obligatorio para todos los tipos salvo
-    // junta_lineal_espuma, que usa metros_lineales en su lugar.
     if (
       !obra_id ||
       !descripcion_material ||
@@ -141,7 +136,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Validar que existan fotos (mínimo 1, máximo 5)
     const files = req.files as Express.Multer.File[];
     if (!files || files.length === 0) {
       res.status(400).json({ error: 'Debe subir al menos 1 foto' });
@@ -152,14 +146,12 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Validar que la obra exista
     const obraCheck = await dbQuery<{ id: string; codigo: string | null }>('SELECT id, codigo FROM obras WHERE id = $1', [obra_id]);
     if (obraCheck.rows.length === 0) {
       res.status(404).json({ error: 'Obra no encontrada' });
       return;
     }
 
-    // Validar tipo de registro contra configuración de la obra
     const validacionTipo = await validarTipoRegistroPermitidoPorObra(obra_id, tipoIntentado);
     if (!validacionTipo.permitido) {
       res.status(400).json({ error: validacionTipo.error ?? 'Tipo de registro no permitido para esta obra.' });
@@ -176,7 +168,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       nombre_sellador,
     );
 
-    // Subir fotos a Cloudinary
     const fotosUrls: string[] = [];
     for (const file of files) {
       try {
@@ -189,18 +180,16 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       }
     }
 
-    // Calcular día de semana
     const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dia_semana = dias[fecha.getDay()];
     const eje_numerico_norm = parseEjeNumericoTexto(eje_numerico);
 
-    // Solo junta_lineal_espuma no usa cantidad_sellos (usa metros_lineales); el resto lo requiere.
     const cantidadSellosNorm =
       tipoRegistroFinal === 'junta_lineal_espuma'
         ? Number(cantidad_sellos ?? 0)
         : Number(cantidad_sellos);
 
-    // Calcular campos derivados (fuente de verdad en backend)
+    const tramosHolguraObra = await getTramosHolguraObra(obra_id, tipoRegistroFinal);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -211,6 +200,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         reparacion_tabique: reparacion_tabique_raw,
         piso: String(piso),
         tipoRegistro: tipoRegistroFinal,
+        tramosHolgura: tramosHolguraObra,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -220,7 +210,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       throw err;
     }
 
-    // Insertar en BD
     const insertValues = [
       obra_id,
       usuario_id,
@@ -318,7 +307,6 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       },
     });
 
-    // Crear notificaciones para usuarios de Ingeniería
     await dbQuery(
       `INSERT INTO notificaciones (usuario_id, tipo, referencia_id, mensaje)
        SELECT id, 'nuevo_registro', $1, $2
@@ -426,7 +414,9 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
       ? await sanitizarRegistrosPorRol(resultConItemizado, 'trabajador')
       : resultConItemizado;
 
-    res.json(result.map((reg) => ({ ...reg, ...calcularRendimientoIndividual(reg) })));
+    const resultConRendimiento = await adjuntarRendimientoRegistros(result);
+
+    res.json(resultConRendimiento);
   } catch (error) {
     console.error('Error al listar registros:', error);
     res.status(500).json({ error: 'Error al listar registros' });
@@ -443,9 +433,6 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
     const usuario_id = req.userId;
     const user_rol = req.userRole;
 
-    // fotos_registro se trae con la misma subconsulta agregada que
-    // listarPendientes/listarRegistros — sin esto, el detalle por ID solo
-    // devolvía la columna legacy rt.fotos_urls (a veces incompleta).
     let query = `
       SELECT rt.*, o.nombre as obra_nombre,
              u.nombre as usuario_nombre,
@@ -461,7 +448,6 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
       WHERE rt.id = $1
     `;
 
-    // Si es terreno, solo puede ver sus propios registros
     if (user_rol === 'terreno') {
       query += ` AND rt.usuario_id = $2`;
       const result = await dbQuery(query, [id, usuario_id]);
@@ -472,7 +458,8 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
       const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
       const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
       const sanitizado = await sanitizarRegistroPorRol(registro, 'trabajador');
-      res.json({ ...sanitizado, ...calcularRendimientoIndividual(sanitizado) });
+      const [registroConRendimiento] = await adjuntarRendimientoRegistros([sanitizado]);
+      res.json(registroConRendimiento);
     } else {
       const result = await dbQuery(query, [id]);
       if (result.rows.length === 0) {
@@ -481,7 +468,8 @@ export const obtenerRegistro = async (req: Request, res: Response): Promise<void
       }
       const [registroConCodigo] = await adjuntarCodigosBeck([result.rows[0]]);
       const [registro] = await adjuntarItemizadosMandante([registroConCodigo]);
-      res.json({ ...registro, ...calcularRendimientoIndividual(registro) });
+      const [registroConRendimiento] = await adjuntarRendimientoRegistros([registro]);
+      res.json(registroConRendimiento);
     }
   } catch (error) {
     console.error('Error al obtener registro:', error);
@@ -542,7 +530,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       );
     }
 
-    // ── Rechazo: transacción atómica + copia corregible ─────────────────────
     if (estado === EstadoRegistroTerreno.rechazado) {
       if (existente.estado !== EstadoRegistroTerreno.en_revision) {
         res.status(400).json({ error: 'Solo se puede rechazar un registro en estado en_revision' });
@@ -638,17 +625,14 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       return;
     }
 
-    // 1. Actualizar estado en registros_terreno (fuente de verdad)
     const registro = await prisma.registroTerreno.update({
       where: { id },
       data: { estado: estado as EstadoRegistroTerreno },
     });
 
-    // 2. Gestionar procesamiento_ingenieria según el nuevo estado
     if (estado === EstadoRegistroTerreno.pendiente) {
       // pendiente: solo existe en registros_terreno, no requiere procesamiento técnico
     } else if (estado === EstadoRegistroTerreno.en_revision) {
-      // Crear entrada de procesamiento si no existe; no duplicar si ya existe
       await dbQuery(
         `INSERT INTO procesamiento_ingenieria (registro_terreno_id, usuario_id, procesado_at)
          VALUES ($1, $2, NOW())
@@ -661,7 +645,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
         res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
         return;
       }
-      // Calcular total técnico con el factor actual de accesibilidad.
       const total_sellos_calculado =
         Number(existente.cantidadSellos) *
         Number(existente.holgura) *
@@ -761,13 +744,6 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
       return;
     }
 
-    // Cierra el bypass del flujo formal: este endpoint genérico de edición no
-    // debe permitir saltar directo a validado/rechazado sin pasar antes por
-    // en_revision — misma regla que ya exige el endpoint dedicado
-    // actualizarEstadoRegistro para estas dos transiciones. Solo se evalúa
-    // cuando el body pide una TRANSICIÓN real (estado destino distinto del
-    // actual): reenviar el mismo valor sin cambios (ej. al editar otros
-    // campos de una corrección ya validada/rechazada) no debe bloquearse.
     const pideTransicionDeEstado = body.estado !== undefined && body.estado !== existente.estado;
 
     if (
@@ -863,7 +839,6 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
         : parseIntegerOrNull(cieloModularRaw);
     }
 
-    // Recalcular campos derivados usando valores actualizados + fallback al registro existente
     const holguraFinal = body.holgura !== undefined
       ? Number(String(body.holgura))
       : Number(existente.holgura);
@@ -879,6 +854,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     const reparacionBase = reparacionRaw !== undefined ? reparacionRaw : existente.reparacionTabique;
     const pisoFinal = body.piso !== undefined ? String(body.piso) : existente.piso;
 
+    const tramosHolguraObraUpdate = await getTramosHolguraObra(existente.obraId, existente.tipoRegistro);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -889,6 +865,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
         reparacion_tabique: reparacionBase,
         piso: pisoFinal,
         tipoRegistro: existente.tipoRegistro,
+        tramosHolgura: tramosHolguraObraUpdate,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -952,7 +929,6 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
   }
 };
 
-// ─── descargarRegistroPdf ───────────────────────────────────────────────────────
 
 /**
  * GET /api/registros/:id/pdf
@@ -1073,10 +1049,6 @@ export const reenviarRevision = async (req: Request, res: Response): Promise<voi
  */
 export const listarPendientes = async (_req: Request, res: Response): Promise<void> => {
   try {
-    // fotos_registro se trae con una subconsulta agregada (igual fuente que
-    // usa listarRegistros vía include de Prisma) porque la columna legacy
-    // rt.fotos_urls puede tener menos fotos que la tabla relacional
-    // fotos_registro para el mismo registro.
     const result = await dbQuery(
       `SELECT rt.*, o.nombre as obra_nombre, u.nombre as usuario_nombre, ui.nombre as seleccionado_inspeccion_por_nombre,
               COALESCE(
@@ -1090,9 +1062,10 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        ORDER BY rt.created_at ASC`
     );
 
-    res.json(result.rows.map((row) => ({
+    const rowsConRendimiento = await adjuntarRendimientoRegistros(result.rows);
+
+    res.json(rowsConRendimiento.map((row) => ({
       ...row,
-      ...calcularRendimientoIndividual(row),
       inspeccionEstado: row.inspeccion_estado,
       inspeccionRevisionEstado: row.inspeccion_revision_estado,
     })));

@@ -116,7 +116,6 @@ const descripcionOportunidad = (
 const descripcionEmpresa = (clienteNombre: string): string =>
   ` para la empresa ${clienteNombre}`;
 
-// ─── Cálculos ────────────────────────────────────────────────────────────────
 
 const calcLineSubtotal = (linea: LineaInput): number => {
   const precioFinal = linea.gananciaPct
@@ -148,7 +147,6 @@ export const calcularTotales = (
 
 export const calcTotals = calcularTotales;
 
-// ─── Parseo y validación de líneas ───────────────────────────────────────────
 
 const VALID_TIPOS = Object.values(TipoLineaCotizacion) as string[];
 
@@ -294,7 +292,6 @@ const enrichLineasFiremat = async (
   return { lineas: enriched, advertencias };
 };
 
-// ─── Helpers DB ──────────────────────────────────────────────────────────────
 
 const validateObra = async (obraId: string | null): Promise<void> => {
   if (!obraId) return;
@@ -429,7 +426,6 @@ const ESTADO_TIPO_MAP: Partial<Record<EstadoCotizacion, TipoMovimientoCRM>> = {
   [EstadoCotizacion.RECHAZADA]: TipoMovimientoCRM.COTIZACION_RECHAZADA,
 };
 
-// ─── Servicios ───────────────────────────────────────────────────────────────
 
 export const createCotizacion = async (input: CreateCotizacionInput, userId: string) => {
   await validateObra(input.obraId);

@@ -4,7 +4,6 @@ import { requirePermission } from '../../middlewares/requirePermission';
 
 const router = Router();
 
-// Lectura auxiliar permitida también desde dashboard (KPI ventas del mes)
 const canSee = requirePermission(['firemat_ventas', 'firemat_dashboard'], 'ver');
 const canEdit = requirePermission('firemat_ventas', 'editar');
 

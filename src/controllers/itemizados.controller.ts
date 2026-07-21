@@ -1,4 +1,3 @@
-// src/controllers/itemizados.controller.ts
 import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
 import { Itemizado } from '../types';
@@ -72,13 +71,11 @@ export const crearItemizado = async (req: Request, res: Response): Promise<void>
     const { codigo, descripcion, unidad_medida, precio_unitario, categoria, activo } =
       req.body;
 
-    // Validar campos obligatorios
     if (!codigo || !descripcion || !unidad_medida || !precio_unitario || !categoria) {
       res.status(400).json({ error: 'Faltan campos obligatorios' });
       return;
     }
 
-    // Verificar que el código no exista
     const checkCodigo = await dbQuery(
       'SELECT id FROM itemizados WHERE codigo = $1',
       [codigo]
@@ -125,7 +122,6 @@ export const actualizarItemizado = async (req: Request, res: Response): Promise<
     const { codigo, descripcion, unidad_medida, precio_unitario, categoria, activo } =
       req.body;
 
-    // Verificar que el itemizado exista
     const checkItemizado = await dbQuery(
       'SELECT id FROM itemizados WHERE id = $1',
       [id]
@@ -135,7 +131,6 @@ export const actualizarItemizado = async (req: Request, res: Response): Promise<
       return;
     }
 
-    // Si se cambia el código, verificar que no exista
     if (codigo) {
       const checkCodigo = await dbQuery(
         'SELECT id FROM itemizados WHERE codigo = $1 AND id != $2',
@@ -182,7 +177,6 @@ export const eliminarItemizado = async (req: Request, res: Response): Promise<vo
   try {
     const { id } = req.params;
 
-    // Verificar que el itemizado no esté siendo usado en procesamientos
     const checkProcesamiento = await dbQuery(
       'SELECT COUNT(*) as count FROM procesamiento_ingenieria WHERE itemizado_id = $1',
       [id]

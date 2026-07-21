@@ -34,7 +34,6 @@ router.get('/:id', canSee, getFunnelFirematById);
 router.post('/', canEdit, createFunnelFiremat);
 router.put('/:id', canEdit, updateFunnelFiremat);
 router.patch('/:id/etapa', canEdit, patchEtapaFunnelFiremat);
-// Admin-only por diseño: eliminación permanente de oportunidad
 router.delete('/:id', authorize('administrador'), deleteFunnelFiremat);
 
 export default router;

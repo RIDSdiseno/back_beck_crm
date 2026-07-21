@@ -563,7 +563,6 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
     const detalles = await validateDetalles(body.detalles);
     const totales = calcularTotales(detalles, body.descuento, body.impuesto);
 
-    // Check permission if cliente is changing
     if (req.userId && req.userRole && req.userRole !== 'administrador') {
       const actual = await firematPrisma.cotizacionFiremat.findUnique({
         where: { id },
@@ -747,7 +746,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
 
     const fmBadge = ESTADO_FM_COLORS[cotizacion.estado] ?? '#64748b';
 
-    // ══════════════════════ A) ENCABEZADO ══════════════════════
 
     doc.rect(0, 0, FM_W, 4).fill(FM_RED);
 
@@ -795,7 +793,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
     doc.rect(FM_MARGIN, doc.y, FM_CONTENT_W, 1.5).fill(FM_RED);
     doc.y += 8;
 
-    // ══════════════════════ B+C) BLOQUES DE INFORMACIÓN ══════════════════════
 
     const FM_BINFO_TOP = doc.y;
     const FM_BINFO_LX  = FM_MARGIN;
@@ -848,7 +845,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
 
     doc.y = FM_BINFO_TOP + FM_BI_TOTAL + 10;
 
-    // ══════════════════════ D) TABLA DE DETALLE ══════════════════════
 
     const FM_TC_NUM = { x: FM_MARGIN,       w: 20  };
     const FM_TC_SKU = { x: FM_MARGIN + 20,  w: 60  };
@@ -912,7 +908,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       .moveTo(FM_MARGIN, doc.y).lineTo(FM_W - FM_MARGIN, doc.y).stroke(FM_BORDER);
     doc.y += 12;
 
-    // ══════════════════════ E) TOTALES ══════════════════════
 
     const FM_TT_X  = 358;
     const FM_TT_LW = 112;
@@ -951,7 +946,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
     fmDrawTotRow('TOTAL:', formatCLP(cotizacion.total), { bold: true, highlight: true });
     doc.y = fmTotY + 10;
 
-    // ══════════════════════ F) OBSERVACIONES ══════════════════════
 
     if (cotizacion.observaciones) {
       if (doc.y > 720) { doc.addPage(); doc.y = FM_MARGIN; }
@@ -975,7 +969,6 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       doc.y += 8;
     }
 
-    // ══════════════════════ G) FIRMA ══════════════════════
 
     if (doc.y > 760) { doc.addPage(); doc.y = FM_MARGIN; }
 

@@ -17,7 +17,6 @@ import { RolUsuario } from "../types";
 import { puedeCambiarEmpresa } from "../helpers/puedeCambiarEmpresa";
 import { getVendedoresFunnelBeckElegibles, reasignarVendedorAutomaticamente, ReasignacionVendedorAutomaticaResultado } from "../helpers/vendedoresFunnelBeck";
 
-// De momento referencial. Después esto debería venir de una API o tabla propia.
 const UF_REFERENCIAL = 38000;
 
 const ETAPA_LABELS: Record<string, string> = {
@@ -64,7 +63,6 @@ function optStr(value: unknown): string | null {
   return s || null;
 }
 
-// Returns undefined (not sent), null (explicitly cleared), or the string value
 function optNullableId(a: unknown, b: unknown): string | null | undefined {
   const val = a !== undefined ? a : b;
   if (val === undefined) return undefined;
@@ -165,7 +163,6 @@ function calcularValores(
   };
 }
 
-// Accepts both camelCase and snake_case from request body
 function extractInput(raw: Record<string, unknown>) {
   return {
     nombreProyecto:      (raw.nombreProyecto      ?? raw.nombre_proyecto)      as string | undefined,
@@ -180,7 +177,6 @@ function extractInput(raw: Record<string, unknown>) {
     etapa:                raw.etapa                                               as EtapaFunnelBeck | undefined,
     estadoCierre:        (raw.estadoCierre         ?? raw.estado_cierre)         as EstadoCierreFunnel | undefined,
     motivoPerdida:       (raw.motivoPerdida        ?? raw.motivo_perdida)        as string | undefined,
-    // Prospecto identificado
     rutEmpresa:          (raw.rutEmpresa           ?? raw.rut_empresa)           as string | undefined,
     cargoContacto:       (raw.cargoContacto        ?? raw.cargo_contacto)        as string | undefined,
     telefonoContacto:    (raw.telefonoContacto     ?? raw.telefono_contacto)     as string | undefined,
@@ -188,21 +184,17 @@ function extractInput(raw: Record<string, unknown>) {
     nombreContacto:      (raw.nombreContacto       ?? raw.nombre_contacto)       as string | undefined,
     tipoCliente:         (raw.tipoCliente          ?? raw.tipo_cliente)          as string | undefined,
     tipoOportunidad:     (raw.tipoOportunidad      ?? raw.tipo_oportunidad)      as string | undefined,
-    // Primera reunión / seguimiento
     fechaPrimerContacto: (raw.fechaPrimerContacto  ?? raw.fecha_primer_contacto) as string | undefined,
     tipoContacto:        (raw.tipoContacto         ?? raw.tipo_contacto)         as string | undefined,
     necesidadDetectada:  (raw.necesidadDetectada   ?? raw.necesidad_detectada)   as string | undefined,
     timingEstimado:      (raw.timingEstimado       ?? raw.timing_estimado)       as string | undefined,
     nivelInteres:        (raw.nivelInteres         ?? raw.nivel_interes)         as string | undefined,
-    // Próxima acción
     proximaAccion:       (raw.proximaAccion        ?? raw.proxima_accion)        as string | undefined,
     fechaProximaAccion:  (raw.fechaProximaAccion   ?? raw.fecha_proxima_accion)  as string | undefined,
-    // Propuesta / negociación
     probabilidadCierre:  (raw.probabilidadCierre   ?? raw.probabilidad_cierre)   as number | undefined,
     objeciones:           raw.objeciones                                          as string | undefined,
     contrapropuestas:     raw.contrapropuestas                                    as string | undefined,
     ajustesSolicitados:  (raw.ajustesSolicitados   ?? raw.ajustes_solicitados)   as string | undefined,
-    // Visita / levantamiento tecnico
     fechaVisita:         (raw.fechaVisita           ?? raw.fecha_visita)           as string | undefined,
     responsableTecnico:  (raw.responsableTecnico    ?? raw.responsable_tecnico)    as string | undefined,
     asistentes:           raw.asistentes                                           as string | undefined,
@@ -216,7 +208,6 @@ function extractInput(raw: Record<string, unknown>) {
     observacionesTecnicas: (raw.observacionesTecnicas ?? raw.observaciones_tecnicas) as string | undefined,
     necesidadOficinaTecnica: (raw.necesidadOficinaTecnica ?? raw.necesidad_oficina_tecnica) as boolean | undefined,
     proximosPasos:       (raw.proximosPasos         ?? raw.proximos_pasos)         as string | undefined,
-    // Desarrollo de propuesta
     estadoDesarrolloPropuesta: (raw.estadoDesarrolloPropuesta ?? raw.estado_desarrollo_propuesta) as string | undefined,
     informacionPendiente: (raw.informacionPendiente ?? raw.informacion_pendiente)  as string | undefined,
     documentosRequeridos: (raw.documentosRequeridos ?? raw.documentos_requeridos)  as string | undefined,
@@ -225,14 +216,12 @@ function extractInput(raw: Record<string, unknown>) {
     necesidadValidacionGerencial: (raw.necesidadValidacionGerencial ?? raw.necesidad_validacion_gerencial) as boolean | undefined,
     fechaComprometidaEnvio: (raw.fechaComprometidaEnvio ?? raw.fecha_comprometida_envio) as string | undefined,
     comentariosInternos: (raw.comentariosInternos   ?? raw.comentarios_internos)   as string | undefined,
-    // Propuesta enviada / negociacion
     fechaEnvioPropuesta: (raw.fechaEnvioPropuesta   ?? raw.fecha_envio_propuesta)  as string | undefined,
     versionPropuesta:    (raw.versionPropuesta      ?? raw.version_propuesta)      as string | undefined,
     numeroPropuesta:     (raw.numeroPropuesta       ?? raw.numero_propuesta)       as string | undefined,
     montoPropuesto:      (raw.montoPropuesto        ?? raw.monto_propuesto)        as number | string | undefined,
     fechaVencimientoPropuesta: (raw.fechaVencimientoPropuesta ?? raw.fecha_vencimiento_propuesta) as string | undefined,
     comentariosCliente:  (raw.comentariosCliente    ?? raw.comentarios_cliente)    as string | undefined,
-    // Documentacion de venta
     ordenCompra:         (raw.ordenCompra           ?? raw.orden_compra)           as string | undefined,
     contrato:             raw.contrato                                             as string | undefined,
     correoAceptacion:    (raw.correoAceptacion      ?? raw.correo_aceptacion)      as string | undefined,
@@ -251,25 +240,20 @@ function extractInput(raw: Record<string, unknown>) {
     fechaTraspasoAdministracion: (raw.fechaTraspasoAdministracion ?? raw.fecha_traspaso_administracion) as string | undefined,
     responsableTraspasoAdministracion: (raw.responsableTraspasoAdministracion ?? raw.responsable_traspaso_administracion) as string | undefined,
     observacionesTraspasoAdministracion: (raw.observacionesTraspasoAdministracion ?? raw.observaciones_traspaso_administracion) as string | undefined,
-    // Cierre perdido / postergado
     etapaPerdida:        (raw.etapaPerdida         ?? raw.etapa_perdida)         as string | undefined,
     motivoPostergacion:  (raw.motivoPostergacion   ?? raw.motivo_postergacion)   as string | undefined,
     fechaReactivacion:   (raw.fechaReactivacion    ?? raw.fecha_reactivacion)    as string | undefined,
-    // Cierre ganado
     montoFinalGanado:    (raw.montoFinalGanado      ?? raw.monto_final_ganado)      as number | string | undefined,
     fechaCierre:         (raw.fechaCierre           ?? raw.fecha_cierre)           as string | undefined,
     documentoRespaldo:   (raw.documentoRespaldo    ?? raw.documento_respaldo)    as string | undefined,
     flujoPosterior:      (raw.flujoPosterior       ?? raw.flujo_posterior)       as string | undefined,
-    // Clientes Beck
     clienteBeckId:       optNullableId(raw.clienteBeckId,  raw.cliente_beck_id),
     contactoBeckId:      optNullableId(raw.contactoBeckId, raw.contacto_beck_id),
-    // Campos adicionales
     direccionProyecto:   (raw.direccionProyecto ?? raw.direccion_proyecto) as string | undefined,
     unidadNegocio:       (raw.unidadNegocio     ?? raw.unidad_negocio)     as string | undefined,
     observaciones:        raw.observaciones                                  as string | undefined,
     urgencia:             raw.urgencia                                       as string | undefined,
     observacionCamposFaltantes: (raw.observacionCamposFaltantes ?? raw.observacion_campos_faltantes) as string | undefined,
-    // Campos punto 12 - Beck específicos
     tipoProyecto:             (raw.tipoProyecto             ?? raw.tipo_proyecto)              as string | undefined,
     empresaMandante:          (raw.empresaMandante          ?? raw.empresa_mandante)           as string | undefined,
     necesidadLevantamiento:   (raw.necesidadLevantamiento  ?? raw.necesidad_levantamiento)    as boolean | undefined,
@@ -367,8 +351,6 @@ function resolverEtapaAlCerrar(params: {
   let estadoCierreSolicitado = params.estadoCierreSolicitado;
   let etapaInvalida = false;
 
-  // Compatibilidad: frontend/legacy enviando literalmente etapa "perdida"/"postergada"
-  // (valor inválido para el enum EtapaFunnelBeck) en vez de estadoCierre.
   if (etapaSolicitada === "perdida" || etapaSolicitada === "postergada") {
     if (!estadoCierreSolicitado) {
       estadoCierreSolicitado = etapaSolicitada as EstadoCierreFunnel;
@@ -378,8 +360,6 @@ function resolverEtapaAlCerrar(params: {
 
   const cierreNoGanado = estadoCierreSolicitado === "perdida" || estadoCierreSolicitado === "postergada";
 
-  // Si se pide cerrar como perdida/postergada, la etapa NO debe moverse a "cerrada":
-  // se mantiene la etapa donde estaba la oportunidad.
   const debeMantenerEtapaActual =
     etapaInvalida || (cierreNoGanado && (etapaSolicitada === undefined || etapaSolicitada === "cerrada"));
 
@@ -434,8 +414,6 @@ const ORDEN_ETAPAS_BECK = [
   "cerrada",
 ] as const;
 
-// Reglas cuyo campo es una condicion de cierre: solo se evaluan si el estadoCierre
-// destino coincide; de lo contrario se omiten (no aplica ni como bloqueo ni advertencia).
 const REGLAS_CONDICION_ESTADO_CIERRE: Record<string, string> = {
   GANADA_DOCUMENTO_RESPALDO: 'ganada',
   GANADA_FLUJO_POSTERIOR_REQUERIDO: 'ganada',
@@ -456,9 +434,6 @@ function esValorVacioBeck(valor: unknown): boolean {
   return false;
 }
 
-// Resuelve el valor real en `datos` para el `campo` configurado en configuracion_validacion.
-// Soporta campos compuestos (ej. "telefonoContacto_correoContacto") donde basta con que
-// uno de los sub-campos tenga valor para considerar la regla satisfecha.
 function resolverValorCampoBeck(
   datos: Record<string, unknown>,
   campo: string,
@@ -472,10 +447,6 @@ function resolverValorCampoBeck(
   return { valor: datos[campo], vacio: esValorVacioBeck(datos[campo]) };
 }
 
-// Construye el objeto de datos "efectivos" (el estado que tendria la oportunidad luego
-// de aplicar el cambio) mezclando el registro existente con el payload y overrides ya
-// normalizados/derivados por el caller. Se usa para evaluar TODAS las reglas activas de
-// configuracion_validacion para la etapa destino, no solo un subconjunto hardcodeado.
 function construirDatosParaValidacionBeck(
   existente: Record<string, unknown>,
   payload: Record<string, unknown>,
@@ -496,7 +467,6 @@ async function validarCamposCriticosBeck(
   const reglas = await obtenerMapaReglasValidacion('BECK', etapa);
   const estadoCierre = datos.estadoCierre as string | null | undefined;
 
-  // TEMP DEBUG — remover una vez confirmado en producción.
   console.log('[DEBUG validarCamposCriticosBeck]', {
     etapaDestino: etapa,
     estadoCierre,
@@ -521,7 +491,6 @@ async function validarCamposCriticosBeck(
 
     const { valor, vacio } = resolverValorCampoBeck(datos, regla.campo);
 
-    // TEMP DEBUG — remover una vez confirmado en producción.
     console.log('[DEBUG regla evaluada]', {
       reglaKey: regla.regla,
       campo: regla.campo,
@@ -533,20 +502,11 @@ async function validarCamposCriticosBeck(
     clasificarResultadoValidacion(regla.regla, vacio, reglas, resultado);
   }
 
-  // TEMP DEBUG — remover junto con los logs de arriba.
   console.log('[DEBUG validarCamposCriticosBeck] resultado', resultado);
 
   return resultado;
 }
 
-// Cuando se avanza saltando etapas (ej. prospecto_identificado -> documentacion_venta),
-// hay que exigir tambien las reglas de cada etapa intermedia que se esta saltando, no solo
-// las de la etapa destino. Retorna el listado de etapas a validar, en orden:
-// - Si la etapa no cambia (solo cambia estadoCierre) o los indices no se pueden resolver,
-//   se valida unicamente la etapa destino (comportamiento previo, sin rango).
-// - Si es un avance, el rango va desde la etapa siguiente a la de origen hasta la destino
-//   (ambas incluidas).
-// El caller es responsable de no invocar esto en un retroceso (idxDestino < idxActual).
 function calcularRangoEtapasBeck(
   idxActual: number,
   idxDestino: number,
@@ -558,11 +518,6 @@ function calcularRangoEtapasBeck(
   return ORDEN_ETAPAS_BECK.slice(idxActual + 1, idxDestino + 1);
 }
 
-// Valida cada etapa del rango por separado (misma "foto" de datos, distintas reglas por
-// etapa) y acumula bloqueos/advertencias. Cuando el rango abarca mas de una etapa, cada
-// mensaje se prefija con la etapa de origen de esa regla para que el usuario entienda de
-// donde viene cada bloqueo/advertencia; si es una sola etapa (caso normal, avance de a un
-// paso) se deja el mensaje tal cual, sin prefijo, igual que antes.
 async function validarRangoEtapasBeck(
   etapas: string[],
   datos: Record<string, unknown>,
@@ -682,7 +637,6 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       etapa:               data.etapa ?? "prospecto_identificado",
       estadoCierre:        data.estadoCierre ?? null,
       motivoPerdida:       optStr(data.motivoPerdida),
-      // Prospecto identificado
       rutEmpresa:          procesarRut(data.rutEmpresa),
       cargoContacto:       optStr(data.cargoContacto),
       telefonoContacto:    procesarTelefono(data.telefonoContacto),
@@ -690,21 +644,17 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       nombreContacto:      optStr(data.nombreContacto),
       tipoCliente:         optStr(data.tipoCliente),
       tipoOportunidad:     optStr(data.tipoOportunidad),
-      // Primera reunión / seguimiento
       fechaPrimerContacto: parseOptionalDate(data.fechaPrimerContacto),
       tipoContacto:        optStr(data.tipoContacto),
       necesidadDetectada:  optStr(data.necesidadDetectada),
       timingEstimado:      optStr(data.timingEstimado),
       nivelInteres:        optStr(data.nivelInteres),
-      // Próxima acción
       proximaAccion:       optStr(data.proximaAccion),
       fechaProximaAccion:  parseOptionalDate(data.fechaProximaAccion),
-      // Propuesta / negociación
       probabilidadCierre:  validarProbabilidad(data.probabilidadCierre),
       objeciones:          optStr(data.objeciones),
       contrapropuestas:    optStr(data.contrapropuestas),
       ajustesSolicitados:  optStr(data.ajustesSolicitados),
-      // Visita / levantamiento tecnico
       fechaVisita:         parseOptionalDate(data.fechaVisita),
       responsableTecnico:  optStr(data.responsableTecnico),
       asistentes:          optStr(data.asistentes),
@@ -718,7 +668,6 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       observacionesTecnicas: optStr(data.observacionesTecnicas),
       necesidadOficinaTecnica: data.necesidadOficinaTecnica ?? null,
       proximosPasos:       optStr(data.proximosPasos),
-      // Desarrollo de propuesta
       estadoDesarrolloPropuesta: optStr(data.estadoDesarrolloPropuesta),
       informacionPendiente: optStr(data.informacionPendiente),
       documentosRequeridos: optStr(data.documentosRequeridos),
@@ -727,14 +676,12 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       necesidadValidacionGerencial: data.necesidadValidacionGerencial ?? null,
       fechaComprometidaEnvio: parseOptionalDate(data.fechaComprometidaEnvio),
       comentariosInternos: optStr(data.comentariosInternos),
-      // Propuesta enviada / negociacion
       fechaEnvioPropuesta: parseOptionalDate(data.fechaEnvioPropuesta),
       versionPropuesta:    optStr(data.versionPropuesta),
       numeroPropuesta:     optStr(data.numeroPropuesta),
       montoPropuesto:      toOptionalNumber(data.montoPropuesto),
       fechaVencimientoPropuesta: parseOptionalDate(data.fechaVencimientoPropuesta),
       comentariosCliente:  optStr(data.comentariosCliente),
-      // Documentacion de venta
       ordenCompra:         optStr(data.ordenCompra),
       contrato:            optStr(data.contrato),
       correoAceptacion:    optStr(data.correoAceptacion),
@@ -753,25 +700,20 @@ export async function createFunnelBeck(rawData: Record<string, unknown>, userId:
       fechaTraspasoAdministracion: parseOptionalDate(data.fechaTraspasoAdministracion),
       responsableTraspasoAdministracion: optStr(data.responsableTraspasoAdministracion),
       observacionesTraspasoAdministracion: optStr(data.observacionesTraspasoAdministracion),
-      // Cierre perdido / postergado
       etapaPerdida:        optStr(data.etapaPerdida),
       motivoPostergacion:  optStr(data.motivoPostergacion),
       fechaReactivacion:   parseOptionalDate(data.fechaReactivacion),
-      // Cierre ganado
       montoFinalGanado:    toOptionalNumber(data.montoFinalGanado),
       fechaCierre:         parseOptionalDate(data.fechaCierre),
       documentoRespaldo:   optStr(data.documentoRespaldo),
       flujoPosterior:      optStr(data.flujoPosterior),
-      // Clientes Beck
       clienteBeckId:       data.clienteBeckId  ?? null,
       contactoBeckId:      data.contactoBeckId ?? null,
-      // Campos adicionales
       direccionProyecto:   optStr(data.direccionProyecto),
       unidadNegocio:       optStr(data.unidadNegocio),
       observaciones:       optStr(data.observaciones),
       urgencia:            optStr(data.urgencia),
       observacionCamposFaltantes: optStr(data.observacionCamposFaltantes),
-      // Campos punto 12 - Beck específicos
       tipoProyecto:             optStr(data.tipoProyecto),
       empresaMandante:          optStr(data.empresaMandante),
       necesidadLevantamiento:   data.necesidadLevantamiento ?? null,
@@ -1020,19 +962,14 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
 
   const data = extractInput(rawData);
 
-  // Señal explícita que envía el frontend solo desde los botones "Rellenar
-  // <etapa>" (guardado enfocado en la sección de la etapa actual). El botón
-  // general "Editar" no la envía. No se infiere por los campos del payload.
   const origenEdicion = rawData.origenEdicion;
   if (origenEdicion !== undefined && origenEdicion !== 'ETAPA_ENFOCADA') {
     throw new Error('Valor de origenEdicion no reconocido.');
   }
 
-  // Resolve final clienteBeckId / contactoBeckId
   const newClienteBeckId  = data.clienteBeckId  !== undefined ? data.clienteBeckId  : existente.clienteBeckId;
   const newContactoBeckId = data.contactoBeckId !== undefined ? data.contactoBeckId : existente.contactoBeckId;
 
-  // Verify permission if empresa/cliente/contacto is changing
   if (userRole && userRole !== 'administrador') {
     const empresaCambia = data.empresa !== undefined && normalizeString(data.empresa) !== existente.empresa;
     const clienteCambia = data.clienteBeckId !== undefined && newClienteBeckId !== existente.clienteBeckId;
@@ -1141,7 +1078,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     fechaProximaAccion: fechaProximaAccionFinal,
   });
 
-  // Regla reprogramaciones: solo incrementar si antes había fecha Y ahora hay fecha distinta
   let incrementarReprogramaciones = false;
   if (data.fechaProximaAccion !== undefined) {
     const anteriorFecha = existente.fechaProximaAccion;
@@ -1155,9 +1091,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
 
   const etapaCambio = etapa !== existente.etapa;
   const cierreCambio = data.estadoCierre !== undefined && data.estadoCierre !== existente.estadoCierre;
-  // Normalizado con trim en ambos lados (existente.vendedor puede tener
-  // espacios residuales de datos históricos) para no registrar un cambio
-  // falso por diferencias puramente de espacios.
   const vendedorAnterior = normalizeString(existente.vendedor);
   const vendedorCambio = vendedorAnterior !== vendedor;
 
@@ -1216,7 +1149,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       etapa,
       estadoCierre: estadoCierre ?? null,
       motivoPerdida,
-      // Prospecto identificado
       ...(data.rutEmpresa         !== undefined && { rutEmpresa:         procesarRut(data.rutEmpresa) }),
       ...(data.cargoContacto      !== undefined && { cargoContacto:      optStr(data.cargoContacto) }),
       ...(data.telefonoContacto   !== undefined && { telefonoContacto:   procesarTelefono(data.telefonoContacto) }),
@@ -1224,21 +1156,17 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.nombreContacto     !== undefined && { nombreContacto:     optStr(data.nombreContacto) }),
       ...(data.tipoCliente        !== undefined && { tipoCliente:        optStr(data.tipoCliente) }),
       ...(data.tipoOportunidad    !== undefined && { tipoOportunidad:    optStr(data.tipoOportunidad) }),
-      // Primera reunión / seguimiento
       ...(data.fechaPrimerContacto !== undefined && { fechaPrimerContacto: parseOptionalDate(data.fechaPrimerContacto) }),
       ...(data.tipoContacto       !== undefined && { tipoContacto:       optStr(data.tipoContacto) }),
       ...(data.necesidadDetectada !== undefined && { necesidadDetectada: optStr(data.necesidadDetectada) }),
       ...(data.timingEstimado     !== undefined && { timingEstimado:     optStr(data.timingEstimado) }),
       ...(data.nivelInteres       !== undefined && { nivelInteres:       optStr(data.nivelInteres) }),
-      // Próxima acción
       ...(data.proximaAccion      !== undefined && { proximaAccion:      optStr(data.proximaAccion) }),
       ...(data.fechaProximaAccion !== undefined && { fechaProximaAccion: parseOptionalDate(data.fechaProximaAccion) }),
-      // Propuesta / negociación
       ...(data.probabilidadCierre !== undefined && { probabilidadCierre: validarProbabilidad(data.probabilidadCierre) }),
       ...(data.objeciones         !== undefined && { objeciones:         optStr(data.objeciones) }),
       ...(data.contrapropuestas   !== undefined && { contrapropuestas:   optStr(data.contrapropuestas) }),
       ...(data.ajustesSolicitados !== undefined && { ajustesSolicitados: optStr(data.ajustesSolicitados) }),
-      // Visita / levantamiento tecnico
       ...(data.fechaVisita        !== undefined && { fechaVisita:        parseOptionalDate(data.fechaVisita) }),
       ...(data.responsableTecnico !== undefined && { responsableTecnico: optStr(data.responsableTecnico) }),
       ...(data.asistentes         !== undefined && { asistentes:         optStr(data.asistentes) }),
@@ -1252,7 +1180,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.observacionesTecnicas !== undefined && { observacionesTecnicas: optStr(data.observacionesTecnicas) }),
       ...(data.necesidadOficinaTecnica !== undefined && { necesidadOficinaTecnica: data.necesidadOficinaTecnica ?? null }),
       ...(data.proximosPasos      !== undefined && { proximosPasos:      optStr(data.proximosPasos) }),
-      // Desarrollo de propuesta
       ...(data.estadoDesarrolloPropuesta !== undefined && { estadoDesarrolloPropuesta: optStr(data.estadoDesarrolloPropuesta) }),
       ...(data.informacionPendiente !== undefined && { informacionPendiente: optStr(data.informacionPendiente) }),
       ...(data.documentosRequeridos !== undefined && { documentosRequeridos: optStr(data.documentosRequeridos) }),
@@ -1261,14 +1188,12 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.necesidadValidacionGerencial !== undefined && { necesidadValidacionGerencial: data.necesidadValidacionGerencial ?? null }),
       ...(data.fechaComprometidaEnvio !== undefined && { fechaComprometidaEnvio: parseOptionalDate(data.fechaComprometidaEnvio) }),
       ...(data.comentariosInternos !== undefined && { comentariosInternos: optStr(data.comentariosInternos) }),
-      // Propuesta enviada / negociacion
       ...(data.fechaEnvioPropuesta !== undefined && { fechaEnvioPropuesta: parseOptionalDate(data.fechaEnvioPropuesta) }),
       ...(data.versionPropuesta   !== undefined && { versionPropuesta:   optStr(data.versionPropuesta) }),
       ...(data.numeroPropuesta    !== undefined && { numeroPropuesta:    optStr(data.numeroPropuesta) }),
       ...(data.montoPropuesto     !== undefined && { montoPropuesto:     toOptionalNumber(data.montoPropuesto) }),
       ...(data.fechaVencimientoPropuesta !== undefined && { fechaVencimientoPropuesta: parseOptionalDate(data.fechaVencimientoPropuesta) }),
       ...(data.comentariosCliente !== undefined && { comentariosCliente: optStr(data.comentariosCliente) }),
-      // Documentacion de venta
       ...(data.ordenCompra        !== undefined && { ordenCompra:        optStr(data.ordenCompra) }),
       ...(data.contrato           !== undefined && { contrato:           optStr(data.contrato) }),
       ...(data.correoAceptacion   !== undefined && { correoAceptacion:   optStr(data.correoAceptacion) }),
@@ -1287,25 +1212,20 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       ...(data.fechaTraspasoAdministracion !== undefined && { fechaTraspasoAdministracion: parseOptionalDate(data.fechaTraspasoAdministracion) }),
       ...(data.responsableTraspasoAdministracion !== undefined && { responsableTraspasoAdministracion: optStr(data.responsableTraspasoAdministracion) }),
       ...(data.observacionesTraspasoAdministracion !== undefined && { observacionesTraspasoAdministracion: optStr(data.observacionesTraspasoAdministracion) }),
-      // Cierre perdido / postergado
       ...(data.etapaPerdida       !== undefined && { etapaPerdida:       optStr(data.etapaPerdida) }),
       motivoPostergacion,
       fechaReactivacion,
-      // Cierre ganado
       ...(data.montoFinalGanado   !== undefined && { montoFinalGanado:   toOptionalNumber(data.montoFinalGanado) }),
       ...(data.fechaCierre        !== undefined && { fechaCierre:        parseOptionalDate(data.fechaCierre) }),
       ...(data.documentoRespaldo  !== undefined && { documentoRespaldo:  optStr(data.documentoRespaldo) }),
       ...(data.flujoPosterior     !== undefined && { flujoPosterior:     optStr(data.flujoPosterior) }),
-      // Clientes Beck
       ...(data.clienteBeckId  !== undefined && { clienteBeckId:  data.clienteBeckId }),
       ...(data.contactoBeckId !== undefined && { contactoBeckId: data.contactoBeckId }),
-      // Campos adicionales
       ...(data.direccionProyecto !== undefined && { direccionProyecto: optStr(data.direccionProyecto) }),
       ...(data.unidadNegocio     !== undefined && { unidadNegocio:     optStr(data.unidadNegocio) }),
       ...(data.observaciones     !== undefined && { observaciones:     optStr(data.observaciones) }),
       ...(data.urgencia          !== undefined && { urgencia:          optStr(data.urgencia) }),
       ...(data.observacionCamposFaltantes !== undefined && { observacionCamposFaltantes: optStr(data.observacionCamposFaltantes) }),
-      // Campos punto 12 - Beck específicos
       ...(data.tipoProyecto             !== undefined && { tipoProyecto:             optStr(data.tipoProyecto) }),
       ...(data.empresaMandante          !== undefined && { empresaMandante:          optStr(data.empresaMandante) }),
       ...(data.necesidadLevantamiento   !== undefined && { necesidadLevantamiento:   data.necesidadLevantamiento ?? null }),
@@ -1330,9 +1250,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
     });
   }
   if (vendedorCambio && userId) {
-    // Se crea con tx (no con registrarMovimientoCRM, que usa el cliente
-    // global) para que quede en la MISMA transacción que el update de la
-    // oportunidad: si esto falla, se revierte también el cambio de vendedor.
     await tx.movimientoCRM.create({
       data: {
         usuarioId: userId,
@@ -1347,10 +1264,6 @@ export async function updateFunnelBeck(id: string, rawData: Record<string, unkno
       },
     });
   }
-  // Solo aplica cuando el cambio de vendedor NO ya vino explícito en el
-  // payload (vendedorCambio) — evita registrar dos movimientos por la misma
-  // acción. El backend no infiere el origen: solo reasigna si el frontend
-  // envió la señal explícita 'ETAPA_ENFOCADA' desde un botón "Rellenar <etapa>".
   let cambioVendedor: ReasignacionVendedorAutomaticaResultado = null;
   if (origenEdicion === 'ETAPA_ENFOCADA' && !vendedorCambio) {
     cambioVendedor = await reasignarVendedorAutomaticamente({
@@ -1502,7 +1415,6 @@ export async function updateEtapaFunnelBeck(
   });
   payload.etapa = resuelto.etapa;
   payload.estadoCierre = resuelto.estadoCierre;
-  // Si se cierra como perdida y no se indicó explícitamente, dejamos registro de en qué etapa se perdió.
   if (resuelto.estadoCierre === "perdida" && payload.etapaPerdida === undefined && !existente.etapaPerdida) {
     payload.etapaPerdida = formatEtapa(existente.etapa);
   }
@@ -1540,13 +1452,11 @@ export async function updateEtapaFunnelBeck(
     if (!observacionFinal) {
       const idxActual  = ORDEN_ETAPAS_BECK.indexOf(existente.etapa as typeof ORDEN_ETAPAS_BECK[number]);
       const idxDestino = ORDEN_ETAPAS_BECK.indexOf((payload.etapa ?? '') as typeof ORDEN_ETAPAS_BECK[number]);
-      // Retroceso: solo aplica cuando la etapa en sí cambia hacia atrás
       const esRetroceso = etapaCambio && idxActual !== -1 && idxDestino !== -1 && idxDestino < idxActual;
       const etapaUsadaParaValidar = payload.etapa!;
 
       const etapasAValidar = esRetroceso ? [] : calcularRangoEtapasBeck(idxActual, idxDestino, etapaUsadaParaValidar);
 
-      // TEMP DEBUG — remover una vez confirmado en producción.
       console.log('[DEBUG updateEtapaFunnelBeck]', {
         oportunidadId: id,
         etapaOrigen: existente.etapa,
@@ -1583,12 +1493,9 @@ export async function updateEtapaFunnelBeck(
       etapa: payload.etapa,
       estadoCierre: payload.estadoCierre ?? null,
       motivoPerdida: optStr(payload.motivoPerdida),
-      // Campos de cierre postergado
       ...(payload.motivoPostergacion !== undefined && { motivoPostergacion: optStr(payload.motivoPostergacion) }),
       ...(payload.fechaReactivacion  !== undefined && { fechaReactivacion:  parseOptionalDate(payload.fechaReactivacion) }),
-      // Campos de cierre perdido
       ...(payload.etapaPerdida       !== undefined && { etapaPerdida:       optStr(payload.etapaPerdida) }),
-      // Campos de cierre ganado
       ...(payload.montoFinalGanado  !== undefined && { montoFinalGanado:  toOptionalNumber(payload.montoFinalGanado) }),
       ...(payload.fechaCierre       !== undefined && { fechaCierre:       parseOptionalDate(payload.fechaCierre) }),
       ...(payload.documentoRespaldo  !== undefined && { documentoRespaldo:  optStr(payload.documentoRespaldo) }),
@@ -1721,7 +1628,6 @@ export async function updateEstadoCierreFunnelBeck(
   const oportunidad = await prisma.operadorBeck.update({
     where: { id },
     data: {
-      // La etapa NO se toca: la oportunidad permanece donde estaba.
       estadoCierre,
       motivoPerdida,
       motivoPostergacion,
@@ -1785,10 +1691,6 @@ export async function getHistorialEtapasBeck(id: string) {
   });
 }
 
-// Historial combinado para la línea de tiempo del Funnel: cambios de etapa
-// (HistorialEtapaBeck, sin tocar) + cambios de vendedor (MovimientoCRM,
-// tipo VENDEDOR_MODIFICADO), ordenados cronológicamente. No reemplaza ni
-// modifica getHistorialEtapasBeck/el endpoint de historial-etapas existente.
 export type HistorialCombinadoBeckItem = {
   tipo: 'ETAPA' | 'CAMBIO_VENDEDOR';
   createdAt: string;

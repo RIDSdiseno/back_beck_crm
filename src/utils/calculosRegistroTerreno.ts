@@ -1,3 +1,8 @@
+export interface TramoHolgura {
+  holguraMax: number;
+  factor: number;
+}
+
 export interface CalcRegistroInput {
   cantidad_sellos: number;
   holgura: number;
@@ -6,6 +11,7 @@ export interface CalcRegistroInput {
   reparacion_tabique: unknown;
   piso: string;
   tipoRegistro: string;
+  tramosHolgura?: TramoHolgura[];
 }
 
 export interface CalcRegistroResult {
@@ -18,23 +24,38 @@ export interface CalcRegistroResult {
 }
 
 /**
- * Tabla de factor por holgura/separación. Replica el Excel oficial: la hoja
- * "Juntas" documenta una escala propia para junta_lineal_espuma (separación en
- * lugar de holgura), distinta de la que usan Sello/Tabiquería/Otros.
+ * Tabla de factor por holgura/separación POR DEFECTO. Replica el Excel oficial:
+ * la hoja "Juntas" documenta una escala propia para junta_lineal_espuma
+ * (separación en lugar de holgura), distinta de la que usan Sello/Tabiquería/Otros.
+ * Una obra puede definir sus propios tramos (ver FactorHolguraTramo /
+ * factorHolgura.service.ts); estos valores solo aplican mientras la obra no
+ * tenga tramos propios para ese tipo de registro.
  */
-function resolveHolguraFactor(holgura: number, tipoRegistro: string): number {
-  if (tipoRegistro === 'junta_lineal_espuma') {
-    if (holgura <= 2) return 1;
-    if (holgura <= 3) return 1.5;
-    if (holgura <= 4) return 2;
-    if (holgura <= 5) return 2.5;
-    throw new Error('CORREGIR HOLGURA');
-  }
+const TRAMOS_HOLGURA_JUNTA_LINEAL: TramoHolgura[] = [
+  { holguraMax: 2, factor: 1 },
+  { holguraMax: 3, factor: 1.5 },
+  { holguraMax: 4, factor: 2 },
+  { holguraMax: 5, factor: 2.5 },
+];
 
-  if (holgura <= 2) return 1;
-  if (holgura <= 4) return 1.2;
-  if (holgura <= 6) return 1.4;
-  if (holgura <= 10) return 1.8;
+const TRAMOS_HOLGURA_GENERICO: TramoHolgura[] = [
+  { holguraMax: 2, factor: 1 },
+  { holguraMax: 4, factor: 1.2 },
+  { holguraMax: 6, factor: 1.4 },
+  { holguraMax: 10, factor: 1.8 },
+];
+
+export function getTramosHolguraPorDefecto(tipoRegistro: string): TramoHolgura[] {
+  return tipoRegistro === 'junta_lineal_espuma'
+    ? TRAMOS_HOLGURA_JUNTA_LINEAL
+    : TRAMOS_HOLGURA_GENERICO;
+}
+
+function resolveHolguraFactor(holgura: number, tramos: TramoHolgura[]): number {
+  const ordenados = [...tramos].sort((a, b) => a.holguraMax - b.holguraMax);
+  for (const tramo of ordenados) {
+    if (holgura <= tramo.holguraMax) return tramo.factor;
+  }
   throw new Error('CORREGIR HOLGURA');
 }
 
@@ -76,13 +97,13 @@ function resolveReparacionTabique(reparacion: unknown): boolean {
 }
 
 export function calcularCamposRegistroTerreno(input: CalcRegistroInput): CalcRegistroResult {
-  const factor_por_holguras = resolveHolguraFactor(input.holgura, input.tipoRegistro);
+  const tramos = input.tramosHolgura ?? getTramosHolguraPorDefecto(input.tipoRegistro);
+  const factor_por_holguras = resolveHolguraFactor(input.holgura, tramos);
   const accFactor = resolveAccesibilidadFactor(input.accesibilidad);
   const aislacion_normalizada = resolveAislacionFactor(input.aislacion);
   const aplicaReparacion = resolveReparacionTabique(input.reparacion_tabique);
   const esSotano = input.piso === '-1';
 
-  // Replica el Excel: S = IF(Piso="-1", Cantidad*Holgura*Accesibilidad*1.1, Cantidad*Holgura*Accesibilidad)
   const cantidad_sellos_con_factores = esSotano
     ? input.cantidad_sellos * factor_por_holguras * accFactor * 1.1
     : input.cantidad_sellos * factor_por_holguras * accFactor;
@@ -90,9 +111,6 @@ export function calcularCamposRegistroTerreno(input: CalcRegistroInput): CalcReg
   const cantidad_sellos_aislacion = aislacion_normalizada;
   const base = cantidad_sellos_con_factores * aislacion_normalizada;
 
-  // Replica el Excel: W = IF(Piso="-1", base, IF(Reparación="APLICA", base+1, base))
-  // En sótano el ×1.1 ya viene incluido en `base` (vía cantidad_sellos_con_factores)
-  // y NO se suma el +1 de reparación en esa misma rama.
   const cantidad_final = esSotano ? base : (aplicaReparacion ? base + 1 : base);
 
   return {

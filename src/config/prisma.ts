@@ -19,7 +19,6 @@ export const prisma = new PrismaClient({
   adapter,
 });
 
-// Manejar cierre graceful
 process.on('SIGINT', async () => {
   await prisma.$disconnect();
   await pool.end();

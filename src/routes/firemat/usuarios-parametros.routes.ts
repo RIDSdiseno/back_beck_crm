@@ -10,7 +10,6 @@ import {
 
 const router = Router();
 
-// Inyectar contexto de empresa Firemat en todos los handlers de este router
 router.use((_req: Request, _res: Response, next: NextFunction) => {
   _req.empresaContexto = 'firemat';
   next();

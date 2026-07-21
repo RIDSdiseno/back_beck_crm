@@ -24,7 +24,6 @@ function toStartOfDay(date: Date): Date {
   return d;
 }
 
-// Returns a - b in whole days (positive = a is after b)
 function diffDias(a: Date, b: Date): number {
   return Math.round((a.getTime() - b.getTime()) / (1000 * 60 * 60 * 24));
 }
@@ -58,7 +57,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
     },
   });
 
-  // Filtrar por vendedor si corresponde (rol vendedor)
   let oportunidades = todasOportunidades;
   if (filtroVendedor) {
     const nombreNorm = filtroVendedor.nombre.trim().toLowerCase();
@@ -78,7 +76,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       op.estadoCierre !== "perdida" &&
       op.estadoCierre !== "postergada";
 
-    // --- 1. SIN_PROXIMA_ACCION ---
     if (estaActiva && (!op.proximaAccion || !op.fechaProximaAccion)) {
       alertas.push({
         alertaKey: `BECK-SIN_PROXIMA_ACCION-${op.id}`,
@@ -92,10 +89,8 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       });
     }
 
-    // --- 2. PROXIMA_ACCION_* ---
     if (estaActiva && op.fechaProximaAccion) {
       const fechaAccion = toStartOfDay(new Date(op.fechaProximaAccion));
-      // diasDiff > 0: faltan días, == 0: hoy, < 0: vencida
       const diasDiff = diffDias(fechaAccion, hoy);
 
       if (diasDiff < 0) {
@@ -147,7 +142,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 3. COTIZACION_ENVIADA_SIN_SEGUIMIENTO ---
     if (estaActiva && op.etapa === "cotizacion_enviada") {
       const diasSinMovimiento = diffDias(hoy, toStartOfDay(new Date(op.updatedAt)));
       if (diasSinMovimiento > cfg.diasCotizacionEnviadaSinSeguimiento) {
@@ -165,7 +159,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 4. DESARROLLO_PROPUESTA_DETENIDO ---
     if (
       estaActiva &&
       (op.etapa === "cotizacion_elaborada" || op.etapa === "visita_levantamiento")
@@ -186,7 +179,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 5. DOCUMENTACION_VENTA_PENDIENTE ---
     if (estaActiva && op.etapa === "documentacion_venta") {
       const documentacionPendiente =
         !op.estadoDocumentacionVenta ||
@@ -207,10 +199,8 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 6. POSTERGADA_REACTIVAR ---
     if (op.estadoCierre === "postergada" && op.fechaReactivacion) {
       const fechaReac = toStartOfDay(new Date(op.fechaReactivacion));
-      // diasHastaReac > 0: quedan días, <= 0: hoy o vencida
       const diasHastaReac = diffDias(fechaReac, hoy);
 
       if (diasHastaReac <= cfg.diasAvisoReactivacion) {
@@ -236,7 +226,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 7. ALTO_MONTO_DETENIDA ---
     if (estaActiva && Number(op.valorClp) >= cfg.montoAltoClp) {
       const diasSinMovimiento = diffDias(hoy, toStartOfDay(new Date(op.updatedAt)));
       if (diasSinMovimiento > cfg.diasAltoMontoDetenida) {
@@ -254,7 +243,6 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       }
     }
 
-    // --- 8. MULTIPLES_REPROGRAMACIONES ---
     if (op.reprogramacionesCount >= 3) {
       alertas.push({
         alertaKey: `BECK-MULTIPLES_REPROGRAMACIONES-${op.id}`,

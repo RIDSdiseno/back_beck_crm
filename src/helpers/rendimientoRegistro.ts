@@ -1,4 +1,3 @@
-// src/helpers/rendimientoRegistro.ts
 
 function toNum(v: unknown): number | null {
   if (v === null || v === undefined) return null;

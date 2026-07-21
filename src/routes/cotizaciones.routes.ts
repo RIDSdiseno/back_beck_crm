@@ -19,8 +19,6 @@ router.get("/:id/versiones", authenticate, requirePermission('beck_cotizaciones'
 router.get("/:id", authenticate, requirePermission('beck_cotizaciones', 'ver'), getCotizacionById);
 router.get("/:id/pdf", authenticate, requirePermission('beck_cotizaciones', 'ver'), downloadCotizacionPdf);
 
-// requirePermission es la autoridad final para escritura: valida permisos efectivos
-// (incluye excepciones individuales por usuario), sin gate intermedio de rol.
 router.post(
   "/",
   authenticate,

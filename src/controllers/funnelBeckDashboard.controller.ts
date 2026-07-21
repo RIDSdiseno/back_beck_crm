@@ -70,7 +70,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
     const parsedDias = parseInt(rawDias, 10);
     const diasSinSeguimiento = Math.max(1, isNaN(parsedDias) ? 7 : parsedDias);
 
-    // ── Filtro base ────────────────────────────────────────────────────────────
     const where: Prisma.OperadorBeckWhereInput = {};
 
     if (typeof unidadNegocio === 'string' && unidadNegocio.trim()) {
@@ -109,9 +108,7 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
     } else if (estadoParam === 'cerrada') {
       where.estadoCierre = { in: ['ganada', 'perdida', 'postergada'] as EstadoCierreFunnel[] };
     }
-    // 'descartada' y cualquier valor desconocido: se ignora sin producir error
 
-    // Fecha ingreso → createdAt
     if (
       (typeof fechaIngresoDesde === 'string' && fechaIngresoDesde) ||
       (typeof fechaIngresoHasta === 'string' && fechaIngresoHasta)
@@ -126,7 +123,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       where.createdAt = createdAtFilter;
     }
 
-    // Fecha cierre → fechaProbableCierre
     if (
       (typeof fechaCierreDesde === 'string' && fechaCierreDesde) ||
       (typeof fechaCierreHasta === 'string' && fechaCierreHasta)
@@ -141,7 +137,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       where.fechaProbableCierre = fechaCierreFilter;
     }
 
-    // ── Consulta principal ─────────────────────────────────────────────────────
     const opps = await prisma.operadorBeck.findMany({
       where,
       select: {
@@ -169,13 +164,11 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       },
     });
 
-    // ── Categorías ─────────────────────────────────────────────────────────────
     const activasSet     = opps.filter(isActiva);
     const ganadasSet     = opps.filter(o => o.estadoCierre === 'ganada');
     const perdidasSet    = opps.filter(o => o.estadoCierre === 'perdida');
     const postergadasSet = opps.filter(o => o.estadoCierre === 'postergada');
 
-    // ── KPIs ───────────────────────────────────────────────────────────────────
     const totalOportunidades       = opps.length;
     const oportunidadesActivas     = activasSet.length;
     const oportunidadesGanadas     = ganadasSet.length;
@@ -193,7 +186,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
 
     const clientesReactivados = opps.filter(o => o.esReactivacion).length;
 
-    // ── Distribución por estado (para gráfico circular) ────────────────────────
     const distribucionEstado = {
       activas:     oportunidadesActivas,
       ganadas:     oportunidadesGanadas,
@@ -201,7 +193,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       postergadas: oportunidadesPostergadas,
     };
 
-    // ── Oportunidades por etapa ────────────────────────────────────────────────
     const porEtapa = Object.fromEntries(
       ETAPAS_ORDEN.map(e => {
         const grupo = opps.filter(o => o.etapa === e);
@@ -215,7 +206,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       }),
     );
 
-    // ── Ranking por vendedor ───────────────────────────────────────────────────
     const vendedoresMap = new Map<
       string,
       {
@@ -261,7 +251,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       .map(([v, stats]) => ({ vendedor: v, ...stats }))
       .sort((a, b) => b.montoTotalClp - a.montoTotalClp);
 
-    // ── Sin seguimiento ────────────────────────────────────────────────────────
     const ahora = new Date();
     const limiteUpdatedAt = new Date(ahora);
     limiteUpdatedAt.setDate(limiteUpdatedAt.getDate() - diasSinSeguimiento);
@@ -292,7 +281,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       prisma.operadorBeck.count({ where: whereSinSeg }),
     ]);
 
-    // ── KPIs de Prospectos ────────────────────────────────────────────────────
     const ahora2 = new Date();
     const hace7Dias  = new Date(ahora2); hace7Dias.setDate(hace7Dias.getDate() - 7);
     const hace30Dias = new Date(ahora2); hace30Dias.setDate(hace30Dias.getDate() - 30);
@@ -320,7 +308,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       .map(([vendedor, cantidad]) => ({ vendedor, cantidad }))
       .sort((a, b) => b.cantidad - a.cantidad);
 
-    // ── Pipeline Avanzado (solo activas: etapa !== cerrada, estadoCierre = null) ─
     const pipelineRespMap = new Map<string, { cantidad: number; montoClp: number }>();
     for (const o of activasSet) {
       const key = o.vendedor || 'SIN_RESPONSABLE';
@@ -393,7 +380,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
         montoClp: toNum(o.valorClp),
       }));
 
-    // ── Motivos ────────────────────────────────────────────────────────────────
     function agruparMotivos(
       items: { motivoPerdida?: string | null; motivoPostergacion?: string | null }[],
       campo: 'motivoPerdida' | 'motivoPostergacion',
@@ -411,7 +397,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
     const motivosPerdida      = agruparMotivos(perdidasSet, 'motivoPerdida');
     const motivosPostergacion = agruparMotivos(postergadasSet, 'motivoPostergacion');
 
-    // ── Riesgo comercial ───────────────────────────────────────────────────────
     const DIAS_DETENIDAS = 7;
     const limiteDetenidas = new Date();
     limiteDetenidas.setDate(limiteDetenidas.getDate() - DIAS_DETENIDAS);
@@ -446,7 +431,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
         valorClp:       toNum(o.valorClp),
       }));
 
-    // ── Forecast 30 / 60 / 90 días ────────────────────────────────────────────
     const hoyF = startOfDay(new Date());
     const fin30 = endOfDay(new Date(hoyF)); fin30.setDate(fin30.getDate() + 30);
     const fin60 = endOfDay(new Date(hoyF)); fin60.setDate(fin60.getDate() + 60);
@@ -476,7 +460,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       dias90: calcForecast(fin90),
     };
 
-    // ── Ganadas: mes actual y últimos 12 meses ─────────────────────────────────
     const ahoraG = new Date();
     const anoActual = ahoraG.getFullYear();
     const mesActual = ahoraG.getMonth();
@@ -509,9 +492,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       .map(([mes, s]) => ({ mes, ...s }))
       .sort((a, b) => a.mes.localeCompare(b.mes));
 
-    // ── Conversión por etapa ──────────────────────────────────────────────────
-    // Aproximación: sin historial de transiciones, se usa distribución acumulada actual.
-    // cantidadDesde = opps en esa etapa + todas las posteriores (embudo hacia adelante).
     const etapasCantidad = ETAPAS_ORDEN.map(e => opps.filter(o => o.etapa === e).length);
 
     const conversionEtapas = {
@@ -541,7 +521,6 @@ export async function getDashboardFunnelBeck(req: Request, res: Response): Promi
       }),
     };
 
-    // ── Próximas acciones (desde dataset principal, solo activas) ─────────────
     const hoyStart = startOfDay(new Date());
     const hoyEnd   = endOfDay(new Date());
     const manana   = new Date(hoyStart);

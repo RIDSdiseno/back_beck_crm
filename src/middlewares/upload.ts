@@ -1,10 +1,8 @@
 import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 
-// Configuración de multer para almacenar en memoria
 const storage = multer.memoryStorage();
 
-// Filtro para aceptar solo imágenes
 const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
@@ -15,7 +13,6 @@ const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFil
   }
 };
 
-// Límites
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE || '5242880', 10); // 5MB por defecto
 const MAX_FILES = parseInt(process.env.MAX_FILES_PER_UPLOAD || '5', 10); // 5 archivos por defecto
 
@@ -65,7 +62,6 @@ export const uploadFunnelBeckFiles = (req: Request, res: Response, next: NextFun
   });
 };
 
-// Filtro para aceptar solo archivos Excel
 const excelFileFilter = (
   _req: Request,
   file: Express.Multer.File,
@@ -124,7 +120,6 @@ export const uploadExcelFile = (req: Request, res: Response, next: NextFunction)
   });
 };
 
-// Filtro para aceptar Excel y CSV
 const excelCsvFileFilter = (
   _req: Request,
   file: Express.Multer.File,
@@ -173,7 +168,6 @@ export const uploadExcelOrCsvFile = (req: Request, res: Response, next: NextFunc
   });
 };
 
-// Filtro que acepta Excel estándar y macro-enabled (.xlsm)
 const excelWithMacrosFileFilter = (
   _req: Request,
   file: Express.Multer.File,

@@ -168,8 +168,6 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     registros.forEach((registro) => {
       const piso = normalizePiso(registro.piso);
       const nombreSellador = normalizeNombreSellador(registro.nombreSellador);
-      // junta_lineal_espuma se mide en metros lineales; el resto de los tipos
-      // (sello_cortafuego, tabiqueria, otros) comparten la unidad "Cantidad".
       const esMetrosLineales = registro.tipoRegistro === 'junta_lineal_espuma';
       const sellos = esMetrosLineales ? 0 : registro.cantidadSellos;
       const metrosLineales = esMetrosLineales ? registro.metrosLineales ?? 0 : 0;
@@ -206,9 +204,6 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     kpis.pisosConRegistros = pisosConRegistros.size;
     kpis.selladoresDistintos = selladoresDistintos.size;
 
-    // Rendimiento por trabajador: respeta los mismos filtros obraId/rango ya
-    // aplicados arriba (misma consulta `registros`), resolviendo el rendimiento
-    // esperado por obra cuando exista override.
     const rendimientoPorTrabajador = await calcularRendimientoPorTrabajador(registros);
 
     res.json({

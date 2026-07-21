@@ -1,4 +1,3 @@
-// src/controllers/importar-registros.controller.ts
 import { Request, Response } from 'express';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
@@ -8,7 +7,8 @@ import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
-import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
+import { calcularCamposRegistroTerreno, CalcRegistroResult, TramoHolgura } from '../utils/calculosRegistroTerreno';
+import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -97,7 +97,6 @@ function parseDecimal(value: unknown): number | null {
 
   let normalized: string;
   if (hasDot && hasComma) {
-    // El separador que aparece más a la derecha es el decimal.
     if (str.lastIndexOf(',') > str.lastIndexOf('.')) {
       normalized = str.replace(/\./g, '').replace(',', '.');
     } else {
@@ -230,7 +229,6 @@ function findHeaderRow(worksheet: ExcelJS.Worksheet, maxScan: number): number {
  */
 export const importarRegistrosExcel = async (req: Request, res: Response): Promise<void> => {
   try {
-    // 1. Validar configuración de Cloudinary
     const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
     if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
       res.status(500).json({ success: false, error: 'Cloudinary no configurado' });
@@ -251,14 +249,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       return;
     }
 
-    // 2. Validar que el usuario importador exista
     const userCheck = await dbQuery<{ id: string }>('SELECT id FROM usuarios WHERE id = $1', [usuario_id]);
     if (userCheck.rows.length === 0) {
       res.status(400).json({ error: 'Usuario importador no encontrado' });
       return;
     }
 
-    // 3. Cargar todas las obras para resolver por nombre (case-insensitive, normalizado)
     const obrasRes = await dbQuery<{ id: string; nombre: string; codigo: string | null }>('SELECT id, nombre, codigo FROM obras');
     const obrasByName = new Map<string, { id: string; codigo: string | null }>();
     const obrasById = new Map<string, { id: string; codigo: string | null }>();
@@ -270,7 +266,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
     const resolveObraIdByName = (nombre: string): string | null =>
       obrasByName.get(normalize(nombre))?.id ?? null;
 
-    // 4. Cargar workbook con ExcelJS (soporta imágenes embebidas)
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(file.buffer as unknown as ArrayBuffer);
 
@@ -292,7 +287,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       }
       if (!tipoRegistro) continue;
 
-      // Detectar nombre de obra en el encabezado de la hoja (primeras 10 filas)
       const sheetObraNombre = extractObraFromHeader(worksheet, 10);
       let sheetObraId: string | null = null;
       if (sheetObraNombre) {
@@ -307,7 +301,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
         if (DEV) console.log(`[importar] hoja "${sheetName}": obra "${sheetObraNombre}" → ${sheetObraId}`);
       }
 
-      // Detectar fila real de encabezados de columna (puede no ser la fila 1 si hay banner)
       const headerRowNum = findHeaderRow(worksheet, 15);
       if (DEV) console.log(`[importar] hoja "${sheetName}": fila de encabezados = ${headerRowNum}`);
 
@@ -317,10 +310,8 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
         headers[colNumber - 1] = cellStr(cell.value) ?? '';
       });
 
-      // ¿La tabla tiene columna "Obra" para override por fila?
       const hasObraColumn = headers.some(h => normalize(h) === 'obra');
 
-      // Si no hay obra en banner ni columna en la tabla → error 400
       if (!sheetObraId && !hasObraColumn) {
         res.status(400).json({
           success: false,
@@ -329,8 +320,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
         return;
       }
 
-      // Mapear imágenes por nativeRow (0-based). Algunos archivos no traen
-      // `nativeRow` poblado; en ese caso se usa `row` como fallback.
       const sheetImages = worksheet.getImages();
       if (DEV) console.log(`[importar] hoja "${sheetName}": ${sheetImages.length} imagen(es) detectadas`);
 
@@ -360,9 +349,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       let insertados = 0;
       let duplicados = 0;
 
-      // Cache por (obraId, tipoRegistro) para evitar una query DB por fila
       const validacionTipoCache = new Map<string, { permitido: boolean; warning?: string; error?: string }>();
       const warningsEmitidos = new Set<string>();
+      const tramosHolguraCache = new Map<string, TramoHolgura[]>();
 
       const lastRowNum = worksheet.lastRow?.number ?? 1;
       if (DEV) console.log(`[importar] hoja "${sheetName}": filas de datos = ${Math.max(0, lastRowNum - headerRowNum)}`);
@@ -402,7 +391,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let holgura: number = 1.0;
 
           if (tipoRegistro === 'sello_cortafuego') {
-            // --- Fecha + Día (nueva plantilla trae estos campos)
             const fechaRaw = getCell(
               rowObj,
               'Fecha ejecucion sello', 'Fecha Ejecucion Sello', 'Fecha ejecución sello',
@@ -413,7 +401,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             const diaRaw = getCell(rowObj, 'Día', 'Dia', 'DIA', 'DÍA');
             dia_semana = diaRaw && diaRaw.trim() ? diaRaw.trim() : DIAS[fecha.getDay()];
 
-            // --- Itemizados
             codigoBeck =
               getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
             itemizadoBeck =
@@ -421,17 +408,13 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             descripcion_material = itemizadoBeck ?? '';
             itemizadoSacyr =
               getCell(rowObj, 'Itemizado SACYR', 'Itemizado Sacyr', 'ITEMIZADO SACYR') ?? null;
-            // Nueva columna "Itemizado Mandante" (texto); fallback a Itemizado SACYR si ausente
             const itemizadoMandanteTextoRaw =
               getCell(rowObj, 'Itemizado Mandante', 'Itemizado mandante', 'ITEMIZADO MANDANTE') ?? null;
             itemizadoMandanteTexto = itemizadoMandanteTextoRaw ?? itemizadoSacyr ?? null;
-            // Columna de ID para lookup (compatibilidad plantilla antigua)
             itemizadoMandanteId =
               getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
 
-            // --- Ubicación
             recinto = nullIfNA(getCell(rowObj, 'Recinto', 'RECINTO'));
-            // "Módulo o edificio" es el campo modulo en la nueva plantilla; fallback a Recinto para plantillas antiguas
             modulo =
               nullIfNA(getCell(rowObj, 'Módulo o edificio', 'Modulo o edificio', 'MODULO O EDIFICIO')) ??
               getCell(rowObj, 'Recinto', 'RECINTO') ??
@@ -443,7 +426,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Eje Numérico', 'Eje Numerico', 'EJE NUMERICO', 'Eje numerico'),
             );
 
-            // --- Sello
             folio = nullIfNA(getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO'));
             numero_sello =
               getCell(rowObj, 'N° DEL SELLO', 'N DEL SELLO', 'N° del Sello', 'Numero Sello', 'NUMERO SELLO', 'Nro Sello') ??
@@ -456,7 +438,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Holgura (cm)', 'Holgura', 'HOLGURA (CM)', 'HOLGURA');
             holgura = parseDecimal(holguraRaw) ?? 1.0;
 
-            // --- Sellador + observaciones
             nombre_sellador =
               getCell(rowObj, 'Nombre sellador', 'Nombre Sellador', 'NOMBRE SELLADOR', 'Sellador') ?? '';
             observaciones =
@@ -466,10 +447,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
             itemizadoMandanteId =
               getCell(rowObj, 'Itemizado Mandante ID', 'itemizadoMandanteId', 'itemizado_mandante_id') ?? null;
-            // tipo_registro = "junta_lineal_espuma" — estructura exacta:
-            //   Descripción, Fecha ejecucion sello, Día, Piso, Eje Alfabético,
-            //   Eje Numérico, Nombre sellador, Foto, Recinto, Longitud (m),
-            //   Observaciones, FOLIO
             descripcion_material =
               getCell(rowObj, 'Descripción', 'Descripcion', 'DESCRIPCION', 'DESCRIPCIÓN', 'Descripcion material') ?? '';
             modulo = getCell(rowObj, 'Recinto', 'RECINTO') ?? '';
@@ -480,11 +457,9 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Eje Numérico', 'Eje Numerico', 'EJE NUMERICO', 'Eje numerico')
             );
 
-            // FOLIO → numero_sello + folio field
             folio = nullIfNA(getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO'));
             numero_sello = folio ?? `JLE-${rowIdx}`;
 
-            // Fecha ejecucion sello → fecha; Día → dia_semana
             const fechaRaw = getCell(
               rowObj,
               'Fecha ejecucion sello',
@@ -502,7 +477,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             const diaRaw = getCell(rowObj, 'Día', 'Dia', 'DIA', 'DÍA');
             dia_semana = diaRaw && diaRaw.trim() ? diaRaw.trim() : DIAS[fecha.getDay()];
 
-            // Longitud (m) → metros_lineales (con parseDecimal)
             const longitudRaw = getCell(
               rowObj,
               'Longitud (m)',
@@ -526,7 +500,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               }
             }
 
-            // junta_lineal_espuma usa metros_lineales; cantidad_sellos siempre 0
             cantidad_sellos = 0;
             nombre_sellador =
               getCell(rowObj, 'Nombre sellador', 'Nombre Sellador', 'NOMBRE SELLADOR', 'Sellador') ?? '';
@@ -539,7 +512,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           aislacion_raw = getCell(rowObj, 'Aislación', 'Aislacion', 'aislacion');
           reparacion_tabique_raw = getCell(rowObj, 'Reparación tabique', 'Reparacion tabique', 'Reparación de tabique', 'Reparacion de tabique', 'reparacion_tabique', 'reparacionTabique');
 
-          // Saltar filas completamente vacías
           if (!descripcion_material && !nombre_sellador) continue;
 
           if (!descripcion_material) {
@@ -551,7 +523,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             continue;
           }
 
-          // Resolver obra para esta fila: columna "Obra" tiene prioridad sobre el banner
           let rowObraId: string | null = sheetObraId;
           const rowObraName = getCell(rowObj, 'Obra', 'OBRA', 'obra', 'Nombre Obra', 'Nombre de Obra');
           if (rowObraName) {
@@ -567,7 +538,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             continue;
           }
 
-          // Validar tipo de registro contra configuración de la obra (con cache por par obra+tipo)
           const cacheKey = `${rowObraId}:${tipoRegistro}`;
           let validacionCacheada = validacionTipoCache.get(cacheKey);
           if (!validacionCacheada) {
@@ -598,7 +568,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             codigoBeckFinal = itemizadoMandante.codigoBeck;
           }
 
-          // Calcular campos derivados (no confiar en valores del Excel)
+          let tramosHolgura = tramosHolguraCache.get(cacheKey);
+          if (!tramosHolgura) {
+            tramosHolgura = await getTramosHolguraObra(rowObraId, tipoRegistro);
+            tramosHolguraCache.set(cacheKey, tramosHolgura);
+          }
+
           let calcResult!: CalcRegistroResult;
           try {
             calcResult = calcularCamposRegistroTerreno({
@@ -609,6 +584,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               reparacion_tabique: reparacion_tabique_raw,
               piso,
               tipoRegistro,
+              tramosHolgura,
             });
           } catch (err) {
             if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -618,7 +594,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             throw err;
           }
 
-          // Verificar duplicado antes de crear
           const existente = await prisma.registroTerreno.findFirst({
             where: {
               obraId: rowObraId,
@@ -674,8 +649,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             },
           });
 
-          // 2) Subir las imágenes embebidas de la fila y persistirlas en
-          //    `fotos_registro`. Si falla una imagen, NO romper la importación.
           if (itemizadoMandanteIdFinal || codigoBeckFinal) {
             await dbQuery(
               `UPDATE registros_terreno
@@ -705,9 +678,6 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               const mediaArr = workbook.model.media as (ExcelJS.Media | undefined)[];
               const mediaItem = mediaArr[imageId];
 
-              // ExcelJS types Image.buffer as its own Buffer (ArrayBuffer-based), but at
-              // runtime it is a Node.js Buffer (Uint8Array-based). Avoid Buffer.isBuffer()
-              // to prevent the Buffer<ArrayBufferLike> / ExcelJS Buffer type conflict.
               let bytes: Uint8Array | null = null;
 
               if (img?.buffer != null) {

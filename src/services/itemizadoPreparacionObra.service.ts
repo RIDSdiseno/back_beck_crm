@@ -71,50 +71,6 @@ export async function assertItemizadoObraEditableAdmin(obraId: string): Promise<
   }
 }
 
-/**
- * Bloquea la edición del cliente sobre la propuesta de itemizado. El cliente solo puede
- * editar mientras la obra está en EN_REVISION_CLIENTE: antes de eso Beck aún no envió la
- * propuesta, y después de FINALIZADO el itemizado quedó confirmado y es inmutable.
- */
-export async function assertItemizadoObraEditablePorCliente(obraId: string): Promise<void> {
-  const obra = await prisma.obra.findUnique({
-    where: { id: obraId },
-    select: { estadoPreparacionItemizado: true },
-  });
-
-  if (!obra) {
-    throw new ItemizadoObraError('Obra no encontrada', 404);
-  }
-
-  if (obra.estadoPreparacionItemizado === EstadoPreparacionItemizado.PREPARACION) {
-    throw new ItemizadoObraError(
-      'La propuesta de itemizado aún no fue enviada para revisión.',
-      409,
-    );
-  }
-
-  if (obra.estadoPreparacionItemizado === EstadoPreparacionItemizado.FINALIZADO) {
-    throw new ItemizadoObraError(
-      'El itemizado ya fue confirmado y no puede modificarse.',
-      409,
-    );
-  }
-}
-
-/**
- * Determina si una obra tiene al menos un itemizado incluido en la propuesta
- * (propuestoAlCliente=true). Gate usado por enviarItemizadoARevisionCliente antes
- * de permitir PREPARACION → EN_REVISION_CLIENTE. No usa `visible`: un itemizado
- * puede estar propuesto sin estar aún activo para la obra (eso solo ocurre tras
- * la confirmación del cliente).
- */
-export async function existeItemizadoPropuestoParaObra(obraId: string): Promise<boolean> {
-  const count = await prisma.configuracionItemizadoOpcionObra.count({
-    where: { obraId, propuestoAlCliente: true },
-  });
-  return count > 0;
-}
-
 export type ItemizadoPropuestoCliente = {
   itemizadoOpcionId: string;
   codigoBeck: string | null;

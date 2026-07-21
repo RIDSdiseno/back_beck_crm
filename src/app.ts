@@ -58,19 +58,13 @@ const corsOptions: cors.CorsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// ===========================================
-// MIDDLEWARES GLOBALES
-// ===========================================
 
-// CORS - Permitir peticiones desde el frontend
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
-// Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logger simple (en producción usar Winston o similar)
 app.use((req: Request, _res: Response, next: NextFunction) => {
   if (req.method === 'GET' && req.path === '/api/auth/me') {
     next();
@@ -81,11 +75,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
-// ===========================================
-// RUTAS
-// ===========================================
 
-// Health check
 app.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
@@ -95,23 +85,19 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 
-// Rutas de API
 app.use('/api/auth', authRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 
-// Bloquea módulos comerciales BECK: terreno, jefeobra y todos los roles Firemat
 const blockBeckCommercial = [
   authenticate,
   denyRoles('terreno', 'jefeobra', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
 ];
 
-// Bloquea módulos operativos BECK: terreno y roles Firemat (jefeobra PERMITIDO)
 const blockBeckOperacional = [
   authenticate,
   denyRoles('terreno', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
 ];
 
-// Rutas BECK OPERATIVAS — accesibles para jefeobra + roles Beck con permisos
 app.use('/api/registros', blockBeckOperacional, registrosRoutes);
 app.use('/api/obras', blockBeckOperacional, obrasRoutes);
 app.use('/api/notificaciones', blockBeckOperacional, notificacionesRoutes);
@@ -120,7 +106,6 @@ app.use('/api/usuarios', blockBeckOperacional, usuariosRoutes);
 app.use('/api/usuarios-parametros', blockBeckOperacional, beckUsuariosParametrosRoutes);
 app.use('/api/beck/usuarios-parametros', blockBeckOperacional, beckUsuariosParametrosRoutes);
 
-// Rutas BECK COMERCIALES — jefeobra bloqueado explícitamente
 app.use('/api/funnel-beck', blockBeckCommercial, funnelBeckRoutes);
 app.use('/api/cotizaciones', blockBeckCommercial, cotizacionesRoutes);
 app.use('/api/clientes-beck', blockBeckCommercial, clientesBeckRoutes);
@@ -129,8 +114,6 @@ app.use('/api/stats', blockBeckCommercial, statsRoutes);
 app.use('/api/procesamiento', blockBeckCommercial, procesamientoRoutes);
 app.use('/api/itemizados', blockBeckCommercial, itemizadosRoutes);
 app.use('/api/alertas', authenticate, alertasRoutes);
-// Vista unificada de lectura Beck + Firemat: no se agrupa con blockBeckCommercial
-// porque roles solo-Firemat (ej. vendedor_firemat) también deben poder consumirla.
 app.use('/api/funnel-unificado', funnelUnificadoRoutes);
 app.use('/api/configuracion-validacion', configuracionValidacionRoutes);
 
@@ -138,7 +121,6 @@ app.use('/api/itemizados-mandante', itemizadosMandanteRoutes);
 app.use('/api/oficina-tecnica-preventa', oficinaTecnicaPreventaRoutes);
 app.use('/api/firemat/usuarios-parametros', authenticate, firematUsuariosParametrosRoutes);
 
-// Rutas Firemat — permisos finos definidos en cada router
 app.use('/api/firemat/categorias', authenticate, firematCategoriasRoutes);
 app.use('/api/firemat/productos', authenticate, firematProductosRoutes);
 app.use('/api/firemat/inventario', authenticate, firematInventarioRoutes);
@@ -148,36 +130,24 @@ app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
 app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
 app.use('/api/firemat/reportes', authenticate, reportesFirematRoutes);
 
-// Configuración de visibilidad de campos por rol (accesible a todos los roles autenticados)
 app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);
 
-// Opciones de itemizado por obra
 app.use('/api/itemizado-opciones', itemizadoOpcionesRoutes);
 
-// Registros con sanitización por rol — accesibles para terreno, jefeobra y roles Beck
-// NO usa blockBeckRoutes para permitir terreno/jefeobra
 app.use('/api/registros-campo', registrosCampoRoutes);
 
-// Permisos del usuario autenticado — accesible para todos los roles
 app.use('/api/me', meRoutes);
 
-// Administración de permisos por rol — solo administrador (autorización interna en el router)
 app.use('/api/permisos', authenticate, permisosRolRoutes);
 
-// Portal cliente — solo obras asignadas + registros validados
 app.use('/api/cliente', clienteRoutes);
 
-// Configuración de Vista Cliente (general + por empresa)
 app.use('/api/vista-cliente', blockBeckOperacional, vistaClienteConfigRoutes);
 
-// Ruta 404
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// ===========================================
-// ERROR HANDLER GLOBAL
-// ===========================================
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Error no manejado:', err);
   res.status(500).json({

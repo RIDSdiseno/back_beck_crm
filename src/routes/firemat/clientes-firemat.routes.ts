@@ -20,11 +20,8 @@ const router = Router();
 
 const canSee = requirePermission('firemat_clientes', 'ver');
 const canEdit = requirePermission('firemat_clientes', 'editar');
-// Lectura de clientes accesible también a usuarios con firemat_cotizaciones.ver (incluye editar)
-// para que el selector de cliente en el modal de cotizaciones funcione sin permiso de clientes
 const canSeeOrCotizaciones = requirePermission(['firemat_clientes', 'firemat_cotizaciones'], 'ver');
 
-// Rutas estáticas antes de /:id para evitar colisión con el parámetro dinámico
 router.get('/buscar', canSeeOrCotizaciones, buscarClientes);
 router.post('/importar', canEdit, uploadExcelOrCsvFile, importarClientes);
 

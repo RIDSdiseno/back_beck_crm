@@ -16,12 +16,10 @@ export async function getPermisosEfectivos(
 ): Promise<PermisoBase[]> {
   const codeDefaults = PERMISOS_POR_ROL[userRole] ?? [];
 
-  // Secuencial para evitar que el adaptador PrismaPg asigne ambas queries al mismo pg.Client
   const userPermisos = await prisma.permisoUsuarioModulo.findMany({
     where: { usuarioId: userId },
     select: { modulo: true, puedeVer: true, puedeEditar: true },
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rolPermisos = await prisma.permisoRolModulo.findMany({
     where: { rol: userRole as any },
     select: { modulo: true, puedeVer: true, puedeEditar: true },

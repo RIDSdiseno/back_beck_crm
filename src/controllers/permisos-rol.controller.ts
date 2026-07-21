@@ -20,7 +20,6 @@ function esRolValido(rol: string): rol is RolUsuario {
   return ROLES_CONFIGURABLES.includes(rol as RolUsuario);
 }
 
-// GET /api/permisos/roles
 export const listarRoles = async (_req: Request, res: Response): Promise<void> => {
   try {
     const [usuariosPorRol, permisosConfiguradosPorRol] = await Promise.all([
@@ -44,7 +43,6 @@ export const listarRoles = async (_req: Request, res: Response): Promise<void> =
   }
 };
 
-// GET /api/permisos/roles/:rol
 export const obtenerPermisosRol = async (req: Request, res: Response): Promise<void> => {
   try {
     const rol = req.params['rol'] as string;
@@ -86,7 +84,6 @@ export const obtenerPermisosRol = async (req: Request, res: Response): Promise<v
       return db ? { modulo: d.modulo, puedeVer: db.puedeVer, puedeEditar: db.puedeEditar } : d;
     });
 
-    // [AUDIT LOG]
     const dbProcesamiento = dbMap.get('beck_procesamiento_ingenieria');
     const efectivoProcesamiento = permisosEfectivos.find((p) => p.modulo === 'beck_procesamiento_ingenieria');
     console.log('[AUDIT] GET permisos rol BD', {
@@ -114,7 +111,6 @@ export const obtenerPermisosRol = async (req: Request, res: Response): Promise<v
   }
 };
 
-// PUT /api/permisos/roles/:rol
 export const actualizarPermisosRol = async (req: Request, res: Response): Promise<void> => {
   try {
     const rol = req.params['rol'] as string;
@@ -122,7 +118,6 @@ export const actualizarPermisosRol = async (req: Request, res: Response): Promis
       permisos: { modulo: string; puedeVer: boolean; puedeEditar: boolean }[];
     };
 
-    // [AUDIT LOG]
     console.log('[AUDIT] PUT permisos rol', {
       rol,
       totalPermisos: Array.isArray(permisos) ? permisos.length : 'NO_ARRAY',
@@ -163,7 +158,6 @@ export const actualizarPermisosRol = async (req: Request, res: Response): Promis
           create: { rol: rol as any, modulo: p.modulo, puedeVer: p.puedeVer, puedeEditar: p.puedeEditar },
           select: { modulo: true, puedeVer: true, puedeEditar: true },
         });
-        // [AUDIT LOG]
         if (p.modulo === 'beck_procesamiento_ingenieria') {
           console.log('[AUDIT] upsert beck_procesamiento_ingenieria', {
             input: { puedeVer: p.puedeVer, puedeEditar: p.puedeEditar },
@@ -181,7 +175,6 @@ export const actualizarPermisosRol = async (req: Request, res: Response): Promis
   }
 };
 
-// GET /api/permisos/roles/:rol/usuarios
 export const listarUsuariosDeRol = async (req: Request, res: Response): Promise<void> => {
   try {
     const rol = req.params['rol'] as string;

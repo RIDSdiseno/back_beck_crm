@@ -62,7 +62,6 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
       where.materialidad = { contains: materialidad.trim(), mode: 'insensitive' };
     }
 
-    // Cuando se filtra por visible sin obraId se usa el campo global
     const obraIdStr = typeof obraId === 'string' && obraId.trim() ? obraId.trim() : null;
     if (!obraIdStr) {
       if (visible === 'true') where.visible = true;
@@ -79,7 +78,6 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
       return;
     }
 
-    // Cargar configuraciones específicas de esta obra en un solo query
     const configs = await prisma.configuracionItemizadoOpcionObra.findMany({
       where: { obraId: obraIdStr },
       select: {
@@ -91,18 +89,12 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
         orden: true,
         rendimientoSellosEsperadoDiario: true,
         rendimientoReparacionEsperadoDiario: true,
+        precioUnitario: true,
+        moneda: true,
       },
     });
     const configMap = new Map(configs.map((c) => [c.itemizadoOpcionId, c]));
 
-    // Catálogo global completo (sin filtrar por visible) mezclado con el
-    // valor efectivo por obra — usado por "Preparar itemizado", que necesita
-    // ver también los itemizados inactivos/sin configuración para poder
-    // activarlos. "nombrePersonalizado"/"orden" solo existen a nivel de
-    // ConfiguracionItemizadoOpcionObra (no hay override global), por eso
-    // vienen null cuando no hay config explícita para esta obra.
-    // propuestoAlCliente/seleccionadoPorCliente tampoco tienen override global
-    // (solo existen por obra): sin config explícita, ambos son false.
     const data = opciones.map((op) => {
       const config = configMap.get(op.id);
       return {
@@ -119,7 +111,6 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
       };
     });
 
-    // Aplicar filtro de visible después de resolver el efectivo
     const filtrado =
       visible === 'true' ? data.filter((d) => d.visible) :
       visible === 'false' ? data.filter((d) => !d.visible) :
@@ -175,8 +166,6 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
     const id = req.params.id as string;
     const body = req.body as Record<string, unknown>;
 
-    // Campos de catálogo: siempre son globales (identidad compartida de la opción,
-    // ej. código BECK, materialidad), sin importar si viene obraId.
     const updateData: Prisma.ItemizadoOpcionUpdateInput = {};
     if (hasOwn(body, 'codigoBeck')) updateData.codigoBeck = getString(body.codigoBeck);
     if (hasOwn(body, 'tipo')) updateData.tipo = getString(body.tipo);
@@ -187,16 +176,8 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
     const obraId = typeof body.obraId === 'string' && body.obraId.trim() ? body.obraId.trim() : null;
 
     if (obraId) {
-      // Excepción administrativa: Beck puede seguir corrigiendo `visible` por obra
-      // incluso en FINALIZADO (agregar un itemizado que faltó), no solo en PREPARACION.
       await assertItemizadoObraEditableAdmin(obraId);
 
-      // visible es específico de la obra: va a la configuración por obra, nunca al
-      // catálogo global (evita que una obra pise a otra). Los rendimientos por obra
-      // ya NO se editan desde esta pantalla (Opciones de itemizado) — se mueven a
-      // Configurar itemizados (ver guardarConfiguracionItemizadosPorObra); por eso
-      // este endpoint ya no lee rendimientoSellosEsperadoDiario/rendimientoReparacionEsperadoDiario
-      // cuando viene obraId.
       const obraData: Prisma.ConfiguracionItemizadoOpcionObraUpdateInput = {};
       if (hasOwn(body, 'visible') && typeof body.visible === 'boolean') {
         obraData.visible = body.visible;
@@ -217,8 +198,6 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
 
       const opcionGlobal = await prisma.itemizadoOpcion.findUniqueOrThrow({ where: { id } });
 
-      // Respuesta refleja el valor EFECTIVO para esta obra (override > global),
-      // preservando el id de la opción (no el de la fila de configuración).
       res.json({
         success: true,
         data: {
@@ -233,7 +212,6 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
       return;
     }
 
-    // Sin obraId → edición del catálogo maestro (comportamiento global existente)
     if (hasOwn(body, 'visible') && typeof body.visible === 'boolean') {
       updateData.visible = body.visible;
     }
@@ -268,11 +246,8 @@ export const patchVisibleItemizadoOpcion = async (req: Request, res: Response): 
     const obraId = typeof body.obraId === 'string' && body.obraId.trim() ? body.obraId.trim() : null;
 
     if (obraId) {
-      // Excepción administrativa: permite corregir `visible` aunque la obra ya
-      // esté FINALIZADO (agregar un itemizado que faltó en el contrato confirmado).
       await assertItemizadoObraEditableAdmin(obraId);
 
-      // Actualizar visibilidad solo para esta obra (no toca el maestro global)
       const config = await prisma.configuracionItemizadoOpcionObra.upsert({
         where: { obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId: id } },
         create: { obraId, itemizadoOpcionId: id, visible: body.visible },
@@ -283,7 +258,6 @@ export const patchVisibleItemizadoOpcion = async (req: Request, res: Response): 
       return;
     }
 
-    // Sin obraId → actualizar visible global (administración del maestro)
     const data = await prisma.itemizadoOpcion.update({
       where: { id },
       data: { visible: body.visible },
@@ -305,7 +279,6 @@ export const eliminarItemizadoOpcion = async (req: Request, res: Response): Prom
   }
 };
 
-// ─── Configuración de itemizados por obra ─────────────────────────────────────
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -334,7 +307,6 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       return;
     }
 
-    // Configs explícitas de esta obra (visibles e invisibles)
     const configsRaw = await prisma.configuracionItemizadoOpcionObra.findMany({
       where: { obraId },
       include: {
@@ -353,7 +325,6 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       },
     });
 
-    // Rendimiento efectivo: override de la obra si existe, si no el del catálogo global
     const configs = configsRaw.map((c) => ({
       ...c,
       itemizadoOpcion: {
@@ -367,7 +338,6 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
 
     const configuredIds = configs.map((c) => c.itemizadoOpcionId);
 
-    // Items globalmente visibles que no tienen config explícita para esta obra
     const globalVisibles = await prisma.itemizadoOpcion.findMany({
       where: {
         visible: true,
@@ -392,6 +362,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       visible: boolean;
       orden: number | null;
       nombrePersonalizado: string | null;
+      precioUnitario: Prisma.Decimal | null;
+      moneda: string | null;
       itemizadoOpcion: {
         id: string;
         codigoBeck: string | null;
@@ -414,6 +386,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
         visible: c.visible,
         orden: c.orden,
         nombrePersonalizado: c.nombrePersonalizado,
+        precioUnitario: c.precioUnitario,
+        moneda: c.moneda,
         itemizadoOpcion: c.itemizadoOpcion,
         nombreMostrar:
           c.nombrePersonalizado && c.nombrePersonalizado.trim()
@@ -428,6 +402,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       visible: true,
       orden: null,
       nombrePersonalizado: null,
+      precioUnitario: null,
+      moneda: null,
       itemizadoOpcion: op,
       nombreMostrar: op.elementoPasante ?? '',
     }));
@@ -467,10 +443,6 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       return;
     }
 
-    // Excepción administrativa: bajo la arquitectura de propuesta/selección, `visible`
-    // solo se activa tras la confirmación del cliente, por lo que esta pantalla
-    // (Configurar itemizados: nombre mandante, orden, rendimientos por obra) recién
-    // tiene itemizados para trabajar una vez FINALIZADO — debe permitirse editar ahí.
     await assertItemizadoObraEditableAdmin(obraId);
 
     if (!Array.isArray(body.items)) {
@@ -490,6 +462,8 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         visible,
         rendimientoSellosEsperadoDiario,
         rendimientoReparacionEsperadoDiario,
+        precioUnitario,
+        moneda,
       } = item as Record<string, unknown>;
 
       if (typeof itemizadoOpcionId !== 'string' || !UUID_REGEX.test(itemizadoOpcionId)) {
@@ -528,6 +502,28 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         });
         return;
       }
+      if (
+        hasOwn(item as Record<string, unknown>, 'precioUnitario') &&
+        precioUnitario !== null &&
+        !(typeof precioUnitario === 'number' && Number.isFinite(precioUnitario) && precioUnitario >= 0)
+      ) {
+        res.status(400).json({
+          success: false,
+          error: `precioUnitario debe ser un número no negativo o null en el item ${itemizadoOpcionId}`,
+        });
+        return;
+      }
+      if (
+        hasOwn(item as Record<string, unknown>, 'moneda') &&
+        moneda !== null &&
+        !(moneda === 'CLP' || moneda === 'UF' || moneda === 'USD')
+      ) {
+        res.status(400).json({
+          success: false,
+          error: `moneda debe ser CLP, UF, USD o null en el item ${itemizadoOpcionId}`,
+        });
+        return;
+      }
     }
 
     type ItemInput = {
@@ -537,12 +533,13 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       visible?: boolean;
       rendimientoSellosEsperadoDiario?: number | null;
       rendimientoReparacionEsperadoDiario?: number | null;
+      precioUnitario?: number | null;
+      moneda?: 'CLP' | 'UF' | 'USD' | null;
     };
 
     const items = itemsRaw as ItemInput[];
     const allIds = items.map((i) => i.itemizadoOpcionId);
 
-    // Evitar duplicados dentro del mismo payload
     const idsVistos = new Set<string>();
     const idsDuplicados = new Set<string>();
     for (const id of allIds) {
@@ -558,7 +555,6 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       return;
     }
 
-    // Verificar que todos los itemizadoOpcionIds existen
     const found = await prisma.itemizadoOpcion.findMany({
       where: { id: { in: allIds } },
       select: { id: true, visible: true },
@@ -570,15 +566,32 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       return;
     }
 
-    // Resolver visibilidad efectiva: config explícita > global
     const explicitConfigs = await prisma.configuracionItemizadoOpcionObra.findMany({
       where: { obraId, itemizadoOpcionId: { in: allIds } },
-      select: { itemizadoOpcionId: true, visible: true },
+      select: { itemizadoOpcionId: true, visible: true, precioUnitario: true, moneda: true },
     });
     const configMap = new Map(explicitConfigs.map((c) => [c.itemizadoOpcionId, c.visible]));
+    const configDataMap = new Map(
+      explicitConfigs.map((c) => [c.itemizadoOpcionId, { precioUnitario: c.precioUnitario, moneda: c.moneda }]),
+    );
 
-    // El gate de "debe estar visible" solo aplica a items que NO traen `visible` explícito:
-    // si el payload trae `visible`, esa es la nueva intención (mostrar u ocultar) y no requiere estado previo.
+    for (const item of items) {
+      const precioProvisto = hasOwn(item as unknown as Record<string, unknown>, 'precioUnitario');
+      const monedaProvisto = hasOwn(item as unknown as Record<string, unknown>, 'moneda');
+      const existente = configDataMap.get(item.itemizadoOpcionId);
+
+      const precioEfectivo = precioProvisto ? item.precioUnitario : (existente?.precioUnitario ?? null);
+      const monedaEfectiva = monedaProvisto ? item.moneda : (existente?.moneda ?? null);
+
+      if (precioEfectivo !== null && precioEfectivo !== undefined && !monedaEfectiva) {
+        res.status(400).json({
+          success: false,
+          error: `La moneda es obligatoria cuando se configura un precio unitario (item ${item.itemizadoOpcionId})`,
+        });
+        return;
+      }
+    }
+
     const idsSinVisibleExplicito = items
       .filter((item) => typeof item.visible !== 'boolean')
       .map((item) => item.itemizadoOpcionId);
@@ -594,8 +607,6 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       return;
     }
 
-    // Upsert: orden y nombrePersonalizado siempre se aplican (compat con payload anterior);
-    // visible y rendimientos son parciales — solo se tocan si vienen explícitos en el item.
     const results = await Promise.all(
       items.map((item) => {
         const ordenVal =
@@ -610,6 +621,8 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         const visibleProvisto = typeof item.visible === 'boolean';
         const sellosProvisto = hasOwn(item as unknown as Record<string, unknown>, 'rendimientoSellosEsperadoDiario');
         const reparacionProvisto = hasOwn(item as unknown as Record<string, unknown>, 'rendimientoReparacionEsperadoDiario');
+        const precioProvisto = hasOwn(item as unknown as Record<string, unknown>, 'precioUnitario');
+        const monedaProvisto = hasOwn(item as unknown as Record<string, unknown>, 'moneda');
 
         const updateData: Prisma.ConfiguracionItemizadoOpcionObraUpdateInput = {
           orden: ordenVal,
@@ -618,6 +631,8 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         if (visibleProvisto) updateData.visible = item.visible;
         if (sellosProvisto) updateData.rendimientoSellosEsperadoDiario = item.rendimientoSellosEsperadoDiario ?? null;
         if (reparacionProvisto) updateData.rendimientoReparacionEsperadoDiario = item.rendimientoReparacionEsperadoDiario ?? null;
+        if (precioProvisto) updateData.precioUnitario = item.precioUnitario ?? null;
+        if (monedaProvisto) updateData.moneda = item.moneda ?? null;
 
         return prisma.configuracionItemizadoOpcionObra.upsert({
           where: {
@@ -631,6 +646,8 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
             nombrePersonalizado: nombreVal,
             rendimientoSellosEsperadoDiario: sellosProvisto ? (item.rendimientoSellosEsperadoDiario ?? null) : null,
             rendimientoReparacionEsperadoDiario: reparacionProvisto ? (item.rendimientoReparacionEsperadoDiario ?? null) : null,
+            precioUnitario: precioProvisto ? (item.precioUnitario ?? null) : null,
+            moneda: monedaProvisto ? (item.moneda ?? null) : null,
           },
           update: updateData,
         });
@@ -643,123 +660,6 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
   }
 };
 
-// ─── Propuesta de itemizado por obra (PrepararItemizadoObraDrawer) ────────────
-//
-// Endpoint dedicado para la pantalla "Preparar itemizado": escribe únicamente
-// propuestoAlCliente (+ seleccionadoPorCliente derivado, ver más abajo). A
-// diferencia de guardarConfiguracionItemizadosPorObra (usado por "Configurar
-// itemizados"), este endpoint NUNCA toca visible, orden, nombrePersonalizado ni
-// los rendimientos — así Beck puede incluir/quitar itemizados de la propuesta
-// sin arriesgar pisar esos campos ni activar prematuramente el itemizado para
-// la obra (eso solo ocurre en confirmarItemizadoCliente, tras la confirmación).
-export const guardarPropuestaItemizadosPorObra = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const obraId = req.params.obraId as string;
-    const body = req.body as { items?: unknown };
-
-    if (!UUID_REGEX.test(obraId)) {
-      res.status(400).json({ success: false, error: 'obraId debe ser un UUID válido' });
-      return;
-    }
-
-    await assertItemizadoObraEditable(obraId);
-
-    if (!Array.isArray(body.items)) {
-      res.status(400).json({ success: false, error: 'items debe ser un arreglo' });
-      return;
-    }
-
-    const itemsRaw = body.items as unknown[];
-    for (const item of itemsRaw) {
-      if (typeof item !== 'object' || item === null) {
-        res.status(400).json({ success: false, error: 'Cada item debe ser un objeto' });
-        return;
-      }
-      const { itemizadoOpcionId, propuestoAlCliente } = item as Record<string, unknown>;
-      if (typeof itemizadoOpcionId !== 'string' || !UUID_REGEX.test(itemizadoOpcionId)) {
-        res.status(400).json({
-          success: false,
-          error: `itemizadoOpcionId inválido: ${String(itemizadoOpcionId)}`,
-        });
-        return;
-      }
-      if (typeof propuestoAlCliente !== 'boolean') {
-        res.status(400).json({
-          success: false,
-          error: `propuestoAlCliente debe ser boolean en el item ${itemizadoOpcionId}`,
-        });
-        return;
-      }
-    }
-
-    type PropuestaItemInput = { itemizadoOpcionId: string; propuestoAlCliente: boolean };
-    const items = itemsRaw as PropuestaItemInput[];
-    const allIds = items.map((i) => i.itemizadoOpcionId);
-
-    const idsVistos = new Set<string>();
-    const idsDuplicados = new Set<string>();
-    for (const id of allIds) {
-      if (idsVistos.has(id)) idsDuplicados.add(id);
-      idsVistos.add(id);
-    }
-    if (idsDuplicados.size > 0) {
-      res.status(400).json({
-        success: false,
-        error: 'itemizadoOpcionId duplicado en el payload',
-        ids: [...idsDuplicados],
-      });
-      return;
-    }
-
-    const found = await prisma.itemizadoOpcion.findMany({
-      where: { id: { in: allIds } },
-      select: { id: true },
-    });
-    const foundIds = new Set(found.map((f) => f.id));
-    const notFound = allIds.filter((id) => !foundIds.has(id));
-    if (notFound.length > 0) {
-      res.status(404).json({ success: false, error: 'Algunos itemizados no existen', ids: notFound });
-      return;
-    }
-
-    // Al incluir (propuestoAlCliente=true) se inicia seleccionadoPorCliente=true por
-    // defecto: preferencia de UX para que el cliente reciba todo preseleccionado y
-    // pueda desmarcar lo que no quiere, en vez de partir de una lista vacía. Al
-    // quitar de la propuesta (propuestoAlCliente=false) se limpia seleccionadoPorCliente
-    // a false, y visible nunca se toca aquí (permanece en lo que ya tuviera, que
-    // solo puede ser false antes de la confirmación del cliente).
-    const results = await Promise.all(
-      items.map((item) =>
-        prisma.configuracionItemizadoOpcionObra.upsert({
-          where: {
-            obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId: item.itemizadoOpcionId },
-          },
-          create: {
-            obraId,
-            itemizadoOpcionId: item.itemizadoOpcionId,
-            visible: false,
-            propuestoAlCliente: item.propuestoAlCliente,
-            seleccionadoPorCliente: item.propuestoAlCliente,
-          },
-          update: {
-            propuestoAlCliente: item.propuestoAlCliente,
-            seleccionadoPorCliente: item.propuestoAlCliente ? true : false,
-          },
-        }),
-      ),
-    );
-
-    res.json({ success: true, data: results });
-  } catch (error) {
-    handleError(res, error);
-  }
-};
-
-// GET /itemizado-opciones/obra/:obraId/propuesta — equivalente interno (roles Beck)
-// de GET /cliente/obras/:obraId/itemizados, para que ItemizadoPreviewPanel muestre
-// exactamente la misma tabla que verá el cliente (mismos itemizados propuestos,
-// mismo estado de selección), en solo lectura. Reutiliza listarItemizadosPropuestosParaObra
-// en vez de duplicar la resolución de propuestoAlCliente.
 export const getPropuestaItemizadosPorObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const obraId = req.params.obraId as string;
@@ -845,7 +745,6 @@ export const patchVisibleMasivoObra = async (req: Request, res: Response): Promi
   }
 };
 
-// ─── Importación masiva desde Excel ───────────────────────────────────────────
 
 const NOMBRE_HOJA = 'Cálculo Material por Pasada';
 const FILA_ENCABEZADOS = 12; // 0-indexed → Excel row 13
@@ -933,7 +832,6 @@ export const importarItemizadoOpciones = async (req: Request, res: Response): Pr
     const lastRow = range.e.r;
     const lastCol = range.e.c;
 
-    // Leer encabezados desde Excel row 13 (0-indexed: 12)
     const colNums: Record<string, number> = {};
     for (let c = 0; c <= lastCol; c++) {
       const val = leerCeldaXlsx(sheet, FILA_ENCABEZADOS, c);
@@ -948,7 +846,6 @@ export const importarItemizadoOpciones = async (req: Request, res: Response): Pr
       materialidad: colNums['materialidad'] ?? -1,
     };
 
-    // Leer filas de datos desde Excel row 14 (0-indexed: 13)
     const filas: FilaItemizadoImport[] = [];
     let totalFilas = 0;
 
@@ -969,12 +866,10 @@ export const importarItemizadoOpciones = async (req: Request, res: Response): Pr
       filas.push(fila);
     }
 
-    // Eliminar catálogo global completo si reemplazar=true
     if (reemplazar) {
       await prisma.itemizadoOpcion.deleteMany({});
     }
 
-    // Cargar claves existentes para deduplicación (solo en modo append)
     let existingKeys = new Set<string>();
     if (!reemplazar) {
       const existing = await prisma.itemizadoOpcion.findMany({
@@ -983,7 +878,6 @@ export const importarItemizadoOpciones = async (req: Request, res: Response): Pr
       existingKeys = new Set(existing.map(claveUnicidad));
     }
 
-    // Construir registros a crear, deduplicando intra-archivo y contra BD
     const registrosACrear: {
       codigoBeck: string | null;
       tipo: string | null;

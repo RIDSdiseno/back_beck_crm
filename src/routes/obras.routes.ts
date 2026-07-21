@@ -1,4 +1,3 @@
-// src/routes/obras.routes.ts
 import { Router } from 'express';
 import {
   listarObras,
@@ -12,8 +11,20 @@ import {
   misObras,
   obtenerTiposRegistroObra,
   actualizarTiposRegistroObra,
-  enviarItemizadoARevisionCliente,
 } from '../controllers/obras.controller';
+import {
+  listarFactoresHolguraObra,
+  guardarFactoresHolguraObra,
+  restaurarFactoresHolguraObra,
+} from '../controllers/factorHolgura.controller';
+import {
+  listarHitosObra,
+  crearHitoObra,
+  actualizarHitoObra,
+  eliminarHitoObra,
+  guardarCantidadesHito,
+  terminarHitoObra,
+} from '../controllers/hitosObra.controller';
 import { authenticate } from '../middlewares/auth';
 import { requirePermission } from '../middlewares/requirePermission';
 
@@ -21,10 +32,8 @@ const router = Router();
 
 router.get('/', authenticate, requirePermission('beck_obras', 'ver'), listarObras);
 
-// mis-obras debe estar antes de /:id para no ser capturado como parámetro
 router.get('/mis-obras', authenticate, misObras);
 
-// Listar usuarios de una obra: lectura de beck_obras
 router.get(
   '/:id/usuarios',
   authenticate,
@@ -32,7 +41,6 @@ router.get(
   listarUsuariosObra,
 );
 
-// Tipos de registro habilitados por obra
 router.get(
   '/:id/tipos-registro',
   authenticate,
@@ -47,7 +55,69 @@ router.put(
   actualizarTiposRegistroObra,
 );
 
-// Rutas de escritura: requirePermission es la autoridad final (valida overrides individuales)
+router.get(
+  '/:obraId/factores-holgura',
+  authenticate,
+  requirePermission('beck_obras', 'ver'),
+  listarFactoresHolguraObra,
+);
+
+router.put(
+  '/:obraId/factores-holgura/:tipoRegistro',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  guardarFactoresHolguraObra,
+);
+
+router.delete(
+  '/:obraId/factores-holgura/:tipoRegistro',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  restaurarFactoresHolguraObra,
+);
+
+router.get(
+  '/:obraId/hitos',
+  authenticate,
+  requirePermission('beck_obras', 'ver'),
+  listarHitosObra,
+);
+
+router.post(
+  '/:obraId/hitos',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  crearHitoObra,
+);
+
+router.put(
+  '/:obraId/hitos/:hitoId',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  actualizarHitoObra,
+);
+
+router.delete(
+  '/:obraId/hitos/:hitoId',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  eliminarHitoObra,
+);
+
+router.put(
+  '/:obraId/hitos/:hitoId/cantidades',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  guardarCantidadesHito,
+);
+
+router.patch(
+  '/:obraId/hitos/:hitoId/terminar',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  terminarHitoObra,
+);
+
 router.post(
   '/',
   authenticate,
@@ -67,15 +137,6 @@ router.patch(
   authenticate,
   requirePermission('beck_obras', 'editar'),
   cambiarEstadoObra,
-);
-
-// Enviar propuesta de itemizado al cliente (PREPARACION → EN_REVISION_CLIENTE):
-// solo roles internos con edición sobre beck_obras
-router.patch(
-  '/:obraId/itemizado/enviar-a-cliente',
-  authenticate,
-  requirePermission('beck_obras', 'editar'),
-  enviarItemizadoARevisionCliente,
 );
 
 router.put(

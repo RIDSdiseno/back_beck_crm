@@ -4,14 +4,11 @@ import { query as dbQuery } from './config/database';
 
 const PORT = process.env.PORT || 5000;
 
-// Test de conexión a la base de datos antes de iniciar el servidor
 const startServer = async () => {
   try {
-    // Verificar conexión a PostgreSQL
     await dbQuery('SELECT NOW()');
     console.log('✅ Conexión a PostgreSQL establecida');
 
-    // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor BECK corriendo en puerto ${PORT}`);
       console.log(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
@@ -23,7 +20,6 @@ const startServer = async () => {
   }
 };
 
-// Manejo de errores no capturados
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   process.exit(1);
@@ -34,5 +30,4 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-// Iniciar servidor
 startServer();

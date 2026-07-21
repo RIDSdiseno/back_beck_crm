@@ -1,7 +1,3 @@
-// src/controllers/registros-campo.controller.ts
-// Endpoints de lectura de registros para roles terreno, jefeobra e ingenieria.
-// Aplica sanitización de campos según configuración por rol (fuente única de verdad:
-// src/config/camposRegistro.config.ts).
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';

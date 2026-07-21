@@ -55,16 +55,13 @@ export function validarMotivoCierre(tipo: TipoMotivoCierre, valor?: string | nul
   if (!valor || !valor.trim()) return false;
   const trimmed = valor.trim();
 
-  // "Otro" exacto sin detalle es inválido para guardar
   if (trimmed === "Otro") return false;
 
-  // "Otro: detalle" es válido si hay texto no vacío después de ":"
   if (trimmed.startsWith("Otro:")) {
     const detalle = trimmed.slice("Otro:".length).trim();
     return detalle.length > 0;
   }
 
-  // Debe estar exactamente en la lista
   return obtenerMotivosCierre(tipo).includes(trimmed);
 }
 

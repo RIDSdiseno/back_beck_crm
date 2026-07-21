@@ -2,9 +2,6 @@ import { TipoClienteFiremat, CanalVentaFiremat } from '../../generated/firemat-c
 import { firematPrisma } from '../../config/firematPrisma';
 import { RawFilaCliente } from '../../utils/importClientes';
 
-// ────────────────────────────────────────────────
-// Helpers
-// ────────────────────────────────────────────────
 
 function optStr(value: unknown): string | null {
   const s = String(value ?? '').trim();
@@ -123,9 +120,6 @@ function parseCanalVenta(value: unknown): CanalVentaFiremat | null {
   return parsed;
 }
 
-// ────────────────────────────────────────────────
-// Include
-// ────────────────────────────────────────────────
 
 const clienteInclude = {
   contactos: {
@@ -140,9 +134,6 @@ const clienteInclude = {
   },
 };
 
-// ────────────────────────────────────────────────
-// Input types
-// ────────────────────────────────────────────────
 
 type ClienteInput = {
   nombre?: unknown;
@@ -204,9 +195,6 @@ export type ImportClientesFirematResult = {
   advertencias: string[];
 };
 
-// ────────────────────────────────────────────────
-// Builders
-// ────────────────────────────────────────────────
 
 function buildClienteData(raw: ClienteInput, isUpdate = false) {
   if (!isUpdate) {
@@ -310,9 +298,6 @@ function filaImportVacia(mapped: MappedClienteImport): boolean {
   return Object.values(mapped).every(value => !value);
 }
 
-// ────────────────────────────────────────────────
-// Service functions
-// ────────────────────────────────────────────────
 
 export async function listarClientesFiremat(params?: { q?: string; activo?: boolean }) {
   const q = String(params?.q ?? '').trim();
@@ -560,13 +545,11 @@ export async function obtenerOportunidadesClienteFiremat(clienteId: number) {
   });
   if (!cliente) throw new Error('Cliente no encontrado.');
 
-  // Retorna oportunidades del modelo Oportunidad (tiene clienteId directo)
   const oportunidades = await firematPrisma.oportunidad.findMany({
     where: { clienteId },
     orderBy: { createdAt: 'desc' },
   });
 
-  // TODO: vincular FunnelFirematOpportunity cuando se agregue campo clienteId al modelo
 
   return oportunidades;
 }

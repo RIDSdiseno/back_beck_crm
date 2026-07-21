@@ -99,7 +99,6 @@ const isSameCalendarDay = (a: Date, b: Date): boolean =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-// ---------- Validación estructural (no dinámica) ----------
 
 const validateStructuralConstraints = (etapa: string, montoEstimado: number | null): void => {
   if (etapa === 'GANADA' && (montoEstimado === null || montoEstimado <= 0)) {
@@ -107,7 +106,6 @@ const validateStructuralConstraints = (etapa: string, montoEstimado: number | nu
   }
 };
 
-// ---------- Validación dinámica FIREMAT ----------
 
 interface CamposSnapshotFiremat {
   cliente: string | null;
@@ -165,7 +163,6 @@ async function ejecutarValidacionDinamicaFiremat(
   etapaDestino: string,
   c: CamposSnapshotFiremat
 ): Promise<{ bloqueos: string[]; advertencias: string[]; puedeAvanzar: boolean; reglasCargadas: string[] }> {
-  // Firemat valida requisitos de entrada de la etapa destino.
   const mapa = await obtenerMapaReglasValidacion('FIREMAT', etapaDestino);
   const mapaDestino = mapa;
   const resultado = { bloqueos: [] as string[], advertencias: [] as string[] };
@@ -208,7 +205,6 @@ async function ejecutarValidacionDinamicaFiremat(
   clasificarResultadoValidacion('PROXIMA_ACCION_REQUERIDA',       isBlank(c.proximaAccion),                 mapa, resultado);
   clasificarResultadoValidacion('FECHA_PROXIMA_ACCION_REQUERIDA', isBlank(c.fechaProximaAccion),            mapa, resultado);
 
-  // Checks de cierre: se evalúan contra el mapa de la etapa destino
   if (etapaDestino === 'GANADA') {
     clasificarResultadoValidacion('GANADA_DOCUMENTO_RESPALDO',          isBlank(c.documentoRespaldo), mapaDestino, resultado);
     clasificarResultadoValidacion('GANADA_FLUJO_POSTERIOR_REQUERIDO',   isBlank(c.flujoPosterior),    mapaDestino, resultado);
@@ -681,7 +677,6 @@ const buildUpdateData = (
   if (hasOwn(body, 'proximaAccion')) data.proximaAccion = proximaAccion;
   if (hasOwn(body, 'fechaProximaAccion')) {
     data.fechaProximaAccion = fechaProximaAccion;
-    // Incrementar cuando se reprograma: anterior fecha → nueva fecha distinta (no null→fecha ni fecha→null)
     if (
       current.fechaProximaAccion !== null &&
       fechaProximaAccion !== null &&
@@ -807,7 +802,6 @@ export const createFunnelFiremat = async (req: Request, res: Response): Promise<
     validateStructuralConstraints(etapa, montoEstimado);
 
     const snapshot = snapshotDesdeBody(body);
-    // Al crear, no hay etapa previa; etapaParaReglas = etapaDestino = etapa inicial
     const observacionCrear = getNullableString(body.observacionCamposFaltantes);
     let advertenciasCrear: string[] = [];
     if (!observacionCrear) {
@@ -878,7 +872,6 @@ export const updateFunnelFiremat = async (req: Request, res: Response): Promise<
     const body = req.body as Record<string, unknown>;
     validarMotivosEnBody(body);
 
-    // Check permission if cliente is changing
     if (req.userId && req.userRole && req.userRole !== 'administrador' && hasOwn(body, 'cliente')) {
       const nuevoCliente = getString(body.cliente);
       if (nuevoCliente !== current.cliente) {
@@ -1007,9 +1000,6 @@ export const patchEtapaFunnelFiremat = async (req: Request, res: Response): Prom
       });
 
       if (!esRetroceso) {
-        // Solo la observación enviada en este PATCH habilita el bypass.
-        // No leer current.observacionCamposFaltantes: si ese campo tiene valor
-        // guardado de antes, no debe evitar la validación en futuros avances.
         const observacionFinalPatch = hasOwn(body, 'observacionCamposFaltantes')
           ? getNullableString(body.observacionCamposFaltantes)
           : null;
