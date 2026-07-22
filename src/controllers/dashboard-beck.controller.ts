@@ -1,53 +1,12 @@
 import { Request, Response } from 'express';
 import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
-import { calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
+import { calcularRendimientoPorTrabajador, calcularRendimientoDetallado, ValidacionIngenieriaFiltro, validacionesIngenieriaValidas } from '../services/rendimientoTrabajador.service';
+import { getDateRange, rangosRapidosValidos, RangoRapido } from '../helpers/rangoFechas';
 
-type RangoDashboard = 'hoy' | 'semana' | 'mes' | 'completa';
+type RangoDashboard = RangoRapido;
 
-const rangosValidos: RangoDashboard[] = ['hoy', 'semana', 'mes', 'completa'];
-
-const startOfDay = (date: Date): Date => {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
-};
-
-const endOfDay = (date: Date): Date => {
-  const result = new Date(date);
-  result.setHours(23, 59, 59, 999);
-  return result;
-};
-
-const getDateRange = (rango: RangoDashboard): { fechaDesde: Date | null; fechaHasta: Date | null } => {
-  const now = new Date();
-
-  if (rango === 'completa') {
-    return { fechaDesde: null, fechaHasta: null };
-  }
-
-  if (rango === 'hoy') {
-    return {
-      fechaDesde: startOfDay(now),
-      fechaHasta: endOfDay(now),
-    };
-  }
-
-  if (rango === 'semana') {
-    const fechaDesde = startOfDay(now);
-    fechaDesde.setDate(fechaDesde.getDate() - 6);
-
-    return {
-      fechaDesde,
-      fechaHasta: endOfDay(now),
-    };
-  }
-
-  return {
-    fechaDesde: new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0),
-    fechaHasta: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
-  };
-};
+const rangosValidos: RangoDashboard[] = rangosRapidosValidos;
 
 const isUuid = (value: string): boolean =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
@@ -241,5 +200,140 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
   } catch (error) {
     console.error('Error al obtener dashboard Beck:', error);
     res.status(500).json({ error: 'Error al obtener dashboard Beck' });
+  }
+};
+
+const parseFechaParam = (value: unknown): Date | null => {
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+/**
+ * GET /api/dashboard/beck/rendimiento-trabajadores
+ *
+ * Endpoint delgado y dedicado al bloque "Rendimiento por trabajador" del
+ * Dashboard Beck. Tiene sus propios filtros (obra, trabajador, rango de
+ * fechas, validación de Ingeniería) totalmente independientes de los
+ * filtros globales de GET /api/dashboard/beck, para no afectar KPIs,
+ * producción por piso ni producción por persona. Reutiliza el 100% de la
+ * lógica de cálculo de rendimiento (calcularRendimientoDetallado).
+ */
+export const getRendimientoTrabajadores = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const obraId = typeof req.query.obraId === 'string' && req.query.obraId.trim() !== ''
+      ? req.query.obraId.trim()
+      : undefined;
+    const trabajador = typeof req.query.trabajador === 'string' && req.query.trabajador.trim() !== ''
+      ? req.query.trabajador.trim()
+      : undefined;
+    const rango = typeof req.query.rango === 'string' && req.query.rango.trim() !== ''
+      ? req.query.rango.trim()
+      : 'completa';
+    const validacionIngenieria = typeof req.query.validacionIngenieria === 'string' && req.query.validacionIngenieria.trim() !== ''
+      ? req.query.validacionIngenieria.trim()
+      : 'todos';
+
+    if (!rangosValidos.includes(rango as RangoDashboard)) {
+      res.status(400).json({ error: 'Rango invalido' });
+      return;
+    }
+
+    if (!validacionesIngenieriaValidas.includes(validacionIngenieria as ValidacionIngenieriaFiltro)) {
+      res.status(400).json({ error: 'Filtro de validacion de Ingenieria invalido' });
+      return;
+    }
+
+    if (obraId && !isUuid(obraId)) {
+      res.status(404).json({ error: 'Obra no encontrada' });
+      return;
+    }
+
+    if (obraId) {
+      const obraExiste = await prisma.obra.findUnique({ where: { id: obraId }, select: { id: true } });
+      if (!obraExiste) {
+        res.status(404).json({ error: 'Obra no encontrada' });
+        return;
+      }
+    }
+
+    const fechaInicioParam = parseFechaParam(req.query.fechaInicio);
+    const fechaFinParam = parseFechaParam(req.query.fechaFin);
+
+    let fechaDesde: Date | null;
+    let fechaHasta: Date | null;
+    let rangoEfectivo: string;
+
+    if (fechaInicioParam && fechaFinParam) {
+      fechaDesde = new Date(fechaInicioParam);
+      fechaDesde.setHours(0, 0, 0, 0);
+      fechaHasta = new Date(fechaFinParam);
+      fechaHasta.setHours(23, 59, 59, 999);
+      rangoEfectivo = 'personalizado';
+    } else {
+      const rangoDashboard = rango as RangoDashboard;
+      const resuelto = getDateRange(rangoDashboard);
+      fechaDesde = resuelto.fechaDesde;
+      fechaHasta = resuelto.fechaHasta;
+      rangoEfectivo = rangoDashboard;
+    }
+
+    const where: Prisma.RegistroTerrenoWhereInput = {};
+    if (obraId) where.obraId = obraId;
+    if (trabajador) where.nombreSellador = trabajador;
+    if (fechaDesde && fechaHasta) where.fecha = { gte: fechaDesde, lte: fechaHasta };
+
+    const [trabajadoresDisponiblesRaw, registros] = await Promise.all([
+      prisma.registroTerreno.findMany({
+        where: obraId ? { obraId } : undefined,
+        distinct: ['nombreSellador'],
+        select: { nombreSellador: true },
+        orderBy: { nombreSellador: 'asc' },
+      }),
+      prisma.registroTerreno.findMany({
+        where,
+        select: {
+          fecha: true,
+          tipoRegistro: true,
+          nombreSellador: true,
+          cantidadSellos: true,
+          metrosLineales: true,
+          codigoBeck: true,
+          obraId: true,
+          estado: true,
+          obra: {
+            select: {
+              nombre: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    const trabajadoresDisponibles = trabajadoresDisponiblesRaw
+      .map((r) => r.nombreSellador?.trim())
+      .filter((n): n is string => Boolean(n));
+
+    const { trabajadores, detalleCodigos } = await calcularRendimientoDetallado(
+      registros,
+      validacionIngenieria as ValidacionIngenieriaFiltro,
+    );
+
+    res.json({
+      filtros: {
+        obraId: obraId ?? null,
+        trabajador: trabajador ?? null,
+        rango: rangoEfectivo,
+        fechaDesde: fechaDesde?.toISOString() ?? null,
+        fechaHasta: fechaHasta?.toISOString() ?? null,
+        validacionIngenieria,
+      },
+      trabajadoresDisponibles,
+      trabajadores,
+      detalleCodigos,
+    });
+  } catch (error) {
+    console.error('Error al obtener rendimiento por trabajador:', error);
+    res.status(500).json({ error: 'Error al obtener rendimiento por trabajador' });
   }
 };

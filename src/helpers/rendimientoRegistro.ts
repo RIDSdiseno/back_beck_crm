@@ -74,6 +74,7 @@ export type RendimientoResult = {
   cantidadEjecutada: number | null;
   rendimientoIndividual: number | null;
   rendimientoIndividualPct: number | null;
+  rendimientoEsperado: number | null;
 };
 
 /**
@@ -88,7 +89,7 @@ export function calcularRendimientoIndividual(reg: Record<string, unknown>): Ren
   const cantidadEjecutada = calcularCantidadEjecutada(reg);
 
   if (cantidadEjecutada === null) {
-    return { cantidadEjecutada: null, rendimientoIndividual: null, rendimientoIndividualPct: null };
+    return { cantidadEjecutada: null, rendimientoIndividual: null, rendimientoIndividualPct: null, rendimientoEsperado: null };
   }
 
   const tipo = String(reg.tipoRegistro ?? reg.tipo_registro ?? '');
@@ -96,7 +97,7 @@ export function calcularRendimientoIndividual(reg: Record<string, unknown>): Ren
   const rend = rendEsperado(reg, camel, snake);
 
   if (!rend) {
-    return { cantidadEjecutada, rendimientoIndividual: null, rendimientoIndividualPct: null };
+    return { cantidadEjecutada, rendimientoIndividual: null, rendimientoIndividualPct: null, rendimientoEsperado: null };
   }
 
   const ri = cantidadEjecutada / rend;
@@ -105,5 +106,6 @@ export function calcularRendimientoIndividual(reg: Record<string, unknown>): Ren
     cantidadEjecutada,
     rendimientoIndividual: Math.round(ri * 10000) / 10000,
     rendimientoIndividualPct: Math.round(ri * 10000) / 100,
+    rendimientoEsperado: rend,
   };
 }
