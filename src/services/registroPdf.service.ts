@@ -360,17 +360,11 @@ export async function generateRegistroPdfBuffer(
     if (signatureOptions?.pathData && !signatureOptions.skipRender) {
       doc.y += 4;
 
-      pdfSectionHeader(doc, 'VALIDACIÓN DEL CLIENTE');
+      pdfSectionHeader(doc, 'FIRMA DEL CLIENTE');
 
-      const clienteBadgeY = doc.y;
-      doc.rect(PDF_MARGIN, clienteBadgeY, 132, 13).fill('#2563eb');
-      doc.font('Helvetica-Bold').fontSize(7).fillColor('#ffffff')
-        .text('VALIDADO POR CLIENTE', PDF_MARGIN + 6, clienteBadgeY + 3.5, { width: 120, lineBreak: false });
-      doc.y = clienteBadgeY + 17;
-
-      pdfFieldRow(doc, 'Firmado por:', signatureOptions.firmadoPor || '-');
+      pdfFieldRow(doc, 'Nombre del firmante:', signatureOptions.firmadoPor || '-');
       if (signatureOptions.firmadoAt) {
-        pdfFieldRow(doc, 'Fecha de firma:', formatDateTime(signatureOptions.firmadoAt));
+        pdfFieldRow(doc, 'Fecha:', formatDateTime(signatureOptions.firmadoAt));
       }
 
       doc.y += 5;
@@ -387,7 +381,7 @@ export async function generateRegistroPdfBuffer(
         .strokeColor('#cbd5e1').lineWidth(1).stroke();
 
       doc.font('Helvetica').fontSize(6.8).fillColor('#94a3b8')
-        .text('Firma digital del cliente', sigBoxX + 7, sigBoxY + sigBoxH - 12, { lineBreak: false });
+        .text('Firma', sigBoxX + 7, sigBoxY + sigBoxH - 12, { lineBreak: false });
 
       const padding = 8;
       const availW = sigBoxW - padding * 2;

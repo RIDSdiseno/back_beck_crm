@@ -27,6 +27,7 @@ const ROLES_ASIGNABLES_INGENIERIA: RolUsuario[] = [
   RolUsuario.visualizador,
   RolUsuario.vendedor,
   RolUsuario.jefeobra,
+  RolUsuario.cliente,
 ];
 
 const esIngenieria = (req: Request): boolean => req.userRole === RolUsuario.ingenieria;

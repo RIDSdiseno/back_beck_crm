@@ -22,7 +22,6 @@ import {
   crearHitoObra,
   actualizarHitoObra,
   eliminarHitoObra,
-  guardarCantidadesHito,
   terminarHitoObra,
 } from '../controllers/hitosObra.controller';
 import { authenticate } from '../middlewares/auth';
@@ -102,13 +101,6 @@ router.delete(
   authenticate,
   requirePermission('beck_obras', 'editar'),
   eliminarHitoObra,
-);
-
-router.put(
-  '/:obraId/hitos/:hitoId/cantidades',
-  authenticate,
-  requirePermission('beck_obras', 'editar'),
-  guardarCantidadesHito,
 );
 
 router.patch(

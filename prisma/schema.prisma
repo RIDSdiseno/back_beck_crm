@@ -175,6 +175,7 @@ model RegistroTerreno {
   motivoRechazoInspeccion     String?                  @map("motivo_rechazo_inspeccion")
   firmaClienteUrl             String?                  @map("firma_cliente_url")
   pdfFirmadoUrl               String?                  @map("pdf_firmado_url")
+  nombreFirmanteCliente       String?                  @db.VarChar(255) @map("nombre_firmante_cliente")
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
@@ -776,7 +777,6 @@ model ConfiguracionItemizadoOpcionObra {
   moneda                              MonedaItemizado?
   itemizadoOpcion                     ItemizadoOpcion    @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
   obra                                Obra               @relation(fields: [obraId], references: [id], onDelete: Cascade)
-  cantidadesHito                      HitoObraCantidad[]
 
   @@unique([obraId, itemizadoOpcionId])
   @@index([obraId])
@@ -786,9 +786,7 @@ model ConfiguracionItemizadoOpcionObra {
 
 // ─── Estados de Avance ────────────────────────────────────────────────────────
 // Hitos por obra. Cada hito muestra automáticamente TODOS los itemizados
-// configurados de su obra; lo único propio del hito son sus cantidades
-// (HitoObraCantidad, filas dispersas: solo existe fila cuando el usuario
-// ingresó una cantidad). Código BECK / Itemizado BECK / Itemizado Mandante /
+// configurados de su obra. Código BECK / Itemizado BECK / Itemizado Mandante /
 // PU / moneda NUNCA se copian aquí: se leen por join desde
 // ConfiguracionItemizadoOpcionObra → ItemizadoOpcion.
 
@@ -810,31 +808,13 @@ model HitoObra {
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  obra         Obra               @relation(fields: [obraId], references: [id], onDelete: Cascade)
-  terminadoPor Usuario?           @relation("HitosTerminadosPorUsuario", fields: [terminadoPorId], references: [id])
-  cantidades   HitoObraCantidad[]
+  obra         Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  terminadoPor Usuario? @relation("HitosTerminadosPorUsuario", fields: [terminadoPorId], references: [id])
 
   @@unique([obraId, orden])
   @@index([obraId])
   @@index([terminadoPorId])
   @@map("hitos_obra")
-}
-
-model HitoObraCantidad {
-  id                           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  hitoObraId                   String   @map("hito_obra_id") @db.Uuid
-  configuracionItemizadoObraId String   @map("configuracion_itemizado_obra_id") @db.Uuid
-  cantidadHito                 Decimal? @map("cantidad_hito") @db.Decimal(14, 2)
-  createdAt                    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
-
-  hitoObra                   HitoObra                         @relation(fields: [hitoObraId], references: [id], onDelete: Cascade)
-  configuracionItemizadoObra ConfiguracionItemizadoOpcionObra @relation(fields: [configuracionItemizadoObraId], references: [id], onDelete: Cascade)
-
-  @@unique([hitoObraId, configuracionItemizadoObraId])
-  @@index([hitoObraId])
-  @@index([configuracionItemizadoObraId])
-  @@map("hitos_obra_cantidades")
 }
 
 model ConfiguracionValidacion {
@@ -902,10 +882,7 @@ model ObraTipoRegistro {
   @@map("obra_tipos_registro")
 }
 
-// Tabla de tramos "holgura ≤ X → factor Y" editable por obra y tipo de registro.
-// Reemplaza la tabla fija de calculosRegistroTerreno.ts para esa obra+tipo; si una
-// obra no tiene tramos propios para un tipo, se usan los valores por defecto
-// (getTramosHolguraPorDefecto). orden define la evaluación ascendente por holguraMax.
+
 model FactorHolguraTramo {
   id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   obraId       String   @map("obra_id") @db.Uuid

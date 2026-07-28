@@ -429,6 +429,7 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
         fotoUrl: true,
         validadoCliente: true,
         validadoClienteAt: true,
+        nombreFirmanteCliente: true,
         pdfFirmadoUrl: true,
         validadoClientePor: {
           select: {
@@ -472,6 +473,7 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
         ...registro,
         validadoCliente,
         validadoClienteAt: original.validadoClienteAt,
+        nombreFirmanteCliente: original.nombreFirmanteCliente,
         validadoClientePor: original.validadoClientePor,
         pdfFirmadoUrl: original.pdfFirmadoUrl,
         estado: validadoCliente ? 'Validado' : 'No validado',
@@ -504,8 +506,31 @@ export const getRegistrosObra = async (req: Request, res: Response): Promise<voi
   }
 };
 
-function validarFirmaBody(body: unknown): { ok: true; pathData: string; canvasWidth: number; canvasHeight: number } | { ok: false; error: string } {
-  const { pathData, canvasWidth, canvasHeight } = (body ?? {}) as Record<string, unknown>;
+function validarFirmaBody(body: unknown): { ok: true; nombreFirmanteCliente: string; pathData: string; canvasWidth: number; canvasHeight: number } | { ok: false; error: string } {
+  
+  const {
+    nombreFirmanteCliente, 
+    pathData,
+    canvasWidth,
+    canvasHeight,
+  } = (body ?? {}) as Record<string, unknown>;  
+
+  if (typeof nombreFirmanteCliente !== 'string' ||
+    nombreFirmanteCliente.trim().length === 0
+
+  ){
+    return{
+      ok: false,
+      error: 'El nombre del firmante es obligatorio',
+    };
+  }
+
+  if (nombreFirmanteCliente.trim().length > 255) {
+    return{
+      ok: false,
+      error: 'El nombre del firmante no puede superar los 255 caracteres',
+    };
+  }
 
   if (!pathData || typeof pathData !== 'string' || pathData.trim().length === 0) {
     return { ok: false, error: 'Falta la firma del cliente' };
@@ -520,13 +545,14 @@ function validarFirmaBody(body: unknown): { ok: true; pathData: string; canvasWi
     return { ok: false, error: 'Dimensiones de canvas inválidas' };
   }
 
-  return { ok: true, pathData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight) };
+  return { ok: true, nombreFirmanteCliente: nombreFirmanteCliente.trim(), pathData, canvasWidth: Number(canvasWidth), canvasHeight: Number(canvasHeight) };
 }
 
 const VALIDADO_CLIENTE_SELECT = {
   id: true,
   validadoCliente: true,
   validadoClienteAt: true,
+  nombreFirmanteCliente: true,
   pdfFirmadoUrl: true,
   validadoClientePor: {
     select: {
@@ -584,6 +610,7 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
         estado: true,
         validadoCliente: true,
         validadoClienteAt: true,
+        nombreFirmanteCliente: true,
         pdfFirmadoUrl: true,
         validadoClientePor: {
           select: {
@@ -618,6 +645,7 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
           id: registro.id,
           validadoCliente: true,
           validadoClienteAt: registro.validadoClienteAt,
+          nombreFirmanteCliente: registro.nombreFirmanteCliente,
           validadoClientePor: registro.validadoClientePor,
           pdfFirmadoUrl: registro.pdfFirmadoUrl,
           estado: 'Validado',
@@ -641,13 +669,8 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
       return;
     }
 
-    const firmante = await prisma.usuario.findUnique({
-      where: { id: req.userId },
-      select: { nombre: true },
-    });
-
     const firmadoAt = new Date();
-    const firmadoPor = firmante?.nombre || 'Cliente';
+    const firmadoPor = firma.nombreFirmanteCliente;
 
     let pdfBuffer: Buffer;
     try {
@@ -719,6 +742,7 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
         validadoCliente: true,
         validadoClientePorId: req.userId,
         validadoClienteAt: firmadoAt,
+        nombreFirmanteCliente: firma.nombreFirmanteCliente,
         pdfFirmadoUrl: pdfResult.secure_url,
       },
     });
@@ -737,6 +761,7 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
             id: actual.id,
             validadoCliente: actual.validadoCliente,
             validadoClienteAt: actual.validadoClienteAt,
+            nombreFirmanteCliente: actual.nombreFirmanteCliente,
             validadoClientePor: actual.validadoClientePor,
             pdfFirmadoUrl: actual.pdfFirmadoUrl,
             estado: actual.validadoCliente ? 'Validado' : 'No validado',
@@ -758,6 +783,7 @@ export const validarRegistroCliente = async (req: Request, res: Response): Promi
         id: actualizado?.id ?? registroId,
         validadoCliente: actualizado?.validadoCliente ?? true,
         validadoClienteAt: actualizado?.validadoClienteAt ?? null,
+        nombreFirmanteCliente: actualizado?.nombreFirmanteCliente ?? firma.nombreFirmanteCliente,
         validadoClientePor: actualizado?.validadoClientePor ?? null,
         pdfFirmadoUrl: actualizado?.pdfFirmadoUrl ?? pdfResult.secure_url,
         estado: 'Validado',
@@ -940,12 +966,8 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
       motivo: 'El registro ya estaba firmado.',
     }));
 
-    const firmante = await prisma.usuario.findUnique({
-      where: { id: req.userId },
-      select: { nombre: true },
-    });
     const firmadoAt = new Date();
-    const firmadoPor = firmante?.nombre || 'Cliente';
+    const firmadoPor = firma.nombreFirmanteCliente;
 
     const exitosos: Array<{ id: string; pdfFirmadoUrl: string }> = [];
     const fallidos: Array<{ id: string; motivo: string }> = [];
@@ -998,6 +1020,7 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
             validadoCliente: true,
             validadoClientePorId: req.userId,
             validadoClienteAt: firmadoAt,
+            nombreFirmanteCliente: firma.nombreFirmanteCliente,
             pdfFirmadoUrl: pdfResult.secure_url,
           },
         });

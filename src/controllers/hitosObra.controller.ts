@@ -145,13 +145,6 @@ type ItemizadoResuelto = {
   precioUnitario: Prisma.Decimal | null;
   moneda: string | null;
   orden: number | null;
-  // Ejecución acumulada GLOBAL de la obra (sin filtro de fecha). Se
-  // mantiene EXCLUSIVAMENTE para no tocar la lógica de saldo pendiente del
-  // frontend (calcularSaldoPendiente en EstadosAvanceObraDrawer.tsx), que
-  // sigue basándose en el total histórico, no en un período. La ejecución
-  // POR PERÍODO de cada hito vive aparte, en hito.cantidadesEjecutadas/
-  // hito.subtotales — nunca se mezclan ambas nociones en este mismo campo.
-  cantidadEjecutada: number;
 };
 
 const calcularSubtotal = (
@@ -269,10 +262,6 @@ const resolverItemizadosDeObra = async (
     select: { id: true, codigoBeck: true, elementoPasante: true },
   });
 
-  const cantidadEjecutadaGlobalPorCodigoBeck = sumarCantidadPorCodigoBeck(registrosValidados);
-  const cantidadEjecutadaDe = (codigoBeck: string | null): number =>
-    codigoBeck ? cantidadEjecutadaGlobalPorCodigoBeck.get(codigoBeck) ?? 0 : 0;
-
   const fromConfigs: ItemizadoResuelto[] = configs
     .filter((c) => c.visible)
     .map((c) => ({
@@ -287,7 +276,6 @@ const resolverItemizadosDeObra = async (
       precioUnitario: c.precioUnitario,
       moneda: c.moneda,
       orden: c.orden,
-      cantidadEjecutada: cantidadEjecutadaDe(c.itemizadoOpcion.codigoBeck),
     }));
 
   const fromGlobal: ItemizadoResuelto[] = globalVisibles.map((op) => ({
@@ -299,7 +287,6 @@ const resolverItemizadosDeObra = async (
     precioUnitario: null,
     moneda: null,
     orden: null,
-    cantidadEjecutada: cantidadEjecutadaDe(op.codigoBeck),
   }));
 
   return [...fromConfigs, ...fromGlobal].sort((a, b) => {
@@ -336,12 +323,6 @@ export const listarHitosObra = async (req: Request, res: Response): Promise<void
           terminadoPorId: true,
           fechaDesde: true,
           fechaHasta: true,
-          cantidades: {
-            select: {
-              cantidadHito: true,
-              configuracionItemizadoObra: { select: { itemizadoOpcionId: true } },
-            },
-          },
         },
       }),
     ]);
@@ -375,13 +356,6 @@ export const listarHitosObra = async (req: Request, res: Response): Promise<void
         terminadoPorId: h.terminadoPorId,
         fechaDesde: h.fechaDesde ? h.fechaDesde.toISOString() : null,
         fechaHasta: h.fechaHasta ? h.fechaHasta.toISOString() : null,
-        tieneCantidadesGuardadas: h.cantidades.length > 0,
-        cantidades: Object.fromEntries(
-          h.cantidades.map((c) => [
-            c.configuracionItemizadoObra.itemizadoOpcionId,
-            c.cantidadHito,
-          ]),
-        ),
         cantidadesEjecutadas,
         subtotales,
       };
@@ -580,143 +554,6 @@ export const eliminarHitoObra = async (req: Request, res: Response): Promise<voi
   }
 };
 
-export const guardarCantidadesHito = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const obraId = req.params.obraId as string;
-    const hitoId = req.params.hitoId as string;
-    const obra = await getObraOr404(obraId, res);
-    if (!obra) return;
-    const hito = await getHitoDeObraOr404(obraId, hitoId, res);
-    if (!hito) return;
-    if (bloquearSiTerminado(hito, res)) return;
-
-    const body = req.body as { items?: unknown };
-    if (!Array.isArray(body.items)) {
-      res.status(400).json({ success: false, error: 'items debe ser un arreglo' });
-      return;
-    }
-
-    type ItemInput = { itemizadoOpcionId: string; cantidadHito: number | null };
-    const items: ItemInput[] = [];
-    const vistos = new Set<string>();
-
-    for (const raw of body.items as unknown[]) {
-      if (typeof raw !== 'object' || raw === null) {
-        res.status(400).json({ success: false, error: 'Cada item debe ser un objeto' });
-        return;
-      }
-      const { itemizadoOpcionId, cantidadHito } = raw as Record<string, unknown>;
-      if (typeof itemizadoOpcionId !== 'string' || !UUID_REGEX.test(itemizadoOpcionId)) {
-        res.status(400).json({
-          success: false,
-          error: `itemizadoOpcionId inválido: ${String(itemizadoOpcionId)}`,
-        });
-        return;
-      }
-      if (vistos.has(itemizadoOpcionId)) {
-        res.status(400).json({
-          success: false,
-          error: `itemizadoOpcionId duplicado en el payload: ${itemizadoOpcionId}`,
-        });
-        return;
-      }
-      vistos.add(itemizadoOpcionId);
-      if (
-        cantidadHito !== null &&
-        !(typeof cantidadHito === 'number' && Number.isFinite(cantidadHito) && cantidadHito >= 0)
-      ) {
-        res.status(400).json({
-          success: false,
-          error: `cantidadHito debe ser un número no negativo o null en el item ${itemizadoOpcionId}`,
-        });
-        return;
-      }
-      items.push({ itemizadoOpcionId, cantidadHito: cantidadHito as number | null });
-    }
-
-    if (items.length === 0) {
-      res.json({ success: true, data: [] });
-      return;
-    }
-
-    const encontrados = await prisma.itemizadoOpcion.findMany({
-      where: { id: { in: items.map((i) => i.itemizadoOpcionId) } },
-      select: { id: true },
-    });
-    const idsEncontrados = new Set(encontrados.map((e) => e.id));
-    const faltantes = items
-      .map((i) => i.itemizadoOpcionId)
-      .filter((id) => !idsEncontrados.has(id));
-    if (faltantes.length > 0) {
-      res.status(404).json({
-        success: false,
-        error: 'Algunos itemizados no existen',
-        ids: faltantes,
-      });
-      return;
-    }
-
-    const results = await prisma.$transaction(async (tx) => {
-      const out = [];
-      for (const item of items) {
-        if (item.cantidadHito === null) {
-          const configExistente = await tx.configuracionItemizadoOpcionObra.findUnique({
-            where: {
-              obraId_itemizadoOpcionId: {
-                obraId,
-                itemizadoOpcionId: item.itemizadoOpcionId,
-              },
-            },
-            select: { id: true },
-          });
-          if (configExistente) {
-            await tx.hitoObraCantidad.deleteMany({
-              where: {
-                hitoObraId: hitoId,
-                configuracionItemizadoObraId: configExistente.id,
-              },
-            });
-          }
-          out.push({ itemizadoOpcionId: item.itemizadoOpcionId, cantidadHito: null });
-          continue;
-        }
-
-        const config = await tx.configuracionItemizadoOpcionObra.upsert({
-          where: {
-            obraId_itemizadoOpcionId: {
-              obraId,
-              itemizadoOpcionId: item.itemizadoOpcionId,
-            },
-          },
-          create: { obraId, itemizadoOpcionId: item.itemizadoOpcionId, visible: true },
-          update: {},
-          select: { id: true, obraId: true },
-        });
-
-        const cantidad = await tx.hitoObraCantidad.upsert({
-          where: {
-            hitoObraId_configuracionItemizadoObraId: {
-              hitoObraId: hitoId,
-              configuracionItemizadoObraId: config.id,
-            },
-          },
-          create: {
-            hitoObraId: hitoId,
-            configuracionItemizadoObraId: config.id,
-            cantidadHito: item.cantidadHito,
-          },
-          update: { cantidadHito: item.cantidadHito },
-        });
-        out.push(cantidad);
-      }
-      return out;
-    });
-
-    res.json({ success: true, data: results });
-  } catch (error) {
-    handleError(res, error);
-  }
-};
 
 // PATCH /obras/:obraId/hitos/:hitoId/terminar
 // Idempotente: si el hito ya está terminado, devuelve éxito sin reescribir

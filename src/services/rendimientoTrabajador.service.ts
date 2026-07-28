@@ -31,16 +31,25 @@ const cumpleValidacion = (estado: string | undefined, filtro: ValidacionIngenier
   return estado === filtro;
 };
 
+export type RendimientoCodigoTrabajador = {
+  obraId: string;
+  obraNombre: string;
+  codigoBeck: string;
+  cantidadEjecutada: number;
+  cantidadEsperada: number;
+  cumplimientoPct: number | null;
+};
+
 export type RendimientoTrabajadorDetalle = {
   nombreSellador: string;
   totalRegistros: number;
   registrosValidados: number;
   registrosNoValidados: number;
-  cantidadEjecutadaTotal: number;
-  cantidadEsperadaTotal: number;
-  rendimientoAcumulado: number;
-  rendimientoAcumuladoPct: number;
+  totalEjecutado: number;
+  totalEsperado: number;
+  rendimientoGlobalPct: number | null;
   codigosTrabajados: number;
+  codigos: RendimientoCodigoTrabajador[];
 };
 
 export type DetalleCodigoBeck = {
@@ -288,24 +297,18 @@ export async function calcularRendimientoDetallado(
 
   const agrupadoTrabajador = new Map<string, {
     totalRegistros: number;
-    cantidadEjecutadaTotal: number;
-    sumaRendimiento: number;
     codigos: Set<string>;
   }>();
 
   for (const reg of activos) {
-    const { cantidadEjecutada, rendimientoIndividual, codigoBeck } = reg;
+    const { codigoBeck } = reg;
     const sellador = reg.nombreSellador?.trim() || 'Sin asignar';
     const acc = agrupadoTrabajador.get(sellador) ?? {
       totalRegistros: 0,
-      cantidadEjecutadaTotal: 0,
-      sumaRendimiento: 0,
       codigos: new Set<string>(),
     };
 
     acc.totalRegistros += 1;
-    acc.cantidadEjecutadaTotal += cantidadEjecutada ?? 0;
-    acc.sumaRendimiento += rendimientoIndividual ?? 0;
     if (codigoBeck) acc.codigos.add(codigoBeck);
 
     agrupadoTrabajador.set(sellador, acc);
@@ -351,27 +354,76 @@ export async function calcularRendimientoDetallado(
     gruposDiarios.set(clave, grupo);
   }
 
-  const esperadoPorTrabajador = new Map<string, number>();
+  // Totales del trabajador (Σ ejecutado, Σ esperado), a partir de los grupos diarios
+  // ya armados (esperado aplicado una vez por día, no por registro). El rendimiento
+  // global del trabajador se calcula como totalEjecutado / totalEsperado × 100 — NUNCA
+  // sumando ni promediando el cumplimientoPct de cada Código BECK.
+  const totalesPorTrabajador = new Map<string, { ejecutado: number; esperado: number }>();
   for (const grupo of gruposDiarios.values()) {
-    esperadoPorTrabajador.set(
-      grupo.nombreSellador,
-      (esperadoPorTrabajador.get(grupo.nombreSellador) ?? 0) + grupo.cantidadEsperada,
-    );
+    const acc = totalesPorTrabajador.get(grupo.nombreSellador) ?? { ejecutado: 0, esperado: 0 };
+    acc.ejecutado += grupo.cantidadEjecutada;
+    acc.esperado += grupo.cantidadEsperada;
+    totalesPorTrabajador.set(grupo.nombreSellador, acc);
+  }
+
+  // Desglose por (trabajador + obra + Código BECK): esto SOLO alimenta la tabla de
+  // detalle por código (cumplimientoPct de cada código, sin cambios); no participa
+  // en el cálculo del rendimiento global de arriba.
+  const codigosPorTrabajador = new Map<string, {
+    obraId: string;
+    obraNombre: string;
+    codigoBeck: string;
+    cantidadEjecutada: number;
+    cantidadEsperada: number;
+  }[]>();
+  for (const grupo of gruposDiarios.values()) {
+    const lista = codigosPorTrabajador.get(grupo.nombreSellador) ?? [];
+    let entry = lista.find((c) => c.obraId === grupo.obraId && c.codigoBeck === grupo.codigoBeck);
+    if (!entry) {
+      entry = {
+        obraId: grupo.obraId,
+        obraNombre: grupo.obraNombre,
+        codigoBeck: grupo.codigoBeck,
+        cantidadEjecutada: 0,
+        cantidadEsperada: 0,
+      };
+      lista.push(entry);
+    }
+    entry.cantidadEjecutada += grupo.cantidadEjecutada;
+    entry.cantidadEsperada += grupo.cantidadEsperada;
+    codigosPorTrabajador.set(grupo.nombreSellador, lista);
   }
 
   const trabajadores: RendimientoTrabajadorDetalle[] = Array.from(agrupadoTrabajador.entries()).map(
     ([nombreSellador, data]) => {
       const validacion = validacionPorTrabajador.get(nombreSellador) ?? { validados: 0, noValidados: 0 };
+      const codigos: RendimientoCodigoTrabajador[] = (codigosPorTrabajador.get(nombreSellador) ?? [])
+        .map((c) => ({
+          obraId: c.obraId,
+          obraNombre: c.obraNombre,
+          codigoBeck: c.codigoBeck,
+          cantidadEjecutada: c.cantidadEjecutada,
+          cantidadEsperada: c.cantidadEsperada,
+          cumplimientoPct: c.cantidadEsperada > 0
+            ? Math.round((c.cantidadEjecutada / c.cantidadEsperada) * 10000) / 100
+            : null,
+        }))
+        .sort((a, b) => (b.cumplimientoPct ?? 0) - (a.cumplimientoPct ?? 0));
+
+      const totales = totalesPorTrabajador.get(nombreSellador) ?? { ejecutado: 0, esperado: 0 };
+
       return {
         nombreSellador,
         totalRegistros: data.totalRegistros,
         registrosValidados: validacion.validados,
         registrosNoValidados: validacion.noValidados,
-        cantidadEjecutadaTotal: data.cantidadEjecutadaTotal,
-        cantidadEsperadaTotal: esperadoPorTrabajador.get(nombreSellador) ?? 0,
-        rendimientoAcumulado: Math.round(data.sumaRendimiento * 10000) / 10000,
-        rendimientoAcumuladoPct: Math.round(data.sumaRendimiento * 10000) / 100,
+        totalEjecutado: totales.ejecutado,
+        totalEsperado: totales.esperado,
+        rendimientoGlobalPct: totales.esperado > 0
+          ? Math.round((totales.ejecutado / totales.esperado) * 10000) / 100
+          : null,
         codigosTrabajados: data.codigos.size,
+        codigos,
       };
     },
   );
