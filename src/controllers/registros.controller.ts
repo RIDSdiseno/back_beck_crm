@@ -1062,7 +1062,9 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        ORDER BY rt.created_at ASC`
     );
 
-    const rowsConRendimiento = await adjuntarRendimientoRegistros(result.rows);
+    const rowsConCodigo = await adjuntarCodigosBeck(result.rows as Record<string, unknown>[]);
+    const rowsConItemizado = await adjuntarItemizadosMandante(rowsConCodigo);
+    const rowsConRendimiento = await adjuntarRendimientoRegistros(rowsConItemizado);
 
     res.json(rowsConRendimiento.map((row) => ({
       ...row,
