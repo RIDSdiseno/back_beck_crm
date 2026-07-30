@@ -340,7 +340,9 @@ export const listarRegistros = async (req: Request, res: Response): Promise<void
     const usuario_id = req.userId;
     const user_rol = req.userRole;
 
-    const where: Prisma.RegistroTerrenoWhereInput = {};
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      cargaCompleta: true,
+    };
 
     if (procesado !== undefined) {
       where.estado = procesado === 'true'
@@ -1196,6 +1198,7 @@ export const rendimientoAcumulado = async (req: Request, res: Response): Promise
     }
 
     const where: Prisma.RegistroTerrenoWhereInput = {
+      cargaCompleta: true,
       fecha: { gte: inicio, lte: fin },
     };
 

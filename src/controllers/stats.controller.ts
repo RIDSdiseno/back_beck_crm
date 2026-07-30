@@ -7,10 +7,13 @@ import { prisma } from '../config/prisma';
  */
 export const getDashboardStats = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const totalRegistros = await prisma.registroTerreno.count();
+    const totalRegistros = await prisma.registroTerreno.count({
+      where: { cargaCompleta: true },
+    });
 
     const registrosProcesados = await prisma.registroTerreno.count({
       where: {
+        cargaCompleta: true,
         estado: {
           in: ['en_revision', 'validado', 'rechazado'],
         },
@@ -18,10 +21,11 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
     });
 
     const registrosPendientes = await prisma.registroTerreno.count({
-      where: { estado: 'pendiente' },
+      where: { estado: 'pendiente', cargaCompleta: true },
     });
 
     const totalSellosResult = await prisma.registroTerreno.aggregate({
+      where: { cargaCompleta: true },
       _sum: {
         cantidadSellos: true,
       },
@@ -48,6 +52,7 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
     const registrosHoy = await prisma.registroTerreno.count({
       where: {
+        cargaCompleta: true,
         createdAt: {
           gte: hoy,
           lt: manana,
@@ -57,6 +62,7 @@ export const getDashboardStats = async (_req: Request, res: Response): Promise<v
 
     const registrosPorObra = await prisma.registroTerreno.groupBy({
       by: ['obraId'],
+      where: { cargaCompleta: true },
       _count: {
         id: true,
       },
