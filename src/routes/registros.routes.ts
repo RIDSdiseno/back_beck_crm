@@ -15,6 +15,8 @@ import {
   getControlInspeccion,
   crearControlInspeccion,
   verDetalleInspeccion,
+  descargarInspeccionPdf,
+  descargarInspeccionesPdfConsolidado,
   revisarInspeccion,
   revisarCorreccionInspeccion,
 } from '../controllers/registros.controller';
@@ -194,6 +196,29 @@ router.get(
   authenticate,
   requirePermission(['beck_procesamiento_ingenieria', 'beck_registro'], 'ver'),
   verDetalleInspeccion,
+);
+
+/**
+ * GET /api/registros/:id/inspeccion/pdf
+ * Descarga el PDF del control de inspección (checklist + revisión de Ingeniería).
+ */
+router.get(
+  '/:id/inspeccion/pdf',
+  authenticate,
+  requirePermission(['beck_procesamiento_ingenieria', 'beck_registro'], 'ver'),
+  descargarInspeccionPdf,
+);
+
+/**
+ * POST /api/registros/inspeccion/pdf-consolidado
+ * Descarga en un único PDF los controles de inspección de varios registros seleccionados.
+ * Body: { registroIds: string[] }
+ */
+router.post(
+  '/inspeccion/pdf-consolidado',
+  authenticate,
+  requirePermission(['beck_procesamiento_ingenieria', 'beck_registro'], 'ver'),
+  descargarInspeccionesPdfConsolidado,
 );
 
 /**

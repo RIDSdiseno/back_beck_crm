@@ -18,7 +18,8 @@ import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
 import { adjuntarRendimientoRegistros, calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
-import { generateRegistroPdfBuffer } from '../services/registroPdf.service';
+import { generateRegistroPdfBuffer, generateInspeccionPdfBuffer } from '../services/registroPdf.service';
+import { PDFDocument } from 'pdf-lib';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -1544,6 +1545,244 @@ export const verDetalleInspeccion = async (req: Request, res: Response): Promise
   } catch (error) {
     console.error('Error al obtener detalle de inspección:', error);
     res.status(500).json({ error: 'Error al obtener detalle de inspección' });
+  }
+};
+
+/**
+ * GET /api/registros/:id/inspeccion/pdf
+ * Descarga el PDF del control de inspección (checklist del Supervisor + revisión
+ * de Ingeniería) mostrado en el modal "Detalle de inspección".
+ */
+export const descargarInspeccionPdf = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id;
+    if (typeof id !== 'string') {
+      res.status(400).json({ error: 'ID de registro invalido' });
+      return;
+    }
+
+    const registro = await prisma.registroTerreno.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        obra: { select: { nombre: true, codigo: true } },
+        inspeccionEstado: true,
+        seleccionadoInspeccionPor: { select: { nombre: true } },
+        fechaSeleccionInspeccion: true,
+        inspeccionRevisionEstado: true,
+        motivoRechazoInspeccion: true,
+      },
+    });
+
+    if (!registro) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
+    const codigoRegistro = typeof registroConCodigo.codigoBeck === 'string' && registroConCodigo.codigoBeck
+      ? registroConCodigo.codigoBeck
+      : `REG-${registro.id.slice(0, 6).toUpperCase()}`;
+
+    const control = await prisma.controlInspeccion.findFirst({
+      where: { registroTerrenoId: id },
+      orderBy: { fecha: 'desc' },
+      include: {
+        ingeniero: { select: { nombre: true } },
+        parametros: { orderBy: { orden: 'asc' } },
+        fotos: { orderBy: { created_at: 'asc' } },
+      },
+    });
+
+    const fotoUrls = control
+      ? [
+          control.fotoInspeccionUrl,
+          control.fotoNoConformidadUrl,
+          ...control.fotos.map((foto) => foto.url),
+        ].filter((url): url is string => Boolean(url))
+      : [];
+
+    const pdfBuffer = await generateInspeccionPdfBuffer({
+      codigoRegistro,
+      obraNombre: registro.obra.nombre,
+      obraCodigo: registro.obra.codigo,
+      inspeccionEstado: registro.inspeccionEstado,
+      enviadoPorNombre: registro.seleccionadoInspeccionPor?.nombre ?? null,
+      fechaEnvio: registro.fechaSeleccionInspeccion,
+      supervisorNombre: control?.ingeniero?.nombre ?? null,
+      fechaInspeccion: control?.fecha ?? null,
+      conformidad: control?.conformidad ?? null,
+      observaciones: control?.observacion ?? null,
+      fotoUrls,
+      revisionEstado: registro.inspeccionRevisionEstado,
+      motivoRechazo: registro.motivoRechazoInspeccion,
+      parametros: (control?.parametros ?? []).map((p) => ({
+        orden: p.orden,
+        parametro: p.parametro,
+        resultado: p.resultado,
+        observacion: p.observacion,
+        correccionObservacion: p.correccionObservacion,
+      })),
+    });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Inspeccion-${codigoRegistro}.pdf"`);
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error('Error al descargar PDF de inspección:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Error al generar PDF de la inspección' });
+    } else {
+      res.end();
+    }
+  }
+};
+
+const MAX_INSPECCIONES_PDF_CONSOLIDADO = 20;
+
+function validarRegistroIdsInspeccionBody(
+  body: unknown,
+): { ok: true; registroIds: string[] } | { ok: false; error: string } {
+  const { registroIds } = (body ?? {}) as Record<string, unknown>;
+
+  if (!Array.isArray(registroIds) || registroIds.length === 0) {
+    return { ok: false, error: 'Debes seleccionar al menos un registro' };
+  }
+  if (registroIds.length > MAX_INSPECCIONES_PDF_CONSOLIDADO) {
+    return { ok: false, error: `No puedes seleccionar más de ${MAX_INSPECCIONES_PDF_CONSOLIDADO} registros a la vez` };
+  }
+  if (!registroIds.every((id) => typeof id === 'string' && id.trim().length > 0)) {
+    return { ok: false, error: 'IDs de registro inválidos' };
+  }
+  const unicos = new Set(registroIds as string[]);
+  if (unicos.size !== registroIds.length) {
+    return { ok: false, error: 'Hay registros duplicados en la selección' };
+  }
+
+  return { ok: true, registroIds: registroIds as string[] };
+}
+
+/**
+ * POST /api/registros/inspeccion/pdf-consolidado
+ * Descarga en un único PDF los controles de inspección de varios registros
+ * (uno detrás del otro), para no tener que descargarlos de a uno desde el modal.
+ * Body: { registroIds: string[] } (máx. MAX_INSPECCIONES_PDF_CONSOLIDADO)
+ */
+export const descargarInspeccionesPdfConsolidado = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const idsResult = validarRegistroIdsInspeccionBody(req.body);
+    if (!idsResult.ok) {
+      res.status(400).json({ error: idsResult.error });
+      return;
+    }
+    const idsOrdenados = idsResult.registroIds;
+
+    const registros = await prisma.registroTerreno.findMany({
+      where: { id: { in: idsOrdenados } },
+      select: {
+        id: true,
+        obra: { select: { nombre: true, codigo: true } },
+        inspeccionEstado: true,
+        seleccionadoInspeccionPor: { select: { nombre: true } },
+        fechaSeleccionInspeccion: true,
+        inspeccionRevisionEstado: true,
+        motivoRechazoInspeccion: true,
+      },
+    });
+
+    if (registros.length !== idsOrdenados.length) {
+      res.status(404).json({ error: 'Uno o más registros no existen' });
+      return;
+    }
+
+    const noInspeccionados = registros.filter((r) => r.inspeccionEstado !== 'inspeccionado');
+    if (noInspeccionados.length > 0) {
+      res.status(400).json({ error: 'Todos los registros seleccionados deben estar inspeccionados' });
+      return;
+    }
+
+    const registrosConCodigo = await adjuntarCodigosBeck(
+      registros as unknown as Record<string, unknown>[],
+    );
+    const registrosPorId = new Map(registrosConCodigo.map((r) => [(r as { id: string }).id, r]));
+    const registrosEnOrden = idsOrdenados.map((id) => registrosPorId.get(id)!);
+
+    const mergedPdf = await PDFDocument.create();
+
+    for (const registro of registrosEnOrden) {
+      const reg = registro as unknown as {
+        id: string;
+        codigoBeck?: string | null;
+        obra: { nombre: string; codigo: string | null };
+        inspeccionEstado: string;
+        seleccionadoInspeccionPor: { nombre: string } | null;
+        fechaSeleccionInspeccion: Date | null;
+        inspeccionRevisionEstado: string | null;
+        motivoRechazoInspeccion: string | null;
+      };
+
+      const control = await prisma.controlInspeccion.findFirst({
+        where: { registroTerrenoId: reg.id },
+        orderBy: { fecha: 'desc' },
+        include: {
+          ingeniero: { select: { nombre: true } },
+          parametros: { orderBy: { orden: 'asc' } },
+          fotos: { orderBy: { created_at: 'asc' } },
+        },
+      });
+
+      const codigoRegistro = typeof reg.codigoBeck === 'string' && reg.codigoBeck
+        ? reg.codigoBeck
+        : `REG-${reg.id.slice(0, 6).toUpperCase()}`;
+
+      const fotoUrls = control
+        ? [
+            control.fotoInspeccionUrl,
+            control.fotoNoConformidadUrl,
+            ...control.fotos.map((foto) => foto.url),
+          ].filter((url): url is string => Boolean(url))
+        : [];
+
+      const pdfBuffer = await generateInspeccionPdfBuffer({
+        codigoRegistro,
+        obraNombre: reg.obra.nombre,
+        obraCodigo: reg.obra.codigo,
+        inspeccionEstado: reg.inspeccionEstado,
+        enviadoPorNombre: reg.seleccionadoInspeccionPor?.nombre ?? null,
+        fechaEnvio: reg.fechaSeleccionInspeccion,
+        supervisorNombre: control?.ingeniero?.nombre ?? null,
+        fechaInspeccion: control?.fecha ?? null,
+        conformidad: control?.conformidad ?? null,
+        observaciones: control?.observacion ?? null,
+        fotoUrls,
+        revisionEstado: reg.inspeccionRevisionEstado,
+        motivoRechazo: reg.motivoRechazoInspeccion,
+        parametros: (control?.parametros ?? []).map((p) => ({
+          orden: p.orden,
+          parametro: p.parametro,
+          resultado: p.resultado,
+          observacion: p.observacion,
+          correccionObservacion: p.correccionObservacion,
+        })),
+      });
+
+      const sourcePdf = await PDFDocument.load(pdfBuffer);
+      const copiedPages = await mergedPdf.copyPages(sourcePdf, sourcePdf.getPageIndices());
+      copiedPages.forEach((page) => mergedPdf.addPage(page));
+    }
+
+    const mergedBytes = await mergedPdf.save();
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="inspecciones-consolidado.pdf"');
+    res.send(Buffer.from(mergedBytes));
+  } catch (error) {
+    console.error('Error al descargar PDF consolidado de inspecciones:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Error al generar el PDF consolidado de inspecciones' });
+    } else {
+      res.end();
+    }
   }
 };
 

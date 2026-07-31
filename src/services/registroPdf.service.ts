@@ -299,6 +299,275 @@ function buildPdfContent(
 }
 
 
+function pdfBadge(doc: PDFKit.PDFDocument, text: string, color: string): void {
+  const y = doc.y;
+  doc.font('Helvetica-Bold').fontSize(7);
+  const w = doc.widthOfString(text) + 12;
+  doc.rect(PDF_MARGIN, y, w, 13).fill(color);
+  doc.fillColor('#ffffff').text(text, PDF_MARGIN + 6, y + 3.5, { lineBreak: false });
+  doc.y = y + 18;
+}
+
+interface PdfTableCol {
+  title: string;
+  width: number;
+}
+
+function pdfTableHeader(doc: PDFKit.PDFDocument, cols: PdfTableCol[]): void {
+  const y = doc.y;
+  doc.rect(PDF_MARGIN, y, PDF_CONTENT_W, 14).fill('#e2e8f0');
+  let x = PDF_MARGIN;
+  doc.font('Helvetica-Bold').fontSize(6.8).fillColor(TEXT_DARK);
+  cols.forEach((c) => {
+    doc.text(c.title, x + 3, y + 4, { width: c.width - 6, lineBreak: false });
+    x += c.width;
+  });
+  doc.y = y + 14 + 3;
+}
+
+function pdfTableRow(
+  doc: PDFKit.PDFDocument,
+  cells: Array<{ width: number; text: string }>,
+  striped: boolean,
+): void {
+  doc.font('Helvetica').fontSize(6.8);
+  const rowH =
+    Math.max(...cells.map((c) => doc.heightOfString(c.text || '-', { width: c.width - 6 }))) + 4;
+
+  if (doc.y + rowH > PDF_BOTTOM) {
+    doc.addPage();
+    doc.y = PDF_MARGIN;
+  }
+  const rowY = doc.y;
+  if (striped) {
+    doc.rect(PDF_MARGIN, rowY, PDF_CONTENT_W, rowH).fill('#f8fafc');
+  }
+  let x = PDF_MARGIN;
+  cells.forEach((c) => {
+    doc.font('Helvetica').fontSize(6.8).fillColor(TEXT_DARK)
+      .text(c.text || '-', x + 3, rowY + 2, { width: c.width - 6 });
+    x += c.width;
+  });
+  doc.y = rowY + rowH;
+}
+
+function pdfImageGridSimple(doc: PDFKit.PDFDocument, images: Buffer[]): void {
+  if (images.length === 0) {
+    doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
+      .text('Sin fotos asociadas.', PDF_MARGIN, doc.y);
+    return;
+  }
+  const gap = 6;
+  const cols = images.length === 1 ? 1 : 2;
+  const rows = Math.ceil(images.length / cols);
+  const imgW = cols === 1 ? Math.min(330, PDF_CONTENT_W) : Math.floor((PDF_CONTENT_W - gap) / 2);
+  const imgH = 110;
+  const neededH = rows * imgH + gap * Math.max(0, rows - 1);
+
+  if (doc.y + neededH > PDF_BOTTOM) {
+    doc.addPage();
+    doc.y = PDF_MARGIN;
+  }
+  const startY = doc.y;
+
+  images.forEach((buf, i) => {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+    const isAloneInRow = cols === 2 && col === 0 && i === images.length - 1;
+    const x = cols === 1 || isAloneInRow
+      ? PDF_MARGIN + (PDF_CONTENT_W - imgW) / 2
+      : PDF_MARGIN + col * (imgW + gap);
+    const y = startY + row * (imgH + gap);
+    try {
+      doc.image(buf, x, y, { fit: [imgW, imgH], align: 'center', valign: 'center' });
+    } catch {
+      // Imagen no procesable, se omite
+    }
+  });
+
+  doc.y = startY + neededH + 5;
+}
+
+const INSPECCION_ESTADO_LABEL: Record<string, string> = {
+  no_enviado: 'No enviado',
+  en_inspeccion: 'En inspección',
+  inspeccionado: 'Inspeccionado',
+};
+const INSPECCION_ESTADO_COLOR: Record<string, string> = {
+  no_enviado: '#64748b',
+  en_inspeccion: '#d97706',
+  inspeccionado: '#16a34a',
+};
+const REVISION_INSPECCION_LABEL: Record<string, string> = {
+  pendiente: 'Pendiente de revisión',
+  validado: 'Validada por Ingeniería',
+  rechazado: 'Rechazada por Ingeniería',
+};
+const REVISION_INSPECCION_COLOR: Record<string, string> = {
+  pendiente: '#d97706',
+  validado: '#16a34a',
+  rechazado: '#dc2626',
+};
+const RESULTADO_PARAMETRO_LABEL: Record<string, string> = {
+  cumple: 'Cumple',
+  no_cumple: 'No cumple',
+  no_aplica: 'No aplica',
+};
+
+export interface InspeccionPdfParametro {
+  orden: number;
+  parametro: string;
+  resultado: string;
+  observacion?: string | null;
+  correccionObservacion?: string | null;
+}
+
+export interface InspeccionPdfData {
+  codigoRegistro: string;
+  obraNombre: string;
+  obraCodigo?: string | null;
+  inspeccionEstado: string;
+  enviadoPorNombre?: string | null;
+  fechaEnvio?: Date | string | null;
+  supervisorNombre?: string | null;
+  fechaInspeccion?: Date | string | null;
+  conformidad?: string | null;
+  observaciones?: string | null;
+  fotoUrls: string[];
+  revisionEstado?: string | null;
+  motivoRechazo?: string | null;
+  parametros: InspeccionPdfParametro[];
+}
+
+/**
+ * Genera el PDF del control de inspección (checklist del Supervisor + revisión
+ * de Ingeniería) mostrado en el modal "Detalle de inspección" de Procesamiento
+ * Ingeniería. Reutiliza los mismos helpers visuales que generateRegistroPdfBuffer.
+ */
+export async function generateInspeccionPdfBuffer(data: InspeccionPdfData): Promise<Buffer> {
+  const imageBuffers = await Promise.all(data.fotoUrls.map(fetchImageBuffer));
+  const validImages = imageBuffers.filter((b): b is Buffer => b !== null);
+
+  const logoPath = path.join(process.cwd(), 'public', 'logo-beck.png');
+  const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
+
+  return new Promise<Buffer>((resolve, reject) => {
+    const doc = new PDFDocument({ size: 'A4', margin: PDF_MARGIN });
+    const chunks: Buffer[] = [];
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+
+    doc.rect(0, 0, PDF_W, 5).fill(BECK_YELLOW);
+    doc.y = 12;
+
+    const headerY = doc.y;
+    if (logoBuffer) {
+      doc.image(logoBuffer, PDF_MARGIN, headerY, { height: 32 });
+    }
+    const textStartX = logoBuffer ? PDF_MARGIN + 46 : PDF_MARGIN;
+
+    doc.font('Helvetica-Bold').fontSize(13).fillColor(BECK_DARK)
+      .text('BECK Soluciones', textStartX, headerY, { lineBreak: false });
+    doc.font('Helvetica').fontSize(8).fillColor(TEXT_MUTED)
+      .text('Control de Inspección', textStartX, headerY + 17, { lineBreak: false });
+
+    const genDate = new Intl.DateTimeFormat('es-CL', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+    }).format(new Date());
+    doc.font('Helvetica').fontSize(7).fillColor('#94a3b8')
+      .text(`Generado: ${genDate}`, PDF_MARGIN, headerY + 27, {
+        width: PDF_CONTENT_W,
+        align: 'right',
+        lineBreak: false,
+      });
+
+    doc.y = headerY + 40;
+    doc.rect(PDF_MARGIN, doc.y, PDF_CONTENT_W, 1.5).fill(BECK_YELLOW);
+    doc.y += 7;
+
+    doc.font('Helvetica-Bold').fontSize(11).fillColor(BECK_DARK)
+      .text(`Registro ${data.codigoRegistro}`);
+    doc.y += 1;
+    doc.font('Helvetica').fontSize(8.5).fillColor(TEXT_MUTED)
+      .text(`Obra: ${data.obraNombre}${data.obraCodigo ? ` (${data.obraCodigo})` : ''}`);
+    doc.y += 5;
+
+    const estadoColor = INSPECCION_ESTADO_COLOR[data.inspeccionEstado] ?? '#64748b';
+    const estadoLabel = INSPECCION_ESTADO_LABEL[data.inspeccionEstado] ?? data.inspeccionEstado;
+    pdfBadge(doc, estadoLabel.toUpperCase(), estadoColor);
+
+    pdfHRule(doc);
+
+    pdfSectionHeader(doc, 'INFORMACIÓN GENERAL');
+    pdfFieldRow(doc, 'Enviado por:', data.enviadoPorNombre);
+    pdfFieldRow(doc, 'Fecha de envío:', data.fechaEnvio ? formatDateTime(data.fechaEnvio) : '-');
+    pdfFieldRow(doc, 'Supervisor:', data.supervisorNombre);
+    pdfFieldRow(doc, 'Fecha de inspección:', data.fechaInspeccion ? formatDateTime(data.fechaInspeccion) : '-');
+
+    pdfHRule(doc);
+
+    pdfSectionHeader(doc, 'RESULTADO');
+    if (data.conformidad) {
+      const conformidadLabel = data.conformidad === 'conforme' ? 'Conforme' : 'No conforme';
+      const conformidadColor = data.conformidad === 'conforme' ? '#16a34a' : '#dc2626';
+      pdfBadge(doc, conformidadLabel.toUpperCase(), conformidadColor);
+    }
+    doc.font('Helvetica').fontSize(8).fillColor(TEXT_DARK)
+      .text(data.observaciones || 'Sin observaciones.', PDF_MARGIN, doc.y, {
+        width: PDF_CONTENT_W,
+      });
+    doc.y += 4;
+
+    pdfHRule(doc);
+
+    pdfSectionHeader(doc, 'REVISIÓN DE INGENIERÍA');
+    const revisionEstado = data.revisionEstado ?? 'pendiente';
+    pdfBadge(
+      doc,
+      (REVISION_INSPECCION_LABEL[revisionEstado] ?? revisionEstado).toUpperCase(),
+      REVISION_INSPECCION_COLOR[revisionEstado] ?? '#64748b',
+    );
+    if (data.motivoRechazo) {
+      pdfFieldRow(doc, 'Motivo de rechazo:', data.motivoRechazo);
+    }
+
+    if (data.parametros.length > 0) {
+      pdfHRule(doc);
+      pdfSectionHeader(doc, 'CHECKLIST / PARÁMETROS DE INSPECCIÓN');
+
+      const cols: PdfTableCol[] = [
+        { title: '#', width: 18 },
+        { title: 'Parámetro', width: 115 },
+        { title: 'Resultado', width: 58 },
+        { title: 'Observación', width: 174 },
+        { title: 'Corrección Supervisor', width: 174 },
+      ];
+      pdfTableHeader(doc, cols);
+      data.parametros.forEach((p, i) => {
+        pdfTableRow(
+          doc,
+          [
+            { width: cols[0].width, text: String(p.orden ?? i + 1) },
+            { width: cols[1].width, text: p.parametro },
+            { width: cols[2].width, text: RESULTADO_PARAMETRO_LABEL[p.resultado] ?? p.resultado },
+            { width: cols[3].width, text: p.observacion || '-' },
+            { width: cols[4].width, text: p.correccionObservacion || '-' },
+          ],
+          i % 2 === 1,
+        );
+      });
+      doc.y += 4;
+    }
+
+    pdfHRule(doc);
+    pdfSectionHeader(doc, 'FOTOGRAFÍAS');
+    pdfImageGridSimple(doc, validImages);
+
+    doc.end();
+  });
+}
+
 export interface SignatureOptions {
   pathData: string;
   canvasWidth: number;
