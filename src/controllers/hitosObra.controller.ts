@@ -183,7 +183,12 @@ type RegistroValidado = {
 // misma obra, estado === 'validado', codigoBeck no nulo ni vacío.
 const obtenerRegistrosValidados = async (obraId: string): Promise<RegistroValidado[]> => {
   const registros = await prisma.registroTerreno.findMany({
-    where: { obraId, estado: 'validado', codigoBeck: { not: null } },
+    where: {
+      obraId,
+      estado: 'validado',
+      codigoBeck: { not: null },
+      cargaCompleta: true,
+    },
     select: { codigoBeck: true, fecha: true, tipoRegistro: true, cantidadSellos: true, metrosLineales: true },
   });
 

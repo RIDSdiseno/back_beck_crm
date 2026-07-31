@@ -26,7 +26,9 @@ export const listarRegistrosCampo = async (req: Request, res: Response): Promise
     const usuario_id = req.userId;
     const user_rol = req.userRole ?? 'terreno';
 
-    const where: Prisma.RegistroTerrenoWhereInput = {};
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      cargaCompleta: true,
+    };
 
     if (typeof obra_id === 'string') {
       where.obraId = obra_id;
@@ -76,7 +78,10 @@ export const obtenerRegistroCampo = async (req: Request, res: Response): Promise
     const usuario_id = req.userId;
     const user_rol = req.userRole ?? 'terreno';
 
-    const where: Prisma.RegistroTerrenoWhereInput = { id: String(id) };
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      id: String(id),
+      cargaCompleta: true,
+    };
 
     if (user_rol === 'terreno') {
       where.usuarioId = usuario_id;

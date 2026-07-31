@@ -135,6 +135,7 @@ model RegistroTerreno {
   holgura                     Decimal                  @db.Decimal(3, 1)
   observaciones               String?
   fotosUrls                   String[]                 @map("fotos_urls")
+  cargaCompleta               Boolean                  @default(true) @map("carga_completa")
   createdAt                   DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt                   DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   estado                      EstadoRegistroTerreno    @default(pendiente)
@@ -206,6 +207,7 @@ model RegistroTerreno {
   @@index([validadoClientePorId])
   @@index([inspeccionRevisionEstado])
   @@index([inspeccionRevisionPorId])
+  @@index([cargaCompleta, createdAt])
   @@map("registros_terreno")
 }
 

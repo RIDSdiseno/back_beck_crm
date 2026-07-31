@@ -48,7 +48,9 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
       }
     }
 
-    const where: Prisma.RegistroTerrenoWhereInput = {};
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      cargaCompleta: true,
+    };
 
     if (obraId) {
       where.obraId = obraId;
@@ -278,14 +280,18 @@ export const getRendimientoTrabajadores = async (req: Request, res: Response): P
       rangoEfectivo = rangoDashboard;
     }
 
-    const where: Prisma.RegistroTerrenoWhereInput = {};
+    const where: Prisma.RegistroTerrenoWhereInput = {
+      cargaCompleta: true,
+    };
     if (obraId) where.obraId = obraId;
     if (trabajador) where.nombreSellador = trabajador;
     if (fechaDesde && fechaHasta) where.fecha = { gte: fechaDesde, lte: fechaHasta };
 
     const [trabajadoresDisponiblesRaw, registros] = await Promise.all([
       prisma.registroTerreno.findMany({
-        where: obraId ? { obraId } : undefined,
+        where: obraId
+          ? { obraId, cargaCompleta: true }
+          : { cargaCompleta: true },
         distinct: ['nombreSellador'],
         select: { nombreSellador: true },
         orderBy: { nombreSellador: 'asc' },
