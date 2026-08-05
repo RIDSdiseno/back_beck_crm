@@ -70,6 +70,7 @@ const toDTO = (p: ProdWithCat) => ({
   stockReservado: p.stockReservado,
   stockDisponible: p.stock - p.stockReservado,
   stockMinimo: p.minStock,
+  stockInicial: p.stockInicial,
   ubicacion: p.ubicacion,
   criticidad: p.criticidad,
   activo: p.activo,
@@ -332,6 +333,7 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
       categoriaId,
       precio,
       stockMinimo,
+      stockInicial,
       ubicacion,
       criticidad,
       activo,
@@ -442,6 +444,15 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
         return;
       }
       data.minStock = sm;
+    }
+
+    if (stockInicial !== undefined) {
+      const si = parseInt(String(stockInicial), 10);
+      if (isNaN(si) || si < 0) {
+        res.status(400).json({ success: false, error: 'stockInicial debe ser >= 0' });
+        return;
+      }
+      data.stockInicial = si;
     }
 
     if (ubicacion !== undefined) data.ubicacion = ubicacion?.trim() ?? null;
