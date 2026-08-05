@@ -5,8 +5,9 @@ import {
   updateInventarioFiremat,
 } from '../../controllers/firemat/inventario.controller';
 import { importarInventarioPdf } from '../../controllers/firemat/importar-firemat-pdf.controller';
+import { importarInventarioExcel } from '../../controllers/firemat/importar-firemat-excel.controller';
 import { requirePermission } from '../../middlewares/requirePermission';
-import { uploadPdfFile } from '../../middlewares/upload';
+import { uploadPdfFile, uploadExcelFile } from '../../middlewares/upload';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ const methodNotAllowed = (_req: import('express').Request, res: import('express'
 };
 
 router.post('/importar-pdf', canEditInventario, uploadPdfFile, importarInventarioPdf);
+router.post('/importar-excel', canEditInventario, uploadExcelFile, importarInventarioExcel);
 
 router.get('/', canSeeInventario, getInventarioFiremat);
 router.post('/', canEditInventario, methodNotAllowed);

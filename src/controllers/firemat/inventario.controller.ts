@@ -239,6 +239,8 @@ export const updateInventarioFiremat = async (req: Request, res: Response): Prom
       ubicacion,
       activo,
       motivo,
+      nombre,
+      sku,
     } = req.body;
 
     const stockNuevoNum = parseOptionalNonNegativeInteger(stockNuevo);
@@ -289,6 +291,14 @@ export const updateInventarioFiremat = async (req: Request, res: Response): Prom
       res.status(400).json({ success: false, error: 'motivo debe ser string' });
       return;
     }
+    if (nombre !== undefined && (typeof nombre !== 'string' || !nombre.trim())) {
+      res.status(400).json({ success: false, error: 'nombre no puede estar vacío' });
+      return;
+    }
+    if (sku !== undefined && sku !== null && typeof sku !== 'string') {
+      res.status(400).json({ success: false, error: 'sku debe ser string' });
+      return;
+    }
 
     const result = await firematPrisma.$transaction(async (tx) => {
       const producto = await tx.producto.findUnique({ where: { id: productoId } });
@@ -311,6 +321,8 @@ export const updateInventarioFiremat = async (req: Request, res: Response): Prom
             : {}),
           ...(ubicacion !== undefined ? { ubicacion: ubicacion.trim() || null } : {}),
           ...(activo !== undefined ? { activo } : {}),
+          ...(nombre !== undefined ? { nombre: nombre.trim() } : {}),
+          ...(sku !== undefined ? { sku: sku === null ? null : sku.trim() || null } : {}),
         },
         include: { Categoria: true },
       });
@@ -340,6 +352,14 @@ export const updateInventarioFiremat = async (req: Request, res: Response): Prom
       movimiento: result.movimientoCreado,
     });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002' &&
+      (error.meta?.target as string[] | undefined)?.includes('sku')
+    ) {
+      res.status(409).json({ success: false, error: 'Ya existe un producto con ese SKU' });
+      return;
+    }
     console.error('Error al actualizar inventario Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al actualizar inventario' });
   }
