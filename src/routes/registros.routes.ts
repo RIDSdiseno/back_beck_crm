@@ -19,6 +19,7 @@ import {
   descargarInspeccionesPdfConsolidado,
   revisarInspeccion,
   revisarCorreccionInspeccion,
+  eliminarRegistro,
 } from '../controllers/registros.controller';
 import {
   importarRegistrosExcel,
@@ -136,6 +137,18 @@ router.patch(
   authenticate,
   requirePermission('beck_procesamiento_ingenieria', 'editar'),
   iniciarRevision,
+);
+
+/**
+ * DELETE /api/registros/:id
+ * Ingeniería elimina un registro de terreno en estado pendiente o en_revision.
+ * Se bloquea si el registro ya tiene un control de inspección asociado.
+ */
+router.delete(
+  '/:id',
+  authenticate,
+  requirePermission('beck_procesamiento_ingenieria', 'editar'),
+  eliminarRegistro,
 );
 
 /**

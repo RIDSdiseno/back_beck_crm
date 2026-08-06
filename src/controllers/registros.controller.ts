@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { query as dbQuery } from '../config/database';
-import { uploadImage } from '../config/cloudinary';
+import { uploadImage, deleteImage } from '../config/cloudinary';
 import { RegistroTerreno } from '../types';
 import { EstadoConformidadInspeccion, EstadoInspeccion, EstadoRegistroTerreno, EstadoRevisionInspeccion, Prisma, ResultadoParametroInspeccion, RolUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
@@ -1161,6 +1161,72 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
   } catch (error) {
     console.error('Error al iniciar revisión:', error);
     res.status(500).json({ error: 'Error al iniciar revisión del registro' });
+  }
+};
+
+/**
+ * DELETE /api/registros/:id
+ * Ingeniería elimina un registro de terreno mientras está pendiente o en revisión
+ * (antes de validarlo). Se bloquea si ya existe un control de inspección asociado,
+ * para no perder evidencia de una inspección ya realizada.
+ *
+ * Hard delete: la fila de procesamiento_ingenieria y las fotos_registro asociadas
+ * se eliminan en cascada por FK (ver schema.prisma). Las imágenes ya subidas a
+ * Cloudinary con public_id conocido (tabla fotos_registro) se limpian best-effort
+ * con deleteImage; un fallo ahí se loguea pero no bloquea el borrado del registro.
+ *
+ * Nota: los registros creados por el flujo normal (crearRegistro) guardan sus fotos
+ * solo como URL en fotosUrls/fotoUrl, sin public_id — para esos casos no hay forma
+ * de limpiar Cloudinary sin una integración nueva, así que esas imágenes quedan
+ * huérfanas en el storage tras el borrado.
+ */
+export const eliminarRegistro = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+
+    const existente = await prisma.registroTerreno.findUnique({ where: { id } });
+    if (!existente) {
+      res.status(404).json({ error: 'Registro no encontrado' });
+      return;
+    }
+
+    const estadosEliminables: EstadoRegistroTerreno[] = [
+      EstadoRegistroTerreno.pendiente,
+      EstadoRegistroTerreno.en_revision,
+    ];
+    if (!estadosEliminables.includes(existente.estado)) {
+      res.status(400).json({
+        error: `Solo se puede eliminar un registro en estado pendiente o en_revision. Estado actual: ${existente.estado}`,
+      });
+      return;
+    }
+
+    const controlesInspeccion = await prisma.controlInspeccion.count({
+      where: { registroTerrenoId: id },
+    });
+    if (controlesInspeccion > 0) {
+      res.status(400).json({
+        error: 'No se puede eliminar: el registro ya tiene un control de inspección asociado.',
+      });
+      return;
+    }
+
+    const fotos = await prisma.fotos_registro.findMany({ where: { registro_id: id } });
+
+    await prisma.registroTerreno.delete({ where: { id } });
+
+    await Promise.all(
+      fotos.map((foto) =>
+        deleteImage(foto.public_id).catch((error) =>
+          console.error(`Error al eliminar foto de Cloudinary (registroId=${id}, public_id=${foto.public_id}):`, error)
+        )
+      )
+    );
+
+    res.json({ message: 'Registro eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar registro:', error);
+    res.status(500).json({ error: 'Error al eliminar el registro' });
   }
 };
 
