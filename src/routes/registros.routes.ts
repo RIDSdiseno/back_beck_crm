@@ -300,6 +300,11 @@ router.put(
  * GET /api/registros/:id
  * Obtener un registro especifico
  */
-router.get('/:id', authenticate, requirePermission('beck_registro', 'ver'), obtenerRegistro);
+router.get(
+  '/:id',
+  authenticate,
+  requirePermission(['beck_registro', 'beck_procesamiento_ingenieria'], 'ver'),
+  obtenerRegistro,
+);
 
 export default router;
