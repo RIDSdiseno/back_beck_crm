@@ -3,6 +3,11 @@ export interface TramoHolgura {
   factor: number;
 }
 
+export interface FactorAccesibilidadNivel {
+  nivel: number;
+  factor: number;
+}
+
 export interface CalcRegistroInput {
   cantidad_sellos: number;
   holgura: number;
@@ -12,6 +17,7 @@ export interface CalcRegistroInput {
   piso: string;
   tipoRegistro: string;
   tramosHolgura?: TramoHolgura[];
+  factoresAccesibilidad?: FactorAccesibilidadNivel[];
 }
 
 export interface CalcRegistroResult {
@@ -59,18 +65,52 @@ function resolveHolguraFactor(holgura: number, tramos: TramoHolgura[]): number {
   throw new Error('CORREGIR HOLGURA');
 }
 
-function resolveAccesibilidadFactor(accesibilidad: unknown): number {
-  if (accesibilidad === null || accesibilidad === undefined) return 1;
-  if (typeof accesibilidad === 'number' && Number.isFinite(accesibilidad)) return accesibilidad;
+/**
+ * Niveles válidos de accesibilidad / cielo modular (F1/F2/F3) y su factor
+ * POR DEFECTO. Una obra puede definir su propio factor por nivel (ver
+ * FactorAccesibilidadObra / factorAccesibilidad.service.ts); estos valores
+ * solo aplican mientras la obra no tenga configuración propia para ese nivel.
+ */
+export const NIVELES_ACCESIBILIDAD = [1, 2, 3] as const;
+
+export const LABELS_ACCESIBILIDAD: Record<number, string> = {
+  1: 'F1 · Accesibilidad normal',
+  2: 'F2 · Cielos Americanos o estructurado',
+  3: 'F3 · Cielo duro y gateras',
+};
+
+export function getFactoresAccesibilidadPorDefecto(): FactorAccesibilidadNivel[] {
+  return NIVELES_ACCESIBILIDAD.map((nivel) => ({ nivel, factor: nivel }));
+}
+
+function buscarFactorNivel(nivel: number, factores: FactorAccesibilidadNivel[]): number {
+  return factores.find((f) => f.nivel === nivel)?.factor ?? nivel;
+}
+
+export function resolveAccesibilidadFactor(
+  accesibilidad: unknown,
+  factoresAccesibilidad?: FactorAccesibilidadNivel[],
+): number {
+  const factores = factoresAccesibilidad ?? getFactoresAccesibilidadPorDefecto();
+  const esNivelConfigurable = (n: number) => Number.isInteger(n) && n >= 1 && n <= 3;
+
+  if (accesibilidad === null || accesibilidad === undefined) return buscarFactorNivel(1, factores);
+  if (typeof accesibilidad === 'number' && Number.isFinite(accesibilidad)) {
+    return esNivelConfigurable(accesibilidad) ? buscarFactorNivel(accesibilidad, factores) : accesibilidad;
+  }
   const str = String(accesibilidad).trim();
   const n = parseFloat(str.replace(',', '.'));
-  if (!isNaN(n) && Number.isFinite(n)) return n;
+  if (!isNaN(n) && Number.isFinite(n)) {
+    return esNivelConfigurable(n) ? buscarFactorNivel(n, factores) : n;
+  }
   const norm = str.toLowerCase().normalize('NFD').replace(/\p{Mn}/gu, '');
-  if (norm === 'normal') return 1;
-  if (norm.includes('cielo') && norm.includes('duro')) return 3;
-  if (norm.includes('cielo') && (norm.includes('americano') || norm.includes('estructurado'))) return 2;
-  if (norm.includes('gateras')) return 3;
-  return 1;
+  if (norm === 'normal') return buscarFactorNivel(1, factores);
+  if (norm.includes('cielo') && norm.includes('duro')) return buscarFactorNivel(3, factores);
+  if (norm.includes('cielo') && (norm.includes('americano') || norm.includes('estructurado'))) {
+    return buscarFactorNivel(2, factores);
+  }
+  if (norm.includes('gateras')) return buscarFactorNivel(3, factores);
+  return buscarFactorNivel(1, factores);
 }
 
 function resolveAislacionFactor(aislacion: unknown): number {
@@ -99,7 +139,7 @@ function resolveReparacionTabique(reparacion: unknown): boolean {
 export function calcularCamposRegistroTerreno(input: CalcRegistroInput): CalcRegistroResult {
   const tramos = input.tramosHolgura ?? getTramosHolguraPorDefecto(input.tipoRegistro);
   const factor_por_holguras = resolveHolguraFactor(input.holgura, tramos);
-  const accFactor = resolveAccesibilidadFactor(input.accesibilidad);
+  const accFactor = resolveAccesibilidadFactor(input.accesibilidad, input.factoresAccesibilidad);
   const aislacion_normalizada = resolveAislacionFactor(input.aislacion);
   const aplicaReparacion = resolveReparacionTabique(input.reparacion_tabique);
   const esSotano = input.piso === '-1';

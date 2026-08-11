@@ -14,6 +14,7 @@ export const TODOS_LOS_MODULOS: string[] = [
   'beck_reportes',
   'beck_cotizaciones',
   'beck_movimientos',
+  'beck_inventario',
   'beck_obras',
   'beck_funnel',
   'beck_clientes',
@@ -65,7 +66,7 @@ export const PERMISOS_POR_ROL: Record<RolUsuario, PermisoBase[]> = {
 
   ingenieria: buildPermisos(
     grant(
-      ['beck_dashboard', 'beck_procesamiento_ingenieria', 'beck_oficina_tecnica', 'beck_registro', 'beck_reportes', 'beck_obras', 'beck_usuarios_parametros'],
+      ['beck_dashboard', 'beck_procesamiento_ingenieria', 'beck_oficina_tecnica', 'beck_registro', 'beck_reportes', 'beck_obras', 'beck_inventario', 'beck_usuarios_parametros'],
       true,
       true,
     ),
@@ -74,12 +75,12 @@ export const PERMISOS_POR_ROL: Record<RolUsuario, PermisoBase[]> = {
   terreno: buildPermisos(grant(['beck_registro'], true, true)),
 
   jefeobra: buildPermisos(
-    grant(['beck_dashboard', 'beck_registro', 'beck_obras', 'beck_usuarios_parametros'], true, true),
+    grant(['beck_dashboard', 'beck_registro', 'beck_obras', 'beck_inventario', 'beck_usuarios_parametros'], true, true),
   ),
 
   visualizador: buildPermisos(
     grant(
-      ['beck_dashboard', 'beck_funnel', 'beck_cotizaciones', 'beck_reportes', 'beck_clientes', 'beck_vista_cliente'],
+      ['beck_dashboard', 'beck_funnel', 'beck_cotizaciones', 'beck_reportes', 'beck_clientes', 'beck_inventario', 'beck_vista_cliente'],
       true,
       false,
     ),

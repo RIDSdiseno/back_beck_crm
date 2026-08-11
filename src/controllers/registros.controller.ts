@@ -13,8 +13,9 @@ import {
   sanitizarRegistroPorRol,
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
-import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
+import { calcularCamposRegistroTerreno, CalcRegistroResult, resolveAccesibilidadFactor } from '../utils/calculosRegistroTerreno';
 import { getTramosHolguraObra } from '../services/factorHolgura.service';
+import { getFactoresAccesibilidadObra } from '../services/factorAccesibilidad.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
 import { adjuntarRendimientoRegistros, calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
@@ -66,6 +67,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       obra_id,
       descripcion_material,
       modulo,
+      recinto,
       piso,
       eje_numerico,
       eje_alfabetico,
@@ -191,6 +193,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         : Number(cantidad_sellos);
 
     const tramosHolguraObra = await getTramosHolguraObra(obra_id, tipoRegistroFinal);
+    const factoresAccesibilidadObra = await getFactoresAccesibilidadObra(obra_id);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -202,6 +205,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         piso: String(piso),
         tipoRegistro: tipoRegistroFinal,
         tramosHolgura: tramosHolguraObra,
+        factoresAccesibilidad: factoresAccesibilidadObra,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -237,6 +241,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       calcResult.cantidad_sellos_aislacion,
       calcResult.reparacion_tabique_normalizada,
       calcResult.cantidad_final,
+      recinto ? String(recinto) : null,
     ];
 
     const result = itemizadoMandanteId
@@ -247,8 +252,8 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
           metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
-          reparacion_tabique, cantidad_final, itemizado_mandante_id, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
+          reparacion_tabique, cantidad_final, recinto, itemizado_mandante_id, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
         RETURNING *`,
         [...insertValues, itemizadoMandanteId, codigoBeckFinal],
       )
@@ -260,8 +265,8 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
           metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
-          reparacion_tabique, cantidad_final, codigo_beck
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+          reparacion_tabique, cantidad_final, recinto, codigo_beck
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
         RETURNING *`,
         [...insertValues, codigoBeckFinal],
       )
@@ -272,8 +277,8 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
           nombre_sellador, holgura, observaciones, fotos_urls, tipo_registro,
           metros_lineales, itemizado_mandante, factor_por_holguras, accesibilidad,
           cantidad_sellos_con_factores, aislacion, cantidad_sellos_aislacion,
-          reparacion_tabique, cantidad_final
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+          reparacion_tabique, cantidad_final, recinto
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
         RETURNING *`,
         insertValues,
       );
@@ -648,10 +653,11 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
         res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
         return;
       }
+      const factoresAccesibilidadObraValidar = await getFactoresAccesibilidadObra(existente.obraId);
       const total_sellos_calculado =
         Number(existente.cantidadSellos) *
         Number(existente.holgura) *
-        Number(existente.accesibilidad ?? 1);
+        resolveAccesibilidadFactor(existente.accesibilidad, factoresAccesibilidadObraValidar);
 
       await dbQuery(
         `INSERT INTO procesamiento_ingenieria
@@ -684,6 +690,7 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
 interface ActualizarRegistroTerrenoBody {
   descripcion_material?: unknown;
   modulo?: unknown;
+  recinto?: unknown;
   piso?: unknown;
   eje_numerico?: unknown;
   eje_alfabetico?: unknown;
@@ -801,6 +808,9 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     if (body.modulo !== undefined) {
       data.modulo = String(body.modulo);
     }
+    if (body.recinto !== undefined) {
+      data.recinto = body.recinto === null ? null : String(body.recinto) || null;
+    }
     if (body.piso !== undefined) {
       data.piso = String(body.piso);
     }
@@ -858,6 +868,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     const pisoFinal = body.piso !== undefined ? String(body.piso) : existente.piso;
 
     const tramosHolguraObraUpdate = await getTramosHolguraObra(existente.obraId, existente.tipoRegistro);
+    const factoresAccesibilidadObraUpdate = await getFactoresAccesibilidadObra(existente.obraId);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -869,6 +880,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
         piso: pisoFinal,
         tipoRegistro: existente.tipoRegistro,
         tramosHolgura: tramosHolguraObraUpdate,
+        factoresAccesibilidad: factoresAccesibilidadObraUpdate,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {

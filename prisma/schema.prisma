@@ -70,6 +70,7 @@ model Obra {
   configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
   cotizaciones                   Cotizacion[]
   factoresHolgura                FactorHolguraTramo[]
+  factoresAccesibilidad          FactorAccesibilidadObra[]
   hitos                          HitoObra[]
   oportunidades                  OperadorBeck[]
   tiposRegistro                  ObraTipoRegistro[]
@@ -279,6 +280,83 @@ model MovimientoInventario {
   @@index([usuarioId])
   @@index([createdAt(sort: Desc)])
   @@map("movimientos_inventario")
+}
+
+model InventarioBeckEpp {
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku          String?  @db.VarChar(100)
+  item         String   @db.VarChar(255)
+  modeloMarca  String?  @map("modelo_marca") @db.VarChar(255)
+  unidadMedida String?  @map("unidad_medida") @db.VarChar(100)
+  talla        String?  @db.VarChar(100)
+  color        String?  @db.VarChar(100)
+  stockInicial Int      @default(0) @map("stock_inicial")
+  entrada      Int      @default(0)
+  salida       Int      @default(0)
+  saldo        Int      @default(0)
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([sku])
+  @@index([item])
+  @@index([modeloMarca])
+  @@index([talla])
+  @@index([color])
+  @@index([activo])
+  @@map("inventario_beck_epp")
+}
+
+model InventarioBeckImplemento {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku          String?   @db.VarChar(100)
+  item         String    @db.VarChar(255)
+  modeloMarca  String?   @map("modelo_marca") @db.VarChar(255)
+  cantidad     Int       @default(0)
+  unidadMedida String?   @map("unidad_medida") @db.VarChar(100)
+  tallaMedida  String?   @map("talla_medida") @db.VarChar(100)
+  color        String?   @db.VarChar(100)
+  ubicacion    String?   @db.VarChar(255)
+  fecha        DateTime? @db.Date
+  salida       Int       @default(0)
+  saldo        Int       @default(0)
+  activo       Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([sku])
+  @@index([item])
+  @@index([modeloMarca])
+  @@index([tallaMedida])
+  @@index([color])
+  @@index([ubicacion])
+  @@index([activo])
+  @@map("inventario_beck_implementos")
+}
+
+model InventarioBeckHerramienta {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre    String    @db.VarChar(255)
+  marca     String?   @db.VarChar(150)
+  modelo    String?   @db.VarChar(150)
+  categoria String?   @db.VarChar(150)
+  sku       String?   @db.VarChar(100)
+  ubicacion String?   @db.VarChar(255)
+  fecha     DateTime? @db.Date
+  encargado String?   @db.VarChar(255)
+  activo    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([sku])
+  @@index([nombre])
+  @@index([marca])
+  @@index([modelo])
+  @@index([categoria])
+  @@index([ubicacion])
+  @@index([encargado])
+  @@index([activo])
+  @@map("inventario_beck_herramientas")
 }
 
 model Cotizacion {
@@ -900,6 +978,20 @@ model FactorHolguraTramo {
   @@index([obraId])
   @@index([tipoRegistro])
   @@map("factor_holgura_tramos")
+}
+
+model FactorAccesibilidadObra {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId    String   @map("obra_id") @db.Uuid
+  nivel     Int
+  factor    Decimal  @db.Decimal(6, 2)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  obra      Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, nivel])
+  @@index([obraId])
+  @@map("factor_accesibilidad_obra")
 }
 
 model ControlInspeccion {

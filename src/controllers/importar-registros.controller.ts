@@ -7,8 +7,9 @@ import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
-import { calcularCamposRegistroTerreno, CalcRegistroResult, TramoHolgura } from '../utils/calculosRegistroTerreno';
+import { calcularCamposRegistroTerreno, CalcRegistroResult, FactorAccesibilidadNivel, TramoHolgura } from '../utils/calculosRegistroTerreno';
 import { getTramosHolguraObra } from '../services/factorHolgura.service';
+import { getFactoresAccesibilidadObra } from '../services/factorAccesibilidad.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -352,6 +353,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       const validacionTipoCache = new Map<string, { permitido: boolean; warning?: string; error?: string }>();
       const warningsEmitidos = new Set<string>();
       const tramosHolguraCache = new Map<string, TramoHolgura[]>();
+      const factoresAccesibilidadCache = new Map<string, FactorAccesibilidadNivel[]>();
 
       const lastRowNum = worksheet.lastRow?.number ?? 1;
       if (DEV) console.log(`[importar] hoja "${sheetName}": filas de datos = ${Math.max(0, lastRowNum - headerRowNum)}`);
@@ -574,6 +576,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             tramosHolguraCache.set(cacheKey, tramosHolgura);
           }
 
+          let factoresAccesibilidad = factoresAccesibilidadCache.get(rowObraId);
+          if (!factoresAccesibilidad) {
+            factoresAccesibilidad = await getFactoresAccesibilidadObra(rowObraId);
+            factoresAccesibilidadCache.set(rowObraId, factoresAccesibilidad);
+          }
+
           let calcResult!: CalcRegistroResult;
           try {
             calcResult = calcularCamposRegistroTerreno({
@@ -585,6 +593,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               piso,
               tipoRegistro,
               tramosHolgura,
+              factoresAccesibilidad,
             });
           } catch (err) {
             if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {

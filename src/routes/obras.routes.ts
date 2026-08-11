@@ -18,6 +18,11 @@ import {
   restaurarFactoresHolguraObra,
 } from '../controllers/factorHolgura.controller';
 import {
+  listarFactoresAccesibilidadObra,
+  guardarFactorAccesibilidadObra,
+  restaurarFactorAccesibilidadObra,
+} from '../controllers/factorAccesibilidad.controller';
+import {
   listarHitosObra,
   crearHitoObra,
   actualizarHitoObra,
@@ -73,6 +78,27 @@ router.delete(
   authenticate,
   requirePermission('beck_obras', 'editar'),
   restaurarFactoresHolguraObra,
+);
+
+router.get(
+  '/:obraId/factores-accesibilidad',
+  authenticate,
+  requirePermission('beck_obras', 'ver'),
+  listarFactoresAccesibilidadObra,
+);
+
+router.put(
+  '/:obraId/factores-accesibilidad/:nivel',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  guardarFactorAccesibilidadObra,
+);
+
+router.delete(
+  '/:obraId/factores-accesibilidad/:nivel',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  restaurarFactorAccesibilidadObra,
 );
 
 router.get(
