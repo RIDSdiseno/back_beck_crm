@@ -16,6 +16,7 @@ import {
 import { calcularCamposRegistroTerreno, CalcRegistroResult, resolveAccesibilidadFactor } from '../utils/calculosRegistroTerreno';
 import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { getFactoresAccesibilidadObra } from '../services/factorAccesibilidad.service';
+import { getFactoresAislacionObra } from '../services/factorAislacion.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
 import { adjuntarRendimientoRegistros, calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
@@ -194,6 +195,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
     const tramosHolguraObra = await getTramosHolguraObra(obra_id, tipoRegistroFinal);
     const factoresAccesibilidadObra = await getFactoresAccesibilidadObra(obra_id);
+    const factoresAislacionObra = await getFactoresAislacionObra(obra_id);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -206,6 +208,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         tipoRegistro: tipoRegistroFinal,
         tramosHolgura: tramosHolguraObra,
         factoresAccesibilidad: factoresAccesibilidadObra,
+        factoresAislacion: factoresAislacionObra,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {
@@ -869,6 +872,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
 
     const tramosHolguraObraUpdate = await getTramosHolguraObra(existente.obraId, existente.tipoRegistro);
     const factoresAccesibilidadObraUpdate = await getFactoresAccesibilidadObra(existente.obraId);
+    const factoresAislacionObraUpdate = await getFactoresAislacionObra(existente.obraId);
     let calcResult!: CalcRegistroResult;
     try {
       calcResult = calcularCamposRegistroTerreno({
@@ -881,6 +885,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
         tipoRegistro: existente.tipoRegistro,
         tramosHolgura: tramosHolguraObraUpdate,
         factoresAccesibilidad: factoresAccesibilidadObraUpdate,
+        factoresAislacion: factoresAislacionObraUpdate,
       });
     } catch (err) {
       if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {

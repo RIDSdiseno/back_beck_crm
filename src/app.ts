@@ -27,6 +27,7 @@ import firematUsuariosParametrosRoutes from './routes/firemat/usuarios-parametro
 import { authenticate, denyRoles } from './middlewares/auth';
 import clientesBeckRoutes from './routes/clientes-beck.routes';
 import firematClientesRoutes from './routes/firemat/clientes-firemat.routes';
+import tragerClientesRoutes from './routes/trager/clientes-trager.routes';
 import reportesFirematRoutes from './routes/firemat/reportes.routes';
 import oficinaTecnicaPreventaRoutes from './routes/oficinaTecnicaPreventa.routes';
 import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegistro.routes';
@@ -131,6 +132,7 @@ app.use('/api/firemat/ventas', authenticate, firematVentasRoutes);
 app.use('/api/firemat/funnel', authenticate, funnelFirematRoutes);
 app.use('/api/firemat/cotizaciones', authenticate, cotizacionesFirematRoutes);
 app.use('/api/firemat/clientes', authenticate, firematClientesRoutes);
+app.use('/api/trager/clientes', authenticate, tragerClientesRoutes);
 app.use('/api/firemat/reportes', authenticate, reportesFirematRoutes);
 
 app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);

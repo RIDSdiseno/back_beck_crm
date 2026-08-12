@@ -7,9 +7,10 @@ import { prisma } from '../config/prisma';
 import { uploadImageDetailed } from '../config/cloudinary';
 import { buildCloudinaryFolder } from '../utils/cloudinaryFolder';
 import { obtenerItemizadoMandanteActivo } from '../services/configuracionCamposRegistro.service';
-import { calcularCamposRegistroTerreno, CalcRegistroResult, FactorAccesibilidadNivel, TramoHolgura } from '../utils/calculosRegistroTerreno';
+import { calcularCamposRegistroTerreno, CalcRegistroResult, FactorAccesibilidadNivel, FactorAislacionEstado, TramoHolgura } from '../utils/calculosRegistroTerreno';
 import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { getFactoresAccesibilidadObra } from '../services/factorAccesibilidad.service';
+import { getFactoresAislacionObra } from '../services/factorAislacion.service';
 import { validarTipoRegistroPermitidoPorObra } from '../helpers/tiposRegistro';
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -354,6 +355,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       const warningsEmitidos = new Set<string>();
       const tramosHolguraCache = new Map<string, TramoHolgura[]>();
       const factoresAccesibilidadCache = new Map<string, FactorAccesibilidadNivel[]>();
+      const factoresAislacionCache = new Map<string, FactorAislacionEstado[]>();
 
       const lastRowNum = worksheet.lastRow?.number ?? 1;
       if (DEV) console.log(`[importar] hoja "${sheetName}": filas de datos = ${Math.max(0, lastRowNum - headerRowNum)}`);
@@ -582,6 +584,12 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             factoresAccesibilidadCache.set(rowObraId, factoresAccesibilidad);
           }
 
+          let factoresAislacion = factoresAislacionCache.get(rowObraId);
+          if (!factoresAislacion) {
+            factoresAislacion = await getFactoresAislacionObra(rowObraId);
+            factoresAislacionCache.set(rowObraId, factoresAislacion);
+          }
+
           let calcResult!: CalcRegistroResult;
           try {
             calcResult = calcularCamposRegistroTerreno({
@@ -594,6 +602,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               tipoRegistro,
               tramosHolgura,
               factoresAccesibilidad,
+              factoresAislacion,
             });
           } catch (err) {
             if (err instanceof Error && err.message === 'CORREGIR HOLGURA') {

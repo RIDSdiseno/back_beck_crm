@@ -1,0 +1,22 @@
+generator tragerclient {
+  provider = "prisma-client-js"
+  output   = "../src/generated/trager-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Cliente {
+  id               Int      @id @default(autoincrement())
+  nombre           String
+  rut              String?  @unique
+  contactoNombre   String?
+  contactoTelefono String?
+  contactoCorreo   String?
+  activo           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  @@index([nombre])
+}

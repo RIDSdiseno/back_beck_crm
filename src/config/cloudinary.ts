@@ -112,6 +112,26 @@ export const uploadFileDetailed = async (
 };
 
 /**
+ * Genera una URL de descarga firmada y temporal para un archivo privado
+ * (`type: 'authenticated'`) subido a Cloudinary. Usado para los PDFs firmados
+ * desde la app móvil, que se suben como privados y guardan solo el public_id
+ * (no una URL pública) en `pdfFirmadoUrl`.
+ */
+export const getPrivateDownloadUrl = (
+  publicId: string,
+  format: string,
+  resourceType: 'image' | 'raw' = 'raw',
+  expiresInSeconds = 5 * 60,
+): string => {
+  return cloudinary.utils.private_download_url(publicId, format, {
+    resource_type: resourceType,
+    type: 'authenticated',
+    expires_at: Math.floor(Date.now() / 1000) + expiresInSeconds,
+    attachment: resourceType === 'raw',
+  });
+};
+
+/**
  * Elimina una imagen de Cloudinary
  * @param publicId Public ID de la imagen en Cloudinary
  */

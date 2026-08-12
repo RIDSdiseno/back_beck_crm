@@ -23,6 +23,11 @@ import {
   restaurarFactorAccesibilidadObra,
 } from '../controllers/factorAccesibilidad.controller';
 import {
+  listarFactoresAislacionObra,
+  guardarFactorAislacionObra,
+  restaurarFactorAislacionObra,
+} from '../controllers/factorAislacion.controller';
+import {
   listarHitosObra,
   crearHitoObra,
   actualizarHitoObra,
@@ -99,6 +104,27 @@ router.delete(
   authenticate,
   requirePermission('beck_obras', 'editar'),
   restaurarFactorAccesibilidadObra,
+);
+
+router.get(
+  '/:obraId/factores-aislacion',
+  authenticate,
+  requirePermission('beck_obras', 'ver'),
+  listarFactoresAislacionObra,
+);
+
+router.put(
+  '/:obraId/factores-aislacion/:aplica',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  guardarFactorAislacionObra,
+);
+
+router.delete(
+  '/:obraId/factores-aislacion/:aplica',
+  authenticate,
+  requirePermission('beck_obras', 'editar'),
+  restaurarFactorAislacionObra,
 );
 
 router.get(

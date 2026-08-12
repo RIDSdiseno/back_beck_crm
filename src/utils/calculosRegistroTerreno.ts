@@ -8,6 +8,11 @@ export interface FactorAccesibilidadNivel {
   factor: number;
 }
 
+export interface FactorAislacionEstado {
+  aplica: boolean;
+  factor: number;
+}
+
 export interface CalcRegistroInput {
   cantidad_sellos: number;
   holgura: number;
@@ -18,6 +23,7 @@ export interface CalcRegistroInput {
   tipoRegistro: string;
   tramosHolgura?: TramoHolgura[];
   factoresAccesibilidad?: FactorAccesibilidadNivel[];
+  factoresAislacion?: FactorAislacionEstado[];
 }
 
 export interface CalcRegistroResult {
@@ -113,16 +119,34 @@ export function resolveAccesibilidadFactor(
   return buscarFactorNivel(1, factores);
 }
 
-function resolveAislacionFactor(aislacion: unknown): number {
-  if (aislacion === null || aislacion === undefined || aislacion === '') return 1;
-  if (typeof aislacion === 'boolean') return aislacion ? 1.3 : 1;
+/**
+ * Factor de Aislación POR DEFECTO según si aplica o no. Una obra puede
+ * definir su propio factor para cada estado (ver FactorAislacionObra /
+ * factorAislacion.service.ts); estos valores solo aplican mientras la obra
+ * no tenga configuración propia para ese estado.
+ */
+export function getFactoresAislacionPorDefecto(): FactorAislacionEstado[] {
+  return [
+    { aplica: true, factor: 1.3 },
+    { aplica: false, factor: 1 },
+  ];
+}
+
+function buscarFactorAislacion(aplica: boolean, factores: FactorAislacionEstado[]): number {
+  return factores.find((f) => f.aplica === aplica)?.factor ?? (aplica ? 1.3 : 1);
+}
+
+function resolveAislacionFactor(aislacion: unknown, factoresAislacion?: FactorAislacionEstado[]): number {
+  const factores = factoresAislacion ?? getFactoresAislacionPorDefecto();
+  if (aislacion === null || aislacion === undefined || aislacion === '') return buscarFactorAislacion(false, factores);
+  if (typeof aislacion === 'boolean') return buscarFactorAislacion(aislacion, factores);
   if (typeof aislacion === 'number') return aislacion;
   const str = String(aislacion).trim();
   const n = parseFloat(str.replace(',', '.'));
   if (!isNaN(n) && Number.isFinite(n)) return n;
   const upper = str.toUpperCase().normalize('NFD').replace(/\p{Mn}/gu, '');
-  if (upper === 'APLICA' || upper === 'SI') return 1.3;
-  return 1;
+  if (upper === 'APLICA' || upper === 'SI') return buscarFactorAislacion(true, factores);
+  return buscarFactorAislacion(false, factores);
 }
 
 function resolveReparacionTabique(reparacion: unknown): boolean {
@@ -140,7 +164,7 @@ export function calcularCamposRegistroTerreno(input: CalcRegistroInput): CalcReg
   const tramos = input.tramosHolgura ?? getTramosHolguraPorDefecto(input.tipoRegistro);
   const factor_por_holguras = resolveHolguraFactor(input.holgura, tramos);
   const accFactor = resolveAccesibilidadFactor(input.accesibilidad, input.factoresAccesibilidad);
-  const aislacion_normalizada = resolveAislacionFactor(input.aislacion);
+  const aislacion_normalizada = resolveAislacionFactor(input.aislacion, input.factoresAislacion);
   const aplicaReparacion = resolveReparacionTabique(input.reparacion_tabique);
   const esSotano = input.piso === '-1';
 

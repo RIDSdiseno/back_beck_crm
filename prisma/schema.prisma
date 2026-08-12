@@ -71,6 +71,7 @@ model Obra {
   cotizaciones                   Cotizacion[]
   factoresHolgura                FactorHolguraTramo[]
   factoresAccesibilidad          FactorAccesibilidadObra[]
+  factoresAislacion              FactorAislacionObra[]
   hitos                          HitoObra[]
   oportunidades                  OperadorBeck[]
   tiposRegistro                  ObraTipoRegistro[]
@@ -992,6 +993,20 @@ model FactorAccesibilidadObra {
   @@unique([obraId, nivel])
   @@index([obraId])
   @@map("factor_accesibilidad_obra")
+}
+
+model FactorAislacionObra {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId    String   @map("obra_id") @db.Uuid
+  aplica    Boolean
+  factor    Decimal  @db.Decimal(6, 2)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  obra      Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, aplica])
+  @@index([obraId])
+  @@map("factor_aislacion_obra")
 }
 
 model ControlInspeccion {

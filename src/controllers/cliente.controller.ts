@@ -7,7 +7,7 @@ import {
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
 import { generateRegistroPdfBuffer } from '../services/registroPdf.service';
-import { uploadFileDetailed } from '../config/cloudinary';
+import { uploadFileDetailed, getPrivateDownloadUrl } from '../config/cloudinary';
 
 
 type ScopeOk =
@@ -839,9 +839,10 @@ export const obtenerPdfFirmadoCliente = async (req: Request, res: Response): Pro
     }
 
     if (registro.pdfFirmadoUrl) {
-      const pdfFirmadoBuffer = await fetchPdfBuffer(registro.pdfFirmadoUrl);
+      const pdfFirmadoDownloadUrl = resolvePdfFirmadoDownloadUrl(registro.pdfFirmadoUrl);
+      const pdfFirmadoBuffer = await fetchPdfBuffer(pdfFirmadoDownloadUrl);
       if (!pdfFirmadoBuffer) {
-        res.redirect(registro.pdfFirmadoUrl);
+        res.redirect(pdfFirmadoDownloadUrl);
         return;
       }
 
@@ -1058,6 +1059,19 @@ export const validarRegistrosClienteMultiple = async (req: Request, res: Respons
 
 const MAX_REGISTROS_PDF_CONSOLIDADO = 20;
 
+/**
+ * `pdfFirmadoUrl` puede ser una URL pública completa (firmado desde el CRM,
+ * subido con `secure_url`) o un public_id privado de Cloudinary (firmado
+ * desde la app móvil, que sube el PDF como `type: 'authenticated'` y guarda
+ * solo el public_id). En el segundo caso hay que generar una URL de
+ * descarga firmada; de lo contrario el fetch/redirect apunta a un public_id
+ * suelto y falla con 404.
+ */
+function resolvePdfFirmadoDownloadUrl(pdfFirmadoUrl: string): string {
+  if (/^https?:\/\//i.test(pdfFirmadoUrl)) return pdfFirmadoUrl;
+  return getPrivateDownloadUrl(pdfFirmadoUrl, 'pdf', 'raw');
+}
+
 async function fetchPdfBuffer(url: string): Promise<Buffer | null> {
   try {
     const controller = new AbortController();
@@ -1186,7 +1200,7 @@ export const descargarPdfConsolidadoCliente = async (req: Request, res: Response
       let pdfBytes: Buffer | null;
 
       if (registro.pdfFirmadoUrl) {
-        pdfBytes = await fetchPdfBuffer(registro.pdfFirmadoUrl);
+        pdfBytes = await fetchPdfBuffer(resolvePdfFirmadoDownloadUrl(registro.pdfFirmadoUrl));
         if (!pdfBytes) {
           res.status(502).json({
             success: false,
