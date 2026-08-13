@@ -132,6 +132,164 @@ exports.Prisma.ClienteScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FunnelTragerOpportunityScalarFieldEnum = {
+  id: 'id',
+  cliente: 'cliente',
+  contacto: 'contacto',
+  telefono: 'telefono',
+  correo: 'correo',
+  tipoCliente: 'tipoCliente',
+  rutEmpresa: 'rutEmpresa',
+  region: 'region',
+  comuna: 'comuna',
+  unidadNegocio: 'unidadNegocio',
+  productoId: 'productoId',
+  cantidadEstimada: 'cantidadEstimada',
+  urgencia: 'urgencia',
+  tipoUso: 'tipoUso',
+  necesidadSoporteTecnico: 'necesidadSoporteTecnico',
+  alternativaProducto: 'alternativaProducto',
+  comision: 'comision',
+  margenEstimado: 'margenEstimado',
+  fechaComprometidaEnvio: 'fechaComprometidaEnvio',
+  versionCotizacion: 'versionCotizacion',
+  comentariosCliente: 'comentariosCliente',
+  objeciones: 'objeciones',
+  ordenCompra: 'ordenCompra',
+  correoAceptacion: 'correoAceptacion',
+  condicionesComerciales: 'condicionesComerciales',
+  coordinacionAdministrativa: 'coordinacionAdministrativa',
+  estadoDocumentacion: 'estadoDocumentacion',
+  traspasoAdministracion: 'traspasoAdministracion',
+  traspasoERP: 'traspasoERP',
+  coordinacionDespacho: 'coordinacionDespacho',
+  estadoComercialOrden: 'estadoComercialOrden',
+  estadoDocumentacionVenta: 'estadoDocumentacionVenta',
+  responsable: 'responsable',
+  etapa: 'etapa',
+  montoEstimado: 'montoEstimado',
+  probabilidadCierre: 'probabilidadCierre',
+  proximaAccion: 'proximaAccion',
+  fechaProximaAccion: 'fechaProximaAccion',
+  observaciones: 'observaciones',
+  origen: 'origen',
+  estadoStock: 'estadoStock',
+  cotizacionId: 'cotizacionId',
+  motivoPerdida: 'motivoPerdida',
+  motivoPostergacion: 'motivoPostergacion',
+  fechaReactivacion: 'fechaReactivacion',
+  documentoRespaldo: 'documentoRespaldo',
+  fechaCierre: 'fechaCierre',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  probabilidad: 'probabilidad',
+  flujoPosterior: 'flujoPosterior',
+  motivoDescarte: 'motivoDescarte',
+  tipoBroker: 'tipoBroker',
+  fechaEstimadaDespacho: 'fechaEstimadaDespacho',
+  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
+  nombreOportunidad: 'nombreOportunidad',
+  cargoContacto: 'cargoContacto',
+  direccionProyecto: 'direccionProyecto',
+  tipoOportunidad: 'tipoOportunidad',
+  fechaProbableCierre: 'fechaProbableCierre',
+  riesgoTecnico: 'riesgoTecnico',
+  comentariosInternos: 'comentariosInternos',
+  observacionesTecnicas: 'observacionesTecnicas',
+  observacionCamposFaltantes: 'observacionCamposFaltantes',
+  lineaProducto: 'lineaProducto',
+  descuento: 'descuento',
+  stockOportunidad: 'stockOportunidad',
+  reprogramacionesCount: 'reprogramacionesCount',
+  fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa',
+  esReactivacion: 'esReactivacion'
+};
+
+exports.Prisma.FunnelTragerArchivoScalarFieldEnum = {
+  id: 'id',
+  oportunidadId: 'oportunidadId',
+  tipo: 'tipo',
+  url: 'url',
+  publicId: 'publicId',
+  nombreArchivo: 'nombreArchivo',
+  mimeType: 'mimeType',
+  bytes: 'bytes',
+  etapa: 'etapa',
+  observaciones: 'observaciones',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.HistorialEtapaTragerScalarFieldEnum = {
+  id: 'id',
+  oportunidadId: 'oportunidadId',
+  etapaAnterior: 'etapaAnterior',
+  etapaNueva: 'etapaNueva',
+  usuarioId: 'usuarioId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CategoriaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre'
+};
+
+exports.Prisma.ProductoScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  stock: 'stock',
+  ubicacion: 'ubicacion',
+  createdAt: 'createdAt',
+  precio: 'precio',
+  minStock: 'minStock',
+  activo: 'activo',
+  criticidad: 'criticidad',
+  imagen: 'imagen',
+  categoriaId: 'categoriaId',
+  stockReservado: 'stockReservado',
+  sku: 'sku',
+  disponibilidad: 'disponibilidad',
+  formato: 'formato',
+  cantidadCaja: 'cantidadCaja',
+  precioUsd: 'precioUsd',
+  precioSugerido: 'precioSugerido',
+  stockInicial: 'stockInicial'
+};
+
+exports.Prisma.CotizacionTragerScalarFieldEnum = {
+  id: 'id',
+  cliente: 'cliente',
+  contacto: 'contacto',
+  tipoCliente: 'tipoCliente',
+  responsable: 'responsable',
+  estado: 'estado',
+  subtotal: 'subtotal',
+  descuento: 'descuento',
+  impuesto: 'impuesto',
+  total: 'total',
+  fechaCotizacion: 'fechaCotizacion',
+  fechaVencimiento: 'fechaVencimiento',
+  fechaEnvio: 'fechaEnvio',
+  fechaSeguimiento: 'fechaSeguimiento',
+  fechaCierre: 'fechaCierre',
+  observaciones: 'observaciones',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  numero: 'numero'
+};
+
+exports.Prisma.CotizacionTragerDetalleScalarFieldEnum = {
+  id: 'id',
+  cotizacionId: 'cotizacionId',
+  productoId: 'productoId',
+  cantidad: 'cantidad',
+  precioUnitario: 'precioUnitario',
+  descuentoPct: 'descuentoPct',
+  subtotal: 'subtotal',
+  stockDisponible: 'stockDisponible',
+  observacion: 'observacion'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -149,7 +307,14 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Cliente: 'Cliente'
+  Cliente: 'Cliente',
+  FunnelTragerOpportunity: 'FunnelTragerOpportunity',
+  FunnelTragerArchivo: 'FunnelTragerArchivo',
+  HistorialEtapaTrager: 'HistorialEtapaTrager',
+  Categoria: 'Categoria',
+  Producto: 'Producto',
+  CotizacionTrager: 'CotizacionTrager',
+  CotizacionTragerDetalle: 'CotizacionTragerDetalle'
 };
 
 /**

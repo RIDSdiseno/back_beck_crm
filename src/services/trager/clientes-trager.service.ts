@@ -52,12 +52,14 @@ function procesarTelefono(value: unknown): string | null {
   const raw = String(value ?? '').trim();
   if (!raw) return null;
 
-  const soloDigitos = raw.replace(/\D/g, '');
-  if (soloDigitos.length < 8 || soloDigitos.length > 12) {
-    throw new Error('Teléfono de contacto inválido. Debe tener entre 8 y 12 dígitos.');
+  const limpio = raw.replace(/\s/g, '');
+  if (!/^(\+?56)?9\d{8}$/.test(limpio)) {
+    throw new Error(
+      'Teléfono de contacto inválido. Formato esperado: 912345678, 56912345678 o +56912345678.'
+    );
   }
 
-  return soloDigitos;
+  return limpio.replace(/\D/g, '');
 }
 
 function normalizarCorreo(value: unknown): string | null {
@@ -85,7 +87,6 @@ function buildClienteData(raw: ClienteInput, isUpdate = false) {
     const nombre = String(raw.nombre ?? '').trim();
     if (!nombre) throw new Error('El nombre es obligatorio.');
     if (!String(raw.contactoNombre ?? '').trim()) throw new Error('El nombre de contacto es obligatorio.');
-    if (!String(raw.contactoTelefono ?? '').trim()) throw new Error('El teléfono de contacto es obligatorio.');
     if (!String(raw.contactoCorreo ?? '').trim()) throw new Error('El correo de contacto es obligatorio.');
   }
 
@@ -95,9 +96,6 @@ function buildClienteData(raw: ClienteInput, isUpdate = false) {
     }
     if (raw.contactoNombre !== undefined && !String(raw.contactoNombre ?? '').trim()) {
       throw new Error('El nombre de contacto no puede estar vacío.');
-    }
-    if (raw.contactoTelefono !== undefined && !String(raw.contactoTelefono ?? '').trim()) {
-      throw new Error('El teléfono de contacto no puede estar vacío.');
     }
     if (raw.contactoCorreo !== undefined && !String(raw.contactoCorreo ?? '').trim()) {
       throw new Error('El correo de contacto no puede estar vacío.');

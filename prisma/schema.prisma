@@ -36,6 +36,7 @@ model Usuario {
   obrasCreadas                            Obra[]                             @relation("ObrasCreadasPorUsuario")
   permisosModulo                          PermisoUsuarioModulo[]
   procesamientos                          ProcesamientoIngenieria[]
+  registrosEnviadosIngenieria              RegistroTerreno[]                  @relation("RegistrosEnviadosIngenieriaPorUsuario")
   registrosRevisionInspeccion             RegistroTerreno[]                  @relation("RegistrosRevisionInspeccionPorUsuario")
   registrosRechazados                     RegistroTerreno[]                  @relation("RegistrosRechazadosPorUsuario")
   registrosSeleccionadosInspeccion        RegistroTerreno[]                  @relation("RegistrosSeleccionadosInspeccion")
@@ -179,6 +180,8 @@ model RegistroTerreno {
   firmaClienteUrl             String?                  @map("firma_cliente_url")
   pdfFirmadoUrl               String?                  @map("pdf_firmado_url")
   nombreFirmanteCliente       String?                  @db.VarChar(255) @map("nombre_firmante_cliente")
+  enviadoIngenieriaAt         DateTime?                @map("enviado_ingenieria_at") @db.Timestamp(6)
+  enviadoIngenieriaPorId      String?                  @map("enviado_ingenieria_por_id") @db.Uuid
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
@@ -191,6 +194,7 @@ model RegistroTerreno {
   seleccionadoInspeccionPor   Usuario?                 @relation("RegistrosSeleccionadosInspeccion", fields: [seleccionadoInspeccionPorId], references: [id])
   usuario                     Usuario                  @relation(fields: [usuarioId], references: [id])
   validadoClientePor          Usuario?                 @relation("RegistrosValidadosClientePorUsuario", fields: [validadoClientePorId], references: [id])
+  enviadoIngenieriaPor        Usuario?                 @relation("RegistrosEnviadosIngenieriaPorUsuario", fields: [enviadoIngenieriaPorId], references: [id], onDelete: SetNull)
 
   @@index([rechazadoPorId])
   @@index([obraId])
@@ -210,6 +214,8 @@ model RegistroTerreno {
   @@index([inspeccionRevisionEstado])
   @@index([inspeccionRevisionPorId])
   @@index([cargaCompleta, createdAt])
+  @@index([enviadoIngenieriaAt])
+  @@index([enviadoIngenieriaPorId])
   @@map("registros_terreno")
 }
 

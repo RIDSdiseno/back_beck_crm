@@ -691,6 +691,7 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
  * GET /api/registros/pendientes
  */
 interface ActualizarRegistroTerrenoBody {
+  fecha?: unknown;
   descripcion_material?: unknown;
   modulo?: unknown;
   recinto?: unknown;
@@ -783,6 +784,16 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     const data: Prisma.RegistroTerrenoUpdateInput = {};
+    if (body.fecha !== undefined) {
+      const nuevaFecha = new Date(String(body.fecha));
+      if (Number.isNaN(nuevaFecha.getTime())) {
+        res.status(400).json({ error: 'fecha inválida' });
+        return;
+      }
+      const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      data.fecha = nuevaFecha;
+      data.diaSemana = dias[nuevaFecha.getUTCDay()];
+    }
     const codigoBeckRaw = body.codigoBeck ?? body.codigo_beck;
     const itemizadoMandanteIdRaw = body.itemizadoMandanteId ?? body.itemizado_mandante_id;
     let itemizadoMandanteIdFinal: string | null | undefined;

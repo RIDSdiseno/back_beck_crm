@@ -88,6 +88,21 @@ export type AlertaVistaFiremat = $Result.DefaultSelection<Prisma.$AlertaVistaFir
  * 
  */
 export type HistorialEtapaFiremat = $Result.DefaultSelection<Prisma.$HistorialEtapaFirematPayload>
+/**
+ * Model ProductoCodigoBarra
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ */
+export type ProductoCodigoBarra = $Result.DefaultSelection<Prisma.$ProductoCodigoBarraPayload>
+/**
+ * Model RecepcionEscaneo
+ * 
+ */
+export type RecepcionEscaneo = $Result.DefaultSelection<Prisma.$RecepcionEscaneoPayload>
+/**
+ * Model RecepcionEscaneoDetalle
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ */
+export type RecepcionEscaneoDetalle = $Result.DefaultSelection<Prisma.$RecepcionEscaneoDetallePayload>
 
 /**
  * Enums
@@ -398,6 +413,36 @@ export class PrismaClient<
     * ```
     */
   get historialEtapaFiremat(): Prisma.HistorialEtapaFirematDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.productoCodigoBarra`: Exposes CRUD operations for the **ProductoCodigoBarra** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductoCodigoBarras
+    * const productoCodigoBarras = await prisma.productoCodigoBarra.findMany()
+    * ```
+    */
+  get productoCodigoBarra(): Prisma.ProductoCodigoBarraDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.recepcionEscaneo`: Exposes CRUD operations for the **RecepcionEscaneo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RecepcionEscaneos
+    * const recepcionEscaneos = await prisma.recepcionEscaneo.findMany()
+    * ```
+    */
+  get recepcionEscaneo(): Prisma.RecepcionEscaneoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.recepcionEscaneoDetalle`: Exposes CRUD operations for the **RecepcionEscaneoDetalle** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RecepcionEscaneoDetalles
+    * const recepcionEscaneoDetalles = await prisma.recepcionEscaneoDetalle.findMany()
+    * ```
+    */
+  get recepcionEscaneoDetalle(): Prisma.RecepcionEscaneoDetalleDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -846,7 +891,10 @@ export namespace Prisma {
     ContactoClienteFiremat: 'ContactoClienteFiremat',
     FunnelFirematArchivo: 'FunnelFirematArchivo',
     AlertaVistaFiremat: 'AlertaVistaFiremat',
-    HistorialEtapaFiremat: 'HistorialEtapaFiremat'
+    HistorialEtapaFiremat: 'HistorialEtapaFiremat',
+    ProductoCodigoBarra: 'ProductoCodigoBarra',
+    RecepcionEscaneo: 'RecepcionEscaneo',
+    RecepcionEscaneoDetalle: 'RecepcionEscaneoDetalle'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -862,7 +910,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat" | "funnelFirematArchivo" | "alertaVistaFiremat" | "historialEtapaFiremat"
+      modelProps: "categoria" | "movimiento" | "producto" | "venta" | "ventaDetalle" | "user" | "cliente" | "oportunidad" | "cotizacionFiremat" | "cotizacionFirematDetalle" | "funnelFirematOpportunity" | "contactoClienteFiremat" | "funnelFirematArchivo" | "alertaVistaFiremat" | "historialEtapaFiremat" | "productoCodigoBarra" | "recepcionEscaneo" | "recepcionEscaneoDetalle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1976,6 +2024,228 @@ export namespace Prisma {
           }
         }
       }
+      ProductoCodigoBarra: {
+        payload: Prisma.$ProductoCodigoBarraPayload<ExtArgs>
+        fields: Prisma.ProductoCodigoBarraFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductoCodigoBarraFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductoCodigoBarraFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          findFirst: {
+            args: Prisma.ProductoCodigoBarraFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductoCodigoBarraFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          findMany: {
+            args: Prisma.ProductoCodigoBarraFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>[]
+          }
+          create: {
+            args: Prisma.ProductoCodigoBarraCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          createMany: {
+            args: Prisma.ProductoCodigoBarraCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductoCodigoBarraCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>[]
+          }
+          delete: {
+            args: Prisma.ProductoCodigoBarraDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          update: {
+            args: Prisma.ProductoCodigoBarraUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductoCodigoBarraDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductoCodigoBarraUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductoCodigoBarraUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductoCodigoBarraUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductoCodigoBarraPayload>
+          }
+          aggregate: {
+            args: Prisma.ProductoCodigoBarraAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductoCodigoBarra>
+          }
+          groupBy: {
+            args: Prisma.ProductoCodigoBarraGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductoCodigoBarraGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductoCodigoBarraCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductoCodigoBarraCountAggregateOutputType> | number
+          }
+        }
+      }
+      RecepcionEscaneo: {
+        payload: Prisma.$RecepcionEscaneoPayload<ExtArgs>
+        fields: Prisma.RecepcionEscaneoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RecepcionEscaneoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RecepcionEscaneoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          findFirst: {
+            args: Prisma.RecepcionEscaneoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RecepcionEscaneoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          findMany: {
+            args: Prisma.RecepcionEscaneoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>[]
+          }
+          create: {
+            args: Prisma.RecepcionEscaneoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          createMany: {
+            args: Prisma.RecepcionEscaneoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RecepcionEscaneoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>[]
+          }
+          delete: {
+            args: Prisma.RecepcionEscaneoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          update: {
+            args: Prisma.RecepcionEscaneoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          deleteMany: {
+            args: Prisma.RecepcionEscaneoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RecepcionEscaneoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RecepcionEscaneoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>[]
+          }
+          upsert: {
+            args: Prisma.RecepcionEscaneoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoPayload>
+          }
+          aggregate: {
+            args: Prisma.RecepcionEscaneoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRecepcionEscaneo>
+          }
+          groupBy: {
+            args: Prisma.RecepcionEscaneoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RecepcionEscaneoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RecepcionEscaneoCountArgs<ExtArgs>
+            result: $Utils.Optional<RecepcionEscaneoCountAggregateOutputType> | number
+          }
+        }
+      }
+      RecepcionEscaneoDetalle: {
+        payload: Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>
+        fields: Prisma.RecepcionEscaneoDetalleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RecepcionEscaneoDetalleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RecepcionEscaneoDetalleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          findFirst: {
+            args: Prisma.RecepcionEscaneoDetalleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RecepcionEscaneoDetalleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          findMany: {
+            args: Prisma.RecepcionEscaneoDetalleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>[]
+          }
+          create: {
+            args: Prisma.RecepcionEscaneoDetalleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          createMany: {
+            args: Prisma.RecepcionEscaneoDetalleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RecepcionEscaneoDetalleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>[]
+          }
+          delete: {
+            args: Prisma.RecepcionEscaneoDetalleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          update: {
+            args: Prisma.RecepcionEscaneoDetalleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          deleteMany: {
+            args: Prisma.RecepcionEscaneoDetalleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RecepcionEscaneoDetalleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RecepcionEscaneoDetalleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>[]
+          }
+          upsert: {
+            args: Prisma.RecepcionEscaneoDetalleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RecepcionEscaneoDetallePayload>
+          }
+          aggregate: {
+            args: Prisma.RecepcionEscaneoDetalleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRecepcionEscaneoDetalle>
+          }
+          groupBy: {
+            args: Prisma.RecepcionEscaneoDetalleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RecepcionEscaneoDetalleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RecepcionEscaneoDetalleCountArgs<ExtArgs>
+            result: $Utils.Optional<RecepcionEscaneoDetalleCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2099,6 +2369,9 @@ export namespace Prisma {
     funnelFirematArchivo?: FunnelFirematArchivoOmit
     alertaVistaFiremat?: AlertaVistaFirematOmit
     historialEtapaFiremat?: HistorialEtapaFirematOmit
+    productoCodigoBarra?: ProductoCodigoBarraOmit
+    recepcionEscaneo?: RecepcionEscaneoOmit
+    recepcionEscaneoDetalle?: RecepcionEscaneoDetalleOmit
   }
 
   /* Types for Logging */
@@ -2214,6 +2487,8 @@ export namespace Prisma {
     FunnelFirematOpportunity: number
     Movimiento: number
     Oportunidad: number
+    ProductoCodigoBarra: number
+    RecepcionEscaneoDetalle: number
     Venta: number
     VentaDetalle: number
   }
@@ -2223,6 +2498,8 @@ export namespace Prisma {
     FunnelFirematOpportunity?: boolean | ProductoCountOutputTypeCountFunnelFirematOpportunityArgs
     Movimiento?: boolean | ProductoCountOutputTypeCountMovimientoArgs
     Oportunidad?: boolean | ProductoCountOutputTypeCountOportunidadArgs
+    ProductoCodigoBarra?: boolean | ProductoCountOutputTypeCountProductoCodigoBarraArgs
+    RecepcionEscaneoDetalle?: boolean | ProductoCountOutputTypeCountRecepcionEscaneoDetalleArgs
     Venta?: boolean | ProductoCountOutputTypeCountVentaArgs
     VentaDetalle?: boolean | ProductoCountOutputTypeCountVentaDetalleArgs
   }
@@ -2264,6 +2541,20 @@ export namespace Prisma {
    */
   export type ProductoCountOutputTypeCountOportunidadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OportunidadWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountProductoCodigoBarraArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductoCodigoBarraWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountRecepcionEscaneoDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecepcionEscaneoDetalleWhereInput
   }
 
   /**
@@ -2317,13 +2608,15 @@ export namespace Prisma {
    */
 
   export type ClienteCountOutputType = {
-    contactos: number
     Oportunidad: number
+    contactos: number
+    cotizaciones: number
   }
 
   export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    contactos?: boolean | ClienteCountOutputTypeCountContactosArgs
     Oportunidad?: boolean | ClienteCountOutputTypeCountOportunidadArgs
+    contactos?: boolean | ClienteCountOutputTypeCountContactosArgs
+    cotizaciones?: boolean | ClienteCountOutputTypeCountCotizacionesArgs
   }
 
   // Custom InputTypes
@@ -2340,6 +2633,13 @@ export namespace Prisma {
   /**
    * ClienteCountOutputType without action
    */
+  export type ClienteCountOutputTypeCountOportunidadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OportunidadWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
   export type ClienteCountOutputTypeCountContactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactoClienteFirematWhereInput
   }
@@ -2347,8 +2647,8 @@ export namespace Prisma {
   /**
    * ClienteCountOutputType without action
    */
-  export type ClienteCountOutputTypeCountOportunidadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OportunidadWhereInput
+  export type ClienteCountOutputTypeCountCotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CotizacionFirematWhereInput
   }
 
 
@@ -2429,6 +2729,68 @@ export namespace Prisma {
    */
   export type FunnelFirematOpportunityCountOutputTypeCountHistorialEtapasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: HistorialEtapaFirematWhereInput
+  }
+
+
+  /**
+   * Count Type ContactoClienteFirematCountOutputType
+   */
+
+  export type ContactoClienteFirematCountOutputType = {
+    cotizaciones: number
+  }
+
+  export type ContactoClienteFirematCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cotizaciones?: boolean | ContactoClienteFirematCountOutputTypeCountCotizacionesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ContactoClienteFirematCountOutputType without action
+   */
+  export type ContactoClienteFirematCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFirematCountOutputType
+     */
+    select?: ContactoClienteFirematCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteFirematCountOutputType without action
+   */
+  export type ContactoClienteFirematCountOutputTypeCountCotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CotizacionFirematWhereInput
+  }
+
+
+  /**
+   * Count Type RecepcionEscaneoCountOutputType
+   */
+
+  export type RecepcionEscaneoCountOutputType = {
+    RecepcionEscaneoDetalle: number
+  }
+
+  export type RecepcionEscaneoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    RecepcionEscaneoDetalle?: boolean | RecepcionEscaneoCountOutputTypeCountRecepcionEscaneoDetalleArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RecepcionEscaneoCountOutputType without action
+   */
+  export type RecepcionEscaneoCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoCountOutputType
+     */
+    select?: RecepcionEscaneoCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RecepcionEscaneoCountOutputType without action
+   */
+  export type RecepcionEscaneoCountOutputTypeCountRecepcionEscaneoDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecepcionEscaneoDetalleWhereInput
   }
 
 
@@ -2652,7 +3014,7 @@ export namespace Prisma {
   type CategoriaGetPayload<S extends boolean | null | undefined | CategoriaDefaultArgs> = $Result.GetResult<Prisma.$CategoriaPayload, S>
 
   type CategoriaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CategoriaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<CategoriaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: CategoriaCountAggregateInputType | true
     }
 
@@ -3095,6 +3457,7 @@ export namespace Prisma {
      * Filter, which Categoria to fetch.
      */
     where: CategoriaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3117,6 +3480,7 @@ export namespace Prisma {
      * Filter, which Categoria to fetch.
      */
     where: CategoriaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3169,6 +3533,7 @@ export namespace Prisma {
      * Filter by unique combinations of Categorias.
      */
     distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3221,6 +3586,7 @@ export namespace Prisma {
      * Filter by unique combinations of Categorias.
      */
     distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3273,6 +3639,7 @@ export namespace Prisma {
      * Filter by unique combinations of Categorias.
      */
     distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3295,6 +3662,7 @@ export namespace Prisma {
      * The data needed to create a Categoria.
      */
     data: XOR<CategoriaCreateInput, CategoriaUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3351,6 +3719,7 @@ export namespace Prisma {
      * Choose, which Categoria to update.
      */
     where: CategoriaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3425,6 +3794,7 @@ export namespace Prisma {
      * In case the Categoria was found with the provided `where` argument, update it with this data.
      */
     update: XOR<CategoriaUpdateInput, CategoriaUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3447,6 +3817,7 @@ export namespace Prisma {
      * Filter which Categoria to delete.
      */
     where: CategoriaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3842,7 +4213,7 @@ export namespace Prisma {
   type MovimientoGetPayload<S extends boolean | null | undefined | MovimientoDefaultArgs> = $Result.GetResult<Prisma.$MovimientoPayload, S>
 
   type MovimientoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<MovimientoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<MovimientoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: MovimientoCountAggregateInputType | true
     }
 
@@ -4293,6 +4664,7 @@ export namespace Prisma {
      * Filter, which Movimiento to fetch.
      */
     where: MovimientoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4315,6 +4687,7 @@ export namespace Prisma {
      * Filter, which Movimiento to fetch.
      */
     where: MovimientoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4367,6 +4740,7 @@ export namespace Prisma {
      * Filter by unique combinations of Movimientos.
      */
     distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4419,6 +4793,7 @@ export namespace Prisma {
      * Filter by unique combinations of Movimientos.
      */
     distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4471,6 +4846,7 @@ export namespace Prisma {
      * Filter by unique combinations of Movimientos.
      */
     distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4493,6 +4869,7 @@ export namespace Prisma {
      * The data needed to create a Movimiento.
      */
     data: XOR<MovimientoCreateInput, MovimientoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4553,6 +4930,7 @@ export namespace Prisma {
      * Choose, which Movimiento to update.
      */
     where: MovimientoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4631,6 +5009,7 @@ export namespace Prisma {
      * In case the Movimiento was found with the provided `where` argument, update it with this data.
      */
     update: XOR<MovimientoUpdateInput, MovimientoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4653,6 +5032,7 @@ export namespace Prisma {
      * Filter which Movimiento to delete.
      */
     where: MovimientoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4707,11 +5087,11 @@ export namespace Prisma {
     minStock: number | null
     categoriaId: number | null
     stockReservado: number | null
-    precioUsd: number | null
     precioSugerido: number | null
-    stockInicial: number | null
-    salidas: number | null
+    precioUsd: number | null
     entradas: number | null
+    salidas: number | null
+    stockInicial: number | null
   }
 
   export type ProductoSumAggregateOutputType = {
@@ -4721,11 +5101,11 @@ export namespace Prisma {
     minStock: number | null
     categoriaId: number | null
     stockReservado: number | null
-    precioUsd: number | null
     precioSugerido: number | null
-    stockInicial: number | null
-    salidas: number | null
+    precioUsd: number | null
     entradas: number | null
+    salidas: number | null
+    stockInicial: number | null
   }
 
   export type ProductoMinAggregateOutputType = {
@@ -4738,21 +5118,21 @@ export namespace Prisma {
     precio: number | null
     minStock: number | null
     activo: boolean | null
-    criticidad: string | null
     imagen: string | null
     categoriaId: number | null
     stockReservado: number | null
     sku: string | null
+    criticidad: string | null
+    cantidadCaja: string | null
     disponibilidad: string | null
     formato: string | null
-    cantidadCaja: string | null
-    precioUsd: number | null
     precioSugerido: number | null
-    stockInicial: number | null
-    salidas: number | null
-    fechaUltimaSalida: Date | null
+    precioUsd: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
+    salidas: number | null
+    stockInicial: number | null
   }
 
   export type ProductoMaxAggregateOutputType = {
@@ -4765,21 +5145,21 @@ export namespace Prisma {
     precio: number | null
     minStock: number | null
     activo: boolean | null
-    criticidad: string | null
     imagen: string | null
     categoriaId: number | null
     stockReservado: number | null
     sku: string | null
+    criticidad: string | null
+    cantidadCaja: string | null
     disponibilidad: string | null
     formato: string | null
-    cantidadCaja: string | null
-    precioUsd: number | null
     precioSugerido: number | null
-    stockInicial: number | null
-    salidas: number | null
-    fechaUltimaSalida: Date | null
+    precioUsd: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
+    salidas: number | null
+    stockInicial: number | null
   }
 
   export type ProductoCountAggregateOutputType = {
@@ -4792,21 +5172,21 @@ export namespace Prisma {
     precio: number
     minStock: number
     activo: number
-    criticidad: number
     imagen: number
     categoriaId: number
     stockReservado: number
     sku: number
+    criticidad: number
+    cantidadCaja: number
     disponibilidad: number
     formato: number
-    cantidadCaja: number
-    precioUsd: number
     precioSugerido: number
-    stockInicial: number
-    salidas: number
-    fechaUltimaSalida: number
+    precioUsd: number
     entradas: number
     fechaUltimaEntrada: number
+    fechaUltimaSalida: number
+    salidas: number
+    stockInicial: number
     _all: number
   }
 
@@ -4818,11 +5198,11 @@ export namespace Prisma {
     minStock?: true
     categoriaId?: true
     stockReservado?: true
-    precioUsd?: true
     precioSugerido?: true
-    stockInicial?: true
-    salidas?: true
+    precioUsd?: true
     entradas?: true
+    salidas?: true
+    stockInicial?: true
   }
 
   export type ProductoSumAggregateInputType = {
@@ -4832,11 +5212,11 @@ export namespace Prisma {
     minStock?: true
     categoriaId?: true
     stockReservado?: true
-    precioUsd?: true
     precioSugerido?: true
-    stockInicial?: true
-    salidas?: true
+    precioUsd?: true
     entradas?: true
+    salidas?: true
+    stockInicial?: true
   }
 
   export type ProductoMinAggregateInputType = {
@@ -4849,21 +5229,21 @@ export namespace Prisma {
     precio?: true
     minStock?: true
     activo?: true
-    criticidad?: true
     imagen?: true
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    criticidad?: true
+    cantidadCaja?: true
     disponibilidad?: true
     formato?: true
-    cantidadCaja?: true
-    precioUsd?: true
     precioSugerido?: true
-    stockInicial?: true
-    salidas?: true
-    fechaUltimaSalida?: true
+    precioUsd?: true
     entradas?: true
     fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
+    salidas?: true
+    stockInicial?: true
   }
 
   export type ProductoMaxAggregateInputType = {
@@ -4876,21 +5256,21 @@ export namespace Prisma {
     precio?: true
     minStock?: true
     activo?: true
-    criticidad?: true
     imagen?: true
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    criticidad?: true
+    cantidadCaja?: true
     disponibilidad?: true
     formato?: true
-    cantidadCaja?: true
-    precioUsd?: true
     precioSugerido?: true
-    stockInicial?: true
-    salidas?: true
-    fechaUltimaSalida?: true
+    precioUsd?: true
     entradas?: true
     fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
+    salidas?: true
+    stockInicial?: true
   }
 
   export type ProductoCountAggregateInputType = {
@@ -4903,21 +5283,21 @@ export namespace Prisma {
     precio?: true
     minStock?: true
     activo?: true
-    criticidad?: true
     imagen?: true
     categoriaId?: true
     stockReservado?: true
     sku?: true
+    criticidad?: true
+    cantidadCaja?: true
     disponibilidad?: true
     formato?: true
-    cantidadCaja?: true
-    precioUsd?: true
     precioSugerido?: true
-    stockInicial?: true
-    salidas?: true
-    fechaUltimaSalida?: true
+    precioUsd?: true
     entradas?: true
     fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
+    salidas?: true
+    stockInicial?: true
     _all?: true
   }
 
@@ -5017,21 +5397,21 @@ export namespace Prisma {
     precio: number
     minStock: number
     activo: boolean
-    criticidad: string
     imagen: string | null
     categoriaId: number
     stockReservado: number
     sku: string | null
+    criticidad: string
+    cantidadCaja: string | null
     disponibilidad: string | null
     formato: string | null
-    cantidadCaja: string | null
-    precioUsd: number | null
     precioSugerido: number | null
-    stockInicial: number | null
-    salidas: number | null
-    fechaUltimaSalida: Date | null
+    precioUsd: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
+    salidas: number | null
+    stockInicial: number | null
     _count: ProductoCountAggregateOutputType | null
     _avg: ProductoAvgAggregateOutputType | null
     _sum: ProductoSumAggregateOutputType | null
@@ -5063,26 +5443,28 @@ export namespace Prisma {
     precio?: boolean
     minStock?: boolean
     activo?: boolean
-    criticidad?: boolean
     imagen?: boolean
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    criticidad?: boolean
+    cantidadCaja?: boolean
     disponibilidad?: boolean
     formato?: boolean
-    cantidadCaja?: boolean
-    precioUsd?: boolean
     precioSugerido?: boolean
-    stockInicial?: boolean
-    salidas?: boolean
-    fechaUltimaSalida?: boolean
+    precioUsd?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
+    salidas?: boolean
+    stockInicial?: boolean
     CotizacionFirematDetalle?: boolean | Producto$CotizacionFirematDetalleArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | Producto$FunnelFirematOpportunityArgs<ExtArgs>
     Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
     Oportunidad?: boolean | Producto$OportunidadArgs<ExtArgs>
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
+    ProductoCodigoBarra?: boolean | Producto$ProductoCodigoBarraArgs<ExtArgs>
+    RecepcionEscaneoDetalle?: boolean | Producto$RecepcionEscaneoDetalleArgs<ExtArgs>
     Venta?: boolean | Producto$VentaArgs<ExtArgs>
     VentaDetalle?: boolean | Producto$VentaDetalleArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
@@ -5098,21 +5480,21 @@ export namespace Prisma {
     precio?: boolean
     minStock?: boolean
     activo?: boolean
-    criticidad?: boolean
     imagen?: boolean
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    criticidad?: boolean
+    cantidadCaja?: boolean
     disponibilidad?: boolean
     formato?: boolean
-    cantidadCaja?: boolean
-    precioUsd?: boolean
     precioSugerido?: boolean
-    stockInicial?: boolean
-    salidas?: boolean
-    fechaUltimaSalida?: boolean
+    precioUsd?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
+    salidas?: boolean
+    stockInicial?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -5126,21 +5508,21 @@ export namespace Prisma {
     precio?: boolean
     minStock?: boolean
     activo?: boolean
-    criticidad?: boolean
     imagen?: boolean
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    criticidad?: boolean
+    cantidadCaja?: boolean
     disponibilidad?: boolean
     formato?: boolean
-    cantidadCaja?: boolean
-    precioUsd?: boolean
     precioSugerido?: boolean
-    stockInicial?: boolean
-    salidas?: boolean
-    fechaUltimaSalida?: boolean
+    precioUsd?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
+    salidas?: boolean
+    stockInicial?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -5154,30 +5536,32 @@ export namespace Prisma {
     precio?: boolean
     minStock?: boolean
     activo?: boolean
-    criticidad?: boolean
     imagen?: boolean
     categoriaId?: boolean
     stockReservado?: boolean
     sku?: boolean
+    criticidad?: boolean
+    cantidadCaja?: boolean
     disponibilidad?: boolean
     formato?: boolean
-    cantidadCaja?: boolean
-    precioUsd?: boolean
     precioSugerido?: boolean
-    stockInicial?: boolean
-    salidas?: boolean
-    fechaUltimaSalida?: boolean
+    precioUsd?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
+    salidas?: boolean
+    stockInicial?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial" | "salidas" | "fechaUltimaSalida" | "entradas" | "fechaUltimaEntrada", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "criticidad" | "cantidadCaja" | "disponibilidad" | "formato" | "precioSugerido" | "precioUsd" | "entradas" | "fechaUltimaEntrada" | "fechaUltimaSalida" | "salidas" | "stockInicial", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CotizacionFirematDetalle?: boolean | Producto$CotizacionFirematDetalleArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | Producto$FunnelFirematOpportunityArgs<ExtArgs>
     Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
     Oportunidad?: boolean | Producto$OportunidadArgs<ExtArgs>
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
+    ProductoCodigoBarra?: boolean | Producto$ProductoCodigoBarraArgs<ExtArgs>
+    RecepcionEscaneoDetalle?: boolean | Producto$RecepcionEscaneoDetalleArgs<ExtArgs>
     Venta?: boolean | Producto$VentaArgs<ExtArgs>
     VentaDetalle?: boolean | Producto$VentaDetalleArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
@@ -5197,6 +5581,8 @@ export namespace Prisma {
       Movimiento: Prisma.$MovimientoPayload<ExtArgs>[]
       Oportunidad: Prisma.$OportunidadPayload<ExtArgs>[]
       Categoria: Prisma.$CategoriaPayload<ExtArgs>
+      ProductoCodigoBarra: Prisma.$ProductoCodigoBarraPayload<ExtArgs>[]
+      RecepcionEscaneoDetalle: Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>[]
       Venta: Prisma.$VentaPayload<ExtArgs>[]
       VentaDetalle: Prisma.$VentaDetallePayload<ExtArgs>[]
     }
@@ -5210,21 +5596,21 @@ export namespace Prisma {
       precio: number
       minStock: number
       activo: boolean
-      criticidad: string
       imagen: string | null
       categoriaId: number
       stockReservado: number
       sku: string | null
+      criticidad: string
+      cantidadCaja: string | null
       disponibilidad: string | null
       formato: string | null
-      cantidadCaja: string | null
-      precioUsd: number | null
       precioSugerido: number | null
-      stockInicial: number | null
-      salidas: number | null
-      fechaUltimaSalida: Date | null
+      precioUsd: number | null
       entradas: number | null
       fechaUltimaEntrada: Date | null
+      fechaUltimaSalida: Date | null
+      salidas: number | null
+      stockInicial: number | null
     }, ExtArgs["result"]["producto"]>
     composites: {}
   }
@@ -5232,7 +5618,7 @@ export namespace Prisma {
   type ProductoGetPayload<S extends boolean | null | undefined | ProductoDefaultArgs> = $Result.GetResult<Prisma.$ProductoPayload, S>
 
   type ProductoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProductoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ProductoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ProductoCountAggregateInputType | true
     }
 
@@ -5624,6 +6010,8 @@ export namespace Prisma {
     Movimiento<T extends Producto$MovimientoArgs<ExtArgs> = {}>(args?: Subset<T, Producto$MovimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Oportunidad<T extends Producto$OportunidadArgs<ExtArgs> = {}>(args?: Subset<T, Producto$OportunidadArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OportunidadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Categoria<T extends CategoriaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoriaDefaultArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    ProductoCodigoBarra<T extends Producto$ProductoCodigoBarraArgs<ExtArgs> = {}>(args?: Subset<T, Producto$ProductoCodigoBarraArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    RecepcionEscaneoDetalle<T extends Producto$RecepcionEscaneoDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Producto$RecepcionEscaneoDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Venta<T extends Producto$VentaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$VentaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     VentaDetalle<T extends Producto$VentaDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Producto$VentaDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -5664,21 +6052,21 @@ export namespace Prisma {
     readonly precio: FieldRef<"Producto", 'Float'>
     readonly minStock: FieldRef<"Producto", 'Int'>
     readonly activo: FieldRef<"Producto", 'Boolean'>
-    readonly criticidad: FieldRef<"Producto", 'String'>
     readonly imagen: FieldRef<"Producto", 'String'>
     readonly categoriaId: FieldRef<"Producto", 'Int'>
     readonly stockReservado: FieldRef<"Producto", 'Int'>
     readonly sku: FieldRef<"Producto", 'String'>
+    readonly criticidad: FieldRef<"Producto", 'String'>
+    readonly cantidadCaja: FieldRef<"Producto", 'String'>
     readonly disponibilidad: FieldRef<"Producto", 'String'>
     readonly formato: FieldRef<"Producto", 'String'>
-    readonly cantidadCaja: FieldRef<"Producto", 'String'>
-    readonly precioUsd: FieldRef<"Producto", 'Float'>
     readonly precioSugerido: FieldRef<"Producto", 'Float'>
-    readonly stockInicial: FieldRef<"Producto", 'Int'>
-    readonly salidas: FieldRef<"Producto", 'Int'>
-    readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
+    readonly precioUsd: FieldRef<"Producto", 'Float'>
     readonly entradas: FieldRef<"Producto", 'Int'>
     readonly fechaUltimaEntrada: FieldRef<"Producto", 'DateTime'>
+    readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
+    readonly salidas: FieldRef<"Producto", 'Int'>
+    readonly stockInicial: FieldRef<"Producto", 'Int'>
   }
     
 
@@ -5703,6 +6091,7 @@ export namespace Prisma {
      * Filter, which Producto to fetch.
      */
     where: ProductoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5725,6 +6114,7 @@ export namespace Prisma {
      * Filter, which Producto to fetch.
      */
     where: ProductoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5777,6 +6167,7 @@ export namespace Prisma {
      * Filter by unique combinations of Productos.
      */
     distinct?: ProductoScalarFieldEnum | ProductoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5829,6 +6220,7 @@ export namespace Prisma {
      * Filter by unique combinations of Productos.
      */
     distinct?: ProductoScalarFieldEnum | ProductoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5881,6 +6273,7 @@ export namespace Prisma {
      * Filter by unique combinations of Productos.
      */
     distinct?: ProductoScalarFieldEnum | ProductoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5903,6 +6296,7 @@ export namespace Prisma {
      * The data needed to create a Producto.
      */
     data: XOR<ProductoCreateInput, ProductoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5963,6 +6357,7 @@ export namespace Prisma {
      * Choose, which Producto to update.
      */
     where: ProductoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6041,6 +6436,7 @@ export namespace Prisma {
      * In case the Producto was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ProductoUpdateInput, ProductoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6063,6 +6459,7 @@ export namespace Prisma {
      * Filter which Producto to delete.
      */
     where: ProductoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6173,6 +6570,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.ProductoCodigoBarra
+   */
+  export type Producto$ProductoCodigoBarraArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    where?: ProductoCodigoBarraWhereInput
+    orderBy?: ProductoCodigoBarraOrderByWithRelationInput | ProductoCodigoBarraOrderByWithRelationInput[]
+    cursor?: ProductoCodigoBarraWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductoCodigoBarraScalarFieldEnum | ProductoCodigoBarraScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.RecepcionEscaneoDetalle
+   */
+  export type Producto$RecepcionEscaneoDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    where?: RecepcionEscaneoDetalleWhereInput
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecepcionEscaneoDetalleScalarFieldEnum | RecepcionEscaneoDetalleScalarFieldEnum[]
   }
 
   /**
@@ -6643,7 +7088,7 @@ export namespace Prisma {
   type VentaGetPayload<S extends boolean | null | undefined | VentaDefaultArgs> = $Result.GetResult<Prisma.$VentaPayload, S>
 
   type VentaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VentaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<VentaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: VentaCountAggregateInputType | true
     }
 
@@ -7100,6 +7545,7 @@ export namespace Prisma {
      * Filter, which Venta to fetch.
      */
     where: VentaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7122,6 +7568,7 @@ export namespace Prisma {
      * Filter, which Venta to fetch.
      */
     where: VentaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7174,6 +7621,7 @@ export namespace Prisma {
      * Filter by unique combinations of Ventas.
      */
     distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7226,6 +7674,7 @@ export namespace Prisma {
      * Filter by unique combinations of Ventas.
      */
     distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7278,6 +7727,7 @@ export namespace Prisma {
      * Filter by unique combinations of Ventas.
      */
     distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7300,6 +7750,7 @@ export namespace Prisma {
      * The data needed to create a Venta.
      */
     data: XOR<VentaCreateInput, VentaUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7360,6 +7811,7 @@ export namespace Prisma {
      * Choose, which Venta to update.
      */
     where: VentaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7438,6 +7890,7 @@ export namespace Prisma {
      * In case the Venta was found with the provided `where` argument, update it with this data.
      */
     update: XOR<VentaUpdateInput, VentaUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7460,6 +7913,7 @@ export namespace Prisma {
      * Filter which Venta to delete.
      */
     where: VentaWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7814,7 +8268,7 @@ export namespace Prisma {
   type VentaDetalleGetPayload<S extends boolean | null | undefined | VentaDetalleDefaultArgs> = $Result.GetResult<Prisma.$VentaDetallePayload, S>
 
   type VentaDetalleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VentaDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<VentaDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: VentaDetalleCountAggregateInputType | true
     }
 
@@ -8262,6 +8716,7 @@ export namespace Prisma {
      * Filter, which VentaDetalle to fetch.
      */
     where: VentaDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8284,6 +8739,7 @@ export namespace Prisma {
      * Filter, which VentaDetalle to fetch.
      */
     where: VentaDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8336,6 +8792,7 @@ export namespace Prisma {
      * Filter by unique combinations of VentaDetalles.
      */
     distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8388,6 +8845,7 @@ export namespace Prisma {
      * Filter by unique combinations of VentaDetalles.
      */
     distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8440,6 +8898,7 @@ export namespace Prisma {
      * Filter by unique combinations of VentaDetalles.
      */
     distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8462,6 +8921,7 @@ export namespace Prisma {
      * The data needed to create a VentaDetalle.
      */
     data: XOR<VentaDetalleCreateInput, VentaDetalleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8522,6 +8982,7 @@ export namespace Prisma {
      * Choose, which VentaDetalle to update.
      */
     where: VentaDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8600,6 +9061,7 @@ export namespace Prisma {
      * In case the VentaDetalle was found with the provided `where` argument, update it with this data.
      */
     update: XOR<VentaDetalleUpdateInput, VentaDetalleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8622,6 +9084,7 @@ export namespace Prisma {
      * Filter which VentaDetalle to delete.
      */
     where: VentaDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8865,7 +9328,7 @@ export namespace Prisma {
   type userGetPayload<S extends boolean | null | undefined | userDefaultArgs> = $Result.GetResult<Prisma.$userPayload, S>
 
   type userCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<userFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<userFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: UserCountAggregateInputType | true
     }
 
@@ -9306,6 +9769,7 @@ export namespace Prisma {
      * Filter, which user to fetch.
      */
     where: userWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9324,6 +9788,7 @@ export namespace Prisma {
      * Filter, which user to fetch.
      */
     where: userWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9372,6 +9837,7 @@ export namespace Prisma {
      * Filter by unique combinations of users.
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9420,6 +9886,7 @@ export namespace Prisma {
      * Filter by unique combinations of users.
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9468,6 +9935,7 @@ export namespace Prisma {
      * Filter by unique combinations of users.
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9486,6 +9954,7 @@ export namespace Prisma {
      * The data needed to create a user.
      */
     data: XOR<userCreateInput, userUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9538,6 +10007,7 @@ export namespace Prisma {
      * Choose, which user to update.
      */
     where: userWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9608,6 +10078,7 @@ export namespace Prisma {
      * In case the user was found with the provided `where` argument, update it with this data.
      */
     update: XOR<userUpdateInput, userUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9626,6 +10097,7 @@ export namespace Prisma {
      * Filter which user to delete.
      */
     where: userWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9684,16 +10156,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    createdAt: Date | null
+    activo: boolean | null
+    updatedAt: Date | null
     razonSocial: string | null
     nombreEmpresa: string | null
     region: string | null
     comuna: string | null
+    observaciones: string | null
     tipoCliente: $Enums.TipoClienteFiremat | null
     canalVenta: $Enums.CanalVentaFiremat | null
-    activo: boolean | null
-    observaciones: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -9703,16 +10175,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    createdAt: Date | null
+    activo: boolean | null
+    updatedAt: Date | null
     razonSocial: string | null
     nombreEmpresa: string | null
     region: string | null
     comuna: string | null
+    observaciones: string | null
     tipoCliente: $Enums.TipoClienteFiremat | null
     canalVenta: $Enums.CanalVentaFiremat | null
-    activo: boolean | null
-    observaciones: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -9722,16 +10194,16 @@ export namespace Prisma {
     email: number
     telefono: number
     direccion: number
+    createdAt: number
+    activo: number
+    updatedAt: number
     razonSocial: number
     nombreEmpresa: number
     region: number
     comuna: number
+    observaciones: number
     tipoCliente: number
     canalVenta: number
-    activo: number
-    observaciones: number
-    createdAt: number
-    updatedAt: number
     _all: number
   }
 
@@ -9751,16 +10223,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    createdAt?: true
+    activo?: true
+    updatedAt?: true
     razonSocial?: true
     nombreEmpresa?: true
     region?: true
     comuna?: true
+    observaciones?: true
     tipoCliente?: true
     canalVenta?: true
-    activo?: true
-    observaciones?: true
-    createdAt?: true
-    updatedAt?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -9770,16 +10242,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    createdAt?: true
+    activo?: true
+    updatedAt?: true
     razonSocial?: true
     nombreEmpresa?: true
     region?: true
     comuna?: true
+    observaciones?: true
     tipoCliente?: true
     canalVenta?: true
-    activo?: true
-    observaciones?: true
-    createdAt?: true
-    updatedAt?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -9789,16 +10261,16 @@ export namespace Prisma {
     email?: true
     telefono?: true
     direccion?: true
+    createdAt?: true
+    activo?: true
+    updatedAt?: true
     razonSocial?: true
     nombreEmpresa?: true
     region?: true
     comuna?: true
+    observaciones?: true
     tipoCliente?: true
     canalVenta?: true
-    activo?: true
-    observaciones?: true
-    createdAt?: true
-    updatedAt?: true
     _all?: true
   }
 
@@ -9895,16 +10367,16 @@ export namespace Prisma {
     email: string | null
     telefono: string | null
     direccion: string | null
+    createdAt: Date
+    activo: boolean
+    updatedAt: Date
     razonSocial: string | null
     nombreEmpresa: string | null
     region: string | null
     comuna: string | null
+    observaciones: string | null
     tipoCliente: $Enums.TipoClienteFiremat | null
     canalVenta: $Enums.CanalVentaFiremat | null
-    activo: boolean
-    observaciones: string | null
-    createdAt: Date
-    updatedAt: Date
     _count: ClienteCountAggregateOutputType | null
     _avg: ClienteAvgAggregateOutputType | null
     _sum: ClienteSumAggregateOutputType | null
@@ -9933,18 +10405,19 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    createdAt?: boolean
+    activo?: boolean
+    updatedAt?: boolean
     razonSocial?: boolean
     nombreEmpresa?: boolean
     region?: boolean
     comuna?: boolean
+    observaciones?: boolean
     tipoCliente?: boolean
     canalVenta?: boolean
-    activo?: boolean
-    observaciones?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
     Oportunidad?: boolean | Cliente$OportunidadArgs<ExtArgs>
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    cotizaciones?: boolean | Cliente$cotizacionesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
 
@@ -9955,16 +10428,16 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    createdAt?: boolean
+    activo?: boolean
+    updatedAt?: boolean
     razonSocial?: boolean
     nombreEmpresa?: boolean
     region?: boolean
     comuna?: boolean
+    observaciones?: boolean
     tipoCliente?: boolean
     canalVenta?: boolean
-    activo?: boolean
-    observaciones?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9974,16 +10447,16 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    createdAt?: boolean
+    activo?: boolean
+    updatedAt?: boolean
     razonSocial?: boolean
     nombreEmpresa?: boolean
     region?: boolean
     comuna?: boolean
+    observaciones?: boolean
     tipoCliente?: boolean
     canalVenta?: boolean
-    activo?: boolean
-    observaciones?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectScalar = {
@@ -9993,22 +10466,23 @@ export namespace Prisma {
     email?: boolean
     telefono?: boolean
     direccion?: boolean
+    createdAt?: boolean
+    activo?: boolean
+    updatedAt?: boolean
     razonSocial?: boolean
     nombreEmpresa?: boolean
     region?: boolean
     comuna?: boolean
+    observaciones?: boolean
     tipoCliente?: boolean
     canalVenta?: boolean
-    activo?: boolean
-    observaciones?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "razonSocial" | "nombreEmpresa" | "region" | "comuna" | "tipoCliente" | "canalVenta" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "createdAt" | "activo" | "updatedAt" | "razonSocial" | "nombreEmpresa" | "region" | "comuna" | "observaciones" | "tipoCliente" | "canalVenta", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
     Oportunidad?: boolean | Cliente$OportunidadArgs<ExtArgs>
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    cotizaciones?: boolean | Cliente$cotizacionesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ClienteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -10017,8 +10491,9 @@ export namespace Prisma {
   export type $ClientePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Cliente"
     objects: {
-      contactos: Prisma.$ContactoClienteFirematPayload<ExtArgs>[]
       Oportunidad: Prisma.$OportunidadPayload<ExtArgs>[]
+      contactos: Prisma.$ContactoClienteFirematPayload<ExtArgs>[]
+      cotizaciones: Prisma.$CotizacionFirematPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10027,16 +10502,16 @@ export namespace Prisma {
       email: string | null
       telefono: string | null
       direccion: string | null
+      createdAt: Date
+      activo: boolean
+      updatedAt: Date
       razonSocial: string | null
       nombreEmpresa: string | null
       region: string | null
       comuna: string | null
+      observaciones: string | null
       tipoCliente: $Enums.TipoClienteFiremat | null
       canalVenta: $Enums.CanalVentaFiremat | null
-      activo: boolean
-      observaciones: string | null
-      createdAt: Date
-      updatedAt: Date
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -10044,7 +10519,7 @@ export namespace Prisma {
   type ClienteGetPayload<S extends boolean | null | undefined | ClienteDefaultArgs> = $Result.GetResult<Prisma.$ClientePayload, S>
 
   type ClienteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ClienteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ClienteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ClienteCountAggregateInputType | true
     }
 
@@ -10431,8 +10906,9 @@ export namespace Prisma {
    */
   export interface Prisma__ClienteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    contactos<T extends Cliente$contactosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$contactosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Oportunidad<T extends Cliente$OportunidadArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$OportunidadArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OportunidadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contactos<T extends Cliente$contactosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$contactosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cotizaciones<T extends Cliente$cotizacionesArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$cotizacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10468,16 +10944,16 @@ export namespace Prisma {
     readonly email: FieldRef<"Cliente", 'String'>
     readonly telefono: FieldRef<"Cliente", 'String'>
     readonly direccion: FieldRef<"Cliente", 'String'>
+    readonly createdAt: FieldRef<"Cliente", 'DateTime'>
+    readonly activo: FieldRef<"Cliente", 'Boolean'>
+    readonly updatedAt: FieldRef<"Cliente", 'DateTime'>
     readonly razonSocial: FieldRef<"Cliente", 'String'>
     readonly nombreEmpresa: FieldRef<"Cliente", 'String'>
     readonly region: FieldRef<"Cliente", 'String'>
     readonly comuna: FieldRef<"Cliente", 'String'>
+    readonly observaciones: FieldRef<"Cliente", 'String'>
     readonly tipoCliente: FieldRef<"Cliente", 'TipoClienteFiremat'>
     readonly canalVenta: FieldRef<"Cliente", 'CanalVentaFiremat'>
-    readonly activo: FieldRef<"Cliente", 'Boolean'>
-    readonly observaciones: FieldRef<"Cliente", 'String'>
-    readonly createdAt: FieldRef<"Cliente", 'DateTime'>
-    readonly updatedAt: FieldRef<"Cliente", 'DateTime'>
   }
     
 
@@ -10502,6 +10978,7 @@ export namespace Prisma {
      * Filter, which Cliente to fetch.
      */
     where: ClienteWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10524,6 +11001,7 @@ export namespace Prisma {
      * Filter, which Cliente to fetch.
      */
     where: ClienteWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10576,6 +11054,7 @@ export namespace Prisma {
      * Filter by unique combinations of Clientes.
      */
     distinct?: ClienteScalarFieldEnum | ClienteScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10628,6 +11107,7 @@ export namespace Prisma {
      * Filter by unique combinations of Clientes.
      */
     distinct?: ClienteScalarFieldEnum | ClienteScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10680,6 +11160,7 @@ export namespace Prisma {
      * Filter by unique combinations of Clientes.
      */
     distinct?: ClienteScalarFieldEnum | ClienteScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10702,6 +11183,7 @@ export namespace Prisma {
      * The data needed to create a Cliente.
      */
     data: XOR<ClienteCreateInput, ClienteUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10758,6 +11240,7 @@ export namespace Prisma {
      * Choose, which Cliente to update.
      */
     where: ClienteWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10832,6 +11315,7 @@ export namespace Prisma {
      * In case the Cliente was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ClienteUpdateInput, ClienteUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10854,6 +11338,7 @@ export namespace Prisma {
      * Filter which Cliente to delete.
      */
     where: ClienteWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10868,6 +11353,30 @@ export namespace Prisma {
      * Limit how many Clientes to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Cliente.Oportunidad
+   */
+  export type Cliente$OportunidadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Oportunidad
+     */
+    select?: OportunidadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Oportunidad
+     */
+    omit?: OportunidadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OportunidadInclude<ExtArgs> | null
+    where?: OportunidadWhereInput
+    orderBy?: OportunidadOrderByWithRelationInput | OportunidadOrderByWithRelationInput[]
+    cursor?: OportunidadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
   }
 
   /**
@@ -10895,27 +11404,27 @@ export namespace Prisma {
   }
 
   /**
-   * Cliente.Oportunidad
+   * Cliente.cotizaciones
    */
-  export type Cliente$OportunidadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Cliente$cotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Oportunidad
+     * Select specific fields to fetch from the CotizacionFiremat
      */
-    select?: OportunidadSelect<ExtArgs> | null
+    select?: CotizacionFirematSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Oportunidad
+     * Omit specific fields from the CotizacionFiremat
      */
-    omit?: OportunidadOmit<ExtArgs> | null
+    omit?: CotizacionFirematOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: OportunidadInclude<ExtArgs> | null
-    where?: OportunidadWhereInput
-    orderBy?: OportunidadOrderByWithRelationInput | OportunidadOrderByWithRelationInput[]
-    cursor?: OportunidadWhereUniqueInput
+    include?: CotizacionFirematInclude<ExtArgs> | null
+    where?: CotizacionFirematWhereInput
+    orderBy?: CotizacionFirematOrderByWithRelationInput | CotizacionFirematOrderByWithRelationInput[]
+    cursor?: CotizacionFirematWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
+    distinct?: CotizacionFirematScalarFieldEnum | CotizacionFirematScalarFieldEnum[]
   }
 
   /**
@@ -11312,7 +11821,7 @@ export namespace Prisma {
   type OportunidadGetPayload<S extends boolean | null | undefined | OportunidadDefaultArgs> = $Result.GetResult<Prisma.$OportunidadPayload, S>
 
   type OportunidadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<OportunidadFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<OportunidadFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: OportunidadCountAggregateInputType | true
     }
 
@@ -11767,6 +12276,7 @@ export namespace Prisma {
      * Filter, which Oportunidad to fetch.
      */
     where: OportunidadWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11789,6 +12299,7 @@ export namespace Prisma {
      * Filter, which Oportunidad to fetch.
      */
     where: OportunidadWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11841,6 +12352,7 @@ export namespace Prisma {
      * Filter by unique combinations of Oportunidads.
      */
     distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11893,6 +12405,7 @@ export namespace Prisma {
      * Filter by unique combinations of Oportunidads.
      */
     distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11945,6 +12458,7 @@ export namespace Prisma {
      * Filter by unique combinations of Oportunidads.
      */
     distinct?: OportunidadScalarFieldEnum | OportunidadScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11967,6 +12481,7 @@ export namespace Prisma {
      * The data needed to create a Oportunidad.
      */
     data: XOR<OportunidadCreateInput, OportunidadUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12027,6 +12542,7 @@ export namespace Prisma {
      * Choose, which Oportunidad to update.
      */
     where: OportunidadWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12105,6 +12621,7 @@ export namespace Prisma {
      * In case the Oportunidad was found with the provided `where` argument, update it with this data.
      */
     update: XOR<OportunidadUpdateInput, OportunidadUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12127,6 +12644,7 @@ export namespace Prisma {
      * Filter which Oportunidad to delete.
      */
     where: OportunidadWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12195,6 +12713,8 @@ export namespace Prisma {
 
   export type CotizacionFirematAvgAggregateOutputType = {
     id: number | null
+    clienteFirematId: number | null
+    contactoFirematId: number | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12206,6 +12726,8 @@ export namespace Prisma {
 
   export type CotizacionFirematSumAggregateOutputType = {
     id: number | null
+    clienteFirematId: number | null
+    contactoFirematId: number | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12219,9 +12741,16 @@ export namespace Prisma {
     id: number | null
     cliente: string | null
     contacto: string | null
+    clienteFirematId: number | null
+    contactoFirematId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string | null
+    moneda: string | null
+    aplicaImpuesto: boolean | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12250,9 +12779,16 @@ export namespace Prisma {
     id: number | null
     cliente: string | null
     contacto: string | null
+    clienteFirematId: number | null
+    contactoFirematId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string | null
+    moneda: string | null
+    aplicaImpuesto: boolean | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12281,9 +12817,16 @@ export namespace Prisma {
     id: number
     cliente: number
     contacto: number
+    clienteFirematId: number
+    contactoFirematId: number
+    telefono: number
+    correo: number
     tipoCliente: number
+    cargo: number
     responsable: number
     estado: number
+    moneda: number
+    aplicaImpuesto: number
     subtotal: number
     descuento: number
     impuesto: number
@@ -12312,6 +12855,8 @@ export namespace Prisma {
 
   export type CotizacionFirematAvgAggregateInputType = {
     id?: true
+    clienteFirematId?: true
+    contactoFirematId?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12323,6 +12868,8 @@ export namespace Prisma {
 
   export type CotizacionFirematSumAggregateInputType = {
     id?: true
+    clienteFirematId?: true
+    contactoFirematId?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12336,9 +12883,16 @@ export namespace Prisma {
     id?: true
     cliente?: true
     contacto?: true
+    clienteFirematId?: true
+    contactoFirematId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12367,9 +12921,16 @@ export namespace Prisma {
     id?: true
     cliente?: true
     contacto?: true
+    clienteFirematId?: true
+    contactoFirematId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12398,9 +12959,16 @@ export namespace Prisma {
     id?: true
     cliente?: true
     contacto?: true
+    clienteFirematId?: true
+    contactoFirematId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12516,9 +13084,16 @@ export namespace Prisma {
     id: number
     cliente: string
     contacto: string | null
+    clienteFirematId: number | null
+    contactoFirematId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string
+    moneda: string
+    aplicaImpuesto: boolean
     subtotal: number
     descuento: number
     impuesto: number
@@ -12566,9 +13141,16 @@ export namespace Prisma {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteFirematId?: boolean
+    contactoFirematId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12593,6 +13175,8 @@ export namespace Prisma {
     numero?: boolean
     detalles?: boolean | CotizacionFiremat$detallesArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | CotizacionFiremat$FunnelFirematOpportunityArgs<ExtArgs>
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
     _count?: boolean | CotizacionFirematCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFiremat"]>
 
@@ -12600,9 +13184,16 @@ export namespace Prisma {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteFirematId?: boolean
+    contactoFirematId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12625,15 +13216,24 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFiremat"]>
 
   export type CotizacionFirematSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteFirematId?: boolean
+    contactoFirematId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12656,15 +13256,24 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFiremat"]>
 
   export type CotizacionFirematSelectScalar = {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteFirematId?: boolean
+    contactoFirematId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12689,28 +13298,45 @@ export namespace Prisma {
     numero?: boolean
   }
 
-  export type CotizacionFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "tipoCliente" | "responsable" | "estado" | "subtotal" | "descuento" | "impuesto" | "total" | "fechaCotizacion" | "fechaVencimiento" | "fechaEnvio" | "fechaSeguimiento" | "fechaCierre" | "probabilidadCierre" | "comentariosCliente" | "objeciones" | "observaciones" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "version" | "esActual" | "cotizacionBaseId" | "createdAt" | "updatedAt" | "numero", ExtArgs["result"]["cotizacionFiremat"]>
+  export type CotizacionFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "clienteFirematId" | "contactoFirematId" | "telefono" | "correo" | "tipoCliente" | "cargo" | "responsable" | "estado" | "moneda" | "aplicaImpuesto" | "subtotal" | "descuento" | "impuesto" | "total" | "fechaCotizacion" | "fechaVencimiento" | "fechaEnvio" | "fechaSeguimiento" | "fechaCierre" | "probabilidadCierre" | "comentariosCliente" | "objeciones" | "observaciones" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "version" | "esActual" | "cotizacionBaseId" | "createdAt" | "updatedAt" | "numero", ExtArgs["result"]["cotizacionFiremat"]>
   export type CotizacionFirematInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     detalles?: boolean | CotizacionFiremat$detallesArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | CotizacionFiremat$FunnelFirematOpportunityArgs<ExtArgs>
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
     _count?: boolean | CotizacionFirematCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CotizacionFirematIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type CotizacionFirematIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CotizacionFirematIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
+  }
+  export type CotizacionFirematIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    clienteFiremat?: boolean | CotizacionFiremat$clienteFirematArgs<ExtArgs>
+    contactoFiremat?: boolean | CotizacionFiremat$contactoFirematArgs<ExtArgs>
+  }
 
   export type $CotizacionFirematPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CotizacionFiremat"
     objects: {
       detalles: Prisma.$CotizacionFirematDetallePayload<ExtArgs>[]
       FunnelFirematOpportunity: Prisma.$FunnelFirematOpportunityPayload<ExtArgs>[]
+      clienteFiremat: Prisma.$ClientePayload<ExtArgs> | null
+      contactoFiremat: Prisma.$ContactoClienteFirematPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       cliente: string
       contacto: string | null
+      clienteFirematId: number | null
+      contactoFirematId: number | null
+      telefono: string | null
+      correo: string | null
       tipoCliente: string | null
+      cargo: string | null
       responsable: string | null
       estado: string
+      moneda: string
+      aplicaImpuesto: boolean
       subtotal: number
       descuento: number
       impuesto: number
@@ -12740,7 +13366,7 @@ export namespace Prisma {
   type CotizacionFirematGetPayload<S extends boolean | null | undefined | CotizacionFirematDefaultArgs> = $Result.GetResult<Prisma.$CotizacionFirematPayload, S>
 
   type CotizacionFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CotizacionFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<CotizacionFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: CotizacionFirematCountAggregateInputType | true
     }
 
@@ -13129,6 +13755,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     detalles<T extends CotizacionFiremat$detallesArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionFiremat$detallesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionFirematDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     FunnelFirematOpportunity<T extends CotizacionFiremat$FunnelFirematOpportunityArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionFiremat$FunnelFirematOpportunityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelFirematOpportunityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    clienteFiremat<T extends CotizacionFiremat$clienteFirematArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionFiremat$clienteFirematArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    contactoFiremat<T extends CotizacionFiremat$contactoFirematArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionFiremat$contactoFirematArgs<ExtArgs>>): Prisma__ContactoClienteFirematClient<$Result.GetResult<Prisma.$ContactoClienteFirematPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13161,9 +13789,16 @@ export namespace Prisma {
     readonly id: FieldRef<"CotizacionFiremat", 'Int'>
     readonly cliente: FieldRef<"CotizacionFiremat", 'String'>
     readonly contacto: FieldRef<"CotizacionFiremat", 'String'>
+    readonly clienteFirematId: FieldRef<"CotizacionFiremat", 'Int'>
+    readonly contactoFirematId: FieldRef<"CotizacionFiremat", 'Int'>
+    readonly telefono: FieldRef<"CotizacionFiremat", 'String'>
+    readonly correo: FieldRef<"CotizacionFiremat", 'String'>
     readonly tipoCliente: FieldRef<"CotizacionFiremat", 'String'>
+    readonly cargo: FieldRef<"CotizacionFiremat", 'String'>
     readonly responsable: FieldRef<"CotizacionFiremat", 'String'>
     readonly estado: FieldRef<"CotizacionFiremat", 'String'>
+    readonly moneda: FieldRef<"CotizacionFiremat", 'String'>
+    readonly aplicaImpuesto: FieldRef<"CotizacionFiremat", 'Boolean'>
     readonly subtotal: FieldRef<"CotizacionFiremat", 'Float'>
     readonly descuento: FieldRef<"CotizacionFiremat", 'Float'>
     readonly impuesto: FieldRef<"CotizacionFiremat", 'Float'>
@@ -13210,6 +13845,7 @@ export namespace Prisma {
      * Filter, which CotizacionFiremat to fetch.
      */
     where: CotizacionFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13232,6 +13868,7 @@ export namespace Prisma {
      * Filter, which CotizacionFiremat to fetch.
      */
     where: CotizacionFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13284,6 +13921,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFiremats.
      */
     distinct?: CotizacionFirematScalarFieldEnum | CotizacionFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13336,6 +13974,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFiremats.
      */
     distinct?: CotizacionFirematScalarFieldEnum | CotizacionFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13388,6 +14027,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFiremats.
      */
     distinct?: CotizacionFirematScalarFieldEnum | CotizacionFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13410,6 +14050,7 @@ export namespace Prisma {
      * The data needed to create a CotizacionFiremat.
      */
     data: XOR<CotizacionFirematCreateInput, CotizacionFirematUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13440,6 +14081,10 @@ export namespace Prisma {
      */
     data: CotizacionFirematCreateManyInput | CotizacionFirematCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionFirematIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13466,6 +14111,7 @@ export namespace Prisma {
      * Choose, which CotizacionFiremat to update.
      */
     where: CotizacionFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13510,6 +14156,10 @@ export namespace Prisma {
      * Limit how many CotizacionFiremats to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionFirematIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13540,6 +14190,7 @@ export namespace Prisma {
      * In case the CotizacionFiremat was found with the provided `where` argument, update it with this data.
      */
     update: XOR<CotizacionFirematUpdateInput, CotizacionFirematUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13562,6 +14213,7 @@ export namespace Prisma {
      * Filter which CotizacionFiremat to delete.
      */
     where: CotizacionFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13624,6 +14276,44 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FunnelFirematOpportunityScalarFieldEnum | FunnelFirematOpportunityScalarFieldEnum[]
+  }
+
+  /**
+   * CotizacionFiremat.clienteFiremat
+   */
+  export type CotizacionFiremat$clienteFirematArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cliente
+     */
+    select?: ClienteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cliente
+     */
+    omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    where?: ClienteWhereInput
+  }
+
+  /**
+   * CotizacionFiremat.contactoFiremat
+   */
+  export type CotizacionFiremat$contactoFirematArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteFiremat
+     */
+    select?: ContactoClienteFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteFiremat
+     */
+    omit?: ContactoClienteFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteFirematInclude<ExtArgs> | null
+    where?: ContactoClienteFirematWhereInput
   }
 
   /**
@@ -13984,7 +14674,7 @@ export namespace Prisma {
   type CotizacionFirematDetalleGetPayload<S extends boolean | null | undefined | CotizacionFirematDetalleDefaultArgs> = $Result.GetResult<Prisma.$CotizacionFirematDetallePayload, S>
 
   type CotizacionFirematDetalleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CotizacionFirematDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<CotizacionFirematDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: CotizacionFirematDetalleCountAggregateInputType | true
     }
 
@@ -14435,6 +15125,7 @@ export namespace Prisma {
      * Filter, which CotizacionFirematDetalle to fetch.
      */
     where: CotizacionFirematDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14457,6 +15148,7 @@ export namespace Prisma {
      * Filter, which CotizacionFirematDetalle to fetch.
      */
     where: CotizacionFirematDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14509,6 +15201,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFirematDetalles.
      */
     distinct?: CotizacionFirematDetalleScalarFieldEnum | CotizacionFirematDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14561,6 +15254,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFirematDetalles.
      */
     distinct?: CotizacionFirematDetalleScalarFieldEnum | CotizacionFirematDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14613,6 +15307,7 @@ export namespace Prisma {
      * Filter by unique combinations of CotizacionFirematDetalles.
      */
     distinct?: CotizacionFirematDetalleScalarFieldEnum | CotizacionFirematDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14635,6 +15330,7 @@ export namespace Prisma {
      * The data needed to create a CotizacionFirematDetalle.
      */
     data: XOR<CotizacionFirematDetalleCreateInput, CotizacionFirematDetalleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14695,6 +15391,7 @@ export namespace Prisma {
      * Choose, which CotizacionFirematDetalle to update.
      */
     where: CotizacionFirematDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14773,6 +15470,7 @@ export namespace Prisma {
      * In case the CotizacionFirematDetalle was found with the provided `where` argument, update it with this data.
      */
     update: XOR<CotizacionFirematDetalleUpdateInput, CotizacionFirematDetalleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14795,6 +15493,7 @@ export namespace Prisma {
      * Filter which CotizacionFirematDetalle to delete.
      */
     where: CotizacionFirematDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14846,12 +15545,12 @@ export namespace Prisma {
     id: number | null
     productoId: number | null
     cantidadEstimada: number | null
-    comision: number | null
-    margenEstimado: number | null
     montoEstimado: number | null
     probabilidadCierre: number | null
     cotizacionId: number | null
     probabilidad: number | null
+    comision: number | null
+    margenEstimado: number | null
     descuento: number | null
     reprogramacionesCount: number | null
   }
@@ -14860,12 +15559,12 @@ export namespace Prisma {
     id: number | null
     productoId: number | null
     cantidadEstimada: number | null
-    comision: number | null
-    margenEstimado: number | null
     montoEstimado: number | null
     probabilidadCierre: number | null
     cotizacionId: number | null
     probabilidad: number | null
+    comision: number | null
+    margenEstimado: number | null
     descuento: number | null
     reprogramacionesCount: number | null
   }
@@ -14877,32 +15576,8 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
-    rutEmpresa: string | null
-    region: string | null
-    comuna: string | null
-    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
-    urgencia: string | null
-    tipoUso: string | null
-    necesidadSoporteTecnico: boolean | null
-    alternativaProducto: string | null
-    comision: number | null
-    margenEstimado: number | null
-    fechaComprometidaEnvio: Date | null
-    versionCotizacion: string | null
-    comentariosCliente: string | null
-    objeciones: string | null
-    ordenCompra: string | null
-    correoAceptacion: string | null
-    condicionesComerciales: string | null
-    coordinacionAdministrativa: string | null
-    estadoDocumentacion: string | null
-    traspasoAdministracion: boolean | null
-    traspasoERP: boolean | null
-    coordinacionDespacho: string | null
-    estadoComercialOrden: string | null
-    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string | null
     montoEstimado: number | null
@@ -14911,32 +15586,56 @@ export namespace Prisma {
     fechaProximaAccion: Date | null
     observaciones: string | null
     origen: string | null
-    estadoStock: string | null
     cotizacionId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    probabilidad: number | null
+    estadoStock: string | null
     motivoPerdida: string | null
     motivoPostergacion: string | null
     fechaReactivacion: Date | null
     documentoRespaldo: string | null
     fechaCierre: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    probabilidad: number | null
+    comuna: string | null
+    necesidadSoporteTecnico: boolean | null
+    region: string | null
+    rutEmpresa: string | null
+    tipoUso: string | null
+    unidadNegocio: string | null
+    urgencia: string | null
+    alternativaProducto: string | null
+    comentariosCliente: string | null
+    comision: number | null
+    fechaComprometidaEnvio: Date | null
+    margenEstimado: number | null
+    objeciones: string | null
+    versionCotizacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    coordinacionDespacho: string | null
+    correoAceptacion: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacion: string | null
+    estadoDocumentacionVenta: string | null
+    ordenCompra: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
     flujoPosterior: string | null
     motivoDescarte: string | null
     tipoBroker: string | null
-    fechaEstimadaDespacho: Date | null
-    fechaSeguimientoPostventa: Date | null
-    nombreOportunidad: string | null
     cargoContacto: string | null
     direccionProyecto: string | null
-    tipoOportunidad: string | null
-    fechaProbableCierre: Date | null
-    riesgoTecnico: string | null
+    nombreOportunidad: string | null
     comentariosInternos: string | null
-    observacionesTecnicas: string | null
+    fechaProbableCierre: Date | null
     observacionCamposFaltantes: string | null
-    lineaProducto: string | null
+    observacionesTecnicas: string | null
+    riesgoTecnico: string | null
+    tipoOportunidad: string | null
     descuento: number | null
+    lineaProducto: string | null
     stockOportunidad: string | null
     reprogramacionesCount: number | null
     fechaUltimoCambioEtapa: Date | null
@@ -14950,32 +15649,8 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
-    rutEmpresa: string | null
-    region: string | null
-    comuna: string | null
-    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
-    urgencia: string | null
-    tipoUso: string | null
-    necesidadSoporteTecnico: boolean | null
-    alternativaProducto: string | null
-    comision: number | null
-    margenEstimado: number | null
-    fechaComprometidaEnvio: Date | null
-    versionCotizacion: string | null
-    comentariosCliente: string | null
-    objeciones: string | null
-    ordenCompra: string | null
-    correoAceptacion: string | null
-    condicionesComerciales: string | null
-    coordinacionAdministrativa: string | null
-    estadoDocumentacion: string | null
-    traspasoAdministracion: boolean | null
-    traspasoERP: boolean | null
-    coordinacionDespacho: string | null
-    estadoComercialOrden: string | null
-    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string | null
     montoEstimado: number | null
@@ -14984,32 +15659,56 @@ export namespace Prisma {
     fechaProximaAccion: Date | null
     observaciones: string | null
     origen: string | null
-    estadoStock: string | null
     cotizacionId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    probabilidad: number | null
+    estadoStock: string | null
     motivoPerdida: string | null
     motivoPostergacion: string | null
     fechaReactivacion: Date | null
     documentoRespaldo: string | null
     fechaCierre: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    probabilidad: number | null
+    comuna: string | null
+    necesidadSoporteTecnico: boolean | null
+    region: string | null
+    rutEmpresa: string | null
+    tipoUso: string | null
+    unidadNegocio: string | null
+    urgencia: string | null
+    alternativaProducto: string | null
+    comentariosCliente: string | null
+    comision: number | null
+    fechaComprometidaEnvio: Date | null
+    margenEstimado: number | null
+    objeciones: string | null
+    versionCotizacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    coordinacionDespacho: string | null
+    correoAceptacion: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacion: string | null
+    estadoDocumentacionVenta: string | null
+    ordenCompra: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
     flujoPosterior: string | null
     motivoDescarte: string | null
     tipoBroker: string | null
-    fechaEstimadaDespacho: Date | null
-    fechaSeguimientoPostventa: Date | null
-    nombreOportunidad: string | null
     cargoContacto: string | null
     direccionProyecto: string | null
-    tipoOportunidad: string | null
-    fechaProbableCierre: Date | null
-    riesgoTecnico: string | null
+    nombreOportunidad: string | null
     comentariosInternos: string | null
-    observacionesTecnicas: string | null
+    fechaProbableCierre: Date | null
     observacionCamposFaltantes: string | null
-    lineaProducto: string | null
+    observacionesTecnicas: string | null
+    riesgoTecnico: string | null
+    tipoOportunidad: string | null
     descuento: number | null
+    lineaProducto: string | null
     stockOportunidad: string | null
     reprogramacionesCount: number | null
     fechaUltimoCambioEtapa: Date | null
@@ -15023,32 +15722,8 @@ export namespace Prisma {
     telefono: number
     correo: number
     tipoCliente: number
-    rutEmpresa: number
-    region: number
-    comuna: number
-    unidadNegocio: number
     productoId: number
     cantidadEstimada: number
-    urgencia: number
-    tipoUso: number
-    necesidadSoporteTecnico: number
-    alternativaProducto: number
-    comision: number
-    margenEstimado: number
-    fechaComprometidaEnvio: number
-    versionCotizacion: number
-    comentariosCliente: number
-    objeciones: number
-    ordenCompra: number
-    correoAceptacion: number
-    condicionesComerciales: number
-    coordinacionAdministrativa: number
-    estadoDocumentacion: number
-    traspasoAdministracion: number
-    traspasoERP: number
-    coordinacionDespacho: number
-    estadoComercialOrden: number
-    estadoDocumentacionVenta: number
     responsable: number
     etapa: number
     montoEstimado: number
@@ -15057,32 +15732,56 @@ export namespace Prisma {
     fechaProximaAccion: number
     observaciones: number
     origen: number
-    estadoStock: number
     cotizacionId: number
+    createdAt: number
+    updatedAt: number
+    probabilidad: number
+    estadoStock: number
     motivoPerdida: number
     motivoPostergacion: number
     fechaReactivacion: number
     documentoRespaldo: number
     fechaCierre: number
-    createdAt: number
-    updatedAt: number
-    probabilidad: number
+    comuna: number
+    necesidadSoporteTecnico: number
+    region: number
+    rutEmpresa: number
+    tipoUso: number
+    unidadNegocio: number
+    urgencia: number
+    alternativaProducto: number
+    comentariosCliente: number
+    comision: number
+    fechaComprometidaEnvio: number
+    margenEstimado: number
+    objeciones: number
+    versionCotizacion: number
+    condicionesComerciales: number
+    coordinacionAdministrativa: number
+    coordinacionDespacho: number
+    correoAceptacion: number
+    estadoComercialOrden: number
+    estadoDocumentacion: number
+    estadoDocumentacionVenta: number
+    ordenCompra: number
+    traspasoAdministracion: number
+    traspasoERP: number
+    fechaEstimadaDespacho: number
+    fechaSeguimientoPostventa: number
     flujoPosterior: number
     motivoDescarte: number
     tipoBroker: number
-    fechaEstimadaDespacho: number
-    fechaSeguimientoPostventa: number
-    nombreOportunidad: number
     cargoContacto: number
     direccionProyecto: number
-    tipoOportunidad: number
-    fechaProbableCierre: number
-    riesgoTecnico: number
+    nombreOportunidad: number
     comentariosInternos: number
-    observacionesTecnicas: number
+    fechaProbableCierre: number
     observacionCamposFaltantes: number
-    lineaProducto: number
+    observacionesTecnicas: number
+    riesgoTecnico: number
+    tipoOportunidad: number
     descuento: number
+    lineaProducto: number
     stockOportunidad: number
     reprogramacionesCount: number
     fechaUltimoCambioEtapa: number
@@ -15095,12 +15794,12 @@ export namespace Prisma {
     id?: true
     productoId?: true
     cantidadEstimada?: true
-    comision?: true
-    margenEstimado?: true
     montoEstimado?: true
     probabilidadCierre?: true
     cotizacionId?: true
     probabilidad?: true
+    comision?: true
+    margenEstimado?: true
     descuento?: true
     reprogramacionesCount?: true
   }
@@ -15109,12 +15808,12 @@ export namespace Prisma {
     id?: true
     productoId?: true
     cantidadEstimada?: true
-    comision?: true
-    margenEstimado?: true
     montoEstimado?: true
     probabilidadCierre?: true
     cotizacionId?: true
     probabilidad?: true
+    comision?: true
+    margenEstimado?: true
     descuento?: true
     reprogramacionesCount?: true
   }
@@ -15126,32 +15825,8 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
-    rutEmpresa?: true
-    region?: true
-    comuna?: true
-    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
-    urgencia?: true
-    tipoUso?: true
-    necesidadSoporteTecnico?: true
-    alternativaProducto?: true
-    comision?: true
-    margenEstimado?: true
-    fechaComprometidaEnvio?: true
-    versionCotizacion?: true
-    comentariosCliente?: true
-    objeciones?: true
-    ordenCompra?: true
-    correoAceptacion?: true
-    condicionesComerciales?: true
-    coordinacionAdministrativa?: true
-    estadoDocumentacion?: true
-    traspasoAdministracion?: true
-    traspasoERP?: true
-    coordinacionDespacho?: true
-    estadoComercialOrden?: true
-    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -15160,32 +15835,56 @@ export namespace Prisma {
     fechaProximaAccion?: true
     observaciones?: true
     origen?: true
-    estadoStock?: true
     cotizacionId?: true
+    createdAt?: true
+    updatedAt?: true
+    probabilidad?: true
+    estadoStock?: true
     motivoPerdida?: true
     motivoPostergacion?: true
     fechaReactivacion?: true
     documentoRespaldo?: true
     fechaCierre?: true
-    createdAt?: true
-    updatedAt?: true
-    probabilidad?: true
+    comuna?: true
+    necesidadSoporteTecnico?: true
+    region?: true
+    rutEmpresa?: true
+    tipoUso?: true
+    unidadNegocio?: true
+    urgencia?: true
+    alternativaProducto?: true
+    comentariosCliente?: true
+    comision?: true
+    fechaComprometidaEnvio?: true
+    margenEstimado?: true
+    objeciones?: true
+    versionCotizacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    coordinacionDespacho?: true
+    correoAceptacion?: true
+    estadoComercialOrden?: true
+    estadoDocumentacion?: true
+    estadoDocumentacionVenta?: true
+    ordenCompra?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
     flujoPosterior?: true
     motivoDescarte?: true
     tipoBroker?: true
-    fechaEstimadaDespacho?: true
-    fechaSeguimientoPostventa?: true
-    nombreOportunidad?: true
     cargoContacto?: true
     direccionProyecto?: true
-    tipoOportunidad?: true
-    fechaProbableCierre?: true
-    riesgoTecnico?: true
+    nombreOportunidad?: true
     comentariosInternos?: true
-    observacionesTecnicas?: true
+    fechaProbableCierre?: true
     observacionCamposFaltantes?: true
-    lineaProducto?: true
+    observacionesTecnicas?: true
+    riesgoTecnico?: true
+    tipoOportunidad?: true
     descuento?: true
+    lineaProducto?: true
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
@@ -15199,32 +15898,8 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
-    rutEmpresa?: true
-    region?: true
-    comuna?: true
-    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
-    urgencia?: true
-    tipoUso?: true
-    necesidadSoporteTecnico?: true
-    alternativaProducto?: true
-    comision?: true
-    margenEstimado?: true
-    fechaComprometidaEnvio?: true
-    versionCotizacion?: true
-    comentariosCliente?: true
-    objeciones?: true
-    ordenCompra?: true
-    correoAceptacion?: true
-    condicionesComerciales?: true
-    coordinacionAdministrativa?: true
-    estadoDocumentacion?: true
-    traspasoAdministracion?: true
-    traspasoERP?: true
-    coordinacionDespacho?: true
-    estadoComercialOrden?: true
-    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -15233,32 +15908,56 @@ export namespace Prisma {
     fechaProximaAccion?: true
     observaciones?: true
     origen?: true
-    estadoStock?: true
     cotizacionId?: true
+    createdAt?: true
+    updatedAt?: true
+    probabilidad?: true
+    estadoStock?: true
     motivoPerdida?: true
     motivoPostergacion?: true
     fechaReactivacion?: true
     documentoRespaldo?: true
     fechaCierre?: true
-    createdAt?: true
-    updatedAt?: true
-    probabilidad?: true
+    comuna?: true
+    necesidadSoporteTecnico?: true
+    region?: true
+    rutEmpresa?: true
+    tipoUso?: true
+    unidadNegocio?: true
+    urgencia?: true
+    alternativaProducto?: true
+    comentariosCliente?: true
+    comision?: true
+    fechaComprometidaEnvio?: true
+    margenEstimado?: true
+    objeciones?: true
+    versionCotizacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    coordinacionDespacho?: true
+    correoAceptacion?: true
+    estadoComercialOrden?: true
+    estadoDocumentacion?: true
+    estadoDocumentacionVenta?: true
+    ordenCompra?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
     flujoPosterior?: true
     motivoDescarte?: true
     tipoBroker?: true
-    fechaEstimadaDespacho?: true
-    fechaSeguimientoPostventa?: true
-    nombreOportunidad?: true
     cargoContacto?: true
     direccionProyecto?: true
-    tipoOportunidad?: true
-    fechaProbableCierre?: true
-    riesgoTecnico?: true
+    nombreOportunidad?: true
     comentariosInternos?: true
-    observacionesTecnicas?: true
+    fechaProbableCierre?: true
     observacionCamposFaltantes?: true
-    lineaProducto?: true
+    observacionesTecnicas?: true
+    riesgoTecnico?: true
+    tipoOportunidad?: true
     descuento?: true
+    lineaProducto?: true
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
@@ -15272,32 +15971,8 @@ export namespace Prisma {
     telefono?: true
     correo?: true
     tipoCliente?: true
-    rutEmpresa?: true
-    region?: true
-    comuna?: true
-    unidadNegocio?: true
     productoId?: true
     cantidadEstimada?: true
-    urgencia?: true
-    tipoUso?: true
-    necesidadSoporteTecnico?: true
-    alternativaProducto?: true
-    comision?: true
-    margenEstimado?: true
-    fechaComprometidaEnvio?: true
-    versionCotizacion?: true
-    comentariosCliente?: true
-    objeciones?: true
-    ordenCompra?: true
-    correoAceptacion?: true
-    condicionesComerciales?: true
-    coordinacionAdministrativa?: true
-    estadoDocumentacion?: true
-    traspasoAdministracion?: true
-    traspasoERP?: true
-    coordinacionDespacho?: true
-    estadoComercialOrden?: true
-    estadoDocumentacionVenta?: true
     responsable?: true
     etapa?: true
     montoEstimado?: true
@@ -15306,32 +15981,56 @@ export namespace Prisma {
     fechaProximaAccion?: true
     observaciones?: true
     origen?: true
-    estadoStock?: true
     cotizacionId?: true
+    createdAt?: true
+    updatedAt?: true
+    probabilidad?: true
+    estadoStock?: true
     motivoPerdida?: true
     motivoPostergacion?: true
     fechaReactivacion?: true
     documentoRespaldo?: true
     fechaCierre?: true
-    createdAt?: true
-    updatedAt?: true
-    probabilidad?: true
+    comuna?: true
+    necesidadSoporteTecnico?: true
+    region?: true
+    rutEmpresa?: true
+    tipoUso?: true
+    unidadNegocio?: true
+    urgencia?: true
+    alternativaProducto?: true
+    comentariosCliente?: true
+    comision?: true
+    fechaComprometidaEnvio?: true
+    margenEstimado?: true
+    objeciones?: true
+    versionCotizacion?: true
+    condicionesComerciales?: true
+    coordinacionAdministrativa?: true
+    coordinacionDespacho?: true
+    correoAceptacion?: true
+    estadoComercialOrden?: true
+    estadoDocumentacion?: true
+    estadoDocumentacionVenta?: true
+    ordenCompra?: true
+    traspasoAdministracion?: true
+    traspasoERP?: true
+    fechaEstimadaDespacho?: true
+    fechaSeguimientoPostventa?: true
     flujoPosterior?: true
     motivoDescarte?: true
     tipoBroker?: true
-    fechaEstimadaDespacho?: true
-    fechaSeguimientoPostventa?: true
-    nombreOportunidad?: true
     cargoContacto?: true
     direccionProyecto?: true
-    tipoOportunidad?: true
-    fechaProbableCierre?: true
-    riesgoTecnico?: true
+    nombreOportunidad?: true
     comentariosInternos?: true
-    observacionesTecnicas?: true
+    fechaProbableCierre?: true
     observacionCamposFaltantes?: true
-    lineaProducto?: true
+    observacionesTecnicas?: true
+    riesgoTecnico?: true
+    tipoOportunidad?: true
     descuento?: true
+    lineaProducto?: true
     stockOportunidad?: true
     reprogramacionesCount?: true
     fechaUltimoCambioEtapa?: true
@@ -15432,32 +16131,8 @@ export namespace Prisma {
     telefono: string | null
     correo: string | null
     tipoCliente: string | null
-    rutEmpresa: string | null
-    region: string | null
-    comuna: string | null
-    unidadNegocio: string | null
     productoId: number | null
     cantidadEstimada: number | null
-    urgencia: string | null
-    tipoUso: string | null
-    necesidadSoporteTecnico: boolean | null
-    alternativaProducto: string | null
-    comision: number | null
-    margenEstimado: number | null
-    fechaComprometidaEnvio: Date | null
-    versionCotizacion: string | null
-    comentariosCliente: string | null
-    objeciones: string | null
-    ordenCompra: string | null
-    correoAceptacion: string | null
-    condicionesComerciales: string | null
-    coordinacionAdministrativa: string | null
-    estadoDocumentacion: string | null
-    traspasoAdministracion: boolean | null
-    traspasoERP: boolean | null
-    coordinacionDespacho: string | null
-    estadoComercialOrden: string | null
-    estadoDocumentacionVenta: string | null
     responsable: string | null
     etapa: string
     montoEstimado: number
@@ -15466,32 +16141,56 @@ export namespace Prisma {
     fechaProximaAccion: Date | null
     observaciones: string | null
     origen: string | null
-    estadoStock: string | null
     cotizacionId: number | null
+    createdAt: Date
+    updatedAt: Date
+    probabilidad: number | null
+    estadoStock: string | null
     motivoPerdida: string | null
     motivoPostergacion: string | null
     fechaReactivacion: Date | null
     documentoRespaldo: string | null
     fechaCierre: Date | null
-    createdAt: Date
-    updatedAt: Date
-    probabilidad: number | null
+    comuna: string | null
+    necesidadSoporteTecnico: boolean | null
+    region: string | null
+    rutEmpresa: string | null
+    tipoUso: string | null
+    unidadNegocio: string | null
+    urgencia: string | null
+    alternativaProducto: string | null
+    comentariosCliente: string | null
+    comision: number | null
+    fechaComprometidaEnvio: Date | null
+    margenEstimado: number | null
+    objeciones: string | null
+    versionCotizacion: string | null
+    condicionesComerciales: string | null
+    coordinacionAdministrativa: string | null
+    coordinacionDespacho: string | null
+    correoAceptacion: string | null
+    estadoComercialOrden: string | null
+    estadoDocumentacion: string | null
+    estadoDocumentacionVenta: string | null
+    ordenCompra: string | null
+    traspasoAdministracion: boolean | null
+    traspasoERP: boolean | null
+    fechaEstimadaDespacho: Date | null
+    fechaSeguimientoPostventa: Date | null
     flujoPosterior: string | null
     motivoDescarte: string | null
     tipoBroker: string | null
-    fechaEstimadaDespacho: Date | null
-    fechaSeguimientoPostventa: Date | null
-    nombreOportunidad: string | null
     cargoContacto: string | null
     direccionProyecto: string | null
-    tipoOportunidad: string | null
-    fechaProbableCierre: Date | null
-    riesgoTecnico: string | null
+    nombreOportunidad: string | null
     comentariosInternos: string | null
-    observacionesTecnicas: string | null
+    fechaProbableCierre: Date | null
     observacionCamposFaltantes: string | null
-    lineaProducto: string | null
+    observacionesTecnicas: string | null
+    riesgoTecnico: string | null
+    tipoOportunidad: string | null
     descuento: number | null
+    lineaProducto: string | null
     stockOportunidad: string | null
     reprogramacionesCount: number
     fechaUltimoCambioEtapa: Date | null
@@ -15524,32 +16223,8 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
-    rutEmpresa?: boolean
-    region?: boolean
-    comuna?: boolean
-    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
-    urgencia?: boolean
-    tipoUso?: boolean
-    necesidadSoporteTecnico?: boolean
-    alternativaProducto?: boolean
-    comision?: boolean
-    margenEstimado?: boolean
-    fechaComprometidaEnvio?: boolean
-    versionCotizacion?: boolean
-    comentariosCliente?: boolean
-    objeciones?: boolean
-    ordenCompra?: boolean
-    correoAceptacion?: boolean
-    condicionesComerciales?: boolean
-    coordinacionAdministrativa?: boolean
-    estadoDocumentacion?: boolean
-    traspasoAdministracion?: boolean
-    traspasoERP?: boolean
-    coordinacionDespacho?: boolean
-    estadoComercialOrden?: boolean
-    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -15558,32 +16233,56 @@ export namespace Prisma {
     fechaProximaAccion?: boolean
     observaciones?: boolean
     origen?: boolean
-    estadoStock?: boolean
     cotizacionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    probabilidad?: boolean
+    estadoStock?: boolean
     motivoPerdida?: boolean
     motivoPostergacion?: boolean
     fechaReactivacion?: boolean
     documentoRespaldo?: boolean
     fechaCierre?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    probabilidad?: boolean
+    comuna?: boolean
+    necesidadSoporteTecnico?: boolean
+    region?: boolean
+    rutEmpresa?: boolean
+    tipoUso?: boolean
+    unidadNegocio?: boolean
+    urgencia?: boolean
+    alternativaProducto?: boolean
+    comentariosCliente?: boolean
+    comision?: boolean
+    fechaComprometidaEnvio?: boolean
+    margenEstimado?: boolean
+    objeciones?: boolean
+    versionCotizacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    coordinacionDespacho?: boolean
+    correoAceptacion?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacion?: boolean
+    estadoDocumentacionVenta?: boolean
+    ordenCompra?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     flujoPosterior?: boolean
     motivoDescarte?: boolean
     tipoBroker?: boolean
-    fechaEstimadaDespacho?: boolean
-    fechaSeguimientoPostventa?: boolean
-    nombreOportunidad?: boolean
     cargoContacto?: boolean
     direccionProyecto?: boolean
-    tipoOportunidad?: boolean
-    fechaProbableCierre?: boolean
-    riesgoTecnico?: boolean
+    nombreOportunidad?: boolean
     comentariosInternos?: boolean
-    observacionesTecnicas?: boolean
+    fechaProbableCierre?: boolean
     observacionCamposFaltantes?: boolean
-    lineaProducto?: boolean
+    observacionesTecnicas?: boolean
+    riesgoTecnico?: boolean
+    tipoOportunidad?: boolean
     descuento?: boolean
+    lineaProducto?: boolean
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
@@ -15602,32 +16301,8 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
-    rutEmpresa?: boolean
-    region?: boolean
-    comuna?: boolean
-    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
-    urgencia?: boolean
-    tipoUso?: boolean
-    necesidadSoporteTecnico?: boolean
-    alternativaProducto?: boolean
-    comision?: boolean
-    margenEstimado?: boolean
-    fechaComprometidaEnvio?: boolean
-    versionCotizacion?: boolean
-    comentariosCliente?: boolean
-    objeciones?: boolean
-    ordenCompra?: boolean
-    correoAceptacion?: boolean
-    condicionesComerciales?: boolean
-    coordinacionAdministrativa?: boolean
-    estadoDocumentacion?: boolean
-    traspasoAdministracion?: boolean
-    traspasoERP?: boolean
-    coordinacionDespacho?: boolean
-    estadoComercialOrden?: boolean
-    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -15636,32 +16311,56 @@ export namespace Prisma {
     fechaProximaAccion?: boolean
     observaciones?: boolean
     origen?: boolean
-    estadoStock?: boolean
     cotizacionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    probabilidad?: boolean
+    estadoStock?: boolean
     motivoPerdida?: boolean
     motivoPostergacion?: boolean
     fechaReactivacion?: boolean
     documentoRespaldo?: boolean
     fechaCierre?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    probabilidad?: boolean
+    comuna?: boolean
+    necesidadSoporteTecnico?: boolean
+    region?: boolean
+    rutEmpresa?: boolean
+    tipoUso?: boolean
+    unidadNegocio?: boolean
+    urgencia?: boolean
+    alternativaProducto?: boolean
+    comentariosCliente?: boolean
+    comision?: boolean
+    fechaComprometidaEnvio?: boolean
+    margenEstimado?: boolean
+    objeciones?: boolean
+    versionCotizacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    coordinacionDespacho?: boolean
+    correoAceptacion?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacion?: boolean
+    estadoDocumentacionVenta?: boolean
+    ordenCompra?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     flujoPosterior?: boolean
     motivoDescarte?: boolean
     tipoBroker?: boolean
-    fechaEstimadaDespacho?: boolean
-    fechaSeguimientoPostventa?: boolean
-    nombreOportunidad?: boolean
     cargoContacto?: boolean
     direccionProyecto?: boolean
-    tipoOportunidad?: boolean
-    fechaProbableCierre?: boolean
-    riesgoTecnico?: boolean
+    nombreOportunidad?: boolean
     comentariosInternos?: boolean
-    observacionesTecnicas?: boolean
+    fechaProbableCierre?: boolean
     observacionCamposFaltantes?: boolean
-    lineaProducto?: boolean
+    observacionesTecnicas?: boolean
+    riesgoTecnico?: boolean
+    tipoOportunidad?: boolean
     descuento?: boolean
+    lineaProducto?: boolean
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
@@ -15677,32 +16376,8 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
-    rutEmpresa?: boolean
-    region?: boolean
-    comuna?: boolean
-    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
-    urgencia?: boolean
-    tipoUso?: boolean
-    necesidadSoporteTecnico?: boolean
-    alternativaProducto?: boolean
-    comision?: boolean
-    margenEstimado?: boolean
-    fechaComprometidaEnvio?: boolean
-    versionCotizacion?: boolean
-    comentariosCliente?: boolean
-    objeciones?: boolean
-    ordenCompra?: boolean
-    correoAceptacion?: boolean
-    condicionesComerciales?: boolean
-    coordinacionAdministrativa?: boolean
-    estadoDocumentacion?: boolean
-    traspasoAdministracion?: boolean
-    traspasoERP?: boolean
-    coordinacionDespacho?: boolean
-    estadoComercialOrden?: boolean
-    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -15711,32 +16386,56 @@ export namespace Prisma {
     fechaProximaAccion?: boolean
     observaciones?: boolean
     origen?: boolean
-    estadoStock?: boolean
     cotizacionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    probabilidad?: boolean
+    estadoStock?: boolean
     motivoPerdida?: boolean
     motivoPostergacion?: boolean
     fechaReactivacion?: boolean
     documentoRespaldo?: boolean
     fechaCierre?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    probabilidad?: boolean
+    comuna?: boolean
+    necesidadSoporteTecnico?: boolean
+    region?: boolean
+    rutEmpresa?: boolean
+    tipoUso?: boolean
+    unidadNegocio?: boolean
+    urgencia?: boolean
+    alternativaProducto?: boolean
+    comentariosCliente?: boolean
+    comision?: boolean
+    fechaComprometidaEnvio?: boolean
+    margenEstimado?: boolean
+    objeciones?: boolean
+    versionCotizacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    coordinacionDespacho?: boolean
+    correoAceptacion?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacion?: boolean
+    estadoDocumentacionVenta?: boolean
+    ordenCompra?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     flujoPosterior?: boolean
     motivoDescarte?: boolean
     tipoBroker?: boolean
-    fechaEstimadaDespacho?: boolean
-    fechaSeguimientoPostventa?: boolean
-    nombreOportunidad?: boolean
     cargoContacto?: boolean
     direccionProyecto?: boolean
-    tipoOportunidad?: boolean
-    fechaProbableCierre?: boolean
-    riesgoTecnico?: boolean
+    nombreOportunidad?: boolean
     comentariosInternos?: boolean
-    observacionesTecnicas?: boolean
+    fechaProbableCierre?: boolean
     observacionCamposFaltantes?: boolean
-    lineaProducto?: boolean
+    observacionesTecnicas?: boolean
+    riesgoTecnico?: boolean
+    tipoOportunidad?: boolean
     descuento?: boolean
+    lineaProducto?: boolean
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
@@ -15752,32 +16451,8 @@ export namespace Prisma {
     telefono?: boolean
     correo?: boolean
     tipoCliente?: boolean
-    rutEmpresa?: boolean
-    region?: boolean
-    comuna?: boolean
-    unidadNegocio?: boolean
     productoId?: boolean
     cantidadEstimada?: boolean
-    urgencia?: boolean
-    tipoUso?: boolean
-    necesidadSoporteTecnico?: boolean
-    alternativaProducto?: boolean
-    comision?: boolean
-    margenEstimado?: boolean
-    fechaComprometidaEnvio?: boolean
-    versionCotizacion?: boolean
-    comentariosCliente?: boolean
-    objeciones?: boolean
-    ordenCompra?: boolean
-    correoAceptacion?: boolean
-    condicionesComerciales?: boolean
-    coordinacionAdministrativa?: boolean
-    estadoDocumentacion?: boolean
-    traspasoAdministracion?: boolean
-    traspasoERP?: boolean
-    coordinacionDespacho?: boolean
-    estadoComercialOrden?: boolean
-    estadoDocumentacionVenta?: boolean
     responsable?: boolean
     etapa?: boolean
     montoEstimado?: boolean
@@ -15786,39 +16461,63 @@ export namespace Prisma {
     fechaProximaAccion?: boolean
     observaciones?: boolean
     origen?: boolean
-    estadoStock?: boolean
     cotizacionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    probabilidad?: boolean
+    estadoStock?: boolean
     motivoPerdida?: boolean
     motivoPostergacion?: boolean
     fechaReactivacion?: boolean
     documentoRespaldo?: boolean
     fechaCierre?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    probabilidad?: boolean
+    comuna?: boolean
+    necesidadSoporteTecnico?: boolean
+    region?: boolean
+    rutEmpresa?: boolean
+    tipoUso?: boolean
+    unidadNegocio?: boolean
+    urgencia?: boolean
+    alternativaProducto?: boolean
+    comentariosCliente?: boolean
+    comision?: boolean
+    fechaComprometidaEnvio?: boolean
+    margenEstimado?: boolean
+    objeciones?: boolean
+    versionCotizacion?: boolean
+    condicionesComerciales?: boolean
+    coordinacionAdministrativa?: boolean
+    coordinacionDespacho?: boolean
+    correoAceptacion?: boolean
+    estadoComercialOrden?: boolean
+    estadoDocumentacion?: boolean
+    estadoDocumentacionVenta?: boolean
+    ordenCompra?: boolean
+    traspasoAdministracion?: boolean
+    traspasoERP?: boolean
+    fechaEstimadaDespacho?: boolean
+    fechaSeguimientoPostventa?: boolean
     flujoPosterior?: boolean
     motivoDescarte?: boolean
     tipoBroker?: boolean
-    fechaEstimadaDespacho?: boolean
-    fechaSeguimientoPostventa?: boolean
-    nombreOportunidad?: boolean
     cargoContacto?: boolean
     direccionProyecto?: boolean
-    tipoOportunidad?: boolean
-    fechaProbableCierre?: boolean
-    riesgoTecnico?: boolean
+    nombreOportunidad?: boolean
     comentariosInternos?: boolean
-    observacionesTecnicas?: boolean
+    fechaProbableCierre?: boolean
     observacionCamposFaltantes?: boolean
-    lineaProducto?: boolean
+    observacionesTecnicas?: boolean
+    riesgoTecnico?: boolean
+    tipoOportunidad?: boolean
     descuento?: boolean
+    lineaProducto?: boolean
     stockOportunidad?: boolean
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
     esReactivacion?: boolean
   }
 
-  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes" | "lineaProducto" | "descuento" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa" | "esReactivacion", ExtArgs["result"]["funnelFirematOpportunity"]>
+  export type FunnelFirematOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "productoId" | "cantidadEstimada" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "cotizacionId" | "createdAt" | "updatedAt" | "probabilidad" | "estadoStock" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "comuna" | "necesidadSoporteTecnico" | "region" | "rutEmpresa" | "tipoUso" | "unidadNegocio" | "urgencia" | "alternativaProducto" | "comentariosCliente" | "comision" | "fechaComprometidaEnvio" | "margenEstimado" | "objeciones" | "versionCotizacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "coordinacionDespacho" | "correoAceptacion" | "estadoComercialOrden" | "estadoDocumentacion" | "estadoDocumentacionVenta" | "ordenCompra" | "traspasoAdministracion" | "traspasoERP" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "cargoContacto" | "direccionProyecto" | "nombreOportunidad" | "comentariosInternos" | "fechaProbableCierre" | "observacionCamposFaltantes" | "observacionesTecnicas" | "riesgoTecnico" | "tipoOportunidad" | "descuento" | "lineaProducto" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa" | "esReactivacion", ExtArgs["result"]["funnelFirematOpportunity"]>
   export type FunnelFirematOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | FunnelFirematOpportunity$cotizacionArgs<ExtArgs>
     producto?: boolean | FunnelFirematOpportunity$productoArgs<ExtArgs>
@@ -15850,32 +16549,8 @@ export namespace Prisma {
       telefono: string | null
       correo: string | null
       tipoCliente: string | null
-      rutEmpresa: string | null
-      region: string | null
-      comuna: string | null
-      unidadNegocio: string | null
       productoId: number | null
       cantidadEstimada: number | null
-      urgencia: string | null
-      tipoUso: string | null
-      necesidadSoporteTecnico: boolean | null
-      alternativaProducto: string | null
-      comision: number | null
-      margenEstimado: number | null
-      fechaComprometidaEnvio: Date | null
-      versionCotizacion: string | null
-      comentariosCliente: string | null
-      objeciones: string | null
-      ordenCompra: string | null
-      correoAceptacion: string | null
-      condicionesComerciales: string | null
-      coordinacionAdministrativa: string | null
-      estadoDocumentacion: string | null
-      traspasoAdministracion: boolean | null
-      traspasoERP: boolean | null
-      coordinacionDespacho: string | null
-      estadoComercialOrden: string | null
-      estadoDocumentacionVenta: string | null
       responsable: string | null
       etapa: string
       montoEstimado: number
@@ -15884,32 +16559,56 @@ export namespace Prisma {
       fechaProximaAccion: Date | null
       observaciones: string | null
       origen: string | null
-      estadoStock: string | null
       cotizacionId: number | null
+      createdAt: Date
+      updatedAt: Date
+      probabilidad: number | null
+      estadoStock: string | null
       motivoPerdida: string | null
       motivoPostergacion: string | null
       fechaReactivacion: Date | null
       documentoRespaldo: string | null
       fechaCierre: Date | null
-      createdAt: Date
-      updatedAt: Date
-      probabilidad: number | null
+      comuna: string | null
+      necesidadSoporteTecnico: boolean | null
+      region: string | null
+      rutEmpresa: string | null
+      tipoUso: string | null
+      unidadNegocio: string | null
+      urgencia: string | null
+      alternativaProducto: string | null
+      comentariosCliente: string | null
+      comision: number | null
+      fechaComprometidaEnvio: Date | null
+      margenEstimado: number | null
+      objeciones: string | null
+      versionCotizacion: string | null
+      condicionesComerciales: string | null
+      coordinacionAdministrativa: string | null
+      coordinacionDespacho: string | null
+      correoAceptacion: string | null
+      estadoComercialOrden: string | null
+      estadoDocumentacion: string | null
+      estadoDocumentacionVenta: string | null
+      ordenCompra: string | null
+      traspasoAdministracion: boolean | null
+      traspasoERP: boolean | null
+      fechaEstimadaDespacho: Date | null
+      fechaSeguimientoPostventa: Date | null
       flujoPosterior: string | null
       motivoDescarte: string | null
       tipoBroker: string | null
-      fechaEstimadaDespacho: Date | null
-      fechaSeguimientoPostventa: Date | null
-      nombreOportunidad: string | null
       cargoContacto: string | null
       direccionProyecto: string | null
-      tipoOportunidad: string | null
-      fechaProbableCierre: Date | null
-      riesgoTecnico: string | null
+      nombreOportunidad: string | null
       comentariosInternos: string | null
-      observacionesTecnicas: string | null
+      fechaProbableCierre: Date | null
       observacionCamposFaltantes: string | null
-      lineaProducto: string | null
+      observacionesTecnicas: string | null
+      riesgoTecnico: string | null
+      tipoOportunidad: string | null
       descuento: number | null
+      lineaProducto: string | null
       stockOportunidad: string | null
       reprogramacionesCount: number
       fechaUltimoCambioEtapa: Date | null
@@ -15921,7 +16620,7 @@ export namespace Prisma {
   type FunnelFirematOpportunityGetPayload<S extends boolean | null | undefined | FunnelFirematOpportunityDefaultArgs> = $Result.GetResult<Prisma.$FunnelFirematOpportunityPayload, S>
 
   type FunnelFirematOpportunityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FunnelFirematOpportunityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<FunnelFirematOpportunityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: FunnelFirematOpportunityCountAggregateInputType | true
     }
 
@@ -16347,32 +17046,8 @@ export namespace Prisma {
     readonly telefono: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly correo: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly tipoCliente: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly rutEmpresa: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly region: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly comuna: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly unidadNegocio: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly productoId: FieldRef<"FunnelFirematOpportunity", 'Int'>
     readonly cantidadEstimada: FieldRef<"FunnelFirematOpportunity", 'Int'>
-    readonly urgencia: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly tipoUso: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly necesidadSoporteTecnico: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
-    readonly alternativaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly comision: FieldRef<"FunnelFirematOpportunity", 'Float'>
-    readonly margenEstimado: FieldRef<"FunnelFirematOpportunity", 'Float'>
-    readonly fechaComprometidaEnvio: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly versionCotizacion: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly comentariosCliente: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly objeciones: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly ordenCompra: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly correoAceptacion: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly condicionesComerciales: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly coordinacionAdministrativa: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly estadoDocumentacion: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly traspasoAdministracion: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
-    readonly traspasoERP: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
-    readonly coordinacionDespacho: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly estadoComercialOrden: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly estadoDocumentacionVenta: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly responsable: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly etapa: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly montoEstimado: FieldRef<"FunnelFirematOpportunity", 'Float'>
@@ -16381,32 +17056,56 @@ export namespace Prisma {
     readonly fechaProximaAccion: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly observaciones: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly origen: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly estadoStock: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly cotizacionId: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly createdAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly updatedAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly probabilidad: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly estadoStock: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly motivoPerdida: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly motivoPostergacion: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly fechaReactivacion: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly documentoRespaldo: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly fechaCierre: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly createdAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly updatedAt: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly probabilidad: FieldRef<"FunnelFirematOpportunity", 'Int'>
+    readonly comuna: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly necesidadSoporteTecnico: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly region: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly rutEmpresa: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly tipoUso: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly unidadNegocio: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly urgencia: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly alternativaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comentariosCliente: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly comision: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly fechaComprometidaEnvio: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly margenEstimado: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly objeciones: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly versionCotizacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly condicionesComerciales: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly coordinacionAdministrativa: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly coordinacionDespacho: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly correoAceptacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoComercialOrden: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoDocumentacion: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly estadoDocumentacionVenta: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly ordenCompra: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly traspasoAdministracion: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly traspasoERP: FieldRef<"FunnelFirematOpportunity", 'Boolean'>
+    readonly fechaEstimadaDespacho: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
+    readonly fechaSeguimientoPostventa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly flujoPosterior: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly motivoDescarte: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly tipoBroker: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly fechaEstimadaDespacho: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly fechaSeguimientoPostventa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly nombreOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly cargoContacto: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly direccionProyecto: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly tipoOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly fechaProbableCierre: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
-    readonly riesgoTecnico: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly nombreOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly comentariosInternos: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly observacionesTecnicas: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly fechaProbableCierre: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
     readonly observacionCamposFaltantes: FieldRef<"FunnelFirematOpportunity", 'String'>
-    readonly lineaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly observacionesTecnicas: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly riesgoTecnico: FieldRef<"FunnelFirematOpportunity", 'String'>
+    readonly tipoOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly descuento: FieldRef<"FunnelFirematOpportunity", 'Float'>
+    readonly lineaProducto: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly stockOportunidad: FieldRef<"FunnelFirematOpportunity", 'String'>
     readonly reprogramacionesCount: FieldRef<"FunnelFirematOpportunity", 'Int'>
     readonly fechaUltimoCambioEtapa: FieldRef<"FunnelFirematOpportunity", 'DateTime'>
@@ -16435,6 +17134,7 @@ export namespace Prisma {
      * Filter, which FunnelFirematOpportunity to fetch.
      */
     where: FunnelFirematOpportunityWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16457,6 +17157,7 @@ export namespace Prisma {
      * Filter, which FunnelFirematOpportunity to fetch.
      */
     where: FunnelFirematOpportunityWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16509,6 +17210,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematOpportunities.
      */
     distinct?: FunnelFirematOpportunityScalarFieldEnum | FunnelFirematOpportunityScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16561,6 +17263,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematOpportunities.
      */
     distinct?: FunnelFirematOpportunityScalarFieldEnum | FunnelFirematOpportunityScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16613,6 +17316,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematOpportunities.
      */
     distinct?: FunnelFirematOpportunityScalarFieldEnum | FunnelFirematOpportunityScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16635,6 +17339,7 @@ export namespace Prisma {
      * The data needed to create a FunnelFirematOpportunity.
      */
     data: XOR<FunnelFirematOpportunityCreateInput, FunnelFirematOpportunityUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16695,6 +17400,7 @@ export namespace Prisma {
      * Choose, which FunnelFirematOpportunity to update.
      */
     where: FunnelFirematOpportunityWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16773,6 +17479,7 @@ export namespace Prisma {
      * In case the FunnelFirematOpportunity was found with the provided `where` argument, update it with this data.
      */
     update: XOR<FunnelFirematOpportunityUpdateInput, FunnelFirematOpportunityUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16795,6 +17502,7 @@ export namespace Prisma {
      * Filter which FunnelFirematOpportunity to delete.
      */
     where: FunnelFirematOpportunityWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17167,6 +17875,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cotizaciones?: boolean | ContactoClienteFiremat$cotizacionesArgs<ExtArgs>
+    _count?: boolean | ContactoClienteFirematCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contactoClienteFiremat"]>
 
   export type ContactoClienteFirematSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17216,6 +17926,8 @@ export namespace Prisma {
   export type ContactoClienteFirematOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "nombre" | "cargo" | "telefono" | "correo" | "principal" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["contactoClienteFiremat"]>
   export type ContactoClienteFirematInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cotizaciones?: boolean | ContactoClienteFiremat$cotizacionesArgs<ExtArgs>
+    _count?: boolean | ContactoClienteFirematCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactoClienteFirematIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -17228,6 +17940,7 @@ export namespace Prisma {
     name: "ContactoClienteFiremat"
     objects: {
       cliente: Prisma.$ClientePayload<ExtArgs>
+      cotizaciones: Prisma.$CotizacionFirematPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -17248,7 +17961,7 @@ export namespace Prisma {
   type ContactoClienteFirematGetPayload<S extends boolean | null | undefined | ContactoClienteFirematDefaultArgs> = $Result.GetResult<Prisma.$ContactoClienteFirematPayload, S>
 
   type ContactoClienteFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ContactoClienteFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ContactoClienteFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ContactoClienteFirematCountAggregateInputType | true
     }
 
@@ -17636,6 +18349,7 @@ export namespace Prisma {
   export interface Prisma__ContactoClienteFirematClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cotizaciones<T extends ContactoClienteFiremat$cotizacionesArgs<ExtArgs> = {}>(args?: Subset<T, ContactoClienteFiremat$cotizacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionFirematPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17700,6 +18414,7 @@ export namespace Prisma {
      * Filter, which ContactoClienteFiremat to fetch.
      */
     where: ContactoClienteFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17722,6 +18437,7 @@ export namespace Prisma {
      * Filter, which ContactoClienteFiremat to fetch.
      */
     where: ContactoClienteFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17774,6 +18490,7 @@ export namespace Prisma {
      * Filter by unique combinations of ContactoClienteFiremats.
      */
     distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17826,6 +18543,7 @@ export namespace Prisma {
      * Filter by unique combinations of ContactoClienteFiremats.
      */
     distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17878,6 +18596,7 @@ export namespace Prisma {
      * Filter by unique combinations of ContactoClienteFiremats.
      */
     distinct?: ContactoClienteFirematScalarFieldEnum | ContactoClienteFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17900,6 +18619,7 @@ export namespace Prisma {
      * The data needed to create a ContactoClienteFiremat.
      */
     data: XOR<ContactoClienteFirematCreateInput, ContactoClienteFirematUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17960,6 +18680,7 @@ export namespace Prisma {
      * Choose, which ContactoClienteFiremat to update.
      */
     where: ContactoClienteFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18038,6 +18759,7 @@ export namespace Prisma {
      * In case the ContactoClienteFiremat was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ContactoClienteFirematUpdateInput, ContactoClienteFirematUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18060,6 +18782,7 @@ export namespace Prisma {
      * Filter which ContactoClienteFiremat to delete.
      */
     where: ContactoClienteFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18074,6 +18797,30 @@ export namespace Prisma {
      * Limit how many ContactoClienteFiremats to delete.
      */
     limit?: number
+  }
+
+  /**
+   * ContactoClienteFiremat.cotizaciones
+   */
+  export type ContactoClienteFiremat$cotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotizacionFiremat
+     */
+    select?: CotizacionFirematSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CotizacionFiremat
+     */
+    omit?: CotizacionFirematOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionFirematInclude<ExtArgs> | null
+    where?: CotizacionFirematWhereInput
+    orderBy?: CotizacionFirematOrderByWithRelationInput | CotizacionFirematOrderByWithRelationInput[]
+    cursor?: CotizacionFirematWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CotizacionFirematScalarFieldEnum | CotizacionFirematScalarFieldEnum[]
   }
 
   /**
@@ -18431,7 +19178,7 @@ export namespace Prisma {
   type FunnelFirematArchivoGetPayload<S extends boolean | null | undefined | FunnelFirematArchivoDefaultArgs> = $Result.GetResult<Prisma.$FunnelFirematArchivoPayload, S>
 
   type FunnelFirematArchivoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FunnelFirematArchivoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<FunnelFirematArchivoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: FunnelFirematArchivoCountAggregateInputType | true
     }
 
@@ -18883,6 +19630,7 @@ export namespace Prisma {
      * Filter, which FunnelFirematArchivo to fetch.
      */
     where: FunnelFirematArchivoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18905,6 +19653,7 @@ export namespace Prisma {
      * Filter, which FunnelFirematArchivo to fetch.
      */
     where: FunnelFirematArchivoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18957,6 +19706,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematArchivos.
      */
     distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19009,6 +19759,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematArchivos.
      */
     distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19061,6 +19812,7 @@ export namespace Prisma {
      * Filter by unique combinations of FunnelFirematArchivos.
      */
     distinct?: FunnelFirematArchivoScalarFieldEnum | FunnelFirematArchivoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19083,6 +19835,7 @@ export namespace Prisma {
      * The data needed to create a FunnelFirematArchivo.
      */
     data: XOR<FunnelFirematArchivoCreateInput, FunnelFirematArchivoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19143,6 +19896,7 @@ export namespace Prisma {
      * Choose, which FunnelFirematArchivo to update.
      */
     where: FunnelFirematArchivoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19221,6 +19975,7 @@ export namespace Prisma {
      * In case the FunnelFirematArchivo was found with the provided `where` argument, update it with this data.
      */
     update: XOR<FunnelFirematArchivoUpdateInput, FunnelFirematArchivoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19243,6 +19998,7 @@ export namespace Prisma {
      * Filter which FunnelFirematArchivo to delete.
      */
     where: FunnelFirematArchivoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19520,7 +20276,7 @@ export namespace Prisma {
   type AlertaVistaFirematGetPayload<S extends boolean | null | undefined | AlertaVistaFirematDefaultArgs> = $Result.GetResult<Prisma.$AlertaVistaFirematPayload, S>
 
   type AlertaVistaFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AlertaVistaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<AlertaVistaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: AlertaVistaFirematCountAggregateInputType | true
     }
 
@@ -19961,6 +20717,7 @@ export namespace Prisma {
      * Filter, which AlertaVistaFiremat to fetch.
      */
     where: AlertaVistaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19979,6 +20736,7 @@ export namespace Prisma {
      * Filter, which AlertaVistaFiremat to fetch.
      */
     where: AlertaVistaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20027,6 +20785,7 @@ export namespace Prisma {
      * Filter by unique combinations of AlertaVistaFiremats.
      */
     distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20075,6 +20834,7 @@ export namespace Prisma {
      * Filter by unique combinations of AlertaVistaFiremats.
      */
     distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20123,6 +20883,7 @@ export namespace Prisma {
      * Filter by unique combinations of AlertaVistaFiremats.
      */
     distinct?: AlertaVistaFirematScalarFieldEnum | AlertaVistaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20141,6 +20902,7 @@ export namespace Prisma {
      * The data needed to create a AlertaVistaFiremat.
      */
     data: XOR<AlertaVistaFirematCreateInput, AlertaVistaFirematUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20193,6 +20955,7 @@ export namespace Prisma {
      * Choose, which AlertaVistaFiremat to update.
      */
     where: AlertaVistaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20263,6 +21026,7 @@ export namespace Prisma {
      * In case the AlertaVistaFiremat was found with the provided `where` argument, update it with this data.
      */
     update: XOR<AlertaVistaFirematUpdateInput, AlertaVistaFirematUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20281,6 +21045,7 @@ export namespace Prisma {
      * Filter which AlertaVistaFiremat to delete.
      */
     where: AlertaVistaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20584,7 +21349,7 @@ export namespace Prisma {
   type HistorialEtapaFirematGetPayload<S extends boolean | null | undefined | HistorialEtapaFirematDefaultArgs> = $Result.GetResult<Prisma.$HistorialEtapaFirematPayload, S>
 
   type HistorialEtapaFirematCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<HistorialEtapaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<HistorialEtapaFirematFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: HistorialEtapaFirematCountAggregateInputType | true
     }
 
@@ -21031,6 +21796,7 @@ export namespace Prisma {
      * Filter, which HistorialEtapaFiremat to fetch.
      */
     where: HistorialEtapaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21053,6 +21819,7 @@ export namespace Prisma {
      * Filter, which HistorialEtapaFiremat to fetch.
      */
     where: HistorialEtapaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21105,6 +21872,7 @@ export namespace Prisma {
      * Filter by unique combinations of HistorialEtapaFiremats.
      */
     distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21157,6 +21925,7 @@ export namespace Prisma {
      * Filter by unique combinations of HistorialEtapaFiremats.
      */
     distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21209,6 +21978,7 @@ export namespace Prisma {
      * Filter by unique combinations of HistorialEtapaFiremats.
      */
     distinct?: HistorialEtapaFirematScalarFieldEnum | HistorialEtapaFirematScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21231,6 +22001,7 @@ export namespace Prisma {
      * The data needed to create a HistorialEtapaFiremat.
      */
     data: XOR<HistorialEtapaFirematCreateInput, HistorialEtapaFirematUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21291,6 +22062,7 @@ export namespace Prisma {
      * Choose, which HistorialEtapaFiremat to update.
      */
     where: HistorialEtapaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21369,6 +22141,7 @@ export namespace Prisma {
      * In case the HistorialEtapaFiremat was found with the provided `where` argument, update it with this data.
      */
     update: XOR<HistorialEtapaFirematUpdateInput, HistorialEtapaFirematUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21391,6 +22164,7 @@ export namespace Prisma {
      * Filter which HistorialEtapaFiremat to delete.
      */
     where: HistorialEtapaFirematWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21427,6 +22201,3433 @@ export namespace Prisma {
 
 
   /**
+   * Model ProductoCodigoBarra
+   */
+
+  export type AggregateProductoCodigoBarra = {
+    _count: ProductoCodigoBarraCountAggregateOutputType | null
+    _avg: ProductoCodigoBarraAvgAggregateOutputType | null
+    _sum: ProductoCodigoBarraSumAggregateOutputType | null
+    _min: ProductoCodigoBarraMinAggregateOutputType | null
+    _max: ProductoCodigoBarraMaxAggregateOutputType | null
+  }
+
+  export type ProductoCodigoBarraAvgAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    unidadesPorEscaneo: number | null
+  }
+
+  export type ProductoCodigoBarraSumAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    unidadesPorEscaneo: number | null
+  }
+
+  export type ProductoCodigoBarraMinAggregateOutputType = {
+    id: number | null
+    codigo: string | null
+    productoId: number | null
+    unidadesPorEscaneo: number | null
+    descripcion: string | null
+    activo: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductoCodigoBarraMaxAggregateOutputType = {
+    id: number | null
+    codigo: string | null
+    productoId: number | null
+    unidadesPorEscaneo: number | null
+    descripcion: string | null
+    activo: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductoCodigoBarraCountAggregateOutputType = {
+    id: number
+    codigo: number
+    productoId: number
+    unidadesPorEscaneo: number
+    descripcion: number
+    activo: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProductoCodigoBarraAvgAggregateInputType = {
+    id?: true
+    productoId?: true
+    unidadesPorEscaneo?: true
+  }
+
+  export type ProductoCodigoBarraSumAggregateInputType = {
+    id?: true
+    productoId?: true
+    unidadesPorEscaneo?: true
+  }
+
+  export type ProductoCodigoBarraMinAggregateInputType = {
+    id?: true
+    codigo?: true
+    productoId?: true
+    unidadesPorEscaneo?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductoCodigoBarraMaxAggregateInputType = {
+    id?: true
+    codigo?: true
+    productoId?: true
+    unidadesPorEscaneo?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductoCodigoBarraCountAggregateInputType = {
+    id?: true
+    codigo?: true
+    productoId?: true
+    unidadesPorEscaneo?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProductoCodigoBarraAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductoCodigoBarra to aggregate.
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductoCodigoBarras to fetch.
+     */
+    orderBy?: ProductoCodigoBarraOrderByWithRelationInput | ProductoCodigoBarraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductoCodigoBarraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductoCodigoBarras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductoCodigoBarras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductoCodigoBarras
+    **/
+    _count?: true | ProductoCodigoBarraCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductoCodigoBarraAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductoCodigoBarraSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductoCodigoBarraMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductoCodigoBarraMaxAggregateInputType
+  }
+
+  export type GetProductoCodigoBarraAggregateType<T extends ProductoCodigoBarraAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductoCodigoBarra]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductoCodigoBarra[P]>
+      : GetScalarType<T[P], AggregateProductoCodigoBarra[P]>
+  }
+
+
+
+
+  export type ProductoCodigoBarraGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductoCodigoBarraWhereInput
+    orderBy?: ProductoCodigoBarraOrderByWithAggregationInput | ProductoCodigoBarraOrderByWithAggregationInput[]
+    by: ProductoCodigoBarraScalarFieldEnum[] | ProductoCodigoBarraScalarFieldEnum
+    having?: ProductoCodigoBarraScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductoCodigoBarraCountAggregateInputType | true
+    _avg?: ProductoCodigoBarraAvgAggregateInputType
+    _sum?: ProductoCodigoBarraSumAggregateInputType
+    _min?: ProductoCodigoBarraMinAggregateInputType
+    _max?: ProductoCodigoBarraMaxAggregateInputType
+  }
+
+  export type ProductoCodigoBarraGroupByOutputType = {
+    id: number
+    codigo: string
+    productoId: number
+    unidadesPorEscaneo: number
+    descripcion: string | null
+    activo: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ProductoCodigoBarraCountAggregateOutputType | null
+    _avg: ProductoCodigoBarraAvgAggregateOutputType | null
+    _sum: ProductoCodigoBarraSumAggregateOutputType | null
+    _min: ProductoCodigoBarraMinAggregateOutputType | null
+    _max: ProductoCodigoBarraMaxAggregateOutputType | null
+  }
+
+  type GetProductoCodigoBarraGroupByPayload<T extends ProductoCodigoBarraGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductoCodigoBarraGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductoCodigoBarraGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductoCodigoBarraGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductoCodigoBarraGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductoCodigoBarraSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codigo?: boolean
+    productoId?: boolean
+    unidadesPorEscaneo?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productoCodigoBarra"]>
+
+  export type ProductoCodigoBarraSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codigo?: boolean
+    productoId?: boolean
+    unidadesPorEscaneo?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productoCodigoBarra"]>
+
+  export type ProductoCodigoBarraSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codigo?: boolean
+    productoId?: boolean
+    unidadesPorEscaneo?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productoCodigoBarra"]>
+
+  export type ProductoCodigoBarraSelectScalar = {
+    id?: boolean
+    codigo?: boolean
+    productoId?: boolean
+    unidadesPorEscaneo?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProductoCodigoBarraOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "codigo" | "productoId" | "unidadesPorEscaneo" | "descripcion" | "activo" | "createdAt" | "updatedAt", ExtArgs["result"]["productoCodigoBarra"]>
+  export type ProductoCodigoBarraInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+  export type ProductoCodigoBarraIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+  export type ProductoCodigoBarraIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+
+  export type $ProductoCodigoBarraPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductoCodigoBarra"
+    objects: {
+      Producto: Prisma.$ProductoPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      codigo: string
+      productoId: number
+      unidadesPorEscaneo: number
+      descripcion: string | null
+      activo: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["productoCodigoBarra"]>
+    composites: {}
+  }
+
+  type ProductoCodigoBarraGetPayload<S extends boolean | null | undefined | ProductoCodigoBarraDefaultArgs> = $Result.GetResult<Prisma.$ProductoCodigoBarraPayload, S>
+
+  type ProductoCodigoBarraCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductoCodigoBarraFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: ProductoCodigoBarraCountAggregateInputType | true
+    }
+
+  export interface ProductoCodigoBarraDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductoCodigoBarra'], meta: { name: 'ProductoCodigoBarra' } }
+    /**
+     * Find zero or one ProductoCodigoBarra that matches the filter.
+     * @param {ProductoCodigoBarraFindUniqueArgs} args - Arguments to find a ProductoCodigoBarra
+     * @example
+     * // Get one ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductoCodigoBarraFindUniqueArgs>(args: SelectSubset<T, ProductoCodigoBarraFindUniqueArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProductoCodigoBarra that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductoCodigoBarraFindUniqueOrThrowArgs} args - Arguments to find a ProductoCodigoBarra
+     * @example
+     * // Get one ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductoCodigoBarraFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductoCodigoBarraFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductoCodigoBarra that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraFindFirstArgs} args - Arguments to find a ProductoCodigoBarra
+     * @example
+     * // Get one ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductoCodigoBarraFindFirstArgs>(args?: SelectSubset<T, ProductoCodigoBarraFindFirstArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductoCodigoBarra that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraFindFirstOrThrowArgs} args - Arguments to find a ProductoCodigoBarra
+     * @example
+     * // Get one ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductoCodigoBarraFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductoCodigoBarraFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProductoCodigoBarras that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductoCodigoBarras
+     * const productoCodigoBarras = await prisma.productoCodigoBarra.findMany()
+     * 
+     * // Get first 10 ProductoCodigoBarras
+     * const productoCodigoBarras = await prisma.productoCodigoBarra.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productoCodigoBarraWithIdOnly = await prisma.productoCodigoBarra.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductoCodigoBarraFindManyArgs>(args?: SelectSubset<T, ProductoCodigoBarraFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProductoCodigoBarra.
+     * @param {ProductoCodigoBarraCreateArgs} args - Arguments to create a ProductoCodigoBarra.
+     * @example
+     * // Create one ProductoCodigoBarra
+     * const ProductoCodigoBarra = await prisma.productoCodigoBarra.create({
+     *   data: {
+     *     // ... data to create a ProductoCodigoBarra
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductoCodigoBarraCreateArgs>(args: SelectSubset<T, ProductoCodigoBarraCreateArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProductoCodigoBarras.
+     * @param {ProductoCodigoBarraCreateManyArgs} args - Arguments to create many ProductoCodigoBarras.
+     * @example
+     * // Create many ProductoCodigoBarras
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductoCodigoBarraCreateManyArgs>(args?: SelectSubset<T, ProductoCodigoBarraCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProductoCodigoBarras and returns the data saved in the database.
+     * @param {ProductoCodigoBarraCreateManyAndReturnArgs} args - Arguments to create many ProductoCodigoBarras.
+     * @example
+     * // Create many ProductoCodigoBarras
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProductoCodigoBarras and only return the `id`
+     * const productoCodigoBarraWithIdOnly = await prisma.productoCodigoBarra.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductoCodigoBarraCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductoCodigoBarraCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProductoCodigoBarra.
+     * @param {ProductoCodigoBarraDeleteArgs} args - Arguments to delete one ProductoCodigoBarra.
+     * @example
+     * // Delete one ProductoCodigoBarra
+     * const ProductoCodigoBarra = await prisma.productoCodigoBarra.delete({
+     *   where: {
+     *     // ... filter to delete one ProductoCodigoBarra
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductoCodigoBarraDeleteArgs>(args: SelectSubset<T, ProductoCodigoBarraDeleteArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProductoCodigoBarra.
+     * @param {ProductoCodigoBarraUpdateArgs} args - Arguments to update one ProductoCodigoBarra.
+     * @example
+     * // Update one ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductoCodigoBarraUpdateArgs>(args: SelectSubset<T, ProductoCodigoBarraUpdateArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProductoCodigoBarras.
+     * @param {ProductoCodigoBarraDeleteManyArgs} args - Arguments to filter ProductoCodigoBarras to delete.
+     * @example
+     * // Delete a few ProductoCodigoBarras
+     * const { count } = await prisma.productoCodigoBarra.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductoCodigoBarraDeleteManyArgs>(args?: SelectSubset<T, ProductoCodigoBarraDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductoCodigoBarras.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductoCodigoBarras
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductoCodigoBarraUpdateManyArgs>(args: SelectSubset<T, ProductoCodigoBarraUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductoCodigoBarras and returns the data updated in the database.
+     * @param {ProductoCodigoBarraUpdateManyAndReturnArgs} args - Arguments to update many ProductoCodigoBarras.
+     * @example
+     * // Update many ProductoCodigoBarras
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProductoCodigoBarras and only return the `id`
+     * const productoCodigoBarraWithIdOnly = await prisma.productoCodigoBarra.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductoCodigoBarraUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductoCodigoBarraUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProductoCodigoBarra.
+     * @param {ProductoCodigoBarraUpsertArgs} args - Arguments to update or create a ProductoCodigoBarra.
+     * @example
+     * // Update or create a ProductoCodigoBarra
+     * const productoCodigoBarra = await prisma.productoCodigoBarra.upsert({
+     *   create: {
+     *     // ... data to create a ProductoCodigoBarra
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductoCodigoBarra we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductoCodigoBarraUpsertArgs>(args: SelectSubset<T, ProductoCodigoBarraUpsertArgs<ExtArgs>>): Prisma__ProductoCodigoBarraClient<$Result.GetResult<Prisma.$ProductoCodigoBarraPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProductoCodigoBarras.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraCountArgs} args - Arguments to filter ProductoCodigoBarras to count.
+     * @example
+     * // Count the number of ProductoCodigoBarras
+     * const count = await prisma.productoCodigoBarra.count({
+     *   where: {
+     *     // ... the filter for the ProductoCodigoBarras we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductoCodigoBarraCountArgs>(
+      args?: Subset<T, ProductoCodigoBarraCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductoCodigoBarraCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductoCodigoBarra.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductoCodigoBarraAggregateArgs>(args: Subset<T, ProductoCodigoBarraAggregateArgs>): Prisma.PrismaPromise<GetProductoCodigoBarraAggregateType<T>>
+
+    /**
+     * Group by ProductoCodigoBarra.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductoCodigoBarraGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductoCodigoBarraGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductoCodigoBarraGroupByArgs['orderBy'] }
+        : { orderBy?: ProductoCodigoBarraGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductoCodigoBarraGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductoCodigoBarraGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProductoCodigoBarra model
+   */
+  readonly fields: ProductoCodigoBarraFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductoCodigoBarra.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductoCodigoBarraClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProductoCodigoBarra model
+   */
+  interface ProductoCodigoBarraFieldRefs {
+    readonly id: FieldRef<"ProductoCodigoBarra", 'Int'>
+    readonly codigo: FieldRef<"ProductoCodigoBarra", 'String'>
+    readonly productoId: FieldRef<"ProductoCodigoBarra", 'Int'>
+    readonly unidadesPorEscaneo: FieldRef<"ProductoCodigoBarra", 'Int'>
+    readonly descripcion: FieldRef<"ProductoCodigoBarra", 'String'>
+    readonly activo: FieldRef<"ProductoCodigoBarra", 'Boolean'>
+    readonly createdAt: FieldRef<"ProductoCodigoBarra", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProductoCodigoBarra", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProductoCodigoBarra findUnique
+   */
+  export type ProductoCodigoBarraFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductoCodigoBarra to fetch.
+     */
+    where: ProductoCodigoBarraWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra findUniqueOrThrow
+   */
+  export type ProductoCodigoBarraFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductoCodigoBarra to fetch.
+     */
+    where: ProductoCodigoBarraWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra findFirst
+   */
+  export type ProductoCodigoBarraFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductoCodigoBarra to fetch.
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductoCodigoBarras to fetch.
+     */
+    orderBy?: ProductoCodigoBarraOrderByWithRelationInput | ProductoCodigoBarraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductoCodigoBarras.
+     */
+    cursor?: ProductoCodigoBarraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductoCodigoBarras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductoCodigoBarras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductoCodigoBarras.
+     */
+    distinct?: ProductoCodigoBarraScalarFieldEnum | ProductoCodigoBarraScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra findFirstOrThrow
+   */
+  export type ProductoCodigoBarraFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductoCodigoBarra to fetch.
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductoCodigoBarras to fetch.
+     */
+    orderBy?: ProductoCodigoBarraOrderByWithRelationInput | ProductoCodigoBarraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductoCodigoBarras.
+     */
+    cursor?: ProductoCodigoBarraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductoCodigoBarras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductoCodigoBarras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductoCodigoBarras.
+     */
+    distinct?: ProductoCodigoBarraScalarFieldEnum | ProductoCodigoBarraScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra findMany
+   */
+  export type ProductoCodigoBarraFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductoCodigoBarras to fetch.
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductoCodigoBarras to fetch.
+     */
+    orderBy?: ProductoCodigoBarraOrderByWithRelationInput | ProductoCodigoBarraOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductoCodigoBarras.
+     */
+    cursor?: ProductoCodigoBarraWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductoCodigoBarras from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductoCodigoBarras.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductoCodigoBarras.
+     */
+    distinct?: ProductoCodigoBarraScalarFieldEnum | ProductoCodigoBarraScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra create
+   */
+  export type ProductoCodigoBarraCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProductoCodigoBarra.
+     */
+    data: XOR<ProductoCodigoBarraCreateInput, ProductoCodigoBarraUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra createMany
+   */
+  export type ProductoCodigoBarraCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProductoCodigoBarras.
+     */
+    data: ProductoCodigoBarraCreateManyInput | ProductoCodigoBarraCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProductoCodigoBarra createManyAndReturn
+   */
+  export type ProductoCodigoBarraCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProductoCodigoBarras.
+     */
+    data: ProductoCodigoBarraCreateManyInput | ProductoCodigoBarraCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductoCodigoBarra update
+   */
+  export type ProductoCodigoBarraUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProductoCodigoBarra.
+     */
+    data: XOR<ProductoCodigoBarraUpdateInput, ProductoCodigoBarraUncheckedUpdateInput>
+    /**
+     * Choose, which ProductoCodigoBarra to update.
+     */
+    where: ProductoCodigoBarraWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra updateMany
+   */
+  export type ProductoCodigoBarraUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProductoCodigoBarras.
+     */
+    data: XOR<ProductoCodigoBarraUpdateManyMutationInput, ProductoCodigoBarraUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductoCodigoBarras to update
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * Limit how many ProductoCodigoBarras to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductoCodigoBarra updateManyAndReturn
+   */
+  export type ProductoCodigoBarraUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * The data used to update ProductoCodigoBarras.
+     */
+    data: XOR<ProductoCodigoBarraUpdateManyMutationInput, ProductoCodigoBarraUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductoCodigoBarras to update
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * Limit how many ProductoCodigoBarras to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductoCodigoBarra upsert
+   */
+  export type ProductoCodigoBarraUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProductoCodigoBarra to update in case it exists.
+     */
+    where: ProductoCodigoBarraWhereUniqueInput
+    /**
+     * In case the ProductoCodigoBarra found by the `where` argument doesn't exist, create a new ProductoCodigoBarra with this data.
+     */
+    create: XOR<ProductoCodigoBarraCreateInput, ProductoCodigoBarraUncheckedCreateInput>
+    /**
+     * In case the ProductoCodigoBarra was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductoCodigoBarraUpdateInput, ProductoCodigoBarraUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra delete
+   */
+  export type ProductoCodigoBarraDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+    /**
+     * Filter which ProductoCodigoBarra to delete.
+     */
+    where: ProductoCodigoBarraWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProductoCodigoBarra deleteMany
+   */
+  export type ProductoCodigoBarraDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductoCodigoBarras to delete
+     */
+    where?: ProductoCodigoBarraWhereInput
+    /**
+     * Limit how many ProductoCodigoBarras to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductoCodigoBarra without action
+   */
+  export type ProductoCodigoBarraDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductoCodigoBarra
+     */
+    select?: ProductoCodigoBarraSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductoCodigoBarra
+     */
+    omit?: ProductoCodigoBarraOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoCodigoBarraInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RecepcionEscaneo
+   */
+
+  export type AggregateRecepcionEscaneo = {
+    _count: RecepcionEscaneoCountAggregateOutputType | null
+    _min: RecepcionEscaneoMinAggregateOutputType | null
+    _max: RecepcionEscaneoMaxAggregateOutputType | null
+  }
+
+  export type RecepcionEscaneoMinAggregateOutputType = {
+    id: string | null
+    usuarioId: string | null
+    motivo: string | null
+    createdAt: Date | null
+  }
+
+  export type RecepcionEscaneoMaxAggregateOutputType = {
+    id: string | null
+    usuarioId: string | null
+    motivo: string | null
+    createdAt: Date | null
+  }
+
+  export type RecepcionEscaneoCountAggregateOutputType = {
+    id: number
+    usuarioId: number
+    motivo: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RecepcionEscaneoMinAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    motivo?: true
+    createdAt?: true
+  }
+
+  export type RecepcionEscaneoMaxAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    motivo?: true
+    createdAt?: true
+  }
+
+  export type RecepcionEscaneoCountAggregateInputType = {
+    id?: true
+    usuarioId?: true
+    motivo?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RecepcionEscaneoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecepcionEscaneo to aggregate.
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneos to fetch.
+     */
+    orderBy?: RecepcionEscaneoOrderByWithRelationInput | RecepcionEscaneoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RecepcionEscaneoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RecepcionEscaneos
+    **/
+    _count?: true | RecepcionEscaneoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RecepcionEscaneoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RecepcionEscaneoMaxAggregateInputType
+  }
+
+  export type GetRecepcionEscaneoAggregateType<T extends RecepcionEscaneoAggregateArgs> = {
+        [P in keyof T & keyof AggregateRecepcionEscaneo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRecepcionEscaneo[P]>
+      : GetScalarType<T[P], AggregateRecepcionEscaneo[P]>
+  }
+
+
+
+
+  export type RecepcionEscaneoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecepcionEscaneoWhereInput
+    orderBy?: RecepcionEscaneoOrderByWithAggregationInput | RecepcionEscaneoOrderByWithAggregationInput[]
+    by: RecepcionEscaneoScalarFieldEnum[] | RecepcionEscaneoScalarFieldEnum
+    having?: RecepcionEscaneoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RecepcionEscaneoCountAggregateInputType | true
+    _min?: RecepcionEscaneoMinAggregateInputType
+    _max?: RecepcionEscaneoMaxAggregateInputType
+  }
+
+  export type RecepcionEscaneoGroupByOutputType = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt: Date
+    _count: RecepcionEscaneoCountAggregateOutputType | null
+    _min: RecepcionEscaneoMinAggregateOutputType | null
+    _max: RecepcionEscaneoMaxAggregateOutputType | null
+  }
+
+  type GetRecepcionEscaneoGroupByPayload<T extends RecepcionEscaneoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RecepcionEscaneoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RecepcionEscaneoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RecepcionEscaneoGroupByOutputType[P]>
+            : GetScalarType<T[P], RecepcionEscaneoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RecepcionEscaneoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    motivo?: boolean
+    createdAt?: boolean
+    RecepcionEscaneoDetalle?: boolean | RecepcionEscaneo$RecepcionEscaneoDetalleArgs<ExtArgs>
+    _count?: boolean | RecepcionEscaneoCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recepcionEscaneo"]>
+
+  export type RecepcionEscaneoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    motivo?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["recepcionEscaneo"]>
+
+  export type RecepcionEscaneoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    usuarioId?: boolean
+    motivo?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["recepcionEscaneo"]>
+
+  export type RecepcionEscaneoSelectScalar = {
+    id?: boolean
+    usuarioId?: boolean
+    motivo?: boolean
+    createdAt?: boolean
+  }
+
+  export type RecepcionEscaneoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "usuarioId" | "motivo" | "createdAt", ExtArgs["result"]["recepcionEscaneo"]>
+  export type RecepcionEscaneoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    RecepcionEscaneoDetalle?: boolean | RecepcionEscaneo$RecepcionEscaneoDetalleArgs<ExtArgs>
+    _count?: boolean | RecepcionEscaneoCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type RecepcionEscaneoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type RecepcionEscaneoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $RecepcionEscaneoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RecepcionEscaneo"
+    objects: {
+      RecepcionEscaneoDetalle: Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      usuarioId: string
+      motivo: string
+      createdAt: Date
+    }, ExtArgs["result"]["recepcionEscaneo"]>
+    composites: {}
+  }
+
+  type RecepcionEscaneoGetPayload<S extends boolean | null | undefined | RecepcionEscaneoDefaultArgs> = $Result.GetResult<Prisma.$RecepcionEscaneoPayload, S>
+
+  type RecepcionEscaneoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RecepcionEscaneoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: RecepcionEscaneoCountAggregateInputType | true
+    }
+
+  export interface RecepcionEscaneoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RecepcionEscaneo'], meta: { name: 'RecepcionEscaneo' } }
+    /**
+     * Find zero or one RecepcionEscaneo that matches the filter.
+     * @param {RecepcionEscaneoFindUniqueArgs} args - Arguments to find a RecepcionEscaneo
+     * @example
+     * // Get one RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RecepcionEscaneoFindUniqueArgs>(args: SelectSubset<T, RecepcionEscaneoFindUniqueArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RecepcionEscaneo that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RecepcionEscaneoFindUniqueOrThrowArgs} args - Arguments to find a RecepcionEscaneo
+     * @example
+     * // Get one RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RecepcionEscaneoFindUniqueOrThrowArgs>(args: SelectSubset<T, RecepcionEscaneoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecepcionEscaneo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoFindFirstArgs} args - Arguments to find a RecepcionEscaneo
+     * @example
+     * // Get one RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RecepcionEscaneoFindFirstArgs>(args?: SelectSubset<T, RecepcionEscaneoFindFirstArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecepcionEscaneo that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoFindFirstOrThrowArgs} args - Arguments to find a RecepcionEscaneo
+     * @example
+     * // Get one RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RecepcionEscaneoFindFirstOrThrowArgs>(args?: SelectSubset<T, RecepcionEscaneoFindFirstOrThrowArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RecepcionEscaneos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RecepcionEscaneos
+     * const recepcionEscaneos = await prisma.recepcionEscaneo.findMany()
+     * 
+     * // Get first 10 RecepcionEscaneos
+     * const recepcionEscaneos = await prisma.recepcionEscaneo.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const recepcionEscaneoWithIdOnly = await prisma.recepcionEscaneo.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RecepcionEscaneoFindManyArgs>(args?: SelectSubset<T, RecepcionEscaneoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RecepcionEscaneo.
+     * @param {RecepcionEscaneoCreateArgs} args - Arguments to create a RecepcionEscaneo.
+     * @example
+     * // Create one RecepcionEscaneo
+     * const RecepcionEscaneo = await prisma.recepcionEscaneo.create({
+     *   data: {
+     *     // ... data to create a RecepcionEscaneo
+     *   }
+     * })
+     * 
+     */
+    create<T extends RecepcionEscaneoCreateArgs>(args: SelectSubset<T, RecepcionEscaneoCreateArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RecepcionEscaneos.
+     * @param {RecepcionEscaneoCreateManyArgs} args - Arguments to create many RecepcionEscaneos.
+     * @example
+     * // Create many RecepcionEscaneos
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RecepcionEscaneoCreateManyArgs>(args?: SelectSubset<T, RecepcionEscaneoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RecepcionEscaneos and returns the data saved in the database.
+     * @param {RecepcionEscaneoCreateManyAndReturnArgs} args - Arguments to create many RecepcionEscaneos.
+     * @example
+     * // Create many RecepcionEscaneos
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RecepcionEscaneos and only return the `id`
+     * const recepcionEscaneoWithIdOnly = await prisma.recepcionEscaneo.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RecepcionEscaneoCreateManyAndReturnArgs>(args?: SelectSubset<T, RecepcionEscaneoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RecepcionEscaneo.
+     * @param {RecepcionEscaneoDeleteArgs} args - Arguments to delete one RecepcionEscaneo.
+     * @example
+     * // Delete one RecepcionEscaneo
+     * const RecepcionEscaneo = await prisma.recepcionEscaneo.delete({
+     *   where: {
+     *     // ... filter to delete one RecepcionEscaneo
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RecepcionEscaneoDeleteArgs>(args: SelectSubset<T, RecepcionEscaneoDeleteArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RecepcionEscaneo.
+     * @param {RecepcionEscaneoUpdateArgs} args - Arguments to update one RecepcionEscaneo.
+     * @example
+     * // Update one RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RecepcionEscaneoUpdateArgs>(args: SelectSubset<T, RecepcionEscaneoUpdateArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RecepcionEscaneos.
+     * @param {RecepcionEscaneoDeleteManyArgs} args - Arguments to filter RecepcionEscaneos to delete.
+     * @example
+     * // Delete a few RecepcionEscaneos
+     * const { count } = await prisma.recepcionEscaneo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RecepcionEscaneoDeleteManyArgs>(args?: SelectSubset<T, RecepcionEscaneoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecepcionEscaneos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RecepcionEscaneos
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RecepcionEscaneoUpdateManyArgs>(args: SelectSubset<T, RecepcionEscaneoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecepcionEscaneos and returns the data updated in the database.
+     * @param {RecepcionEscaneoUpdateManyAndReturnArgs} args - Arguments to update many RecepcionEscaneos.
+     * @example
+     * // Update many RecepcionEscaneos
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RecepcionEscaneos and only return the `id`
+     * const recepcionEscaneoWithIdOnly = await prisma.recepcionEscaneo.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RecepcionEscaneoUpdateManyAndReturnArgs>(args: SelectSubset<T, RecepcionEscaneoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RecepcionEscaneo.
+     * @param {RecepcionEscaneoUpsertArgs} args - Arguments to update or create a RecepcionEscaneo.
+     * @example
+     * // Update or create a RecepcionEscaneo
+     * const recepcionEscaneo = await prisma.recepcionEscaneo.upsert({
+     *   create: {
+     *     // ... data to create a RecepcionEscaneo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RecepcionEscaneo we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RecepcionEscaneoUpsertArgs>(args: SelectSubset<T, RecepcionEscaneoUpsertArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RecepcionEscaneos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoCountArgs} args - Arguments to filter RecepcionEscaneos to count.
+     * @example
+     * // Count the number of RecepcionEscaneos
+     * const count = await prisma.recepcionEscaneo.count({
+     *   where: {
+     *     // ... the filter for the RecepcionEscaneos we want to count
+     *   }
+     * })
+    **/
+    count<T extends RecepcionEscaneoCountArgs>(
+      args?: Subset<T, RecepcionEscaneoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RecepcionEscaneoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RecepcionEscaneo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RecepcionEscaneoAggregateArgs>(args: Subset<T, RecepcionEscaneoAggregateArgs>): Prisma.PrismaPromise<GetRecepcionEscaneoAggregateType<T>>
+
+    /**
+     * Group by RecepcionEscaneo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RecepcionEscaneoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RecepcionEscaneoGroupByArgs['orderBy'] }
+        : { orderBy?: RecepcionEscaneoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RecepcionEscaneoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRecepcionEscaneoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RecepcionEscaneo model
+   */
+  readonly fields: RecepcionEscaneoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RecepcionEscaneo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RecepcionEscaneoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    RecepcionEscaneoDetalle<T extends RecepcionEscaneo$RecepcionEscaneoDetalleArgs<ExtArgs> = {}>(args?: Subset<T, RecepcionEscaneo$RecepcionEscaneoDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RecepcionEscaneo model
+   */
+  interface RecepcionEscaneoFieldRefs {
+    readonly id: FieldRef<"RecepcionEscaneo", 'String'>
+    readonly usuarioId: FieldRef<"RecepcionEscaneo", 'String'>
+    readonly motivo: FieldRef<"RecepcionEscaneo", 'String'>
+    readonly createdAt: FieldRef<"RecepcionEscaneo", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RecepcionEscaneo findUnique
+   */
+  export type RecepcionEscaneoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneo to fetch.
+     */
+    where: RecepcionEscaneoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo findUniqueOrThrow
+   */
+  export type RecepcionEscaneoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneo to fetch.
+     */
+    where: RecepcionEscaneoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo findFirst
+   */
+  export type RecepcionEscaneoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneo to fetch.
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneos to fetch.
+     */
+    orderBy?: RecepcionEscaneoOrderByWithRelationInput | RecepcionEscaneoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecepcionEscaneos.
+     */
+    cursor?: RecepcionEscaneoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneos.
+     */
+    distinct?: RecepcionEscaneoScalarFieldEnum | RecepcionEscaneoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo findFirstOrThrow
+   */
+  export type RecepcionEscaneoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneo to fetch.
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneos to fetch.
+     */
+    orderBy?: RecepcionEscaneoOrderByWithRelationInput | RecepcionEscaneoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecepcionEscaneos.
+     */
+    cursor?: RecepcionEscaneoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneos.
+     */
+    distinct?: RecepcionEscaneoScalarFieldEnum | RecepcionEscaneoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo findMany
+   */
+  export type RecepcionEscaneoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneos to fetch.
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneos to fetch.
+     */
+    orderBy?: RecepcionEscaneoOrderByWithRelationInput | RecepcionEscaneoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RecepcionEscaneos.
+     */
+    cursor?: RecepcionEscaneoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneos.
+     */
+    distinct?: RecepcionEscaneoScalarFieldEnum | RecepcionEscaneoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo create
+   */
+  export type RecepcionEscaneoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RecepcionEscaneo.
+     */
+    data: XOR<RecepcionEscaneoCreateInput, RecepcionEscaneoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo createMany
+   */
+  export type RecepcionEscaneoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RecepcionEscaneos.
+     */
+    data: RecepcionEscaneoCreateManyInput | RecepcionEscaneoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RecepcionEscaneo createManyAndReturn
+   */
+  export type RecepcionEscaneoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * The data used to create many RecepcionEscaneos.
+     */
+    data: RecepcionEscaneoCreateManyInput | RecepcionEscaneoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RecepcionEscaneo update
+   */
+  export type RecepcionEscaneoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RecepcionEscaneo.
+     */
+    data: XOR<RecepcionEscaneoUpdateInput, RecepcionEscaneoUncheckedUpdateInput>
+    /**
+     * Choose, which RecepcionEscaneo to update.
+     */
+    where: RecepcionEscaneoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo updateMany
+   */
+  export type RecepcionEscaneoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RecepcionEscaneos.
+     */
+    data: XOR<RecepcionEscaneoUpdateManyMutationInput, RecepcionEscaneoUncheckedUpdateManyInput>
+    /**
+     * Filter which RecepcionEscaneos to update
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * Limit how many RecepcionEscaneos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecepcionEscaneo updateManyAndReturn
+   */
+  export type RecepcionEscaneoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * The data used to update RecepcionEscaneos.
+     */
+    data: XOR<RecepcionEscaneoUpdateManyMutationInput, RecepcionEscaneoUncheckedUpdateManyInput>
+    /**
+     * Filter which RecepcionEscaneos to update
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * Limit how many RecepcionEscaneos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecepcionEscaneo upsert
+   */
+  export type RecepcionEscaneoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RecepcionEscaneo to update in case it exists.
+     */
+    where: RecepcionEscaneoWhereUniqueInput
+    /**
+     * In case the RecepcionEscaneo found by the `where` argument doesn't exist, create a new RecepcionEscaneo with this data.
+     */
+    create: XOR<RecepcionEscaneoCreateInput, RecepcionEscaneoUncheckedCreateInput>
+    /**
+     * In case the RecepcionEscaneo was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RecepcionEscaneoUpdateInput, RecepcionEscaneoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo delete
+   */
+  export type RecepcionEscaneoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+    /**
+     * Filter which RecepcionEscaneo to delete.
+     */
+    where: RecepcionEscaneoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneo deleteMany
+   */
+  export type RecepcionEscaneoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecepcionEscaneos to delete
+     */
+    where?: RecepcionEscaneoWhereInput
+    /**
+     * Limit how many RecepcionEscaneos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecepcionEscaneo.RecepcionEscaneoDetalle
+   */
+  export type RecepcionEscaneo$RecepcionEscaneoDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    where?: RecepcionEscaneoDetalleWhereInput
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RecepcionEscaneoDetalleScalarFieldEnum | RecepcionEscaneoDetalleScalarFieldEnum[]
+  }
+
+  /**
+   * RecepcionEscaneo without action
+   */
+  export type RecepcionEscaneoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneo
+     */
+    select?: RecepcionEscaneoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneo
+     */
+    omit?: RecepcionEscaneoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RecepcionEscaneoDetalle
+   */
+
+  export type AggregateRecepcionEscaneoDetalle = {
+    _count: RecepcionEscaneoDetalleCountAggregateOutputType | null
+    _avg: RecepcionEscaneoDetalleAvgAggregateOutputType | null
+    _sum: RecepcionEscaneoDetalleSumAggregateOutputType | null
+    _min: RecepcionEscaneoDetalleMinAggregateOutputType | null
+    _max: RecepcionEscaneoDetalleMaxAggregateOutputType | null
+  }
+
+  export type RecepcionEscaneoDetalleAvgAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cantidadEscaneos: number | null
+    unidadesPorEscaneo: number | null
+    unidadesIngresadas: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+  }
+
+  export type RecepcionEscaneoDetalleSumAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cantidadEscaneos: number | null
+    unidadesPorEscaneo: number | null
+    unidadesIngresadas: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+  }
+
+  export type RecepcionEscaneoDetalleMinAggregateOutputType = {
+    id: number | null
+    recepcionId: string | null
+    productoId: number | null
+    codigo: string | null
+    cantidadEscaneos: number | null
+    unidadesPorEscaneo: number | null
+    unidadesIngresadas: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    createdAt: Date | null
+  }
+
+  export type RecepcionEscaneoDetalleMaxAggregateOutputType = {
+    id: number | null
+    recepcionId: string | null
+    productoId: number | null
+    codigo: string | null
+    cantidadEscaneos: number | null
+    unidadesPorEscaneo: number | null
+    unidadesIngresadas: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    createdAt: Date | null
+  }
+
+  export type RecepcionEscaneoDetalleCountAggregateOutputType = {
+    id: number
+    recepcionId: number
+    productoId: number
+    codigo: number
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RecepcionEscaneoDetalleAvgAggregateInputType = {
+    id?: true
+    productoId?: true
+    cantidadEscaneos?: true
+    unidadesPorEscaneo?: true
+    unidadesIngresadas?: true
+    stockAnterior?: true
+    stockNuevo?: true
+  }
+
+  export type RecepcionEscaneoDetalleSumAggregateInputType = {
+    id?: true
+    productoId?: true
+    cantidadEscaneos?: true
+    unidadesPorEscaneo?: true
+    unidadesIngresadas?: true
+    stockAnterior?: true
+    stockNuevo?: true
+  }
+
+  export type RecepcionEscaneoDetalleMinAggregateInputType = {
+    id?: true
+    recepcionId?: true
+    productoId?: true
+    codigo?: true
+    cantidadEscaneos?: true
+    unidadesPorEscaneo?: true
+    unidadesIngresadas?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    createdAt?: true
+  }
+
+  export type RecepcionEscaneoDetalleMaxAggregateInputType = {
+    id?: true
+    recepcionId?: true
+    productoId?: true
+    codigo?: true
+    cantidadEscaneos?: true
+    unidadesPorEscaneo?: true
+    unidadesIngresadas?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    createdAt?: true
+  }
+
+  export type RecepcionEscaneoDetalleCountAggregateInputType = {
+    id?: true
+    recepcionId?: true
+    productoId?: true
+    codigo?: true
+    cantidadEscaneos?: true
+    unidadesPorEscaneo?: true
+    unidadesIngresadas?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RecepcionEscaneoDetalleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecepcionEscaneoDetalle to aggregate.
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneoDetalles to fetch.
+     */
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneoDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneoDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RecepcionEscaneoDetalles
+    **/
+    _count?: true | RecepcionEscaneoDetalleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RecepcionEscaneoDetalleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RecepcionEscaneoDetalleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RecepcionEscaneoDetalleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RecepcionEscaneoDetalleMaxAggregateInputType
+  }
+
+  export type GetRecepcionEscaneoDetalleAggregateType<T extends RecepcionEscaneoDetalleAggregateArgs> = {
+        [P in keyof T & keyof AggregateRecepcionEscaneoDetalle]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRecepcionEscaneoDetalle[P]>
+      : GetScalarType<T[P], AggregateRecepcionEscaneoDetalle[P]>
+  }
+
+
+
+
+  export type RecepcionEscaneoDetalleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RecepcionEscaneoDetalleWhereInput
+    orderBy?: RecepcionEscaneoDetalleOrderByWithAggregationInput | RecepcionEscaneoDetalleOrderByWithAggregationInput[]
+    by: RecepcionEscaneoDetalleScalarFieldEnum[] | RecepcionEscaneoDetalleScalarFieldEnum
+    having?: RecepcionEscaneoDetalleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RecepcionEscaneoDetalleCountAggregateInputType | true
+    _avg?: RecepcionEscaneoDetalleAvgAggregateInputType
+    _sum?: RecepcionEscaneoDetalleSumAggregateInputType
+    _min?: RecepcionEscaneoDetalleMinAggregateInputType
+    _max?: RecepcionEscaneoDetalleMaxAggregateInputType
+  }
+
+  export type RecepcionEscaneoDetalleGroupByOutputType = {
+    id: number
+    recepcionId: string
+    productoId: number
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt: Date
+    _count: RecepcionEscaneoDetalleCountAggregateOutputType | null
+    _avg: RecepcionEscaneoDetalleAvgAggregateOutputType | null
+    _sum: RecepcionEscaneoDetalleSumAggregateOutputType | null
+    _min: RecepcionEscaneoDetalleMinAggregateOutputType | null
+    _max: RecepcionEscaneoDetalleMaxAggregateOutputType | null
+  }
+
+  type GetRecepcionEscaneoDetalleGroupByPayload<T extends RecepcionEscaneoDetalleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RecepcionEscaneoDetalleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RecepcionEscaneoDetalleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RecepcionEscaneoDetalleGroupByOutputType[P]>
+            : GetScalarType<T[P], RecepcionEscaneoDetalleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RecepcionEscaneoDetalleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recepcionId?: boolean
+    productoId?: boolean
+    codigo?: boolean
+    cantidadEscaneos?: boolean
+    unidadesPorEscaneo?: boolean
+    unidadesIngresadas?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    createdAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recepcionEscaneoDetalle"]>
+
+  export type RecepcionEscaneoDetalleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recepcionId?: boolean
+    productoId?: boolean
+    codigo?: boolean
+    cantidadEscaneos?: boolean
+    unidadesPorEscaneo?: boolean
+    unidadesIngresadas?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    createdAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recepcionEscaneoDetalle"]>
+
+  export type RecepcionEscaneoDetalleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recepcionId?: boolean
+    productoId?: boolean
+    codigo?: boolean
+    cantidadEscaneos?: boolean
+    unidadesPorEscaneo?: boolean
+    unidadesIngresadas?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    createdAt?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["recepcionEscaneoDetalle"]>
+
+  export type RecepcionEscaneoDetalleSelectScalar = {
+    id?: boolean
+    recepcionId?: boolean
+    productoId?: boolean
+    codigo?: boolean
+    cantidadEscaneos?: boolean
+    unidadesPorEscaneo?: boolean
+    unidadesIngresadas?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    createdAt?: boolean
+  }
+
+  export type RecepcionEscaneoDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recepcionId" | "productoId" | "codigo" | "cantidadEscaneos" | "unidadesPorEscaneo" | "unidadesIngresadas" | "stockAnterior" | "stockNuevo" | "createdAt", ExtArgs["result"]["recepcionEscaneoDetalle"]>
+  export type RecepcionEscaneoDetalleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }
+  export type RecepcionEscaneoDetalleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }
+  export type RecepcionEscaneoDetalleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    RecepcionEscaneo?: boolean | RecepcionEscaneoDefaultArgs<ExtArgs>
+  }
+
+  export type $RecepcionEscaneoDetallePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RecepcionEscaneoDetalle"
+    objects: {
+      Producto: Prisma.$ProductoPayload<ExtArgs>
+      RecepcionEscaneo: Prisma.$RecepcionEscaneoPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      recepcionId: string
+      productoId: number
+      codigo: string
+      cantidadEscaneos: number
+      unidadesPorEscaneo: number
+      unidadesIngresadas: number
+      stockAnterior: number
+      stockNuevo: number
+      createdAt: Date
+    }, ExtArgs["result"]["recepcionEscaneoDetalle"]>
+    composites: {}
+  }
+
+  type RecepcionEscaneoDetalleGetPayload<S extends boolean | null | undefined | RecepcionEscaneoDetalleDefaultArgs> = $Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload, S>
+
+  type RecepcionEscaneoDetalleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RecepcionEscaneoDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: RecepcionEscaneoDetalleCountAggregateInputType | true
+    }
+
+  export interface RecepcionEscaneoDetalleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RecepcionEscaneoDetalle'], meta: { name: 'RecepcionEscaneoDetalle' } }
+    /**
+     * Find zero or one RecepcionEscaneoDetalle that matches the filter.
+     * @param {RecepcionEscaneoDetalleFindUniqueArgs} args - Arguments to find a RecepcionEscaneoDetalle
+     * @example
+     * // Get one RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RecepcionEscaneoDetalleFindUniqueArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleFindUniqueArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RecepcionEscaneoDetalle that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RecepcionEscaneoDetalleFindUniqueOrThrowArgs} args - Arguments to find a RecepcionEscaneoDetalle
+     * @example
+     * // Get one RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RecepcionEscaneoDetalleFindUniqueOrThrowArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecepcionEscaneoDetalle that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleFindFirstArgs} args - Arguments to find a RecepcionEscaneoDetalle
+     * @example
+     * // Get one RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RecepcionEscaneoDetalleFindFirstArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleFindFirstArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RecepcionEscaneoDetalle that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleFindFirstOrThrowArgs} args - Arguments to find a RecepcionEscaneoDetalle
+     * @example
+     * // Get one RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RecepcionEscaneoDetalleFindFirstOrThrowArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleFindFirstOrThrowArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RecepcionEscaneoDetalles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalles = await prisma.recepcionEscaneoDetalle.findMany()
+     * 
+     * // Get first 10 RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalles = await prisma.recepcionEscaneoDetalle.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const recepcionEscaneoDetalleWithIdOnly = await prisma.recepcionEscaneoDetalle.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RecepcionEscaneoDetalleFindManyArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RecepcionEscaneoDetalle.
+     * @param {RecepcionEscaneoDetalleCreateArgs} args - Arguments to create a RecepcionEscaneoDetalle.
+     * @example
+     * // Create one RecepcionEscaneoDetalle
+     * const RecepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.create({
+     *   data: {
+     *     // ... data to create a RecepcionEscaneoDetalle
+     *   }
+     * })
+     * 
+     */
+    create<T extends RecepcionEscaneoDetalleCreateArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleCreateArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RecepcionEscaneoDetalles.
+     * @param {RecepcionEscaneoDetalleCreateManyArgs} args - Arguments to create many RecepcionEscaneoDetalles.
+     * @example
+     * // Create many RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RecepcionEscaneoDetalleCreateManyArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RecepcionEscaneoDetalles and returns the data saved in the database.
+     * @param {RecepcionEscaneoDetalleCreateManyAndReturnArgs} args - Arguments to create many RecepcionEscaneoDetalles.
+     * @example
+     * // Create many RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RecepcionEscaneoDetalles and only return the `id`
+     * const recepcionEscaneoDetalleWithIdOnly = await prisma.recepcionEscaneoDetalle.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RecepcionEscaneoDetalleCreateManyAndReturnArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RecepcionEscaneoDetalle.
+     * @param {RecepcionEscaneoDetalleDeleteArgs} args - Arguments to delete one RecepcionEscaneoDetalle.
+     * @example
+     * // Delete one RecepcionEscaneoDetalle
+     * const RecepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.delete({
+     *   where: {
+     *     // ... filter to delete one RecepcionEscaneoDetalle
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RecepcionEscaneoDetalleDeleteArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleDeleteArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RecepcionEscaneoDetalle.
+     * @param {RecepcionEscaneoDetalleUpdateArgs} args - Arguments to update one RecepcionEscaneoDetalle.
+     * @example
+     * // Update one RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RecepcionEscaneoDetalleUpdateArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleUpdateArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RecepcionEscaneoDetalles.
+     * @param {RecepcionEscaneoDetalleDeleteManyArgs} args - Arguments to filter RecepcionEscaneoDetalles to delete.
+     * @example
+     * // Delete a few RecepcionEscaneoDetalles
+     * const { count } = await prisma.recepcionEscaneoDetalle.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RecepcionEscaneoDetalleDeleteManyArgs>(args?: SelectSubset<T, RecepcionEscaneoDetalleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecepcionEscaneoDetalles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RecepcionEscaneoDetalleUpdateManyArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RecepcionEscaneoDetalles and returns the data updated in the database.
+     * @param {RecepcionEscaneoDetalleUpdateManyAndReturnArgs} args - Arguments to update many RecepcionEscaneoDetalles.
+     * @example
+     * // Update many RecepcionEscaneoDetalles
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RecepcionEscaneoDetalles and only return the `id`
+     * const recepcionEscaneoDetalleWithIdOnly = await prisma.recepcionEscaneoDetalle.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RecepcionEscaneoDetalleUpdateManyAndReturnArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RecepcionEscaneoDetalle.
+     * @param {RecepcionEscaneoDetalleUpsertArgs} args - Arguments to update or create a RecepcionEscaneoDetalle.
+     * @example
+     * // Update or create a RecepcionEscaneoDetalle
+     * const recepcionEscaneoDetalle = await prisma.recepcionEscaneoDetalle.upsert({
+     *   create: {
+     *     // ... data to create a RecepcionEscaneoDetalle
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RecepcionEscaneoDetalle we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RecepcionEscaneoDetalleUpsertArgs>(args: SelectSubset<T, RecepcionEscaneoDetalleUpsertArgs<ExtArgs>>): Prisma__RecepcionEscaneoDetalleClient<$Result.GetResult<Prisma.$RecepcionEscaneoDetallePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RecepcionEscaneoDetalles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleCountArgs} args - Arguments to filter RecepcionEscaneoDetalles to count.
+     * @example
+     * // Count the number of RecepcionEscaneoDetalles
+     * const count = await prisma.recepcionEscaneoDetalle.count({
+     *   where: {
+     *     // ... the filter for the RecepcionEscaneoDetalles we want to count
+     *   }
+     * })
+    **/
+    count<T extends RecepcionEscaneoDetalleCountArgs>(
+      args?: Subset<T, RecepcionEscaneoDetalleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RecepcionEscaneoDetalleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RecepcionEscaneoDetalle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RecepcionEscaneoDetalleAggregateArgs>(args: Subset<T, RecepcionEscaneoDetalleAggregateArgs>): Prisma.PrismaPromise<GetRecepcionEscaneoDetalleAggregateType<T>>
+
+    /**
+     * Group by RecepcionEscaneoDetalle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RecepcionEscaneoDetalleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RecepcionEscaneoDetalleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RecepcionEscaneoDetalleGroupByArgs['orderBy'] }
+        : { orderBy?: RecepcionEscaneoDetalleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RecepcionEscaneoDetalleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRecepcionEscaneoDetalleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RecepcionEscaneoDetalle model
+   */
+  readonly fields: RecepcionEscaneoDetalleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RecepcionEscaneoDetalle.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RecepcionEscaneoDetalleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    RecepcionEscaneo<T extends RecepcionEscaneoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RecepcionEscaneoDefaultArgs<ExtArgs>>): Prisma__RecepcionEscaneoClient<$Result.GetResult<Prisma.$RecepcionEscaneoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RecepcionEscaneoDetalle model
+   */
+  interface RecepcionEscaneoDetalleFieldRefs {
+    readonly id: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly recepcionId: FieldRef<"RecepcionEscaneoDetalle", 'String'>
+    readonly productoId: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly codigo: FieldRef<"RecepcionEscaneoDetalle", 'String'>
+    readonly cantidadEscaneos: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly unidadesPorEscaneo: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly unidadesIngresadas: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly stockAnterior: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly stockNuevo: FieldRef<"RecepcionEscaneoDetalle", 'Int'>
+    readonly createdAt: FieldRef<"RecepcionEscaneoDetalle", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RecepcionEscaneoDetalle findUnique
+   */
+  export type RecepcionEscaneoDetalleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneoDetalle to fetch.
+     */
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle findUniqueOrThrow
+   */
+  export type RecepcionEscaneoDetalleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneoDetalle to fetch.
+     */
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle findFirst
+   */
+  export type RecepcionEscaneoDetalleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneoDetalle to fetch.
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneoDetalles to fetch.
+     */
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecepcionEscaneoDetalles.
+     */
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneoDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneoDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneoDetalles.
+     */
+    distinct?: RecepcionEscaneoDetalleScalarFieldEnum | RecepcionEscaneoDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle findFirstOrThrow
+   */
+  export type RecepcionEscaneoDetalleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneoDetalle to fetch.
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneoDetalles to fetch.
+     */
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RecepcionEscaneoDetalles.
+     */
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneoDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneoDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneoDetalles.
+     */
+    distinct?: RecepcionEscaneoDetalleScalarFieldEnum | RecepcionEscaneoDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle findMany
+   */
+  export type RecepcionEscaneoDetalleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which RecepcionEscaneoDetalles to fetch.
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RecepcionEscaneoDetalles to fetch.
+     */
+    orderBy?: RecepcionEscaneoDetalleOrderByWithRelationInput | RecepcionEscaneoDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RecepcionEscaneoDetalles.
+     */
+    cursor?: RecepcionEscaneoDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RecepcionEscaneoDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RecepcionEscaneoDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RecepcionEscaneoDetalles.
+     */
+    distinct?: RecepcionEscaneoDetalleScalarFieldEnum | RecepcionEscaneoDetalleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle create
+   */
+  export type RecepcionEscaneoDetalleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RecepcionEscaneoDetalle.
+     */
+    data: XOR<RecepcionEscaneoDetalleCreateInput, RecepcionEscaneoDetalleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle createMany
+   */
+  export type RecepcionEscaneoDetalleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RecepcionEscaneoDetalles.
+     */
+    data: RecepcionEscaneoDetalleCreateManyInput | RecepcionEscaneoDetalleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RecepcionEscaneoDetalle createManyAndReturn
+   */
+  export type RecepcionEscaneoDetalleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * The data used to create many RecepcionEscaneoDetalles.
+     */
+    data: RecepcionEscaneoDetalleCreateManyInput | RecepcionEscaneoDetalleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RecepcionEscaneoDetalle update
+   */
+  export type RecepcionEscaneoDetalleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RecepcionEscaneoDetalle.
+     */
+    data: XOR<RecepcionEscaneoDetalleUpdateInput, RecepcionEscaneoDetalleUncheckedUpdateInput>
+    /**
+     * Choose, which RecepcionEscaneoDetalle to update.
+     */
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle updateMany
+   */
+  export type RecepcionEscaneoDetalleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RecepcionEscaneoDetalles.
+     */
+    data: XOR<RecepcionEscaneoDetalleUpdateManyMutationInput, RecepcionEscaneoDetalleUncheckedUpdateManyInput>
+    /**
+     * Filter which RecepcionEscaneoDetalles to update
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * Limit how many RecepcionEscaneoDetalles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecepcionEscaneoDetalle updateManyAndReturn
+   */
+  export type RecepcionEscaneoDetalleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * The data used to update RecepcionEscaneoDetalles.
+     */
+    data: XOR<RecepcionEscaneoDetalleUpdateManyMutationInput, RecepcionEscaneoDetalleUncheckedUpdateManyInput>
+    /**
+     * Filter which RecepcionEscaneoDetalles to update
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * Limit how many RecepcionEscaneoDetalles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RecepcionEscaneoDetalle upsert
+   */
+  export type RecepcionEscaneoDetalleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RecepcionEscaneoDetalle to update in case it exists.
+     */
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    /**
+     * In case the RecepcionEscaneoDetalle found by the `where` argument doesn't exist, create a new RecepcionEscaneoDetalle with this data.
+     */
+    create: XOR<RecepcionEscaneoDetalleCreateInput, RecepcionEscaneoDetalleUncheckedCreateInput>
+    /**
+     * In case the RecepcionEscaneoDetalle was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RecepcionEscaneoDetalleUpdateInput, RecepcionEscaneoDetalleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle delete
+   */
+  export type RecepcionEscaneoDetalleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+    /**
+     * Filter which RecepcionEscaneoDetalle to delete.
+     */
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RecepcionEscaneoDetalle deleteMany
+   */
+  export type RecepcionEscaneoDetalleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RecepcionEscaneoDetalles to delete
+     */
+    where?: RecepcionEscaneoDetalleWhereInput
+    /**
+     * Limit how many RecepcionEscaneoDetalles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RecepcionEscaneoDetalle without action
+   */
+  export type RecepcionEscaneoDetalleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RecepcionEscaneoDetalle
+     */
+    select?: RecepcionEscaneoDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RecepcionEscaneoDetalle
+     */
+    omit?: RecepcionEscaneoDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RecepcionEscaneoDetalleInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -21446,6 +25647,14 @@ export namespace Prisma {
   };
 
   export type CategoriaScalarFieldEnum = (typeof CategoriaScalarFieldEnum)[keyof typeof CategoriaScalarFieldEnum]
+
+
+  export const RelationLoadStrategy: {
+    query: 'query',
+    join: 'join'
+  };
+
+  export type RelationLoadStrategy = (typeof RelationLoadStrategy)[keyof typeof RelationLoadStrategy]
 
 
   export const MovimientoScalarFieldEnum: {
@@ -21474,21 +25683,21 @@ export namespace Prisma {
     precio: 'precio',
     minStock: 'minStock',
     activo: 'activo',
-    criticidad: 'criticidad',
     imagen: 'imagen',
     categoriaId: 'categoriaId',
     stockReservado: 'stockReservado',
     sku: 'sku',
+    criticidad: 'criticidad',
+    cantidadCaja: 'cantidadCaja',
     disponibilidad: 'disponibilidad',
     formato: 'formato',
-    cantidadCaja: 'cantidadCaja',
-    precioUsd: 'precioUsd',
     precioSugerido: 'precioSugerido',
-    stockInicial: 'stockInicial',
-    salidas: 'salidas',
-    fechaUltimaSalida: 'fechaUltimaSalida',
+    precioUsd: 'precioUsd',
     entradas: 'entradas',
-    fechaUltimaEntrada: 'fechaUltimaEntrada'
+    fechaUltimaEntrada: 'fechaUltimaEntrada',
+    fechaUltimaSalida: 'fechaUltimaSalida',
+    salidas: 'salidas',
+    stockInicial: 'stockInicial'
   };
 
   export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
@@ -21545,16 +25754,16 @@ export namespace Prisma {
     email: 'email',
     telefono: 'telefono',
     direccion: 'direccion',
+    createdAt: 'createdAt',
+    activo: 'activo',
+    updatedAt: 'updatedAt',
     razonSocial: 'razonSocial',
     nombreEmpresa: 'nombreEmpresa',
     region: 'region',
     comuna: 'comuna',
-    tipoCliente: 'tipoCliente',
-    canalVenta: 'canalVenta',
-    activo: 'activo',
     observaciones: 'observaciones',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    tipoCliente: 'tipoCliente',
+    canalVenta: 'canalVenta'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -21583,9 +25792,16 @@ export namespace Prisma {
     id: 'id',
     cliente: 'cliente',
     contacto: 'contacto',
+    clienteFirematId: 'clienteFirematId',
+    contactoFirematId: 'contactoFirematId',
+    telefono: 'telefono',
+    correo: 'correo',
     tipoCliente: 'tipoCliente',
+    cargo: 'cargo',
     responsable: 'responsable',
     estado: 'estado',
+    moneda: 'moneda',
+    aplicaImpuesto: 'aplicaImpuesto',
     subtotal: 'subtotal',
     descuento: 'descuento',
     impuesto: 'impuesto',
@@ -21635,32 +25851,8 @@ export namespace Prisma {
     telefono: 'telefono',
     correo: 'correo',
     tipoCliente: 'tipoCliente',
-    rutEmpresa: 'rutEmpresa',
-    region: 'region',
-    comuna: 'comuna',
-    unidadNegocio: 'unidadNegocio',
     productoId: 'productoId',
     cantidadEstimada: 'cantidadEstimada',
-    urgencia: 'urgencia',
-    tipoUso: 'tipoUso',
-    necesidadSoporteTecnico: 'necesidadSoporteTecnico',
-    alternativaProducto: 'alternativaProducto',
-    comision: 'comision',
-    margenEstimado: 'margenEstimado',
-    fechaComprometidaEnvio: 'fechaComprometidaEnvio',
-    versionCotizacion: 'versionCotizacion',
-    comentariosCliente: 'comentariosCliente',
-    objeciones: 'objeciones',
-    ordenCompra: 'ordenCompra',
-    correoAceptacion: 'correoAceptacion',
-    condicionesComerciales: 'condicionesComerciales',
-    coordinacionAdministrativa: 'coordinacionAdministrativa',
-    estadoDocumentacion: 'estadoDocumentacion',
-    traspasoAdministracion: 'traspasoAdministracion',
-    traspasoERP: 'traspasoERP',
-    coordinacionDespacho: 'coordinacionDespacho',
-    estadoComercialOrden: 'estadoComercialOrden',
-    estadoDocumentacionVenta: 'estadoDocumentacionVenta',
     responsable: 'responsable',
     etapa: 'etapa',
     montoEstimado: 'montoEstimado',
@@ -21669,32 +25861,56 @@ export namespace Prisma {
     fechaProximaAccion: 'fechaProximaAccion',
     observaciones: 'observaciones',
     origen: 'origen',
-    estadoStock: 'estadoStock',
     cotizacionId: 'cotizacionId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    probabilidad: 'probabilidad',
+    estadoStock: 'estadoStock',
     motivoPerdida: 'motivoPerdida',
     motivoPostergacion: 'motivoPostergacion',
     fechaReactivacion: 'fechaReactivacion',
     documentoRespaldo: 'documentoRespaldo',
     fechaCierre: 'fechaCierre',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    probabilidad: 'probabilidad',
+    comuna: 'comuna',
+    necesidadSoporteTecnico: 'necesidadSoporteTecnico',
+    region: 'region',
+    rutEmpresa: 'rutEmpresa',
+    tipoUso: 'tipoUso',
+    unidadNegocio: 'unidadNegocio',
+    urgencia: 'urgencia',
+    alternativaProducto: 'alternativaProducto',
+    comentariosCliente: 'comentariosCliente',
+    comision: 'comision',
+    fechaComprometidaEnvio: 'fechaComprometidaEnvio',
+    margenEstimado: 'margenEstimado',
+    objeciones: 'objeciones',
+    versionCotizacion: 'versionCotizacion',
+    condicionesComerciales: 'condicionesComerciales',
+    coordinacionAdministrativa: 'coordinacionAdministrativa',
+    coordinacionDespacho: 'coordinacionDespacho',
+    correoAceptacion: 'correoAceptacion',
+    estadoComercialOrden: 'estadoComercialOrden',
+    estadoDocumentacion: 'estadoDocumentacion',
+    estadoDocumentacionVenta: 'estadoDocumentacionVenta',
+    ordenCompra: 'ordenCompra',
+    traspasoAdministracion: 'traspasoAdministracion',
+    traspasoERP: 'traspasoERP',
+    fechaEstimadaDespacho: 'fechaEstimadaDespacho',
+    fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
     flujoPosterior: 'flujoPosterior',
     motivoDescarte: 'motivoDescarte',
     tipoBroker: 'tipoBroker',
-    fechaEstimadaDespacho: 'fechaEstimadaDespacho',
-    fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
-    nombreOportunidad: 'nombreOportunidad',
     cargoContacto: 'cargoContacto',
     direccionProyecto: 'direccionProyecto',
-    tipoOportunidad: 'tipoOportunidad',
-    fechaProbableCierre: 'fechaProbableCierre',
-    riesgoTecnico: 'riesgoTecnico',
+    nombreOportunidad: 'nombreOportunidad',
     comentariosInternos: 'comentariosInternos',
-    observacionesTecnicas: 'observacionesTecnicas',
+    fechaProbableCierre: 'fechaProbableCierre',
     observacionCamposFaltantes: 'observacionCamposFaltantes',
-    lineaProducto: 'lineaProducto',
+    observacionesTecnicas: 'observacionesTecnicas',
+    riesgoTecnico: 'riesgoTecnico',
+    tipoOportunidad: 'tipoOportunidad',
     descuento: 'descuento',
+    lineaProducto: 'lineaProducto',
     stockOportunidad: 'stockOportunidad',
     reprogramacionesCount: 'reprogramacionesCount',
     fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa',
@@ -21759,6 +25975,46 @@ export namespace Prisma {
   };
 
   export type HistorialEtapaFirematScalarFieldEnum = (typeof HistorialEtapaFirematScalarFieldEnum)[keyof typeof HistorialEtapaFirematScalarFieldEnum]
+
+
+  export const ProductoCodigoBarraScalarFieldEnum: {
+    id: 'id',
+    codigo: 'codigo',
+    productoId: 'productoId',
+    unidadesPorEscaneo: 'unidadesPorEscaneo',
+    descripcion: 'descripcion',
+    activo: 'activo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProductoCodigoBarraScalarFieldEnum = (typeof ProductoCodigoBarraScalarFieldEnum)[keyof typeof ProductoCodigoBarraScalarFieldEnum]
+
+
+  export const RecepcionEscaneoScalarFieldEnum: {
+    id: 'id',
+    usuarioId: 'usuarioId',
+    motivo: 'motivo',
+    createdAt: 'createdAt'
+  };
+
+  export type RecepcionEscaneoScalarFieldEnum = (typeof RecepcionEscaneoScalarFieldEnum)[keyof typeof RecepcionEscaneoScalarFieldEnum]
+
+
+  export const RecepcionEscaneoDetalleScalarFieldEnum: {
+    id: 'id',
+    recepcionId: 'recepcionId',
+    productoId: 'productoId',
+    codigo: 'codigo',
+    cantidadEscaneos: 'cantidadEscaneos',
+    unidadesPorEscaneo: 'unidadesPorEscaneo',
+    unidadesIngresadas: 'unidadesIngresadas',
+    stockAnterior: 'stockAnterior',
+    stockNuevo: 'stockNuevo',
+    createdAt: 'createdAt'
+  };
+
+  export type RecepcionEscaneoDetalleScalarFieldEnum = (typeof RecepcionEscaneoDetalleScalarFieldEnum)[keyof typeof RecepcionEscaneoDetalleScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -22021,26 +26277,28 @@ export namespace Prisma {
     precio?: FloatFilter<"Producto"> | number
     minStock?: IntFilter<"Producto"> | number
     activo?: BoolFilter<"Producto"> | boolean
-    criticidad?: StringFilter<"Producto"> | string
     imagen?: StringNullableFilter<"Producto"> | string | null
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
     sku?: StringNullableFilter<"Producto"> | string | null
+    criticidad?: StringFilter<"Producto"> | string
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
     disponibilidad?: StringNullableFilter<"Producto"> | string | null
     formato?: StringNullableFilter<"Producto"> | string | null
-    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
-    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
-    stockInicial?: IntNullableFilter<"Producto"> | number | null
-    salidas?: IntNullableFilter<"Producto"> | number | null
-    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
     Movimiento?: MovimientoListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
+    ProductoCodigoBarra?: ProductoCodigoBarraListRelationFilter
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleListRelationFilter
     Venta?: VentaListRelationFilter
     VentaDetalle?: VentaDetalleListRelationFilter
   }
@@ -22055,26 +26313,28 @@ export namespace Prisma {
     precio?: SortOrder
     minStock?: SortOrder
     activo?: SortOrder
-    criticidad?: SortOrder
     imagen?: SortOrderInput | SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrderInput | SortOrder
+    criticidad?: SortOrder
+    cantidadCaja?: SortOrderInput | SortOrder
     disponibilidad?: SortOrderInput | SortOrder
     formato?: SortOrderInput | SortOrder
-    cantidadCaja?: SortOrderInput | SortOrder
-    precioUsd?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
-    stockInicial?: SortOrderInput | SortOrder
-    salidas?: SortOrderInput | SortOrder
-    fechaUltimaSalida?: SortOrderInput | SortOrder
+    precioUsd?: SortOrderInput | SortOrder
     entradas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    stockInicial?: SortOrderInput | SortOrder
     CotizacionFirematDetalle?: CotizacionFirematDetalleOrderByRelationAggregateInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityOrderByRelationAggregateInput
     Movimiento?: MovimientoOrderByRelationAggregateInput
     Oportunidad?: OportunidadOrderByRelationAggregateInput
     Categoria?: CategoriaOrderByWithRelationInput
+    ProductoCodigoBarra?: ProductoCodigoBarraOrderByRelationAggregateInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleOrderByRelationAggregateInput
     Venta?: VentaOrderByRelationAggregateInput
     VentaDetalle?: VentaDetalleOrderByRelationAggregateInput
   }
@@ -22093,25 +26353,27 @@ export namespace Prisma {
     precio?: FloatFilter<"Producto"> | number
     minStock?: IntFilter<"Producto"> | number
     activo?: BoolFilter<"Producto"> | boolean
-    criticidad?: StringFilter<"Producto"> | string
     imagen?: StringNullableFilter<"Producto"> | string | null
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
+    criticidad?: StringFilter<"Producto"> | string
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
     disponibilidad?: StringNullableFilter<"Producto"> | string | null
     formato?: StringNullableFilter<"Producto"> | string | null
-    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
-    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
-    stockInicial?: IntNullableFilter<"Producto"> | number | null
-    salidas?: IntNullableFilter<"Producto"> | number | null
-    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
     Movimiento?: MovimientoListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
+    ProductoCodigoBarra?: ProductoCodigoBarraListRelationFilter
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleListRelationFilter
     Venta?: VentaListRelationFilter
     VentaDetalle?: VentaDetalleListRelationFilter
   }, "id" | "sku">
@@ -22126,21 +26388,21 @@ export namespace Prisma {
     precio?: SortOrder
     minStock?: SortOrder
     activo?: SortOrder
-    criticidad?: SortOrder
     imagen?: SortOrderInput | SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrderInput | SortOrder
+    criticidad?: SortOrder
+    cantidadCaja?: SortOrderInput | SortOrder
     disponibilidad?: SortOrderInput | SortOrder
     formato?: SortOrderInput | SortOrder
-    cantidadCaja?: SortOrderInput | SortOrder
-    precioUsd?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
-    stockInicial?: SortOrderInput | SortOrder
-    salidas?: SortOrderInput | SortOrder
-    fechaUltimaSalida?: SortOrderInput | SortOrder
+    precioUsd?: SortOrderInput | SortOrder
     entradas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    stockInicial?: SortOrderInput | SortOrder
     _count?: ProductoCountOrderByAggregateInput
     _avg?: ProductoAvgOrderByAggregateInput
     _max?: ProductoMaxOrderByAggregateInput
@@ -22161,21 +26423,21 @@ export namespace Prisma {
     precio?: FloatWithAggregatesFilter<"Producto"> | number
     minStock?: IntWithAggregatesFilter<"Producto"> | number
     activo?: BoolWithAggregatesFilter<"Producto"> | boolean
-    criticidad?: StringWithAggregatesFilter<"Producto"> | string
     imagen?: StringNullableWithAggregatesFilter<"Producto"> | string | null
     categoriaId?: IntWithAggregatesFilter<"Producto"> | number
     stockReservado?: IntWithAggregatesFilter<"Producto"> | number
     sku?: StringNullableWithAggregatesFilter<"Producto"> | string | null
+    criticidad?: StringWithAggregatesFilter<"Producto"> | string
+    cantidadCaja?: StringNullableWithAggregatesFilter<"Producto"> | string | null
     disponibilidad?: StringNullableWithAggregatesFilter<"Producto"> | string | null
     formato?: StringNullableWithAggregatesFilter<"Producto"> | string | null
-    cantidadCaja?: StringNullableWithAggregatesFilter<"Producto"> | string | null
-    precioUsd?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
-    stockInicial?: IntNullableWithAggregatesFilter<"Producto"> | number | null
-    salidas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
-    fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    precioUsd?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     entradas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    salidas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    stockInicial?: IntNullableWithAggregatesFilter<"Producto"> | number | null
   }
 
   export type VentaWhereInput = {
@@ -22415,18 +26677,19 @@ export namespace Prisma {
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
+    createdAt?: DateTimeFilter<"Cliente"> | Date | string
+    activo?: BoolFilter<"Cliente"> | boolean
+    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
     razonSocial?: StringNullableFilter<"Cliente"> | string | null
     nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
     region?: StringNullableFilter<"Cliente"> | string | null
     comuna?: StringNullableFilter<"Cliente"> | string | null
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     tipoCliente?: EnumTipoClienteFirematNullableFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
     canalVenta?: EnumCanalVentaFirematNullableFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
-    activo?: BoolFilter<"Cliente"> | boolean
-    observaciones?: StringNullableFilter<"Cliente"> | string | null
-    createdAt?: DateTimeFilter<"Cliente"> | Date | string
-    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
-    contactos?: ContactoClienteFirematListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
+    contactos?: ContactoClienteFirematListRelationFilter
+    cotizaciones?: CotizacionFirematListRelationFilter
   }
 
   export type ClienteOrderByWithRelationInput = {
@@ -22436,18 +26699,19 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    activo?: SortOrder
+    updatedAt?: SortOrder
     razonSocial?: SortOrderInput | SortOrder
     nombreEmpresa?: SortOrderInput | SortOrder
     region?: SortOrderInput | SortOrder
     comuna?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
     canalVenta?: SortOrderInput | SortOrder
-    activo?: SortOrder
-    observaciones?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    contactos?: ContactoClienteFirematOrderByRelationAggregateInput
     Oportunidad?: OportunidadOrderByRelationAggregateInput
+    contactos?: ContactoClienteFirematOrderByRelationAggregateInput
+    cotizaciones?: CotizacionFirematOrderByRelationAggregateInput
   }
 
   export type ClienteWhereUniqueInput = Prisma.AtLeast<{
@@ -22460,18 +26724,19 @@ export namespace Prisma {
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
+    createdAt?: DateTimeFilter<"Cliente"> | Date | string
+    activo?: BoolFilter<"Cliente"> | boolean
+    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
     razonSocial?: StringNullableFilter<"Cliente"> | string | null
     nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
     region?: StringNullableFilter<"Cliente"> | string | null
     comuna?: StringNullableFilter<"Cliente"> | string | null
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     tipoCliente?: EnumTipoClienteFirematNullableFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
     canalVenta?: EnumCanalVentaFirematNullableFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
-    activo?: BoolFilter<"Cliente"> | boolean
-    observaciones?: StringNullableFilter<"Cliente"> | string | null
-    createdAt?: DateTimeFilter<"Cliente"> | Date | string
-    updatedAt?: DateTimeFilter<"Cliente"> | Date | string
-    contactos?: ContactoClienteFirematListRelationFilter
     Oportunidad?: OportunidadListRelationFilter
+    contactos?: ContactoClienteFirematListRelationFilter
+    cotizaciones?: CotizacionFirematListRelationFilter
   }, "id" | "rut">
 
   export type ClienteOrderByWithAggregationInput = {
@@ -22481,16 +26746,16 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    activo?: SortOrder
+    updatedAt?: SortOrder
     razonSocial?: SortOrderInput | SortOrder
     nombreEmpresa?: SortOrderInput | SortOrder
     region?: SortOrderInput | SortOrder
     comuna?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
     canalVenta?: SortOrderInput | SortOrder
-    activo?: SortOrder
-    observaciones?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _avg?: ClienteAvgOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
@@ -22508,16 +26773,16 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     direccion?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
+    activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
+    updatedAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
     razonSocial?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     nombreEmpresa?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     region?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     comuna?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    observaciones?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     tipoCliente?: EnumTipoClienteFirematNullableWithAggregatesFilter<"Cliente"> | $Enums.TipoClienteFiremat | null
     canalVenta?: EnumCanalVentaFirematNullableWithAggregatesFilter<"Cliente"> | $Enums.CanalVentaFiremat | null
-    activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
-    observaciones?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
   }
 
   export type OportunidadWhereInput = {
@@ -22627,9 +26892,16 @@ export namespace Prisma {
     id?: IntFilter<"CotizacionFiremat"> | number
     cliente?: StringFilter<"CotizacionFiremat"> | string
     contacto?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    clienteFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    contactoFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    telefono?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    correo?: StringNullableFilter<"CotizacionFiremat"> | string | null
     tipoCliente?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    cargo?: StringNullableFilter<"CotizacionFiremat"> | string | null
     responsable?: StringNullableFilter<"CotizacionFiremat"> | string | null
     estado?: StringFilter<"CotizacionFiremat"> | string
+    moneda?: StringFilter<"CotizacionFiremat"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionFiremat"> | boolean
     subtotal?: FloatFilter<"CotizacionFiremat"> | number
     descuento?: FloatFilter<"CotizacionFiremat"> | number
     impuesto?: FloatFilter<"CotizacionFiremat"> | number
@@ -22654,15 +26926,24 @@ export namespace Prisma {
     numero?: StringNullableFilter<"CotizacionFiremat"> | string | null
     detalles?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
+    clienteFiremat?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    contactoFiremat?: XOR<ContactoClienteFirematNullableScalarRelationFilter, ContactoClienteFirematWhereInput> | null
   }
 
   export type CotizacionFirematOrderByWithRelationInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrderInput | SortOrder
+    clienteFirematId?: SortOrderInput | SortOrder
+    contactoFirematId?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    cargo?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -22687,6 +26968,8 @@ export namespace Prisma {
     numero?: SortOrderInput | SortOrder
     detalles?: CotizacionFirematDetalleOrderByRelationAggregateInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityOrderByRelationAggregateInput
+    clienteFiremat?: ClienteOrderByWithRelationInput
+    contactoFiremat?: ContactoClienteFirematOrderByWithRelationInput
   }
 
   export type CotizacionFirematWhereUniqueInput = Prisma.AtLeast<{
@@ -22697,9 +26980,16 @@ export namespace Prisma {
     NOT?: CotizacionFirematWhereInput | CotizacionFirematWhereInput[]
     cliente?: StringFilter<"CotizacionFiremat"> | string
     contacto?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    clienteFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    contactoFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    telefono?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    correo?: StringNullableFilter<"CotizacionFiremat"> | string | null
     tipoCliente?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    cargo?: StringNullableFilter<"CotizacionFiremat"> | string | null
     responsable?: StringNullableFilter<"CotizacionFiremat"> | string | null
     estado?: StringFilter<"CotizacionFiremat"> | string
+    moneda?: StringFilter<"CotizacionFiremat"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionFiremat"> | boolean
     subtotal?: FloatFilter<"CotizacionFiremat"> | number
     descuento?: FloatFilter<"CotizacionFiremat"> | number
     impuesto?: FloatFilter<"CotizacionFiremat"> | number
@@ -22723,15 +27013,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CotizacionFiremat"> | Date | string
     detalles?: CotizacionFirematDetalleListRelationFilter
     FunnelFirematOpportunity?: FunnelFirematOpportunityListRelationFilter
+    clienteFiremat?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    contactoFiremat?: XOR<ContactoClienteFirematNullableScalarRelationFilter, ContactoClienteFirematWhereInput> | null
   }, "id" | "numero">
 
   export type CotizacionFirematOrderByWithAggregationInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrderInput | SortOrder
+    clienteFirematId?: SortOrderInput | SortOrder
+    contactoFirematId?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    cargo?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -22768,9 +27067,16 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"CotizacionFiremat"> | number
     cliente?: StringWithAggregatesFilter<"CotizacionFiremat"> | string
     contacto?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
+    clienteFirematId?: IntNullableWithAggregatesFilter<"CotizacionFiremat"> | number | null
+    contactoFirematId?: IntNullableWithAggregatesFilter<"CotizacionFiremat"> | number | null
+    telefono?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
+    correo?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
     tipoCliente?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
+    cargo?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
     responsable?: StringNullableWithAggregatesFilter<"CotizacionFiremat"> | string | null
     estado?: StringWithAggregatesFilter<"CotizacionFiremat"> | string
+    moneda?: StringWithAggregatesFilter<"CotizacionFiremat"> | string
+    aplicaImpuesto?: BoolWithAggregatesFilter<"CotizacionFiremat"> | boolean
     subtotal?: FloatWithAggregatesFilter<"CotizacionFiremat"> | number
     descuento?: FloatWithAggregatesFilter<"CotizacionFiremat"> | number
     impuesto?: FloatWithAggregatesFilter<"CotizacionFiremat"> | number
@@ -22885,32 +27191,8 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
-    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -22919,32 +27201,56 @@ export namespace Prisma {
     fechaProximaAccion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observaciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     origen?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cotizacionId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPerdida?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPostergacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaReactivacion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     documentoRespaldo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
@@ -22962,32 +27268,8 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
-    rutEmpresa?: SortOrderInput | SortOrder
-    region?: SortOrderInput | SortOrder
-    comuna?: SortOrderInput | SortOrder
-    unidadNegocio?: SortOrderInput | SortOrder
     productoId?: SortOrderInput | SortOrder
     cantidadEstimada?: SortOrderInput | SortOrder
-    urgencia?: SortOrderInput | SortOrder
-    tipoUso?: SortOrderInput | SortOrder
-    necesidadSoporteTecnico?: SortOrderInput | SortOrder
-    alternativaProducto?: SortOrderInput | SortOrder
-    comision?: SortOrderInput | SortOrder
-    margenEstimado?: SortOrderInput | SortOrder
-    fechaComprometidaEnvio?: SortOrderInput | SortOrder
-    versionCotizacion?: SortOrderInput | SortOrder
-    comentariosCliente?: SortOrderInput | SortOrder
-    objeciones?: SortOrderInput | SortOrder
-    ordenCompra?: SortOrderInput | SortOrder
-    correoAceptacion?: SortOrderInput | SortOrder
-    condicionesComerciales?: SortOrderInput | SortOrder
-    coordinacionAdministrativa?: SortOrderInput | SortOrder
-    estadoDocumentacion?: SortOrderInput | SortOrder
-    traspasoAdministracion?: SortOrderInput | SortOrder
-    traspasoERP?: SortOrderInput | SortOrder
-    coordinacionDespacho?: SortOrderInput | SortOrder
-    estadoComercialOrden?: SortOrderInput | SortOrder
-    estadoDocumentacionVenta?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -22996,32 +27278,56 @@ export namespace Prisma {
     fechaProximaAccion?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
     origen?: SortOrderInput | SortOrder
-    estadoStock?: SortOrderInput | SortOrder
     cotizacionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    probabilidad?: SortOrderInput | SortOrder
+    estadoStock?: SortOrderInput | SortOrder
     motivoPerdida?: SortOrderInput | SortOrder
     motivoPostergacion?: SortOrderInput | SortOrder
     fechaReactivacion?: SortOrderInput | SortOrder
     documentoRespaldo?: SortOrderInput | SortOrder
     fechaCierre?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    probabilidad?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    necesidadSoporteTecnico?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    rutEmpresa?: SortOrderInput | SortOrder
+    tipoUso?: SortOrderInput | SortOrder
+    unidadNegocio?: SortOrderInput | SortOrder
+    urgencia?: SortOrderInput | SortOrder
+    alternativaProducto?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    comision?: SortOrderInput | SortOrder
+    fechaComprometidaEnvio?: SortOrderInput | SortOrder
+    margenEstimado?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
+    versionCotizacion?: SortOrderInput | SortOrder
+    condicionesComerciales?: SortOrderInput | SortOrder
+    coordinacionAdministrativa?: SortOrderInput | SortOrder
+    coordinacionDespacho?: SortOrderInput | SortOrder
+    correoAceptacion?: SortOrderInput | SortOrder
+    estadoComercialOrden?: SortOrderInput | SortOrder
+    estadoDocumentacion?: SortOrderInput | SortOrder
+    estadoDocumentacionVenta?: SortOrderInput | SortOrder
+    ordenCompra?: SortOrderInput | SortOrder
+    traspasoAdministracion?: SortOrderInput | SortOrder
+    traspasoERP?: SortOrderInput | SortOrder
+    fechaEstimadaDespacho?: SortOrderInput | SortOrder
+    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
     flujoPosterior?: SortOrderInput | SortOrder
     motivoDescarte?: SortOrderInput | SortOrder
     tipoBroker?: SortOrderInput | SortOrder
-    fechaEstimadaDespacho?: SortOrderInput | SortOrder
-    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
-    nombreOportunidad?: SortOrderInput | SortOrder
     cargoContacto?: SortOrderInput | SortOrder
     direccionProyecto?: SortOrderInput | SortOrder
-    tipoOportunidad?: SortOrderInput | SortOrder
-    fechaProbableCierre?: SortOrderInput | SortOrder
-    riesgoTecnico?: SortOrderInput | SortOrder
+    nombreOportunidad?: SortOrderInput | SortOrder
     comentariosInternos?: SortOrderInput | SortOrder
-    observacionesTecnicas?: SortOrderInput | SortOrder
+    fechaProbableCierre?: SortOrderInput | SortOrder
     observacionCamposFaltantes?: SortOrderInput | SortOrder
-    lineaProducto?: SortOrderInput | SortOrder
+    observacionesTecnicas?: SortOrderInput | SortOrder
+    riesgoTecnico?: SortOrderInput | SortOrder
+    tipoOportunidad?: SortOrderInput | SortOrder
     descuento?: SortOrderInput | SortOrder
+    lineaProducto?: SortOrderInput | SortOrder
     stockOportunidad?: SortOrderInput | SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
@@ -23042,32 +27348,8 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
-    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -23076,32 +27358,56 @@ export namespace Prisma {
     fechaProximaAccion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observaciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     origen?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cotizacionId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPerdida?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPostergacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaReactivacion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     documentoRespaldo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
@@ -23119,32 +27425,8 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
-    rutEmpresa?: SortOrderInput | SortOrder
-    region?: SortOrderInput | SortOrder
-    comuna?: SortOrderInput | SortOrder
-    unidadNegocio?: SortOrderInput | SortOrder
     productoId?: SortOrderInput | SortOrder
     cantidadEstimada?: SortOrderInput | SortOrder
-    urgencia?: SortOrderInput | SortOrder
-    tipoUso?: SortOrderInput | SortOrder
-    necesidadSoporteTecnico?: SortOrderInput | SortOrder
-    alternativaProducto?: SortOrderInput | SortOrder
-    comision?: SortOrderInput | SortOrder
-    margenEstimado?: SortOrderInput | SortOrder
-    fechaComprometidaEnvio?: SortOrderInput | SortOrder
-    versionCotizacion?: SortOrderInput | SortOrder
-    comentariosCliente?: SortOrderInput | SortOrder
-    objeciones?: SortOrderInput | SortOrder
-    ordenCompra?: SortOrderInput | SortOrder
-    correoAceptacion?: SortOrderInput | SortOrder
-    condicionesComerciales?: SortOrderInput | SortOrder
-    coordinacionAdministrativa?: SortOrderInput | SortOrder
-    estadoDocumentacion?: SortOrderInput | SortOrder
-    traspasoAdministracion?: SortOrderInput | SortOrder
-    traspasoERP?: SortOrderInput | SortOrder
-    coordinacionDespacho?: SortOrderInput | SortOrder
-    estadoComercialOrden?: SortOrderInput | SortOrder
-    estadoDocumentacionVenta?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -23153,32 +27435,56 @@ export namespace Prisma {
     fechaProximaAccion?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
     origen?: SortOrderInput | SortOrder
-    estadoStock?: SortOrderInput | SortOrder
     cotizacionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    probabilidad?: SortOrderInput | SortOrder
+    estadoStock?: SortOrderInput | SortOrder
     motivoPerdida?: SortOrderInput | SortOrder
     motivoPostergacion?: SortOrderInput | SortOrder
     fechaReactivacion?: SortOrderInput | SortOrder
     documentoRespaldo?: SortOrderInput | SortOrder
     fechaCierre?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    probabilidad?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    necesidadSoporteTecnico?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    rutEmpresa?: SortOrderInput | SortOrder
+    tipoUso?: SortOrderInput | SortOrder
+    unidadNegocio?: SortOrderInput | SortOrder
+    urgencia?: SortOrderInput | SortOrder
+    alternativaProducto?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    comision?: SortOrderInput | SortOrder
+    fechaComprometidaEnvio?: SortOrderInput | SortOrder
+    margenEstimado?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
+    versionCotizacion?: SortOrderInput | SortOrder
+    condicionesComerciales?: SortOrderInput | SortOrder
+    coordinacionAdministrativa?: SortOrderInput | SortOrder
+    coordinacionDespacho?: SortOrderInput | SortOrder
+    correoAceptacion?: SortOrderInput | SortOrder
+    estadoComercialOrden?: SortOrderInput | SortOrder
+    estadoDocumentacion?: SortOrderInput | SortOrder
+    estadoDocumentacionVenta?: SortOrderInput | SortOrder
+    ordenCompra?: SortOrderInput | SortOrder
+    traspasoAdministracion?: SortOrderInput | SortOrder
+    traspasoERP?: SortOrderInput | SortOrder
+    fechaEstimadaDespacho?: SortOrderInput | SortOrder
+    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
     flujoPosterior?: SortOrderInput | SortOrder
     motivoDescarte?: SortOrderInput | SortOrder
     tipoBroker?: SortOrderInput | SortOrder
-    fechaEstimadaDespacho?: SortOrderInput | SortOrder
-    fechaSeguimientoPostventa?: SortOrderInput | SortOrder
-    nombreOportunidad?: SortOrderInput | SortOrder
     cargoContacto?: SortOrderInput | SortOrder
     direccionProyecto?: SortOrderInput | SortOrder
-    tipoOportunidad?: SortOrderInput | SortOrder
-    fechaProbableCierre?: SortOrderInput | SortOrder
-    riesgoTecnico?: SortOrderInput | SortOrder
+    nombreOportunidad?: SortOrderInput | SortOrder
     comentariosInternos?: SortOrderInput | SortOrder
-    observacionesTecnicas?: SortOrderInput | SortOrder
+    fechaProbableCierre?: SortOrderInput | SortOrder
     observacionCamposFaltantes?: SortOrderInput | SortOrder
-    lineaProducto?: SortOrderInput | SortOrder
+    observacionesTecnicas?: SortOrderInput | SortOrder
+    riesgoTecnico?: SortOrderInput | SortOrder
+    tipoOportunidad?: SortOrderInput | SortOrder
     descuento?: SortOrderInput | SortOrder
+    lineaProducto?: SortOrderInput | SortOrder
     stockOportunidad?: SortOrderInput | SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
@@ -23200,32 +27506,8 @@ export namespace Prisma {
     telefono?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    rutEmpresa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    region?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    comuna?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    unidadNegocio?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
-    urgencia?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    tipoUso?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    necesidadSoporteTecnico?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
-    alternativaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    comision?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
-    margenEstimado?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
-    fechaComprometidaEnvio?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
-    versionCotizacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    comentariosCliente?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    objeciones?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    ordenCompra?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    correoAceptacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    condicionesComerciales?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    coordinacionAdministrativa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    traspasoAdministracion?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
-    traspasoERP?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
-    coordinacionDespacho?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    estadoComercialOrden?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacionVenta?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringWithAggregatesFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatWithAggregatesFilter<"FunnelFirematOpportunity"> | number
@@ -23234,32 +27516,56 @@ export namespace Prisma {
     fechaProximaAccion?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
     observaciones?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     origen?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    estadoStock?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     cotizacionId?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
+    probabilidad?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    estadoStock?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     motivoPerdida?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     motivoPostergacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     fechaReactivacion?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
     documentoRespaldo?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     fechaCierre?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string
-    probabilidad?: IntNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    comuna?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    region?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    urgencia?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    alternativaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    margenEstimado?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    objeciones?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    versionCotizacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionDespacho?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | boolean | null
+    fechaEstimadaDespacho?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
     flujoPosterior?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     motivoDescarte?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     tipoBroker?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    fechaEstimadaDespacho?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
-    fechaSeguimientoPostventa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
-    nombreOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     cargoContacto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     direccionProyecto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    tipoOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    fechaProbableCierre?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
-    riesgoTecnico?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    nombreOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     comentariosInternos?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    observacionesTecnicas?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
     observacionCamposFaltantes?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
-    lineaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    riesgoTecnico?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     descuento?: FloatNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | number | null
+    lineaProducto?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     stockOportunidad?: StringNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntWithAggregatesFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableWithAggregatesFilter<"FunnelFirematOpportunity"> | Date | string | null
@@ -23282,6 +27588,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
     updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cotizaciones?: CotizacionFirematListRelationFilter
   }
 
   export type ContactoClienteFirematOrderByWithRelationInput = {
@@ -23297,6 +27604,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
+    cotizaciones?: CotizacionFirematOrderByRelationAggregateInput
   }
 
   export type ContactoClienteFirematWhereUniqueInput = Prisma.AtLeast<{
@@ -23315,6 +27623,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
     updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cotizaciones?: CotizacionFirematListRelationFilter
   }, "id">
 
   export type ContactoClienteFirematOrderByWithAggregationInput = {
@@ -23557,6 +27866,213 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"HistorialEtapaFiremat"> | Date | string
   }
 
+  export type ProductoCodigoBarraWhereInput = {
+    AND?: ProductoCodigoBarraWhereInput | ProductoCodigoBarraWhereInput[]
+    OR?: ProductoCodigoBarraWhereInput[]
+    NOT?: ProductoCodigoBarraWhereInput | ProductoCodigoBarraWhereInput[]
+    id?: IntFilter<"ProductoCodigoBarra"> | number
+    codigo?: StringFilter<"ProductoCodigoBarra"> | string
+    productoId?: IntFilter<"ProductoCodigoBarra"> | number
+    unidadesPorEscaneo?: IntFilter<"ProductoCodigoBarra"> | number
+    descripcion?: StringNullableFilter<"ProductoCodigoBarra"> | string | null
+    activo?: BoolFilter<"ProductoCodigoBarra"> | boolean
+    createdAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+  }
+
+  export type ProductoCodigoBarraOrderByWithRelationInput = {
+    id?: SortOrder
+    codigo?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    Producto?: ProductoOrderByWithRelationInput
+  }
+
+  export type ProductoCodigoBarraWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    codigo?: string
+    AND?: ProductoCodigoBarraWhereInput | ProductoCodigoBarraWhereInput[]
+    OR?: ProductoCodigoBarraWhereInput[]
+    NOT?: ProductoCodigoBarraWhereInput | ProductoCodigoBarraWhereInput[]
+    productoId?: IntFilter<"ProductoCodigoBarra"> | number
+    unidadesPorEscaneo?: IntFilter<"ProductoCodigoBarra"> | number
+    descripcion?: StringNullableFilter<"ProductoCodigoBarra"> | string | null
+    activo?: BoolFilter<"ProductoCodigoBarra"> | boolean
+    createdAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+  }, "id" | "codigo">
+
+  export type ProductoCodigoBarraOrderByWithAggregationInput = {
+    id?: SortOrder
+    codigo?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProductoCodigoBarraCountOrderByAggregateInput
+    _avg?: ProductoCodigoBarraAvgOrderByAggregateInput
+    _max?: ProductoCodigoBarraMaxOrderByAggregateInput
+    _min?: ProductoCodigoBarraMinOrderByAggregateInput
+    _sum?: ProductoCodigoBarraSumOrderByAggregateInput
+  }
+
+  export type ProductoCodigoBarraScalarWhereWithAggregatesInput = {
+    AND?: ProductoCodigoBarraScalarWhereWithAggregatesInput | ProductoCodigoBarraScalarWhereWithAggregatesInput[]
+    OR?: ProductoCodigoBarraScalarWhereWithAggregatesInput[]
+    NOT?: ProductoCodigoBarraScalarWhereWithAggregatesInput | ProductoCodigoBarraScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ProductoCodigoBarra"> | number
+    codigo?: StringWithAggregatesFilter<"ProductoCodigoBarra"> | string
+    productoId?: IntWithAggregatesFilter<"ProductoCodigoBarra"> | number
+    unidadesPorEscaneo?: IntWithAggregatesFilter<"ProductoCodigoBarra"> | number
+    descripcion?: StringNullableWithAggregatesFilter<"ProductoCodigoBarra"> | string | null
+    activo?: BoolWithAggregatesFilter<"ProductoCodigoBarra"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ProductoCodigoBarra"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProductoCodigoBarra"> | Date | string
+  }
+
+  export type RecepcionEscaneoWhereInput = {
+    AND?: RecepcionEscaneoWhereInput | RecepcionEscaneoWhereInput[]
+    OR?: RecepcionEscaneoWhereInput[]
+    NOT?: RecepcionEscaneoWhereInput | RecepcionEscaneoWhereInput[]
+    id?: StringFilter<"RecepcionEscaneo"> | string
+    usuarioId?: StringFilter<"RecepcionEscaneo"> | string
+    motivo?: StringFilter<"RecepcionEscaneo"> | string
+    createdAt?: DateTimeFilter<"RecepcionEscaneo"> | Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleListRelationFilter
+  }
+
+  export type RecepcionEscaneoOrderByWithRelationInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    motivo?: SortOrder
+    createdAt?: SortOrder
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleOrderByRelationAggregateInput
+  }
+
+  export type RecepcionEscaneoWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RecepcionEscaneoWhereInput | RecepcionEscaneoWhereInput[]
+    OR?: RecepcionEscaneoWhereInput[]
+    NOT?: RecepcionEscaneoWhereInput | RecepcionEscaneoWhereInput[]
+    usuarioId?: StringFilter<"RecepcionEscaneo"> | string
+    motivo?: StringFilter<"RecepcionEscaneo"> | string
+    createdAt?: DateTimeFilter<"RecepcionEscaneo"> | Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleListRelationFilter
+  }, "id">
+
+  export type RecepcionEscaneoOrderByWithAggregationInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    motivo?: SortOrder
+    createdAt?: SortOrder
+    _count?: RecepcionEscaneoCountOrderByAggregateInput
+    _max?: RecepcionEscaneoMaxOrderByAggregateInput
+    _min?: RecepcionEscaneoMinOrderByAggregateInput
+  }
+
+  export type RecepcionEscaneoScalarWhereWithAggregatesInput = {
+    AND?: RecepcionEscaneoScalarWhereWithAggregatesInput | RecepcionEscaneoScalarWhereWithAggregatesInput[]
+    OR?: RecepcionEscaneoScalarWhereWithAggregatesInput[]
+    NOT?: RecepcionEscaneoScalarWhereWithAggregatesInput | RecepcionEscaneoScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RecepcionEscaneo"> | string
+    usuarioId?: StringWithAggregatesFilter<"RecepcionEscaneo"> | string
+    motivo?: StringWithAggregatesFilter<"RecepcionEscaneo"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"RecepcionEscaneo"> | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleWhereInput = {
+    AND?: RecepcionEscaneoDetalleWhereInput | RecepcionEscaneoDetalleWhereInput[]
+    OR?: RecepcionEscaneoDetalleWhereInput[]
+    NOT?: RecepcionEscaneoDetalleWhereInput | RecepcionEscaneoDetalleWhereInput[]
+    id?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    recepcionId?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    productoId?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    codigo?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    cantidadEscaneos?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesPorEscaneo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesIngresadas?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockAnterior?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockNuevo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    createdAt?: DateTimeFilter<"RecepcionEscaneoDetalle"> | Date | string
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    RecepcionEscaneo?: XOR<RecepcionEscaneoScalarRelationFilter, RecepcionEscaneoWhereInput>
+  }
+
+  export type RecepcionEscaneoDetalleOrderByWithRelationInput = {
+    id?: SortOrder
+    recepcionId?: SortOrder
+    productoId?: SortOrder
+    codigo?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    createdAt?: SortOrder
+    Producto?: ProductoOrderByWithRelationInput
+    RecepcionEscaneo?: RecepcionEscaneoOrderByWithRelationInput
+  }
+
+  export type RecepcionEscaneoDetalleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: RecepcionEscaneoDetalleWhereInput | RecepcionEscaneoDetalleWhereInput[]
+    OR?: RecepcionEscaneoDetalleWhereInput[]
+    NOT?: RecepcionEscaneoDetalleWhereInput | RecepcionEscaneoDetalleWhereInput[]
+    recepcionId?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    productoId?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    codigo?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    cantidadEscaneos?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesPorEscaneo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesIngresadas?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockAnterior?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockNuevo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    createdAt?: DateTimeFilter<"RecepcionEscaneoDetalle"> | Date | string
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    RecepcionEscaneo?: XOR<RecepcionEscaneoScalarRelationFilter, RecepcionEscaneoWhereInput>
+  }, "id">
+
+  export type RecepcionEscaneoDetalleOrderByWithAggregationInput = {
+    id?: SortOrder
+    recepcionId?: SortOrder
+    productoId?: SortOrder
+    codigo?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    createdAt?: SortOrder
+    _count?: RecepcionEscaneoDetalleCountOrderByAggregateInput
+    _avg?: RecepcionEscaneoDetalleAvgOrderByAggregateInput
+    _max?: RecepcionEscaneoDetalleMaxOrderByAggregateInput
+    _min?: RecepcionEscaneoDetalleMinOrderByAggregateInput
+    _sum?: RecepcionEscaneoDetalleSumOrderByAggregateInput
+  }
+
+  export type RecepcionEscaneoDetalleScalarWhereWithAggregatesInput = {
+    AND?: RecepcionEscaneoDetalleScalarWhereWithAggregatesInput | RecepcionEscaneoDetalleScalarWhereWithAggregatesInput[]
+    OR?: RecepcionEscaneoDetalleScalarWhereWithAggregatesInput[]
+    NOT?: RecepcionEscaneoDetalleScalarWhereWithAggregatesInput | RecepcionEscaneoDetalleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    recepcionId?: StringWithAggregatesFilter<"RecepcionEscaneoDetalle"> | string
+    productoId?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    codigo?: StringWithAggregatesFilter<"RecepcionEscaneoDetalle"> | string
+    cantidadEscaneos?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesPorEscaneo?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesIngresadas?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    stockAnterior?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    stockNuevo?: IntWithAggregatesFilter<"RecepcionEscaneoDetalle"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"RecepcionEscaneoDetalle"> | Date | string
+  }
+
   export type CategoriaCreateInput = {
     nombre: string
     Producto?: ProductoCreateNestedManyWithoutCategoriaInput
@@ -23689,25 +28205,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -23722,25 +28240,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -23754,25 +28274,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -23787,25 +28309,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -23820,21 +28344,21 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
   }
 
   export type ProductoUpdateManyMutationInput = {
@@ -23846,20 +28370,20 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ProductoUncheckedUpdateManyInput = {
@@ -23872,21 +28396,21 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type VentaCreateInput = {
@@ -24135,18 +28659,19 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
     Oportunidad?: OportunidadCreateNestedManyWithoutClienteInput
+    contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteUncheckedCreateInput = {
@@ -24156,18 +28681,19 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutClienteInput
+    contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematUncheckedCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteUpdateInput = {
@@ -24176,18 +28702,19 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutClienteNestedInput
+    contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUpdateManyWithoutClienteFirematNestedInput
   }
 
   export type ClienteUncheckedUpdateInput = {
@@ -24197,18 +28724,19 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
+    contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUncheckedUpdateManyWithoutClienteFirematNestedInput
   }
 
   export type ClienteCreateManyInput = {
@@ -24218,16 +28746,16 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -24236,16 +28764,16 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -24255,16 +28783,16 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OportunidadCreateInput = {
@@ -24377,9 +28905,14 @@ export namespace Prisma {
   export type CotizacionFirematCreateInput = {
     cliente: string
     contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -24404,15 +28937,24 @@ export namespace Prisma {
     numero?: string | null
     detalles?: CotizacionFirematDetalleCreateNestedManyWithoutCotizacionInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteFiremat?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoFiremat?: ContactoClienteFirematCreateNestedOneWithoutCotizacionesInput
   }
 
   export type CotizacionFirematUncheckedCreateInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteFirematId?: number | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -24442,9 +28984,14 @@ export namespace Prisma {
   export type CotizacionFirematUpdateInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -24469,15 +29016,24 @@ export namespace Prisma {
     numero?: NullableStringFieldUpdateOperationsInput | string | null
     detalles?: CotizacionFirematDetalleUpdateManyWithoutCotizacionNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteFiremat?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoFiremat?: ContactoClienteFirematUpdateOneWithoutCotizacionesNestedInput
   }
 
   export type CotizacionFirematUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -24508,9 +29064,16 @@ export namespace Prisma {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteFirematId?: number | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -24538,9 +29101,14 @@ export namespace Prisma {
   export type CotizacionFirematUpdateManyMutationInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -24569,9 +29137,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -24681,31 +29256,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -24714,31 +29265,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -24756,32 +29331,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -24790,32 +29341,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -24830,31 +29405,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24863,31 +29414,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24905,32 +29480,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -24939,32 +29490,56 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24980,32 +29555,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -25014,32 +29565,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -25052,31 +29627,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -25085,31 +29636,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25123,32 +29698,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -25157,32 +29708,56 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25200,6 +29775,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContactosInput
+    cotizaciones?: CotizacionFirematCreateNestedManyWithoutContactoFirematInput
   }
 
   export type ContactoClienteFirematUncheckedCreateInput = {
@@ -25214,6 +29790,7 @@ export namespace Prisma {
     observaciones?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionFirematUncheckedCreateNestedManyWithoutContactoFirematInput
   }
 
   export type ContactoClienteFirematUpdateInput = {
@@ -25227,6 +29804,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+    cotizaciones?: CotizacionFirematUpdateManyWithoutContactoFirematNestedInput
   }
 
   export type ContactoClienteFirematUncheckedUpdateInput = {
@@ -25241,6 +29819,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionFirematUncheckedUpdateManyWithoutContactoFirematNestedInput
   }
 
   export type ContactoClienteFirematCreateManyInput = {
@@ -25486,6 +30065,218 @@ export namespace Prisma {
     etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
     etapaNueva?: StringFieldUpdateOperationsInput | string
     usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraCreateInput = {
+    codigo: string
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Producto: ProductoCreateNestedOneWithoutProductoCodigoBarraInput
+  }
+
+  export type ProductoCodigoBarraUncheckedCreateInput = {
+    id?: number
+    codigo: string
+    productoId: number
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductoCodigoBarraUpdateInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Producto?: ProductoUpdateOneRequiredWithoutProductoCodigoBarraNestedInput
+  }
+
+  export type ProductoCodigoBarraUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraCreateManyInput = {
+    id?: number
+    codigo: string
+    productoId: number
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductoCodigoBarraUpdateManyMutationInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoCreateInput = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt?: Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutRecepcionEscaneoInput
+  }
+
+  export type RecepcionEscaneoUncheckedCreateInput = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt?: Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutRecepcionEscaneoInput
+  }
+
+  export type RecepcionEscaneoUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutRecepcionEscaneoNestedInput
+  }
+
+  export type RecepcionEscaneoUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutRecepcionEscaneoNestedInput
+  }
+
+  export type RecepcionEscaneoCreateManyInput = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleCreateInput = {
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+    Producto: ProductoCreateNestedOneWithoutRecepcionEscaneoDetalleInput
+    RecepcionEscaneo: RecepcionEscaneoCreateNestedOneWithoutRecepcionEscaneoDetalleInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedCreateInput = {
+    id?: number
+    recepcionId: string
+    productoId: number
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUpdateInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Producto?: ProductoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput
+    RecepcionEscaneo?: RecepcionEscaneoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recepcionId?: StringFieldUpdateOperationsInput | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleCreateManyInput = {
+    id?: number
+    recepcionId: string
+    productoId: number
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUpdateManyMutationInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recepcionId?: StringFieldUpdateOperationsInput | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -25801,6 +30592,18 @@ export namespace Prisma {
     isNot?: CategoriaWhereInput
   }
 
+  export type ProductoCodigoBarraListRelationFilter = {
+    every?: ProductoCodigoBarraWhereInput
+    some?: ProductoCodigoBarraWhereInput
+    none?: ProductoCodigoBarraWhereInput
+  }
+
+  export type RecepcionEscaneoDetalleListRelationFilter = {
+    every?: RecepcionEscaneoDetalleWhereInput
+    some?: RecepcionEscaneoDetalleWhereInput
+    none?: RecepcionEscaneoDetalleWhereInput
+  }
+
   export type VentaListRelationFilter = {
     every?: VentaWhereInput
     some?: VentaWhereInput
@@ -25829,6 +30632,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ProductoCodigoBarraOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RecepcionEscaneoDetalleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type VentaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -25847,21 +30658,21 @@ export namespace Prisma {
     precio?: SortOrder
     minStock?: SortOrder
     activo?: SortOrder
-    criticidad?: SortOrder
     imagen?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    criticidad?: SortOrder
+    cantidadCaja?: SortOrder
     disponibilidad?: SortOrder
     formato?: SortOrder
-    cantidadCaja?: SortOrder
-    precioUsd?: SortOrder
     precioSugerido?: SortOrder
-    stockInicial?: SortOrder
-    salidas?: SortOrder
-    fechaUltimaSalida?: SortOrder
+    precioUsd?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    salidas?: SortOrder
+    stockInicial?: SortOrder
   }
 
   export type ProductoAvgOrderByAggregateInput = {
@@ -25871,11 +30682,11 @@ export namespace Prisma {
     minStock?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
-    precioUsd?: SortOrder
     precioSugerido?: SortOrder
-    stockInicial?: SortOrder
-    salidas?: SortOrder
+    precioUsd?: SortOrder
     entradas?: SortOrder
+    salidas?: SortOrder
+    stockInicial?: SortOrder
   }
 
   export type ProductoMaxOrderByAggregateInput = {
@@ -25888,21 +30699,21 @@ export namespace Prisma {
     precio?: SortOrder
     minStock?: SortOrder
     activo?: SortOrder
-    criticidad?: SortOrder
     imagen?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    criticidad?: SortOrder
+    cantidadCaja?: SortOrder
     disponibilidad?: SortOrder
     formato?: SortOrder
-    cantidadCaja?: SortOrder
-    precioUsd?: SortOrder
     precioSugerido?: SortOrder
-    stockInicial?: SortOrder
-    salidas?: SortOrder
-    fechaUltimaSalida?: SortOrder
+    precioUsd?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    salidas?: SortOrder
+    stockInicial?: SortOrder
   }
 
   export type ProductoMinOrderByAggregateInput = {
@@ -25915,21 +30726,21 @@ export namespace Prisma {
     precio?: SortOrder
     minStock?: SortOrder
     activo?: SortOrder
-    criticidad?: SortOrder
     imagen?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
     sku?: SortOrder
+    criticidad?: SortOrder
+    cantidadCaja?: SortOrder
     disponibilidad?: SortOrder
     formato?: SortOrder
-    cantidadCaja?: SortOrder
-    precioUsd?: SortOrder
     precioSugerido?: SortOrder
-    stockInicial?: SortOrder
-    salidas?: SortOrder
-    fechaUltimaSalida?: SortOrder
+    precioUsd?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
+    salidas?: SortOrder
+    stockInicial?: SortOrder
   }
 
   export type ProductoSumOrderByAggregateInput = {
@@ -25939,11 +30750,11 @@ export namespace Prisma {
     minStock?: SortOrder
     categoriaId?: SortOrder
     stockReservado?: SortOrder
-    precioUsd?: SortOrder
     precioSugerido?: SortOrder
-    stockInicial?: SortOrder
-    salidas?: SortOrder
+    precioUsd?: SortOrder
     entradas?: SortOrder
+    salidas?: SortOrder
+    stockInicial?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -26166,7 +30977,17 @@ export namespace Prisma {
     none?: ContactoClienteFirematWhereInput
   }
 
+  export type CotizacionFirematListRelationFilter = {
+    every?: CotizacionFirematWhereInput
+    some?: CotizacionFirematWhereInput
+    none?: CotizacionFirematWhereInput
+  }
+
   export type ContactoClienteFirematOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CotizacionFirematOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -26177,16 +30998,16 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    createdAt?: SortOrder
+    activo?: SortOrder
+    updatedAt?: SortOrder
     razonSocial?: SortOrder
     nombreEmpresa?: SortOrder
     region?: SortOrder
     comuna?: SortOrder
+    observaciones?: SortOrder
     tipoCliente?: SortOrder
     canalVenta?: SortOrder
-    activo?: SortOrder
-    observaciones?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type ClienteAvgOrderByAggregateInput = {
@@ -26200,16 +31021,16 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    createdAt?: SortOrder
+    activo?: SortOrder
+    updatedAt?: SortOrder
     razonSocial?: SortOrder
     nombreEmpresa?: SortOrder
     region?: SortOrder
     comuna?: SortOrder
+    observaciones?: SortOrder
     tipoCliente?: SortOrder
     canalVenta?: SortOrder
-    activo?: SortOrder
-    observaciones?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -26219,16 +31040,16 @@ export namespace Prisma {
     email?: SortOrder
     telefono?: SortOrder
     direccion?: SortOrder
+    createdAt?: SortOrder
+    activo?: SortOrder
+    updatedAt?: SortOrder
     razonSocial?: SortOrder
     nombreEmpresa?: SortOrder
     region?: SortOrder
     comuna?: SortOrder
+    observaciones?: SortOrder
     tipoCliente?: SortOrder
     canalVenta?: SortOrder
-    activo?: SortOrder
-    observaciones?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type ClienteSumOrderByAggregateInput = {
@@ -26329,13 +31150,30 @@ export namespace Prisma {
     productoId?: SortOrder
   }
 
+  export type ClienteNullableScalarRelationFilter = {
+    is?: ClienteWhereInput | null
+    isNot?: ClienteWhereInput | null
+  }
+
+  export type ContactoClienteFirematNullableScalarRelationFilter = {
+    is?: ContactoClienteFirematWhereInput | null
+    isNot?: ContactoClienteFirematWhereInput | null
+  }
+
   export type CotizacionFirematCountOrderByAggregateInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteFirematId?: SortOrder
+    contactoFirematId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -26362,6 +31200,8 @@ export namespace Prisma {
 
   export type CotizacionFirematAvgOrderByAggregateInput = {
     id?: SortOrder
+    clienteFirematId?: SortOrder
+    contactoFirematId?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -26375,9 +31215,16 @@ export namespace Prisma {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteFirematId?: SortOrder
+    contactoFirematId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -26406,9 +31253,16 @@ export namespace Prisma {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteFirematId?: SortOrder
+    contactoFirematId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -26435,6 +31289,8 @@ export namespace Prisma {
 
   export type CotizacionFirematSumOrderByAggregateInput = {
     id?: SortOrder
+    clienteFirematId?: SortOrder
+    contactoFirematId?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -26544,32 +31400,8 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
-    rutEmpresa?: SortOrder
-    region?: SortOrder
-    comuna?: SortOrder
-    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
-    urgencia?: SortOrder
-    tipoUso?: SortOrder
-    necesidadSoporteTecnico?: SortOrder
-    alternativaProducto?: SortOrder
-    comision?: SortOrder
-    margenEstimado?: SortOrder
-    fechaComprometidaEnvio?: SortOrder
-    versionCotizacion?: SortOrder
-    comentariosCliente?: SortOrder
-    objeciones?: SortOrder
-    ordenCompra?: SortOrder
-    correoAceptacion?: SortOrder
-    condicionesComerciales?: SortOrder
-    coordinacionAdministrativa?: SortOrder
-    estadoDocumentacion?: SortOrder
-    traspasoAdministracion?: SortOrder
-    traspasoERP?: SortOrder
-    coordinacionDespacho?: SortOrder
-    estadoComercialOrden?: SortOrder
-    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -26578,32 +31410,56 @@ export namespace Prisma {
     fechaProximaAccion?: SortOrder
     observaciones?: SortOrder
     origen?: SortOrder
-    estadoStock?: SortOrder
     cotizacionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    probabilidad?: SortOrder
+    estadoStock?: SortOrder
     motivoPerdida?: SortOrder
     motivoPostergacion?: SortOrder
     fechaReactivacion?: SortOrder
     documentoRespaldo?: SortOrder
     fechaCierre?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    probabilidad?: SortOrder
+    comuna?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    region?: SortOrder
+    rutEmpresa?: SortOrder
+    tipoUso?: SortOrder
+    unidadNegocio?: SortOrder
+    urgencia?: SortOrder
+    alternativaProducto?: SortOrder
+    comentariosCliente?: SortOrder
+    comision?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    margenEstimado?: SortOrder
+    objeciones?: SortOrder
+    versionCotizacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    coordinacionDespacho?: SortOrder
+    correoAceptacion?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacion?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
+    ordenCompra?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
     flujoPosterior?: SortOrder
     motivoDescarte?: SortOrder
     tipoBroker?: SortOrder
-    fechaEstimadaDespacho?: SortOrder
-    fechaSeguimientoPostventa?: SortOrder
-    nombreOportunidad?: SortOrder
     cargoContacto?: SortOrder
     direccionProyecto?: SortOrder
-    tipoOportunidad?: SortOrder
-    fechaProbableCierre?: SortOrder
-    riesgoTecnico?: SortOrder
+    nombreOportunidad?: SortOrder
     comentariosInternos?: SortOrder
-    observacionesTecnicas?: SortOrder
+    fechaProbableCierre?: SortOrder
     observacionCamposFaltantes?: SortOrder
-    lineaProducto?: SortOrder
+    observacionesTecnicas?: SortOrder
+    riesgoTecnico?: SortOrder
+    tipoOportunidad?: SortOrder
     descuento?: SortOrder
+    lineaProducto?: SortOrder
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
@@ -26614,12 +31470,12 @@ export namespace Prisma {
     id?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
-    comision?: SortOrder
-    margenEstimado?: SortOrder
     montoEstimado?: SortOrder
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
     descuento?: SortOrder
     reprogramacionesCount?: SortOrder
   }
@@ -26631,32 +31487,8 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
-    rutEmpresa?: SortOrder
-    region?: SortOrder
-    comuna?: SortOrder
-    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
-    urgencia?: SortOrder
-    tipoUso?: SortOrder
-    necesidadSoporteTecnico?: SortOrder
-    alternativaProducto?: SortOrder
-    comision?: SortOrder
-    margenEstimado?: SortOrder
-    fechaComprometidaEnvio?: SortOrder
-    versionCotizacion?: SortOrder
-    comentariosCliente?: SortOrder
-    objeciones?: SortOrder
-    ordenCompra?: SortOrder
-    correoAceptacion?: SortOrder
-    condicionesComerciales?: SortOrder
-    coordinacionAdministrativa?: SortOrder
-    estadoDocumentacion?: SortOrder
-    traspasoAdministracion?: SortOrder
-    traspasoERP?: SortOrder
-    coordinacionDespacho?: SortOrder
-    estadoComercialOrden?: SortOrder
-    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -26665,32 +31497,56 @@ export namespace Prisma {
     fechaProximaAccion?: SortOrder
     observaciones?: SortOrder
     origen?: SortOrder
-    estadoStock?: SortOrder
     cotizacionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    probabilidad?: SortOrder
+    estadoStock?: SortOrder
     motivoPerdida?: SortOrder
     motivoPostergacion?: SortOrder
     fechaReactivacion?: SortOrder
     documentoRespaldo?: SortOrder
     fechaCierre?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    probabilidad?: SortOrder
+    comuna?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    region?: SortOrder
+    rutEmpresa?: SortOrder
+    tipoUso?: SortOrder
+    unidadNegocio?: SortOrder
+    urgencia?: SortOrder
+    alternativaProducto?: SortOrder
+    comentariosCliente?: SortOrder
+    comision?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    margenEstimado?: SortOrder
+    objeciones?: SortOrder
+    versionCotizacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    coordinacionDespacho?: SortOrder
+    correoAceptacion?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacion?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
+    ordenCompra?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
     flujoPosterior?: SortOrder
     motivoDescarte?: SortOrder
     tipoBroker?: SortOrder
-    fechaEstimadaDespacho?: SortOrder
-    fechaSeguimientoPostventa?: SortOrder
-    nombreOportunidad?: SortOrder
     cargoContacto?: SortOrder
     direccionProyecto?: SortOrder
-    tipoOportunidad?: SortOrder
-    fechaProbableCierre?: SortOrder
-    riesgoTecnico?: SortOrder
+    nombreOportunidad?: SortOrder
     comentariosInternos?: SortOrder
-    observacionesTecnicas?: SortOrder
+    fechaProbableCierre?: SortOrder
     observacionCamposFaltantes?: SortOrder
-    lineaProducto?: SortOrder
+    observacionesTecnicas?: SortOrder
+    riesgoTecnico?: SortOrder
+    tipoOportunidad?: SortOrder
     descuento?: SortOrder
+    lineaProducto?: SortOrder
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
@@ -26704,32 +31560,8 @@ export namespace Prisma {
     telefono?: SortOrder
     correo?: SortOrder
     tipoCliente?: SortOrder
-    rutEmpresa?: SortOrder
-    region?: SortOrder
-    comuna?: SortOrder
-    unidadNegocio?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
-    urgencia?: SortOrder
-    tipoUso?: SortOrder
-    necesidadSoporteTecnico?: SortOrder
-    alternativaProducto?: SortOrder
-    comision?: SortOrder
-    margenEstimado?: SortOrder
-    fechaComprometidaEnvio?: SortOrder
-    versionCotizacion?: SortOrder
-    comentariosCliente?: SortOrder
-    objeciones?: SortOrder
-    ordenCompra?: SortOrder
-    correoAceptacion?: SortOrder
-    condicionesComerciales?: SortOrder
-    coordinacionAdministrativa?: SortOrder
-    estadoDocumentacion?: SortOrder
-    traspasoAdministracion?: SortOrder
-    traspasoERP?: SortOrder
-    coordinacionDespacho?: SortOrder
-    estadoComercialOrden?: SortOrder
-    estadoDocumentacionVenta?: SortOrder
     responsable?: SortOrder
     etapa?: SortOrder
     montoEstimado?: SortOrder
@@ -26738,32 +31570,56 @@ export namespace Prisma {
     fechaProximaAccion?: SortOrder
     observaciones?: SortOrder
     origen?: SortOrder
-    estadoStock?: SortOrder
     cotizacionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    probabilidad?: SortOrder
+    estadoStock?: SortOrder
     motivoPerdida?: SortOrder
     motivoPostergacion?: SortOrder
     fechaReactivacion?: SortOrder
     documentoRespaldo?: SortOrder
     fechaCierre?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    probabilidad?: SortOrder
+    comuna?: SortOrder
+    necesidadSoporteTecnico?: SortOrder
+    region?: SortOrder
+    rutEmpresa?: SortOrder
+    tipoUso?: SortOrder
+    unidadNegocio?: SortOrder
+    urgencia?: SortOrder
+    alternativaProducto?: SortOrder
+    comentariosCliente?: SortOrder
+    comision?: SortOrder
+    fechaComprometidaEnvio?: SortOrder
+    margenEstimado?: SortOrder
+    objeciones?: SortOrder
+    versionCotizacion?: SortOrder
+    condicionesComerciales?: SortOrder
+    coordinacionAdministrativa?: SortOrder
+    coordinacionDespacho?: SortOrder
+    correoAceptacion?: SortOrder
+    estadoComercialOrden?: SortOrder
+    estadoDocumentacion?: SortOrder
+    estadoDocumentacionVenta?: SortOrder
+    ordenCompra?: SortOrder
+    traspasoAdministracion?: SortOrder
+    traspasoERP?: SortOrder
+    fechaEstimadaDespacho?: SortOrder
+    fechaSeguimientoPostventa?: SortOrder
     flujoPosterior?: SortOrder
     motivoDescarte?: SortOrder
     tipoBroker?: SortOrder
-    fechaEstimadaDespacho?: SortOrder
-    fechaSeguimientoPostventa?: SortOrder
-    nombreOportunidad?: SortOrder
     cargoContacto?: SortOrder
     direccionProyecto?: SortOrder
-    tipoOportunidad?: SortOrder
-    fechaProbableCierre?: SortOrder
-    riesgoTecnico?: SortOrder
+    nombreOportunidad?: SortOrder
     comentariosInternos?: SortOrder
-    observacionesTecnicas?: SortOrder
+    fechaProbableCierre?: SortOrder
     observacionCamposFaltantes?: SortOrder
-    lineaProducto?: SortOrder
+    observacionesTecnicas?: SortOrder
+    riesgoTecnico?: SortOrder
+    tipoOportunidad?: SortOrder
     descuento?: SortOrder
+    lineaProducto?: SortOrder
     stockOportunidad?: SortOrder
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrder
@@ -26774,12 +31630,12 @@ export namespace Prisma {
     id?: SortOrder
     productoId?: SortOrder
     cantidadEstimada?: SortOrder
-    comision?: SortOrder
-    margenEstimado?: SortOrder
     montoEstimado?: SortOrder
     probabilidadCierre?: SortOrder
     cotizacionId?: SortOrder
     probabilidad?: SortOrder
+    comision?: SortOrder
+    margenEstimado?: SortOrder
     descuento?: SortOrder
     reprogramacionesCount?: SortOrder
   }
@@ -27031,6 +31887,136 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type ProductoCodigoBarraCountOrderByAggregateInput = {
+    id?: SortOrder
+    codigo?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductoCodigoBarraAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+  }
+
+  export type ProductoCodigoBarraMaxOrderByAggregateInput = {
+    id?: SortOrder
+    codigo?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductoCodigoBarraMinOrderByAggregateInput = {
+    id?: SortOrder
+    codigo?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductoCodigoBarraSumOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+  }
+
+  export type RecepcionEscaneoCountOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    motivo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    motivo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoMinOrderByAggregateInput = {
+    id?: SortOrder
+    usuarioId?: SortOrder
+    motivo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoScalarRelationFilter = {
+    is?: RecepcionEscaneoWhereInput
+    isNot?: RecepcionEscaneoWhereInput
+  }
+
+  export type RecepcionEscaneoDetalleCountOrderByAggregateInput = {
+    id?: SortOrder
+    recepcionId?: SortOrder
+    productoId?: SortOrder
+    codigo?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoDetalleAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+  }
+
+  export type RecepcionEscaneoDetalleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    recepcionId?: SortOrder
+    productoId?: SortOrder
+    codigo?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoDetalleMinOrderByAggregateInput = {
+    id?: SortOrder
+    recepcionId?: SortOrder
+    productoId?: SortOrder
+    codigo?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RecepcionEscaneoDetalleSumOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cantidadEscaneos?: SortOrder
+    unidadesPorEscaneo?: SortOrder
+    unidadesIngresadas?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+  }
+
   export type ProductoCreateNestedManyWithoutCategoriaInput = {
     create?: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput> | ProductoCreateWithoutCategoriaInput[] | ProductoUncheckedCreateWithoutCategoriaInput[]
     connectOrCreate?: ProductoCreateOrConnectWithoutCategoriaInput | ProductoCreateOrConnectWithoutCategoriaInput[]
@@ -27149,6 +32135,20 @@ export namespace Prisma {
     connect?: CategoriaWhereUniqueInput
   }
 
+  export type ProductoCodigoBarraCreateNestedManyWithoutProductoInput = {
+    create?: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput> | ProductoCodigoBarraCreateWithoutProductoInput[] | ProductoCodigoBarraUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: ProductoCodigoBarraCreateOrConnectWithoutProductoInput | ProductoCodigoBarraCreateOrConnectWithoutProductoInput[]
+    createMany?: ProductoCodigoBarraCreateManyProductoInputEnvelope
+    connect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+  }
+
+  export type RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput> | RecepcionEscaneoDetalleCreateWithoutProductoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyProductoInputEnvelope
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+  }
+
   export type VentaCreateNestedManyWithoutProductoInput = {
     create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
@@ -27189,6 +32189,20 @@ export namespace Prisma {
     connectOrCreate?: OportunidadCreateOrConnectWithoutProductoInput | OportunidadCreateOrConnectWithoutProductoInput[]
     createMany?: OportunidadCreateManyProductoInputEnvelope
     connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+  }
+
+  export type ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput> | ProductoCodigoBarraCreateWithoutProductoInput[] | ProductoCodigoBarraUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: ProductoCodigoBarraCreateOrConnectWithoutProductoInput | ProductoCodigoBarraCreateOrConnectWithoutProductoInput[]
+    createMany?: ProductoCodigoBarraCreateManyProductoInputEnvelope
+    connect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput> | RecepcionEscaneoDetalleCreateWithoutProductoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyProductoInputEnvelope
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
   }
 
   export type VentaUncheckedCreateNestedManyWithoutProductoInput = {
@@ -27293,6 +32307,34 @@ export namespace Prisma {
     update?: XOR<XOR<CategoriaUpdateToOneWithWhereWithoutProductoInput, CategoriaUpdateWithoutProductoInput>, CategoriaUncheckedUpdateWithoutProductoInput>
   }
 
+  export type ProductoCodigoBarraUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput> | ProductoCodigoBarraCreateWithoutProductoInput[] | ProductoCodigoBarraUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: ProductoCodigoBarraCreateOrConnectWithoutProductoInput | ProductoCodigoBarraCreateOrConnectWithoutProductoInput[]
+    upsert?: ProductoCodigoBarraUpsertWithWhereUniqueWithoutProductoInput | ProductoCodigoBarraUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: ProductoCodigoBarraCreateManyProductoInputEnvelope
+    set?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    disconnect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    delete?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    connect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    update?: ProductoCodigoBarraUpdateWithWhereUniqueWithoutProductoInput | ProductoCodigoBarraUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: ProductoCodigoBarraUpdateManyWithWhereWithoutProductoInput | ProductoCodigoBarraUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: ProductoCodigoBarraScalarWhereInput | ProductoCodigoBarraScalarWhereInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput> | RecepcionEscaneoDetalleCreateWithoutProductoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput[]
+    upsert?: RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutProductoInput | RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyProductoInputEnvelope
+    set?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    disconnect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    delete?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    update?: RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutProductoInput | RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: RecepcionEscaneoDetalleUpdateManyWithWhereWithoutProductoInput | RecepcionEscaneoDetalleUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
+  }
+
   export type VentaUpdateManyWithoutProductoNestedInput = {
     create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
@@ -27375,6 +32417,34 @@ export namespace Prisma {
     update?: OportunidadUpdateWithWhereUniqueWithoutProductoInput | OportunidadUpdateWithWhereUniqueWithoutProductoInput[]
     updateMany?: OportunidadUpdateManyWithWhereWithoutProductoInput | OportunidadUpdateManyWithWhereWithoutProductoInput[]
     deleteMany?: OportunidadScalarWhereInput | OportunidadScalarWhereInput[]
+  }
+
+  export type ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput> | ProductoCodigoBarraCreateWithoutProductoInput[] | ProductoCodigoBarraUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: ProductoCodigoBarraCreateOrConnectWithoutProductoInput | ProductoCodigoBarraCreateOrConnectWithoutProductoInput[]
+    upsert?: ProductoCodigoBarraUpsertWithWhereUniqueWithoutProductoInput | ProductoCodigoBarraUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: ProductoCodigoBarraCreateManyProductoInputEnvelope
+    set?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    disconnect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    delete?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    connect?: ProductoCodigoBarraWhereUniqueInput | ProductoCodigoBarraWhereUniqueInput[]
+    update?: ProductoCodigoBarraUpdateWithWhereUniqueWithoutProductoInput | ProductoCodigoBarraUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: ProductoCodigoBarraUpdateManyWithWhereWithoutProductoInput | ProductoCodigoBarraUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: ProductoCodigoBarraScalarWhereInput | ProductoCodigoBarraScalarWhereInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput> | RecepcionEscaneoDetalleCreateWithoutProductoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput[]
+    upsert?: RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutProductoInput | RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyProductoInputEnvelope
+    set?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    disconnect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    delete?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    update?: RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutProductoInput | RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: RecepcionEscaneoDetalleUpdateManyWithWhereWithoutProductoInput | RecepcionEscaneoDetalleUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
   }
 
   export type VentaUncheckedUpdateManyWithoutProductoNestedInput = {
@@ -27489,6 +32559,13 @@ export namespace Prisma {
     update?: XOR<XOR<VentaUpdateToOneWithWhereWithoutVentaDetalleInput, VentaUpdateWithoutVentaDetalleInput>, VentaUncheckedUpdateWithoutVentaDetalleInput>
   }
 
+  export type OportunidadCreateNestedManyWithoutClienteInput = {
+    create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
+    createMany?: OportunidadCreateManyClienteInputEnvelope
+    connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+  }
+
   export type ContactoClienteFirematCreateNestedManyWithoutClienteInput = {
     create?: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput> | ContactoClienteFirematCreateWithoutClienteInput[] | ContactoClienteFirematUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutClienteInput | ContactoClienteFirematCreateOrConnectWithoutClienteInput[]
@@ -27496,7 +32573,14 @@ export namespace Prisma {
     connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
   }
 
-  export type OportunidadCreateNestedManyWithoutClienteInput = {
+  export type CotizacionFirematCreateNestedManyWithoutClienteFirematInput = {
+    create?: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput> | CotizacionFirematCreateWithoutClienteFirematInput[] | CotizacionFirematUncheckedCreateWithoutClienteFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutClienteFirematInput | CotizacionFirematCreateOrConnectWithoutClienteFirematInput[]
+    createMany?: CotizacionFirematCreateManyClienteFirematInputEnvelope
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+  }
+
+  export type OportunidadUncheckedCreateNestedManyWithoutClienteInput = {
     create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
     createMany?: OportunidadCreateManyClienteInputEnvelope
@@ -27510,11 +32594,11 @@ export namespace Prisma {
     connect?: ContactoClienteFirematWhereUniqueInput | ContactoClienteFirematWhereUniqueInput[]
   }
 
-  export type OportunidadUncheckedCreateNestedManyWithoutClienteInput = {
-    create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
-    connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
-    createMany?: OportunidadCreateManyClienteInputEnvelope
-    connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+  export type CotizacionFirematUncheckedCreateNestedManyWithoutClienteFirematInput = {
+    create?: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput> | CotizacionFirematCreateWithoutClienteFirematInput[] | CotizacionFirematUncheckedCreateWithoutClienteFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutClienteFirematInput | CotizacionFirematCreateOrConnectWithoutClienteFirematInput[]
+    createMany?: CotizacionFirematCreateManyClienteFirematInputEnvelope
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
   }
 
   export type NullableEnumTipoClienteFirematFieldUpdateOperationsInput = {
@@ -27523,6 +32607,20 @@ export namespace Prisma {
 
   export type NullableEnumCanalVentaFirematFieldUpdateOperationsInput = {
     set?: $Enums.CanalVentaFiremat | null
+  }
+
+  export type OportunidadUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
+    upsert?: OportunidadUpsertWithWhereUniqueWithoutClienteInput | OportunidadUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: OportunidadCreateManyClienteInputEnvelope
+    set?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+    disconnect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+    delete?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+    connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
+    update?: OportunidadUpdateWithWhereUniqueWithoutClienteInput | OportunidadUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: OportunidadUpdateManyWithWhereWithoutClienteInput | OportunidadUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: OportunidadScalarWhereInput | OportunidadScalarWhereInput[]
   }
 
   export type ContactoClienteFirematUpdateManyWithoutClienteNestedInput = {
@@ -27539,7 +32637,21 @@ export namespace Prisma {
     deleteMany?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
   }
 
-  export type OportunidadUpdateManyWithoutClienteNestedInput = {
+  export type CotizacionFirematUpdateManyWithoutClienteFirematNestedInput = {
+    create?: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput> | CotizacionFirematCreateWithoutClienteFirematInput[] | CotizacionFirematUncheckedCreateWithoutClienteFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutClienteFirematInput | CotizacionFirematCreateOrConnectWithoutClienteFirematInput[]
+    upsert?: CotizacionFirematUpsertWithWhereUniqueWithoutClienteFirematInput | CotizacionFirematUpsertWithWhereUniqueWithoutClienteFirematInput[]
+    createMany?: CotizacionFirematCreateManyClienteFirematInputEnvelope
+    set?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    disconnect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    delete?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    update?: CotizacionFirematUpdateWithWhereUniqueWithoutClienteFirematInput | CotizacionFirematUpdateWithWhereUniqueWithoutClienteFirematInput[]
+    updateMany?: CotizacionFirematUpdateManyWithWhereWithoutClienteFirematInput | CotizacionFirematUpdateManyWithWhereWithoutClienteFirematInput[]
+    deleteMany?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
+  }
+
+  export type OportunidadUncheckedUpdateManyWithoutClienteNestedInput = {
     create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
     upsert?: OportunidadUpsertWithWhereUniqueWithoutClienteInput | OportunidadUpsertWithWhereUniqueWithoutClienteInput[]
@@ -27567,18 +32679,18 @@ export namespace Prisma {
     deleteMany?: ContactoClienteFirematScalarWhereInput | ContactoClienteFirematScalarWhereInput[]
   }
 
-  export type OportunidadUncheckedUpdateManyWithoutClienteNestedInput = {
-    create?: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput> | OportunidadCreateWithoutClienteInput[] | OportunidadUncheckedCreateWithoutClienteInput[]
-    connectOrCreate?: OportunidadCreateOrConnectWithoutClienteInput | OportunidadCreateOrConnectWithoutClienteInput[]
-    upsert?: OportunidadUpsertWithWhereUniqueWithoutClienteInput | OportunidadUpsertWithWhereUniqueWithoutClienteInput[]
-    createMany?: OportunidadCreateManyClienteInputEnvelope
-    set?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
-    disconnect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
-    delete?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
-    connect?: OportunidadWhereUniqueInput | OportunidadWhereUniqueInput[]
-    update?: OportunidadUpdateWithWhereUniqueWithoutClienteInput | OportunidadUpdateWithWhereUniqueWithoutClienteInput[]
-    updateMany?: OportunidadUpdateManyWithWhereWithoutClienteInput | OportunidadUpdateManyWithWhereWithoutClienteInput[]
-    deleteMany?: OportunidadScalarWhereInput | OportunidadScalarWhereInput[]
+  export type CotizacionFirematUncheckedUpdateManyWithoutClienteFirematNestedInput = {
+    create?: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput> | CotizacionFirematCreateWithoutClienteFirematInput[] | CotizacionFirematUncheckedCreateWithoutClienteFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutClienteFirematInput | CotizacionFirematCreateOrConnectWithoutClienteFirematInput[]
+    upsert?: CotizacionFirematUpsertWithWhereUniqueWithoutClienteFirematInput | CotizacionFirematUpsertWithWhereUniqueWithoutClienteFirematInput[]
+    createMany?: CotizacionFirematCreateManyClienteFirematInputEnvelope
+    set?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    disconnect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    delete?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    update?: CotizacionFirematUpdateWithWhereUniqueWithoutClienteFirematInput | CotizacionFirematUpdateWithWhereUniqueWithoutClienteFirematInput[]
+    updateMany?: CotizacionFirematUpdateManyWithWhereWithoutClienteFirematInput | CotizacionFirematUpdateManyWithWhereWithoutClienteFirematInput[]
+    deleteMany?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
   }
 
   export type ClienteCreateNestedOneWithoutOportunidadInput = {
@@ -27625,6 +32737,18 @@ export namespace Prisma {
     connect?: FunnelFirematOpportunityWhereUniqueInput | FunnelFirematOpportunityWhereUniqueInput[]
   }
 
+  export type ClienteCreateNestedOneWithoutCotizacionesInput = {
+    create?: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCotizacionesInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ContactoClienteFirematCreateNestedOneWithoutCotizacionesInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutCotizacionesInput, ContactoClienteFirematUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutCotizacionesInput
+    connect?: ContactoClienteFirematWhereUniqueInput
+  }
+
   export type CotizacionFirematDetalleUncheckedCreateNestedManyWithoutCotizacionInput = {
     create?: XOR<CotizacionFirematDetalleCreateWithoutCotizacionInput, CotizacionFirematDetalleUncheckedCreateWithoutCotizacionInput> | CotizacionFirematDetalleCreateWithoutCotizacionInput[] | CotizacionFirematDetalleUncheckedCreateWithoutCotizacionInput[]
     connectOrCreate?: CotizacionFirematDetalleCreateOrConnectWithoutCotizacionInput | CotizacionFirematDetalleCreateOrConnectWithoutCotizacionInput[]
@@ -27665,6 +32789,26 @@ export namespace Prisma {
     update?: FunnelFirematOpportunityUpdateWithWhereUniqueWithoutCotizacionInput | FunnelFirematOpportunityUpdateWithWhereUniqueWithoutCotizacionInput[]
     updateMany?: FunnelFirematOpportunityUpdateManyWithWhereWithoutCotizacionInput | FunnelFirematOpportunityUpdateManyWithWhereWithoutCotizacionInput[]
     deleteMany?: FunnelFirematOpportunityScalarWhereInput | FunnelFirematOpportunityScalarWhereInput[]
+  }
+
+  export type ClienteUpdateOneWithoutCotizacionesNestedInput = {
+    create?: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCotizacionesInput
+    upsert?: ClienteUpsertWithoutCotizacionesInput
+    disconnect?: ClienteWhereInput | boolean
+    delete?: ClienteWhereInput | boolean
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutCotizacionesInput, ClienteUpdateWithoutCotizacionesInput>, ClienteUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteFirematUpdateOneWithoutCotizacionesNestedInput = {
+    create?: XOR<ContactoClienteFirematCreateWithoutCotizacionesInput, ContactoClienteFirematUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ContactoClienteFirematCreateOrConnectWithoutCotizacionesInput
+    upsert?: ContactoClienteFirematUpsertWithoutCotizacionesInput
+    disconnect?: ContactoClienteFirematWhereInput | boolean
+    delete?: ContactoClienteFirematWhereInput | boolean
+    connect?: ContactoClienteFirematWhereUniqueInput
+    update?: XOR<XOR<ContactoClienteFirematUpdateToOneWithWhereWithoutCotizacionesInput, ContactoClienteFirematUpdateWithoutCotizacionesInput>, ContactoClienteFirematUncheckedUpdateWithoutCotizacionesInput>
   }
 
   export type CotizacionFirematDetalleUncheckedUpdateManyWithoutCotizacionNestedInput = {
@@ -27849,12 +32993,54 @@ export namespace Prisma {
     connect?: ClienteWhereUniqueInput
   }
 
+  export type CotizacionFirematCreateNestedManyWithoutContactoFirematInput = {
+    create?: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput> | CotizacionFirematCreateWithoutContactoFirematInput[] | CotizacionFirematUncheckedCreateWithoutContactoFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutContactoFirematInput | CotizacionFirematCreateOrConnectWithoutContactoFirematInput[]
+    createMany?: CotizacionFirematCreateManyContactoFirematInputEnvelope
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+  }
+
+  export type CotizacionFirematUncheckedCreateNestedManyWithoutContactoFirematInput = {
+    create?: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput> | CotizacionFirematCreateWithoutContactoFirematInput[] | CotizacionFirematUncheckedCreateWithoutContactoFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutContactoFirematInput | CotizacionFirematCreateOrConnectWithoutContactoFirematInput[]
+    createMany?: CotizacionFirematCreateManyContactoFirematInputEnvelope
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+  }
+
   export type ClienteUpdateOneRequiredWithoutContactosNestedInput = {
     create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
     upsert?: ClienteUpsertWithoutContactosInput
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContactosInput, ClienteUpdateWithoutContactosInput>, ClienteUncheckedUpdateWithoutContactosInput>
+  }
+
+  export type CotizacionFirematUpdateManyWithoutContactoFirematNestedInput = {
+    create?: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput> | CotizacionFirematCreateWithoutContactoFirematInput[] | CotizacionFirematUncheckedCreateWithoutContactoFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutContactoFirematInput | CotizacionFirematCreateOrConnectWithoutContactoFirematInput[]
+    upsert?: CotizacionFirematUpsertWithWhereUniqueWithoutContactoFirematInput | CotizacionFirematUpsertWithWhereUniqueWithoutContactoFirematInput[]
+    createMany?: CotizacionFirematCreateManyContactoFirematInputEnvelope
+    set?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    disconnect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    delete?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    update?: CotizacionFirematUpdateWithWhereUniqueWithoutContactoFirematInput | CotizacionFirematUpdateWithWhereUniqueWithoutContactoFirematInput[]
+    updateMany?: CotizacionFirematUpdateManyWithWhereWithoutContactoFirematInput | CotizacionFirematUpdateManyWithWhereWithoutContactoFirematInput[]
+    deleteMany?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
+  }
+
+  export type CotizacionFirematUncheckedUpdateManyWithoutContactoFirematNestedInput = {
+    create?: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput> | CotizacionFirematCreateWithoutContactoFirematInput[] | CotizacionFirematUncheckedCreateWithoutContactoFirematInput[]
+    connectOrCreate?: CotizacionFirematCreateOrConnectWithoutContactoFirematInput | CotizacionFirematCreateOrConnectWithoutContactoFirematInput[]
+    upsert?: CotizacionFirematUpsertWithWhereUniqueWithoutContactoFirematInput | CotizacionFirematUpsertWithWhereUniqueWithoutContactoFirematInput[]
+    createMany?: CotizacionFirematCreateManyContactoFirematInputEnvelope
+    set?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    disconnect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    delete?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    connect?: CotizacionFirematWhereUniqueInput | CotizacionFirematWhereUniqueInput[]
+    update?: CotizacionFirematUpdateWithWhereUniqueWithoutContactoFirematInput | CotizacionFirematUpdateWithWhereUniqueWithoutContactoFirematInput[]
+    updateMany?: CotizacionFirematUpdateManyWithWhereWithoutContactoFirematInput | CotizacionFirematUpdateManyWithWhereWithoutContactoFirematInput[]
+    deleteMany?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
   }
 
   export type FunnelFirematOpportunityCreateNestedOneWithoutArchivosInput = {
@@ -27883,6 +33069,90 @@ export namespace Prisma {
     upsert?: FunnelFirematOpportunityUpsertWithoutHistorialEtapasInput
     connect?: FunnelFirematOpportunityWhereUniqueInput
     update?: XOR<XOR<FunnelFirematOpportunityUpdateToOneWithWhereWithoutHistorialEtapasInput, FunnelFirematOpportunityUpdateWithoutHistorialEtapasInput>, FunnelFirematOpportunityUncheckedUpdateWithoutHistorialEtapasInput>
+  }
+
+  export type ProductoCreateNestedOneWithoutProductoCodigoBarraInput = {
+    create?: XOR<ProductoCreateWithoutProductoCodigoBarraInput, ProductoUncheckedCreateWithoutProductoCodigoBarraInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutProductoCodigoBarraInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type ProductoUpdateOneRequiredWithoutProductoCodigoBarraNestedInput = {
+    create?: XOR<ProductoCreateWithoutProductoCodigoBarraInput, ProductoUncheckedCreateWithoutProductoCodigoBarraInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutProductoCodigoBarraInput
+    upsert?: ProductoUpsertWithoutProductoCodigoBarraInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutProductoCodigoBarraInput, ProductoUpdateWithoutProductoCodigoBarraInput>, ProductoUncheckedUpdateWithoutProductoCodigoBarraInput>
+  }
+
+  export type RecepcionEscaneoDetalleCreateNestedManyWithoutRecepcionEscaneoInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput> | RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInputEnvelope
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutRecepcionEscaneoInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput> | RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInputEnvelope
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUpdateManyWithoutRecepcionEscaneoNestedInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput> | RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput[]
+    upsert?: RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutRecepcionEscaneoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInputEnvelope
+    set?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    disconnect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    delete?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    update?: RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutRecepcionEscaneoInput[]
+    updateMany?: RecepcionEscaneoDetalleUpdateManyWithWhereWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpdateManyWithWhereWithoutRecepcionEscaneoInput[]
+    deleteMany?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateManyWithoutRecepcionEscaneoNestedInput = {
+    create?: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput> | RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput[] | RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput[]
+    connectOrCreate?: RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput[]
+    upsert?: RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutRecepcionEscaneoInput[]
+    createMany?: RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInputEnvelope
+    set?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    disconnect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    delete?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    connect?: RecepcionEscaneoDetalleWhereUniqueInput | RecepcionEscaneoDetalleWhereUniqueInput[]
+    update?: RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutRecepcionEscaneoInput[]
+    updateMany?: RecepcionEscaneoDetalleUpdateManyWithWhereWithoutRecepcionEscaneoInput | RecepcionEscaneoDetalleUpdateManyWithWhereWithoutRecepcionEscaneoInput[]
+    deleteMany?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
+  }
+
+  export type ProductoCreateNestedOneWithoutRecepcionEscaneoDetalleInput = {
+    create?: XOR<ProductoCreateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutRecepcionEscaneoDetalleInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type RecepcionEscaneoCreateNestedOneWithoutRecepcionEscaneoDetalleInput = {
+    create?: XOR<RecepcionEscaneoCreateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    connectOrCreate?: RecepcionEscaneoCreateOrConnectWithoutRecepcionEscaneoDetalleInput
+    connect?: RecepcionEscaneoWhereUniqueInput
+  }
+
+  export type ProductoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput = {
+    create?: XOR<ProductoCreateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutRecepcionEscaneoDetalleInput
+    upsert?: ProductoUpsertWithoutRecepcionEscaneoDetalleInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutRecepcionEscaneoDetalleInput, ProductoUpdateWithoutRecepcionEscaneoDetalleInput>, ProductoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
+  }
+
+  export type RecepcionEscaneoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput = {
+    create?: XOR<RecepcionEscaneoCreateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    connectOrCreate?: RecepcionEscaneoCreateOrConnectWithoutRecepcionEscaneoDetalleInput
+    upsert?: RecepcionEscaneoUpsertWithoutRecepcionEscaneoDetalleInput
+    connect?: RecepcionEscaneoWhereUniqueInput
+    update?: XOR<XOR<RecepcionEscaneoUpdateToOneWithWhereWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUpdateWithoutRecepcionEscaneoDetalleInput>, RecepcionEscaneoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -28224,24 +33494,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -28256,24 +33528,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -28317,21 +33591,21 @@ export namespace Prisma {
     precio?: FloatFilter<"Producto"> | number
     minStock?: IntFilter<"Producto"> | number
     activo?: BoolFilter<"Producto"> | boolean
-    criticidad?: StringFilter<"Producto"> | string
     imagen?: StringNullableFilter<"Producto"> | string | null
     categoriaId?: IntFilter<"Producto"> | number
     stockReservado?: IntFilter<"Producto"> | number
     sku?: StringNullableFilter<"Producto"> | string | null
+    criticidad?: StringFilter<"Producto"> | string
+    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
     disponibilidad?: StringNullableFilter<"Producto"> | string | null
     formato?: StringNullableFilter<"Producto"> | string | null
-    cantidadCaja?: StringNullableFilter<"Producto"> | string | null
-    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
-    stockInicial?: IntNullableFilter<"Producto"> | number | null
-    salidas?: IntNullableFilter<"Producto"> | number | null
-    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioUsd?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    stockInicial?: IntNullableFilter<"Producto"> | number | null
   }
 
   export type ProductoCreateWithoutMovimientoInput = {
@@ -28343,24 +33617,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -28375,24 +33651,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -28422,24 +33700,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -28454,24 +33734,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -28513,31 +33795,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -28546,31 +33804,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -28587,31 +33869,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -28620,32 +33878,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -28748,6 +34030,68 @@ export namespace Prisma {
   export type CategoriaCreateOrConnectWithoutProductoInput = {
     where: CategoriaWhereUniqueInput
     create: XOR<CategoriaCreateWithoutProductoInput, CategoriaUncheckedCreateWithoutProductoInput>
+  }
+
+  export type ProductoCodigoBarraCreateWithoutProductoInput = {
+    codigo: string
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductoCodigoBarraUncheckedCreateWithoutProductoInput = {
+    id?: number
+    codigo: string
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductoCodigoBarraCreateOrConnectWithoutProductoInput = {
+    where: ProductoCodigoBarraWhereUniqueInput
+    create: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput>
+  }
+
+  export type ProductoCodigoBarraCreateManyProductoInputEnvelope = {
+    data: ProductoCodigoBarraCreateManyProductoInput | ProductoCodigoBarraCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RecepcionEscaneoDetalleCreateWithoutProductoInput = {
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+    RecepcionEscaneo: RecepcionEscaneoCreateNestedOneWithoutRecepcionEscaneoDetalleInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput = {
+    id?: number
+    recepcionId: string
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleCreateOrConnectWithoutProductoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    create: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput>
+  }
+
+  export type RecepcionEscaneoDetalleCreateManyProductoInputEnvelope = {
+    data: RecepcionEscaneoDetalleCreateManyProductoInput | RecepcionEscaneoDetalleCreateManyProductoInput[]
+    skipDuplicates?: boolean
   }
 
   export type VentaCreateWithoutProductoInput = {
@@ -28877,32 +34221,8 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     correo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     productoId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
     cantidadEstimada?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
-    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
-    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
-    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     responsable?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     etapa?: StringFilter<"FunnelFirematOpportunity"> | string
     montoEstimado?: FloatFilter<"FunnelFirematOpportunity"> | number
@@ -28911,32 +34231,56 @@ export namespace Prisma {
     fechaProximaAccion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observaciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     origen?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cotizacionId?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
+    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    estadoStock?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPerdida?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoPostergacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaReactivacion?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     documentoRespaldo?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     fechaCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    createdAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    updatedAt?: DateTimeFilter<"FunnelFirematOpportunity"> | Date | string
-    probabilidad?: IntNullableFilter<"FunnelFirematOpportunity"> | number | null
+    comuna?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    region?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    urgencia?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    alternativaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    margenEstimado?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    objeciones?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelFirematOpportunity"> | boolean | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     flujoPosterior?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     motivoDescarte?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     tipoBroker?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     cargoContacto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     direccionProyecto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
-    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     comentariosInternos?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
     observacionCamposFaltantes?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
-    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     descuento?: FloatNullableFilter<"FunnelFirematOpportunity"> | number | null
+    lineaProducto?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     stockOportunidad?: StringNullableFilter<"FunnelFirematOpportunity"> | string | null
     reprogramacionesCount?: IntFilter<"FunnelFirematOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelFirematOpportunity"> | Date | string | null
@@ -29030,6 +34374,68 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ProductoCodigoBarraUpsertWithWhereUniqueWithoutProductoInput = {
+    where: ProductoCodigoBarraWhereUniqueInput
+    update: XOR<ProductoCodigoBarraUpdateWithoutProductoInput, ProductoCodigoBarraUncheckedUpdateWithoutProductoInput>
+    create: XOR<ProductoCodigoBarraCreateWithoutProductoInput, ProductoCodigoBarraUncheckedCreateWithoutProductoInput>
+  }
+
+  export type ProductoCodigoBarraUpdateWithWhereUniqueWithoutProductoInput = {
+    where: ProductoCodigoBarraWhereUniqueInput
+    data: XOR<ProductoCodigoBarraUpdateWithoutProductoInput, ProductoCodigoBarraUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type ProductoCodigoBarraUpdateManyWithWhereWithoutProductoInput = {
+    where: ProductoCodigoBarraScalarWhereInput
+    data: XOR<ProductoCodigoBarraUpdateManyMutationInput, ProductoCodigoBarraUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type ProductoCodigoBarraScalarWhereInput = {
+    AND?: ProductoCodigoBarraScalarWhereInput | ProductoCodigoBarraScalarWhereInput[]
+    OR?: ProductoCodigoBarraScalarWhereInput[]
+    NOT?: ProductoCodigoBarraScalarWhereInput | ProductoCodigoBarraScalarWhereInput[]
+    id?: IntFilter<"ProductoCodigoBarra"> | number
+    codigo?: StringFilter<"ProductoCodigoBarra"> | string
+    productoId?: IntFilter<"ProductoCodigoBarra"> | number
+    unidadesPorEscaneo?: IntFilter<"ProductoCodigoBarra"> | number
+    descripcion?: StringNullableFilter<"ProductoCodigoBarra"> | string | null
+    activo?: BoolFilter<"ProductoCodigoBarra"> | boolean
+    createdAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductoCodigoBarra"> | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutProductoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    update: XOR<RecepcionEscaneoDetalleUpdateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedUpdateWithoutProductoInput>
+    create: XOR<RecepcionEscaneoDetalleCreateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutProductoInput>
+  }
+
+  export type RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutProductoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    data: XOR<RecepcionEscaneoDetalleUpdateWithoutProductoInput, RecepcionEscaneoDetalleUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type RecepcionEscaneoDetalleUpdateManyWithWhereWithoutProductoInput = {
+    where: RecepcionEscaneoDetalleScalarWhereInput
+    data: XOR<RecepcionEscaneoDetalleUpdateManyMutationInput, RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type RecepcionEscaneoDetalleScalarWhereInput = {
+    AND?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
+    OR?: RecepcionEscaneoDetalleScalarWhereInput[]
+    NOT?: RecepcionEscaneoDetalleScalarWhereInput | RecepcionEscaneoDetalleScalarWhereInput[]
+    id?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    recepcionId?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    productoId?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    codigo?: StringFilter<"RecepcionEscaneoDetalle"> | string
+    cantidadEscaneos?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesPorEscaneo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    unidadesIngresadas?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockAnterior?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    stockNuevo?: IntFilter<"RecepcionEscaneoDetalle"> | number
+    createdAt?: DateTimeFilter<"RecepcionEscaneoDetalle"> | Date | string
+  }
+
   export type VentaUpsertWithWhereUniqueWithoutProductoInput = {
     where: VentaWhereUniqueInput
     update: XOR<VentaUpdateWithoutProductoInput, VentaUncheckedUpdateWithoutProductoInput>
@@ -29104,25 +34510,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
 
@@ -29136,25 +34544,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
 
@@ -29208,25 +34618,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
 
@@ -29240,25 +34652,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
@@ -29287,25 +34701,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
   }
 
@@ -29319,25 +34735,27 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
   }
 
@@ -29406,25 +34824,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
   }
 
@@ -29438,25 +34858,27 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
@@ -29506,41 +34928,6 @@ export namespace Prisma {
     proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type ContactoClienteFirematCreateWithoutClienteInput = {
-    nombre: string
-    cargo?: string | null
-    telefono?: string | null
-    correo?: string | null
-    principal?: boolean
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ContactoClienteFirematUncheckedCreateWithoutClienteInput = {
-    id?: number
-    nombre: string
-    cargo?: string | null
-    telefono?: string | null
-    correo?: string | null
-    principal?: boolean
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ContactoClienteFirematCreateOrConnectWithoutClienteInput = {
-    where: ContactoClienteFirematWhereUniqueInput
-    create: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput>
-  }
-
-  export type ContactoClienteFirematCreateManyClienteInputEnvelope = {
-    data: ContactoClienteFirematCreateManyClienteInput | ContactoClienteFirematCreateManyClienteInput[]
-    skipDuplicates?: boolean
-  }
-
   export type OportunidadCreateWithoutClienteInput = {
     titulo: string
     descripcion?: string | null
@@ -29580,6 +34967,146 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ContactoClienteFirematCreateWithoutClienteInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cotizaciones?: CotizacionFirematCreateNestedManyWithoutContactoFirematInput
+  }
+
+  export type ContactoClienteFirematUncheckedCreateWithoutClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cotizaciones?: CotizacionFirematUncheckedCreateNestedManyWithoutContactoFirematInput
+  }
+
+  export type ContactoClienteFirematCreateOrConnectWithoutClienteInput = {
+    where: ContactoClienteFirematWhereUniqueInput
+    create: XOR<ContactoClienteFirematCreateWithoutClienteInput, ContactoClienteFirematUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ContactoClienteFirematCreateManyClienteInputEnvelope = {
+    data: ContactoClienteFirematCreateManyClienteInput | ContactoClienteFirematCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CotizacionFirematCreateWithoutClienteFirematInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionFirematDetalleCreateNestedManyWithoutCotizacionInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutCotizacionInput
+    contactoFiremat?: ContactoClienteFirematCreateNestedOneWithoutCotizacionesInput
+  }
+
+  export type CotizacionFirematUncheckedCreateWithoutClienteFirematInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
+  }
+
+  export type CotizacionFirematCreateOrConnectWithoutClienteFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    create: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput>
+  }
+
+  export type CotizacionFirematCreateManyClienteFirematInputEnvelope = {
+    data: CotizacionFirematCreateManyClienteFirematInput | CotizacionFirematCreateManyClienteFirematInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OportunidadUpsertWithWhereUniqueWithoutClienteInput = {
+    where: OportunidadWhereUniqueInput
+    update: XOR<OportunidadUpdateWithoutClienteInput, OportunidadUncheckedUpdateWithoutClienteInput>
+    create: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput>
+  }
+
+  export type OportunidadUpdateWithWhereUniqueWithoutClienteInput = {
+    where: OportunidadWhereUniqueInput
+    data: XOR<OportunidadUpdateWithoutClienteInput, OportunidadUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type OportunidadUpdateManyWithWhereWithoutClienteInput = {
+    where: OportunidadScalarWhereInput
+    data: XOR<OportunidadUpdateManyMutationInput, OportunidadUncheckedUpdateManyWithoutClienteInput>
+  }
+
   export type ContactoClienteFirematUpsertWithWhereUniqueWithoutClienteInput = {
     where: ContactoClienteFirematWhereUniqueInput
     update: XOR<ContactoClienteFirematUpdateWithoutClienteInput, ContactoClienteFirematUncheckedUpdateWithoutClienteInput>
@@ -29613,20 +35140,61 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ContactoClienteFiremat"> | Date | string
   }
 
-  export type OportunidadUpsertWithWhereUniqueWithoutClienteInput = {
-    where: OportunidadWhereUniqueInput
-    update: XOR<OportunidadUpdateWithoutClienteInput, OportunidadUncheckedUpdateWithoutClienteInput>
-    create: XOR<OportunidadCreateWithoutClienteInput, OportunidadUncheckedCreateWithoutClienteInput>
+  export type CotizacionFirematUpsertWithWhereUniqueWithoutClienteFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    update: XOR<CotizacionFirematUpdateWithoutClienteFirematInput, CotizacionFirematUncheckedUpdateWithoutClienteFirematInput>
+    create: XOR<CotizacionFirematCreateWithoutClienteFirematInput, CotizacionFirematUncheckedCreateWithoutClienteFirematInput>
   }
 
-  export type OportunidadUpdateWithWhereUniqueWithoutClienteInput = {
-    where: OportunidadWhereUniqueInput
-    data: XOR<OportunidadUpdateWithoutClienteInput, OportunidadUncheckedUpdateWithoutClienteInput>
+  export type CotizacionFirematUpdateWithWhereUniqueWithoutClienteFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    data: XOR<CotizacionFirematUpdateWithoutClienteFirematInput, CotizacionFirematUncheckedUpdateWithoutClienteFirematInput>
   }
 
-  export type OportunidadUpdateManyWithWhereWithoutClienteInput = {
-    where: OportunidadScalarWhereInput
-    data: XOR<OportunidadUpdateManyMutationInput, OportunidadUncheckedUpdateManyWithoutClienteInput>
+  export type CotizacionFirematUpdateManyWithWhereWithoutClienteFirematInput = {
+    where: CotizacionFirematScalarWhereInput
+    data: XOR<CotizacionFirematUpdateManyMutationInput, CotizacionFirematUncheckedUpdateManyWithoutClienteFirematInput>
+  }
+
+  export type CotizacionFirematScalarWhereInput = {
+    AND?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
+    OR?: CotizacionFirematScalarWhereInput[]
+    NOT?: CotizacionFirematScalarWhereInput | CotizacionFirematScalarWhereInput[]
+    id?: IntFilter<"CotizacionFiremat"> | number
+    cliente?: StringFilter<"CotizacionFiremat"> | string
+    contacto?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    clienteFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    contactoFirematId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    telefono?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    correo?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    tipoCliente?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    cargo?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    responsable?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    estado?: StringFilter<"CotizacionFiremat"> | string
+    moneda?: StringFilter<"CotizacionFiremat"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionFiremat"> | boolean
+    subtotal?: FloatFilter<"CotizacionFiremat"> | number
+    descuento?: FloatFilter<"CotizacionFiremat"> | number
+    impuesto?: FloatFilter<"CotizacionFiremat"> | number
+    total?: FloatFilter<"CotizacionFiremat"> | number
+    fechaCotizacion?: DateTimeFilter<"CotizacionFiremat"> | Date | string
+    fechaVencimiento?: DateTimeNullableFilter<"CotizacionFiremat"> | Date | string | null
+    fechaEnvio?: DateTimeNullableFilter<"CotizacionFiremat"> | Date | string | null
+    fechaSeguimiento?: DateTimeNullableFilter<"CotizacionFiremat"> | Date | string | null
+    fechaCierre?: DateTimeNullableFilter<"CotizacionFiremat"> | Date | string | null
+    probabilidadCierre?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    comentariosCliente?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    objeciones?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    observaciones?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    motivoPerdida?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    motivoPostergacion?: StringNullableFilter<"CotizacionFiremat"> | string | null
+    fechaReactivacion?: DateTimeNullableFilter<"CotizacionFiremat"> | Date | string | null
+    version?: IntFilter<"CotizacionFiremat"> | number
+    esActual?: BoolFilter<"CotizacionFiremat"> | boolean
+    cotizacionBaseId?: IntNullableFilter<"CotizacionFiremat"> | number | null
+    createdAt?: DateTimeFilter<"CotizacionFiremat"> | Date | string
+    updatedAt?: DateTimeFilter<"CotizacionFiremat"> | Date | string
+    numero?: StringNullableFilter<"CotizacionFiremat"> | string | null
   }
 
   export type ClienteCreateWithoutOportunidadInput = {
@@ -29635,17 +35203,18 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
     contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteUncheckedCreateWithoutOportunidadInput = {
@@ -29655,17 +35224,18 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
     contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematUncheckedCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteCreateOrConnectWithoutOportunidadInput = {
@@ -29682,24 +35252,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -29714,24 +35286,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -29758,17 +35332,18 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUpdateManyWithoutClienteFirematNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutOportunidadInput = {
@@ -29778,17 +35353,18 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUncheckedUpdateManyWithoutClienteFirematNestedInput
   }
 
   export type ProductoUpsertWithoutOportunidadInput = {
@@ -29811,24 +35387,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -29843,24 +35421,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -29902,31 +35482,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -29935,31 +35491,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -29976,32 +35556,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -30010,31 +35566,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -30051,6 +35631,84 @@ export namespace Prisma {
   export type FunnelFirematOpportunityCreateManyCotizacionInputEnvelope = {
     data: FunnelFirematOpportunityCreateManyCotizacionInput | FunnelFirematOpportunityCreateManyCotizacionInput[]
     skipDuplicates?: boolean
+  }
+
+  export type ClienteCreateWithoutCotizacionesInput = {
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    observaciones?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    Oportunidad?: OportunidadCreateNestedManyWithoutClienteInput
+    contactos?: ContactoClienteFirematCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutCotizacionesInput = {
+    id?: number
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    observaciones?: string | null
+    tipoCliente?: $Enums.TipoClienteFiremat | null
+    canalVenta?: $Enums.CanalVentaFiremat | null
+    Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutClienteInput
+    contactos?: ContactoClienteFirematUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutCotizacionesInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteFirematCreateWithoutCotizacionesInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContactosInput
+  }
+
+  export type ContactoClienteFirematUncheckedCreateWithoutCotizacionesInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteFirematCreateOrConnectWithoutCotizacionesInput = {
+    where: ContactoClienteFirematWhereUniqueInput
+    create: XOR<ContactoClienteFirematCreateWithoutCotizacionesInput, ContactoClienteFirematUncheckedCreateWithoutCotizacionesInput>
   }
 
   export type CotizacionFirematDetalleUpsertWithWhereUniqueWithoutCotizacionInput = {
@@ -30085,12 +35743,107 @@ export namespace Prisma {
     data: XOR<FunnelFirematOpportunityUpdateManyMutationInput, FunnelFirematOpportunityUncheckedUpdateManyWithoutCotizacionInput>
   }
 
+  export type ClienteUpsertWithoutCotizacionesInput = {
+    update: XOR<ClienteUpdateWithoutCotizacionesInput, ClienteUncheckedUpdateWithoutCotizacionesInput>
+    create: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutCotizacionesInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutCotizacionesInput, ClienteUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ClienteUpdateWithoutCotizacionesInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    Oportunidad?: OportunidadUpdateManyWithoutClienteNestedInput
+    contactos?: ContactoClienteFirematUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutCotizacionesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
+    canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
+    Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
+    contactos?: ContactoClienteFirematUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ContactoClienteFirematUpsertWithoutCotizacionesInput = {
+    update: XOR<ContactoClienteFirematUpdateWithoutCotizacionesInput, ContactoClienteFirematUncheckedUpdateWithoutCotizacionesInput>
+    create: XOR<ContactoClienteFirematCreateWithoutCotizacionesInput, ContactoClienteFirematUncheckedCreateWithoutCotizacionesInput>
+    where?: ContactoClienteFirematWhereInput
+  }
+
+  export type ContactoClienteFirematUpdateToOneWithWhereWithoutCotizacionesInput = {
+    where?: ContactoClienteFirematWhereInput
+    data: XOR<ContactoClienteFirematUpdateWithoutCotizacionesInput, ContactoClienteFirematUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteFirematUpdateWithoutCotizacionesInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateWithoutCotizacionesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CotizacionFirematCreateWithoutDetallesInput = {
     cliente: string
     contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -30114,15 +35867,24 @@ export namespace Prisma {
     updatedAt?: Date | string
     numero?: string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteFiremat?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoFiremat?: ContactoClienteFirematCreateNestedOneWithoutCotizacionesInput
   }
 
   export type CotizacionFirematUncheckedCreateWithoutDetallesInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteFirematId?: number | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -30162,24 +35924,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -30194,24 +35958,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -30235,9 +36001,14 @@ export namespace Prisma {
   export type CotizacionFirematUpdateWithoutDetallesInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -30261,15 +36032,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteFiremat?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoFiremat?: ContactoClienteFirematUpdateOneWithoutCotizacionesNestedInput
   }
 
   export type CotizacionFirematUncheckedUpdateWithoutDetallesInput = {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -30315,24 +36095,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -30347,24 +36129,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -30372,9 +36156,14 @@ export namespace Prisma {
   export type CotizacionFirematCreateWithoutFunnelFirematOpportunityInput = {
     cliente: string
     contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -30398,15 +36187,24 @@ export namespace Prisma {
     updatedAt?: Date | string
     numero?: string | null
     detalles?: CotizacionFirematDetalleCreateNestedManyWithoutCotizacionInput
+    clienteFiremat?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoFiremat?: ContactoClienteFirematCreateNestedOneWithoutCotizacionesInput
   }
 
   export type CotizacionFirematUncheckedCreateWithoutFunnelFirematOpportunityInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteFirematId?: number | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -30446,24 +36244,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
     Venta?: VentaCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
@@ -30478,24 +36278,26 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     categoriaId: number
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
     Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
     VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
@@ -30579,9 +36381,14 @@ export namespace Prisma {
   export type CotizacionFirematUpdateWithoutFunnelFirematOpportunityInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -30605,15 +36412,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
     detalles?: CotizacionFirematDetalleUpdateManyWithoutCotizacionNestedInput
+    clienteFiremat?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoFiremat?: ContactoClienteFirematUpdateOneWithoutCotizacionesNestedInput
   }
 
   export type CotizacionFirematUncheckedUpdateWithoutFunnelFirematOpportunityInput = {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -30659,24 +36475,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -30691,24 +36509,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     categoriaId?: IntFieldUpdateOperationsInput | number
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -30780,17 +36600,18 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
     Oportunidad?: OportunidadCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteUncheckedCreateWithoutContactosInput = {
@@ -30800,22 +36621,110 @@ export namespace Prisma {
     email?: string | null
     telefono?: string | null
     direccion?: string | null
+    createdAt?: Date | string
+    activo?: boolean
+    updatedAt?: Date | string
     razonSocial?: string | null
     nombreEmpresa?: string | null
     region?: string | null
     comuna?: string | null
+    observaciones?: string | null
     tipoCliente?: $Enums.TipoClienteFiremat | null
     canalVenta?: $Enums.CanalVentaFiremat | null
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
     Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionFirematUncheckedCreateNestedManyWithoutClienteFirematInput
   }
 
   export type ClienteCreateOrConnectWithoutContactosInput = {
     where: ClienteWhereUniqueInput
     create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+  }
+
+  export type CotizacionFirematCreateWithoutContactoFirematInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionFirematDetalleCreateNestedManyWithoutCotizacionInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteFiremat?: ClienteCreateNestedOneWithoutCotizacionesInput
+  }
+
+  export type CotizacionFirematUncheckedCreateWithoutContactoFirematInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    clienteFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
+  }
+
+  export type CotizacionFirematCreateOrConnectWithoutContactoFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    create: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput>
+  }
+
+  export type CotizacionFirematCreateManyContactoFirematInputEnvelope = {
+    data: CotizacionFirematCreateManyContactoFirematInput | CotizacionFirematCreateManyContactoFirematInput[]
+    skipDuplicates?: boolean
   }
 
   export type ClienteUpsertWithoutContactosInput = {
@@ -30835,17 +36744,18 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Oportunidad?: OportunidadUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUpdateManyWithoutClienteFirematNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutContactosInput = {
@@ -30855,17 +36765,34 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
     nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableEnumTipoClienteFirematFieldUpdateOperationsInput | $Enums.TipoClienteFiremat | null
     canalVenta?: NullableEnumCanalVentaFirematFieldUpdateOperationsInput | $Enums.CanalVentaFiremat | null
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionFirematUncheckedUpdateManyWithoutClienteFirematNestedInput
+  }
+
+  export type CotizacionFirematUpsertWithWhereUniqueWithoutContactoFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    update: XOR<CotizacionFirematUpdateWithoutContactoFirematInput, CotizacionFirematUncheckedUpdateWithoutContactoFirematInput>
+    create: XOR<CotizacionFirematCreateWithoutContactoFirematInput, CotizacionFirematUncheckedCreateWithoutContactoFirematInput>
+  }
+
+  export type CotizacionFirematUpdateWithWhereUniqueWithoutContactoFirematInput = {
+    where: CotizacionFirematWhereUniqueInput
+    data: XOR<CotizacionFirematUpdateWithoutContactoFirematInput, CotizacionFirematUncheckedUpdateWithoutContactoFirematInput>
+  }
+
+  export type CotizacionFirematUpdateManyWithWhereWithoutContactoFirematInput = {
+    where: CotizacionFirematScalarWhereInput
+    data: XOR<CotizacionFirematUpdateManyMutationInput, CotizacionFirematUncheckedUpdateManyWithoutContactoFirematInput>
   }
 
   export type FunnelFirematOpportunityCreateWithoutArchivosInput = {
@@ -30874,31 +36801,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -30907,31 +36810,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -30948,32 +36875,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -30982,32 +36885,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -31037,31 +36964,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31070,31 +36973,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31111,32 +37038,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31145,32 +37048,56 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31184,31 +37111,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -31217,31 +37120,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -31258,32 +37185,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -31292,32 +37195,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -31347,31 +37274,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31380,31 +37283,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31421,32 +37348,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31455,37 +37358,454 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     esReactivacion?: BoolFieldUpdateOperationsInput | boolean
     archivos?: FunnelFirematArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type ProductoCreateWithoutProductoCodigoBarraInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    precioSugerido?: number | null
+    precioUsd?: number | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutProductoCodigoBarraInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    precioSugerido?: number | null
+    precioUsd?: number | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutProductoCodigoBarraInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutProductoCodigoBarraInput, ProductoUncheckedCreateWithoutProductoCodigoBarraInput>
+  }
+
+  export type ProductoUpsertWithoutProductoCodigoBarraInput = {
+    update: XOR<ProductoUpdateWithoutProductoCodigoBarraInput, ProductoUncheckedUpdateWithoutProductoCodigoBarraInput>
+    create: XOR<ProductoCreateWithoutProductoCodigoBarraInput, ProductoUncheckedCreateWithoutProductoCodigoBarraInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutProductoCodigoBarraInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutProductoCodigoBarraInput, ProductoUncheckedUpdateWithoutProductoCodigoBarraInput>
+  }
+
+  export type ProductoUpdateWithoutProductoCodigoBarraInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutProductoCodigoBarraInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput = {
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+    Producto: ProductoCreateNestedOneWithoutRecepcionEscaneoDetalleInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput = {
+    id?: number
+    productoId: number
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleCreateOrConnectWithoutRecepcionEscaneoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    create: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput>
+  }
+
+  export type RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInputEnvelope = {
+    data: RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInput | RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RecepcionEscaneoDetalleUpsertWithWhereUniqueWithoutRecepcionEscaneoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    update: XOR<RecepcionEscaneoDetalleUpdateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedUpdateWithoutRecepcionEscaneoInput>
+    create: XOR<RecepcionEscaneoDetalleCreateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedCreateWithoutRecepcionEscaneoInput>
+  }
+
+  export type RecepcionEscaneoDetalleUpdateWithWhereUniqueWithoutRecepcionEscaneoInput = {
+    where: RecepcionEscaneoDetalleWhereUniqueInput
+    data: XOR<RecepcionEscaneoDetalleUpdateWithoutRecepcionEscaneoInput, RecepcionEscaneoDetalleUncheckedUpdateWithoutRecepcionEscaneoInput>
+  }
+
+  export type RecepcionEscaneoDetalleUpdateManyWithWhereWithoutRecepcionEscaneoInput = {
+    where: RecepcionEscaneoDetalleScalarWhereInput
+    data: XOR<RecepcionEscaneoDetalleUpdateManyMutationInput, RecepcionEscaneoDetalleUncheckedUpdateManyWithoutRecepcionEscaneoInput>
+  }
+
+  export type ProductoCreateWithoutRecepcionEscaneoDetalleInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    precioSugerido?: number | null
+    precioUsd?: number | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleCreateNestedManyWithoutProductoInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    Oportunidad?: OportunidadCreateNestedManyWithoutProductoInput
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutRecepcionEscaneoDetalleInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    precioSugerido?: number | null
+    precioUsd?: number | null
+    entradas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedCreateNestedManyWithoutProductoInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    Oportunidad?: OportunidadUncheckedCreateNestedManyWithoutProductoInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutRecepcionEscaneoDetalleInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+  }
+
+  export type RecepcionEscaneoCreateWithoutRecepcionEscaneoDetalleInput = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoUncheckedCreateWithoutRecepcionEscaneoDetalleInput = {
+    id: string
+    usuarioId: string
+    motivo: string
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoCreateOrConnectWithoutRecepcionEscaneoDetalleInput = {
+    where: RecepcionEscaneoWhereUniqueInput
+    create: XOR<RecepcionEscaneoCreateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+  }
+
+  export type ProductoUpsertWithoutRecepcionEscaneoDetalleInput = {
+    update: XOR<ProductoUpdateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
+    create: XOR<ProductoCreateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutRecepcionEscaneoDetalleInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutRecepcionEscaneoDetalleInput, ProductoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
+  }
+
+  export type ProductoUpdateWithoutRecepcionEscaneoDetalleInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type RecepcionEscaneoUpsertWithoutRecepcionEscaneoDetalleInput = {
+    update: XOR<RecepcionEscaneoUpdateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
+    create: XOR<RecepcionEscaneoCreateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedCreateWithoutRecepcionEscaneoDetalleInput>
+    where?: RecepcionEscaneoWhereInput
+  }
+
+  export type RecepcionEscaneoUpdateToOneWithWhereWithoutRecepcionEscaneoDetalleInput = {
+    where?: RecepcionEscaneoWhereInput
+    data: XOR<RecepcionEscaneoUpdateWithoutRecepcionEscaneoDetalleInput, RecepcionEscaneoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput>
+  }
+
+  export type RecepcionEscaneoUpdateWithoutRecepcionEscaneoDetalleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoUncheckedUpdateWithoutRecepcionEscaneoDetalleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+    motivo?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductoCreateManyCategoriaInput = {
@@ -31498,20 +37818,20 @@ export namespace Prisma {
     precio: number
     minStock?: number
     activo?: boolean
-    criticidad?: string
     imagen?: string | null
     stockReservado?: number
     sku?: string | null
+    criticidad?: string
+    cantidadCaja?: string | null
     disponibilidad?: string | null
     formato?: string | null
-    cantidadCaja?: string | null
-    precioUsd?: number | null
     precioSugerido?: number | null
-    stockInicial?: number | null
-    salidas?: number | null
-    fechaUltimaSalida?: Date | string | null
+    precioUsd?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    salidas?: number | null
+    stockInicial?: number | null
   }
 
   export type ProductoUpdateWithoutCategoriaInput = {
@@ -31523,24 +37843,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUpdateManyWithoutProductoNestedInput
     Venta?: VentaUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
@@ -31555,24 +37877,26 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
     CotizacionFirematDetalle?: CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoNestedInput
     FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
     Oportunidad?: OportunidadUncheckedUpdateManyWithoutProductoNestedInput
+    ProductoCodigoBarra?: ProductoCodigoBarraUncheckedUpdateManyWithoutProductoNestedInput
+    RecepcionEscaneoDetalle?: RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
     VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
@@ -31587,20 +37911,20 @@ export namespace Prisma {
     precio?: FloatFieldUpdateOperationsInput | number
     minStock?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    criticidad?: StringFieldUpdateOperationsInput | string
     imagen?: NullableStringFieldUpdateOperationsInput | string | null
     stockReservado?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
+    criticidad?: StringFieldUpdateOperationsInput | string
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
     disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
     formato?: NullableStringFieldUpdateOperationsInput | string | null
-    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
-    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
-    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
-    salidas?: NullableIntFieldUpdateOperationsInput | number | null
-    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CotizacionFirematDetalleCreateManyProductoInput = {
@@ -31621,31 +37945,7 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -31654,32 +37954,56 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
-    estadoStock?: string | null
     cotizacionId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -31710,6 +38034,28 @@ export namespace Prisma {
     proximaAccion?: string | null
     fechaProximaAccion?: Date | string | null
     probabilidad?: number | null
+    createdAt?: Date | string
+  }
+
+  export type ProductoCodigoBarraCreateManyProductoInput = {
+    id?: number
+    codigo: string
+    unidadesPorEscaneo: number
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleCreateManyProductoInput = {
+    id?: number
+    recepcionId: string
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
     createdAt?: Date | string
   }
 
@@ -31776,31 +38122,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31809,31 +38131,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31850,31 +38196,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31883,32 +38205,56 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31924,31 +38270,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -31957,32 +38279,56 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32065,6 +38411,70 @@ export namespace Prisma {
     proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraUpdateWithoutProductoInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductoCodigoBarraUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUpdateWithoutProductoInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    RecepcionEscaneo?: RecepcionEscaneoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recepcionId?: StringFieldUpdateOperationsInput | string
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recepcionId?: StringFieldUpdateOperationsInput | string
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32174,19 +38584,6 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
-  export type ContactoClienteFirematCreateManyClienteInput = {
-    id?: number
-    nombre: string
-    cargo?: string | null
-    telefono?: string | null
-    correo?: string | null
-    principal?: boolean
-    activo?: boolean
-    observaciones?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type OportunidadCreateManyClienteInput = {
     id?: number
     titulo: string
@@ -32202,42 +38599,54 @@ export namespace Prisma {
     productoId?: number | null
   }
 
-  export type ContactoClienteFirematUpdateWithoutClienteInput = {
-    nombre?: StringFieldUpdateOperationsInput | string
-    cargo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    principal?: BoolFieldUpdateOperationsInput | boolean
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type ContactoClienteFirematCreateManyClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type ContactoClienteFirematUncheckedUpdateWithoutClienteInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    nombre?: StringFieldUpdateOperationsInput | string
-    cargo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    principal?: BoolFieldUpdateOperationsInput | boolean
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ContactoClienteFirematUncheckedUpdateManyWithoutClienteInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    nombre?: StringFieldUpdateOperationsInput | string
-    cargo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    principal?: BoolFieldUpdateOperationsInput | boolean
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type CotizacionFirematCreateManyClienteFirematInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    contactoFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
   }
 
   export type OportunidadUpdateWithoutClienteInput = {
@@ -32284,6 +38693,160 @@ export namespace Prisma {
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type ContactoClienteFirematUpdateWithoutClienteInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionFirematUpdateManyWithoutContactoFirematNestedInput
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionFirematUncheckedUpdateManyWithoutContactoFirematNestedInput
+  }
+
+  export type ContactoClienteFirematUncheckedUpdateManyWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CotizacionFirematUpdateWithoutClienteFirematInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionFirematDetalleUpdateManyWithoutCotizacionNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutCotizacionNestedInput
+    contactoFiremat?: ContactoClienteFirematUpdateOneWithoutCotizacionesNestedInput
+  }
+
+  export type CotizacionFirematUncheckedUpdateWithoutClienteFirematInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionFirematDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
+  }
+
+  export type CotizacionFirematUncheckedUpdateManyWithoutClienteFirematInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type CotizacionFirematDetalleCreateManyCotizacionInput = {
     id?: number
     productoId: number
@@ -32302,32 +38865,8 @@ export namespace Prisma {
     telefono?: string | null
     correo?: string | null
     tipoCliente?: string | null
-    rutEmpresa?: string | null
-    region?: string | null
-    comuna?: string | null
-    unidadNegocio?: string | null
     productoId?: number | null
     cantidadEstimada?: number | null
-    urgencia?: string | null
-    tipoUso?: string | null
-    necesidadSoporteTecnico?: boolean | null
-    alternativaProducto?: string | null
-    comision?: number | null
-    margenEstimado?: number | null
-    fechaComprometidaEnvio?: Date | string | null
-    versionCotizacion?: string | null
-    comentariosCliente?: string | null
-    objeciones?: string | null
-    ordenCompra?: string | null
-    correoAceptacion?: string | null
-    condicionesComerciales?: string | null
-    coordinacionAdministrativa?: string | null
-    estadoDocumentacion?: string | null
-    traspasoAdministracion?: boolean | null
-    traspasoERP?: boolean | null
-    coordinacionDespacho?: string | null
-    estadoComercialOrden?: string | null
-    estadoDocumentacionVenta?: string | null
     responsable?: string | null
     etapa?: string
     montoEstimado?: number
@@ -32336,31 +38875,55 @@ export namespace Prisma {
     fechaProximaAccion?: Date | string | null
     observaciones?: string | null
     origen?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
     estadoStock?: string | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
     documentoRespaldo?: string | null
     fechaCierre?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    probabilidad?: number | null
+    comuna?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    region?: string | null
+    rutEmpresa?: string | null
+    tipoUso?: string | null
+    unidadNegocio?: string | null
+    urgencia?: string | null
+    alternativaProducto?: string | null
+    comentariosCliente?: string | null
+    comision?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    margenEstimado?: number | null
+    objeciones?: string | null
+    versionCotizacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    coordinacionDespacho?: string | null
+    correoAceptacion?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacion?: string | null
+    estadoDocumentacionVenta?: string | null
+    ordenCompra?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
     flujoPosterior?: string | null
     motivoDescarte?: string | null
     tipoBroker?: string | null
-    fechaEstimadaDespacho?: Date | string | null
-    fechaSeguimientoPostventa?: Date | string | null
-    nombreOportunidad?: string | null
     cargoContacto?: string | null
     direccionProyecto?: string | null
-    tipoOportunidad?: string | null
-    fechaProbableCierre?: Date | string | null
-    riesgoTecnico?: string | null
+    nombreOportunidad?: string | null
     comentariosInternos?: string | null
-    observacionesTecnicas?: string | null
+    fechaProbableCierre?: Date | string | null
     observacionCamposFaltantes?: string | null
-    lineaProducto?: string | null
+    observacionesTecnicas?: string | null
+    riesgoTecnico?: string | null
+    tipoOportunidad?: string | null
     descuento?: number | null
+    lineaProducto?: string | null
     stockOportunidad?: string | null
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
@@ -32405,31 +38968,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -32438,31 +38977,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32479,32 +39042,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -32513,31 +39052,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32553,32 +39116,8 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    comuna?: NullableStringFieldUpdateOperationsInput | string | null
-    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
     productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
-    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
-    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
-    comision?: NullableFloatFieldUpdateOperationsInput | number | null
-    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
-    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
-    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
-    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
-    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
-    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
-    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
-    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
-    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
-    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     etapa?: StringFieldUpdateOperationsInput | string
     montoEstimado?: FloatFieldUpdateOperationsInput | number
@@ -32587,31 +39126,55 @@ export namespace Prisma {
     fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
     motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
     tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
     direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
-    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
-    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
-    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
-    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
     stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32697,6 +39260,204 @@ export namespace Prisma {
     etapaAnterior?: NullableStringFieldUpdateOperationsInput | string | null
     etapaNueva?: StringFieldUpdateOperationsInput | string
     usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CotizacionFirematCreateManyContactoFirematInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    clienteFirematId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+  }
+
+  export type CotizacionFirematUpdateWithoutContactoFirematInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionFirematDetalleUpdateManyWithoutCotizacionNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteFiremat?: ClienteUpdateOneWithoutCotizacionesNestedInput
+  }
+
+  export type CotizacionFirematUncheckedUpdateWithoutContactoFirematInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionFirematDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+    FunnelFirematOpportunity?: FunnelFirematOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
+  }
+
+  export type CotizacionFirematUncheckedUpdateManyWithoutContactoFirematInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteFirematId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RecepcionEscaneoDetalleCreateManyRecepcionEscaneoInput = {
+    id?: number
+    productoId: number
+    codigo: string
+    cantidadEscaneos: number
+    unidadesPorEscaneo: number
+    unidadesIngresadas: number
+    stockAnterior: number
+    stockNuevo: number
+    createdAt?: Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUpdateWithoutRecepcionEscaneoInput = {
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Producto?: ProductoUpdateOneRequiredWithoutRecepcionEscaneoDetalleNestedInput
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateWithoutRecepcionEscaneoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RecepcionEscaneoDetalleUncheckedUpdateManyWithoutRecepcionEscaneoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    codigo?: StringFieldUpdateOperationsInput | string
+    cantidadEscaneos?: IntFieldUpdateOperationsInput | number
+    unidadesPorEscaneo?: IntFieldUpdateOperationsInput | number
+    unidadesIngresadas?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -14,7 +14,7 @@ import {
   buildConfiguracionVistaCliente,
   VISTA_CLIENTE_CLAVES,
 } from '../helpers/configuracionVistaCliente';
-import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
+import { PERMISOS_POR_ROL } from '../helpers/permisosPorRol';
 import { getVendedoresFunnelBeckElegibles } from '../helpers/vendedoresFunnelBeck';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
@@ -357,6 +357,8 @@ export const listarUsuariosComerciales = async (_req: Request, res: Response): P
  * override de rol, ver getPermisosEfectivos), igual que
  * listarUsuariosComerciales hace para Beck.
  */
+const MODULOS_ELEGIBILIDAD_FIREMAT = ['firemat_funnel', 'firemat_cambiar_empresa'] as const;
+
 export const listarUsuariosComercialesFiremat = async (_req: Request, res: Response): Promise<void> => {
   try {
     const usuarios = await prisma.usuario.findMany({
@@ -367,16 +369,50 @@ export const listarUsuariosComercialesFiremat = async (_req: Request, res: Respo
 
     const base = usuarios.filter((usuario) => ROLES_COMERCIALES_FIREMAT.includes(usuario.rol));
     const baseIds = new Set(base.map((usuario) => usuario.id));
+    const candidatos = usuarios.filter((usuario) => !baseIds.has(usuario.id));
 
-    const extras: typeof usuarios = [];
-    for (const usuario of usuarios) {
-      if (baseIds.has(usuario.id)) continue;
-      const permisos = await getPermisosEfectivos(usuario.id, usuario.rol);
-      const puedeEditarFunnel = permisos.some((p) => p.modulo === 'firemat_funnel' && p.puedeEditar);
-      const puedeCambiarEmpresaFiremat = permisos.some(
-        (p) => p.modulo === 'firemat_cambiar_empresa' && (p.puedeVer || p.puedeEditar),
+    let extras: typeof usuarios = [];
+    if (candidatos.length > 0) {
+      const candidatoIds = candidatos.map((usuario) => usuario.id);
+      const rolesCandidatos = [...new Set(candidatos.map((usuario) => usuario.rol))];
+
+      const [permisosUsuario, permisosRol] = await Promise.all([
+        prisma.permisoUsuarioModulo.findMany({
+          where: { usuarioId: { in: candidatoIds }, modulo: { in: [...MODULOS_ELEGIBILIDAD_FIREMAT] } },
+          select: { usuarioId: true, modulo: true, puedeVer: true, puedeEditar: true },
+        }),
+        prisma.permisoRolModulo.findMany({
+          where: { rol: { in: rolesCandidatos as any[] }, modulo: { in: [...MODULOS_ELEGIBILIDAD_FIREMAT] } },
+          select: { rol: true, modulo: true, puedeVer: true, puedeEditar: true },
+        }),
+      ]);
+
+      const permisoUsuarioMap = new Map(
+        permisosUsuario.map((p) => [`${p.usuarioId}:${p.modulo}`, p]),
       );
-      if (puedeEditarFunnel || puedeCambiarEmpresaFiremat) extras.push(usuario);
+      const permisoRolMap = new Map(
+        permisosRol.map((p) => [`${p.rol}:${p.modulo}`, p]),
+      );
+
+      const resolverPermiso = (
+        usuarioId: string,
+        rol: RolUsuario,
+        modulo: string,
+      ): { puedeVer: boolean; puedeEditar: boolean } | undefined => {
+        const porUsuario = permisoUsuarioMap.get(`${usuarioId}:${modulo}`);
+        if (porUsuario) return porUsuario;
+        const porRol = permisoRolMap.get(`${rol}:${modulo}`);
+        if (porRol) return porRol;
+        return (PERMISOS_POR_ROL[rol] ?? []).find((d) => d.modulo === modulo);
+      };
+
+      extras = candidatos.filter((usuario) => {
+        const funnel = resolverPermiso(usuario.id, usuario.rol, 'firemat_funnel');
+        const cambiarEmpresa = resolverPermiso(usuario.id, usuario.rol, 'firemat_cambiar_empresa');
+        const puedeEditarFunnel = funnel?.puedeEditar ?? false;
+        const puedeCambiarEmpresaFiremat = (cambiarEmpresa?.puedeVer || cambiarEmpresa?.puedeEditar) ?? false;
+        return puedeEditarFunnel || puedeCambiarEmpresaFiremat;
+      });
     }
 
     const data = [...base, ...extras].sort((a, b) => a.nombre.localeCompare(b.nombre));

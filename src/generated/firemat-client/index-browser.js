@@ -125,6 +125,11 @@ exports.Prisma.CategoriaScalarFieldEnum = {
   nombre: 'nombre'
 };
 
+exports.Prisma.RelationLoadStrategy = {
+  query: 'query',
+  join: 'join'
+};
+
 exports.Prisma.MovimientoScalarFieldEnum = {
   id: 'id',
   tipo: 'tipo',
@@ -148,21 +153,21 @@ exports.Prisma.ProductoScalarFieldEnum = {
   precio: 'precio',
   minStock: 'minStock',
   activo: 'activo',
-  criticidad: 'criticidad',
   imagen: 'imagen',
   categoriaId: 'categoriaId',
   stockReservado: 'stockReservado',
   sku: 'sku',
+  criticidad: 'criticidad',
+  cantidadCaja: 'cantidadCaja',
   disponibilidad: 'disponibilidad',
   formato: 'formato',
-  cantidadCaja: 'cantidadCaja',
-  precioUsd: 'precioUsd',
   precioSugerido: 'precioSugerido',
-  stockInicial: 'stockInicial',
-  salidas: 'salidas',
-  fechaUltimaSalida: 'fechaUltimaSalida',
+  precioUsd: 'precioUsd',
   entradas: 'entradas',
-  fechaUltimaEntrada: 'fechaUltimaEntrada'
+  fechaUltimaEntrada: 'fechaUltimaEntrada',
+  fechaUltimaSalida: 'fechaUltimaSalida',
+  salidas: 'salidas',
+  stockInicial: 'stockInicial'
 };
 
 exports.Prisma.VentaScalarFieldEnum = {
@@ -207,16 +212,16 @@ exports.Prisma.ClienteScalarFieldEnum = {
   email: 'email',
   telefono: 'telefono',
   direccion: 'direccion',
+  createdAt: 'createdAt',
+  activo: 'activo',
+  updatedAt: 'updatedAt',
   razonSocial: 'razonSocial',
   nombreEmpresa: 'nombreEmpresa',
   region: 'region',
   comuna: 'comuna',
-  tipoCliente: 'tipoCliente',
-  canalVenta: 'canalVenta',
-  activo: 'activo',
   observaciones: 'observaciones',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  tipoCliente: 'tipoCliente',
+  canalVenta: 'canalVenta'
 };
 
 exports.Prisma.OportunidadScalarFieldEnum = {
@@ -239,9 +244,16 @@ exports.Prisma.CotizacionFirematScalarFieldEnum = {
   id: 'id',
   cliente: 'cliente',
   contacto: 'contacto',
+  clienteFirematId: 'clienteFirematId',
+  contactoFirematId: 'contactoFirematId',
+  telefono: 'telefono',
+  correo: 'correo',
   tipoCliente: 'tipoCliente',
+  cargo: 'cargo',
   responsable: 'responsable',
   estado: 'estado',
+  moneda: 'moneda',
+  aplicaImpuesto: 'aplicaImpuesto',
   subtotal: 'subtotal',
   descuento: 'descuento',
   impuesto: 'impuesto',
@@ -285,32 +297,8 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   telefono: 'telefono',
   correo: 'correo',
   tipoCliente: 'tipoCliente',
-  rutEmpresa: 'rutEmpresa',
-  region: 'region',
-  comuna: 'comuna',
-  unidadNegocio: 'unidadNegocio',
   productoId: 'productoId',
   cantidadEstimada: 'cantidadEstimada',
-  urgencia: 'urgencia',
-  tipoUso: 'tipoUso',
-  necesidadSoporteTecnico: 'necesidadSoporteTecnico',
-  alternativaProducto: 'alternativaProducto',
-  comision: 'comision',
-  margenEstimado: 'margenEstimado',
-  fechaComprometidaEnvio: 'fechaComprometidaEnvio',
-  versionCotizacion: 'versionCotizacion',
-  comentariosCliente: 'comentariosCliente',
-  objeciones: 'objeciones',
-  ordenCompra: 'ordenCompra',
-  correoAceptacion: 'correoAceptacion',
-  condicionesComerciales: 'condicionesComerciales',
-  coordinacionAdministrativa: 'coordinacionAdministrativa',
-  estadoDocumentacion: 'estadoDocumentacion',
-  traspasoAdministracion: 'traspasoAdministracion',
-  traspasoERP: 'traspasoERP',
-  coordinacionDespacho: 'coordinacionDespacho',
-  estadoComercialOrden: 'estadoComercialOrden',
-  estadoDocumentacionVenta: 'estadoDocumentacionVenta',
   responsable: 'responsable',
   etapa: 'etapa',
   montoEstimado: 'montoEstimado',
@@ -319,32 +307,56 @@ exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {
   fechaProximaAccion: 'fechaProximaAccion',
   observaciones: 'observaciones',
   origen: 'origen',
-  estadoStock: 'estadoStock',
   cotizacionId: 'cotizacionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  probabilidad: 'probabilidad',
+  estadoStock: 'estadoStock',
   motivoPerdida: 'motivoPerdida',
   motivoPostergacion: 'motivoPostergacion',
   fechaReactivacion: 'fechaReactivacion',
   documentoRespaldo: 'documentoRespaldo',
   fechaCierre: 'fechaCierre',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  probabilidad: 'probabilidad',
+  comuna: 'comuna',
+  necesidadSoporteTecnico: 'necesidadSoporteTecnico',
+  region: 'region',
+  rutEmpresa: 'rutEmpresa',
+  tipoUso: 'tipoUso',
+  unidadNegocio: 'unidadNegocio',
+  urgencia: 'urgencia',
+  alternativaProducto: 'alternativaProducto',
+  comentariosCliente: 'comentariosCliente',
+  comision: 'comision',
+  fechaComprometidaEnvio: 'fechaComprometidaEnvio',
+  margenEstimado: 'margenEstimado',
+  objeciones: 'objeciones',
+  versionCotizacion: 'versionCotizacion',
+  condicionesComerciales: 'condicionesComerciales',
+  coordinacionAdministrativa: 'coordinacionAdministrativa',
+  coordinacionDespacho: 'coordinacionDespacho',
+  correoAceptacion: 'correoAceptacion',
+  estadoComercialOrden: 'estadoComercialOrden',
+  estadoDocumentacion: 'estadoDocumentacion',
+  estadoDocumentacionVenta: 'estadoDocumentacionVenta',
+  ordenCompra: 'ordenCompra',
+  traspasoAdministracion: 'traspasoAdministracion',
+  traspasoERP: 'traspasoERP',
+  fechaEstimadaDespacho: 'fechaEstimadaDespacho',
+  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
   flujoPosterior: 'flujoPosterior',
   motivoDescarte: 'motivoDescarte',
   tipoBroker: 'tipoBroker',
-  fechaEstimadaDespacho: 'fechaEstimadaDespacho',
-  fechaSeguimientoPostventa: 'fechaSeguimientoPostventa',
-  nombreOportunidad: 'nombreOportunidad',
   cargoContacto: 'cargoContacto',
   direccionProyecto: 'direccionProyecto',
-  tipoOportunidad: 'tipoOportunidad',
-  fechaProbableCierre: 'fechaProbableCierre',
-  riesgoTecnico: 'riesgoTecnico',
+  nombreOportunidad: 'nombreOportunidad',
   comentariosInternos: 'comentariosInternos',
-  observacionesTecnicas: 'observacionesTecnicas',
+  fechaProbableCierre: 'fechaProbableCierre',
   observacionCamposFaltantes: 'observacionCamposFaltantes',
-  lineaProducto: 'lineaProducto',
+  observacionesTecnicas: 'observacionesTecnicas',
+  riesgoTecnico: 'riesgoTecnico',
+  tipoOportunidad: 'tipoOportunidad',
   descuento: 'descuento',
+  lineaProducto: 'lineaProducto',
   stockOportunidad: 'stockOportunidad',
   reprogramacionesCount: 'reprogramacionesCount',
   fechaUltimoCambioEtapa: 'fechaUltimoCambioEtapa',
@@ -393,6 +405,37 @@ exports.Prisma.HistorialEtapaFirematScalarFieldEnum = {
   etapaAnterior: 'etapaAnterior',
   etapaNueva: 'etapaNueva',
   usuarioId: 'usuarioId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProductoCodigoBarraScalarFieldEnum = {
+  id: 'id',
+  codigo: 'codigo',
+  productoId: 'productoId',
+  unidadesPorEscaneo: 'unidadesPorEscaneo',
+  descripcion: 'descripcion',
+  activo: 'activo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RecepcionEscaneoScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  motivo: 'motivo',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RecepcionEscaneoDetalleScalarFieldEnum = {
+  id: 'id',
+  recepcionId: 'recepcionId',
+  productoId: 'productoId',
+  codigo: 'codigo',
+  cantidadEscaneos: 'cantidadEscaneos',
+  unidadesPorEscaneo: 'unidadesPorEscaneo',
+  unidadesIngresadas: 'unidadesIngresadas',
+  stockAnterior: 'stockAnterior',
+  stockNuevo: 'stockNuevo',
   createdAt: 'createdAt'
 };
 
@@ -445,7 +488,10 @@ exports.Prisma.ModelName = {
   ContactoClienteFiremat: 'ContactoClienteFiremat',
   FunnelFirematArchivo: 'FunnelFirematArchivo',
   AlertaVistaFiremat: 'AlertaVistaFiremat',
-  HistorialEtapaFiremat: 'HistorialEtapaFiremat'
+  HistorialEtapaFiremat: 'HistorialEtapaFiremat',
+  ProductoCodigoBarra: 'ProductoCodigoBarra',
+  RecepcionEscaneo: 'RecepcionEscaneo',
+  RecepcionEscaneoDetalle: 'RecepcionEscaneoDetalle'
 };
 
 /**

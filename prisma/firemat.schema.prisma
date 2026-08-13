@@ -1,6 +1,7 @@
 generator firemaatclient {
-  provider = "prisma-client-js"
-  output   = "../src/generated/firemat-client"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/firemat-client"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -37,27 +38,28 @@ model Producto {
   precio                   Float
   minStock                 Int                        @default(0)
   activo                   Boolean                    @default(true)
-  criticidad               String                     @default("Media")
   imagen                   String?
   categoriaId              Int
   stockReservado           Int                        @default(0)
   sku                      String?                    @unique
+  criticidad               String                     @default("Media")
+  cantidadCaja             String?
   disponibilidad           String?
   formato                  String?
-  cantidadCaja             String?
-  precioUsd                Float?
   precioSugerido           Float?
-  stockInicial             Int?                       @default(0)
-  salidas                  Int?                       @default(0)
-  fechaUltimaSalida        DateTime?
+  precioUsd                Float?
   entradas                 Int?                       @default(0)
   fechaUltimaEntrada       DateTime?
-
+  fechaUltimaSalida        DateTime?
+  salidas                  Int?                       @default(0)
+  stockInicial             Int?                       @default(0)
   CotizacionFirematDetalle CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
   Movimiento               Movimiento[]
   Oportunidad              Oportunidad[]
   Categoria                Categoria                  @relation(fields: [categoriaId], references: [id])
+  ProductoCodigoBarra      ProductoCodigoBarra[]
+  RecepcionEscaneoDetalle  RecepcionEscaneoDetalle[]
   Venta                    Venta[]
   VentaDetalle             VentaDetalle[]
 }
@@ -102,27 +104,25 @@ model user {
 }
 
 model Cliente {
-  id             Int      @id @default(autoincrement())
-  nombre         String
-  rut            String?  @unique
-  email          String?
-  telefono       String?
-  direccion      String?
-
-  razonSocial    String?  @map("razon_social")
-  nombreEmpresa  String?  @map("nombre_empresa")
-  region         String?
-  comuna         String?
-  tipoCliente    TipoClienteFiremat?
-  canalVenta     CanalVentaFiremat? @map("canal_venta")
-  activo         Boolean  @default(true)
-  observaciones  String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  contactos      ContactoClienteFiremat[]
-  Oportunidad    Oportunidad[]
+  id            Int                      @id @default(autoincrement())
+  nombre        String
+  rut           String?                  @unique
+  email         String?
+  telefono      String?
+  direccion     String?
+  createdAt     DateTime                 @default(now())
+  activo        Boolean                  @default(true)
+  updatedAt     DateTime                 @default(now()) @updatedAt
+  razonSocial   String?                  @map("razon_social")
+  nombreEmpresa String?                  @map("nombre_empresa")
+  region        String?
+  comuna        String?
+  observaciones String?
+  tipoCliente   TipoClienteFiremat?
+  canalVenta    CanalVentaFiremat?       @map("canal_venta")
+  Oportunidad   Oportunidad[]
+  contactos     ContactoClienteFiremat[]
+  cotizaciones  CotizacionFiremat[]
 
   @@index([rut])
   @@index([nombre])
@@ -154,9 +154,16 @@ model CotizacionFiremat {
   id                       Int                        @id @default(autoincrement())
   cliente                  String
   contacto                 String?
+  clienteFirematId         Int?
+  contactoFirematId        Int?
+  telefono                 String?
+  correo                   String?
   tipoCliente              String?
+  cargo                    String?
   responsable              String?
   estado                   String                     @default("BORRADOR")
+  moneda                   String                     @default("CLP")
+  aplicaImpuesto           Boolean                    @default(true)
   subtotal                 Float                      @default(0)
   descuento                Float                      @default(0)
   impuesto                 Float                      @default(0)
@@ -181,6 +188,8 @@ model CotizacionFiremat {
   numero                   String?                    @unique
   detalles                 CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
+  clienteFiremat           Cliente?                   @relation(fields: [clienteFirematId], references: [id], onDelete: SetNull)
+  contactoFiremat          ContactoClienteFiremat?    @relation(fields: [contactoFirematId], references: [id], onDelete: SetNull)
 }
 
 model CotizacionFirematDetalle {
@@ -198,81 +207,80 @@ model CotizacionFirematDetalle {
 }
 
 model FunnelFirematOpportunity {
-  id                       Int                @id @default(autoincrement())
-  cliente                  String
-  contacto                 String?
-  telefono                 String?
-  correo                   String?
-  tipoCliente              String?
-  rutEmpresa               String?
-  region                   String?
-  comuna                   String?
-  unidadNegocio            String?
-  productoId               Int?
-  cantidadEstimada         Int?
-  urgencia                 String?
-  tipoUso                  String?
-  necesidadSoporteTecnico  Boolean?
-  alternativaProducto     String?
-  comision                Float?
-  margenEstimado          Float?
-  fechaComprometidaEnvio  DateTime?
-  versionCotizacion       String?
-  comentariosCliente      String?
-  objeciones              String?
-  ordenCompra                 String?
-  correoAceptacion            String?
-  condicionesComerciales      String?
-  coordinacionAdministrativa  String?
-  estadoDocumentacion         String?
-  traspasoAdministracion      Boolean?
-  traspasoERP                 Boolean?
-  coordinacionDespacho        String?
-  estadoComercialOrden        String?
-  estadoDocumentacionVenta    String?
-  responsable              String?
-  etapa                    String             @default("PROSPECTO")
-  montoEstimado            Float              @default(0)
-  probabilidadCierre       Int?
-  proximaAccion            String?
-  fechaProximaAccion       DateTime?
-  observaciones            String?
-  origen                   String?
-  estadoStock              String?
-  cotizacionId             Int?
-  motivoPerdida            String?
-  motivoPostergacion       String?
-  fechaReactivacion        DateTime?
-  documentoRespaldo        String?
-  fechaCierre              DateTime?
-  createdAt                DateTime           @default(now())
-  updatedAt                DateTime           @updatedAt
-  probabilidad             Int?               @default(50)
-  flujoPosterior              String?
-  motivoDescarte              String?
-  tipoBroker                  String?
-  fechaEstimadaDespacho       DateTime?
-  fechaSeguimientoPostventa   DateTime?
-  nombreOportunidad String? @map("nombre_oportunidad")
-  cargoContacto     String? @map("cargo_contacto")
-  direccionProyecto String? @map("direccion_proyecto")
-  tipoOportunidad            String?   @map("tipo_oportunidad")
-  fechaProbableCierre        DateTime? @map("fecha_probable_cierre")
-  riesgoTecnico              String?   @map("riesgo_tecnico")
-  comentariosInternos        String?   @map("comentarios_internos")
-  observacionesTecnicas      String?   @map("observaciones_tecnicas")
-  observacionCamposFaltantes String?   @map("observacion_campos_faltantes")
-  lineaProducto    String? @map("linea_producto") @db.VarChar(150)
-  descuento        Float?
-  stockOportunidad String? @map("stock_oportunidad") @db.VarChar(20)
-  reprogramacionesCount Int @default(0) @map("reprogramaciones_count")
-  fechaUltimoCambioEtapa DateTime? @map("fecha_ultimo_cambio_etapa")
-  esReactivacion Boolean @default(false) @map("es_reactivacion")
-
-  cotizacion               CotizacionFiremat? @relation(fields: [cotizacionId], references: [id])
-  producto                 Producto?          @relation(fields: [productoId], references: [id])
-  archivos FunnelFirematArchivo[]
-  historialEtapas HistorialEtapaFiremat[]
+  id                         Int                     @id @default(autoincrement())
+  cliente                    String
+  contacto                   String?
+  telefono                   String?
+  correo                     String?
+  tipoCliente                String?
+  productoId                 Int?
+  cantidadEstimada           Int?
+  responsable                String?
+  etapa                      String                  @default("PROSPECTO")
+  montoEstimado              Float                   @default(0)
+  probabilidadCierre         Int?
+  proximaAccion              String?
+  fechaProximaAccion         DateTime?
+  observaciones              String?
+  origen                     String?
+  cotizacionId               Int?
+  createdAt                  DateTime                @default(now())
+  updatedAt                  DateTime                @updatedAt
+  probabilidad               Int?                    @default(50)
+  estadoStock                String?
+  motivoPerdida              String?
+  motivoPostergacion         String?
+  fechaReactivacion          DateTime?
+  documentoRespaldo          String?
+  fechaCierre                DateTime?
+  comuna                     String?
+  necesidadSoporteTecnico    Boolean?
+  region                     String?
+  rutEmpresa                 String?
+  tipoUso                    String?
+  unidadNegocio              String?
+  urgencia                   String?
+  alternativaProducto        String?
+  comentariosCliente         String?
+  comision                   Float?
+  fechaComprometidaEnvio     DateTime?
+  margenEstimado             Float?
+  objeciones                 String?
+  versionCotizacion          String?
+  condicionesComerciales     String?
+  coordinacionAdministrativa String?
+  coordinacionDespacho       String?
+  correoAceptacion           String?
+  estadoComercialOrden       String?
+  estadoDocumentacion        String?
+  estadoDocumentacionVenta   String?
+  ordenCompra                String?
+  traspasoAdministracion     Boolean?
+  traspasoERP                Boolean?
+  fechaEstimadaDespacho      DateTime?
+  fechaSeguimientoPostventa  DateTime?
+  flujoPosterior             String?
+  motivoDescarte             String?
+  tipoBroker                 String?
+  cargoContacto              String?                 @map("cargo_contacto")
+  direccionProyecto          String?                 @map("direccion_proyecto")
+  nombreOportunidad          String?                 @map("nombre_oportunidad")
+  comentariosInternos        String?                 @map("comentarios_internos")
+  fechaProbableCierre        DateTime?               @map("fecha_probable_cierre")
+  observacionCamposFaltantes String?                 @map("observacion_campos_faltantes")
+  observacionesTecnicas      String?                 @map("observaciones_tecnicas")
+  riesgoTecnico              String?                 @map("riesgo_tecnico")
+  tipoOportunidad            String?                 @map("tipo_oportunidad")
+  descuento                  Float?
+  lineaProducto              String?                 @map("linea_producto") @db.VarChar(150)
+  stockOportunidad           String?                 @map("stock_oportunidad") @db.VarChar(20)
+  reprogramacionesCount      Int                     @default(0) @map("reprogramaciones_count")
+  fechaUltimoCambioEtapa     DateTime?               @map("fecha_ultimo_cambio_etapa")
+  esReactivacion             Boolean                 @default(false) @map("es_reactivacion")
+  cotizacion                 CotizacionFiremat?      @relation(fields: [cotizacionId], references: [id])
+  producto                   Producto?               @relation(fields: [productoId], references: [id])
+  archivos                   FunnelFirematArchivo[]
+  historialEtapas            HistorialEtapaFiremat[]
 }
 
 model ContactoClienteFiremat {
@@ -285,11 +293,10 @@ model ContactoClienteFiremat {
   principal     Boolean  @default(false)
   activo        Boolean  @default(true)
   observaciones String?
-
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  cliente       Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  cliente       Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  cotizaciones  CotizacionFiremat[]
 
   @@index([clienteId])
   @@index([correo])
@@ -298,19 +305,18 @@ model ContactoClienteFiremat {
 }
 
 model FunnelFirematArchivo {
-  id             Int      @id @default(autoincrement())
+  id            Int                      @id @default(autoincrement())
   oportunidadId Int
-  tipo           String
-  url            String
-  publicId       String
-  nombreArchivo  String?
-  mimeType       String?
-  bytes          Int?
-  etapa          String?
-  observaciones  String?
-  createdAt      DateTime @default(now())
-
-  oportunidad FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+  tipo          String
+  url           String
+  publicId      String
+  nombreArchivo String?
+  mimeType      String?
+  bytes         Int?
+  etapa         String?
+  observaciones String?
+  createdAt     DateTime                 @default(now())
+  oportunidad   FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
 
   @@index([oportunidadId])
   @@index([tipo])
@@ -332,19 +338,60 @@ model AlertaVistaFiremat {
 }
 
 model HistorialEtapaFiremat {
-  id             Int      @id @default(autoincrement())
-  oportunidadId  Int      @map("oportunidad_id")
-  etapaAnterior  String?  @map("etapa_anterior") @db.VarChar(100)
-  etapaNueva     String   @map("etapa_nueva") @db.VarChar(100)
-  usuarioId      String?  @map("usuario_id") @db.Uuid
-  createdAt      DateTime @default(now()) @map("created_at")
-
-  oportunidad FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+  id            Int                      @id @default(autoincrement())
+  oportunidadId Int                      @map("oportunidad_id")
+  etapaAnterior String?                  @map("etapa_anterior") @db.VarChar(100)
+  etapaNueva    String                   @map("etapa_nueva") @db.VarChar(100)
+  usuarioId     String?                  @map("usuario_id") @db.Uuid
+  createdAt     DateTime                 @default(now()) @map("created_at")
+  oportunidad   FunnelFirematOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
 
   @@index([oportunidadId])
   @@index([etapaNueva])
   @@index([createdAt])
   @@map("historial_etapas_firemat")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ProductoCodigoBarra {
+  id                 Int      @id @default(autoincrement())
+  codigo             String   @unique @db.VarChar(100)
+  productoId         Int
+  unidadesPorEscaneo Int
+  descripcion        String?  @db.VarChar(150)
+  activo             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now())
+  Producto           Producto @relation(fields: [productoId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([productoId])
+}
+
+model RecepcionEscaneo {
+  id                      String                    @id @db.VarChar(64)
+  usuarioId               String                    @db.VarChar(100)
+  motivo                  String
+  createdAt               DateTime                  @default(now())
+  RecepcionEscaneoDetalle RecepcionEscaneoDetalle[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model RecepcionEscaneoDetalle {
+  id                 Int              @id @default(autoincrement())
+  recepcionId        String           @db.VarChar(64)
+  productoId         Int
+  codigo             String           @db.VarChar(100)
+  cantidadEscaneos   Int
+  unidadesPorEscaneo Int
+  unidadesIngresadas Int
+  stockAnterior      Int
+  stockNuevo         Int
+  createdAt          DateTime         @default(now())
+  Producto           Producto         @relation(fields: [productoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  RecepcionEscaneo   RecepcionEscaneo @relation(fields: [recepcionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([productoId])
+  @@index([recepcionId])
 }
 
 enum TipoClienteFiremat {

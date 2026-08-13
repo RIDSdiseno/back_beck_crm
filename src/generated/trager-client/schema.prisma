@@ -20,3 +20,185 @@ model Cliente {
 
   @@index([nombre])
 }
+
+model FunnelTragerOpportunity {
+  id                         Int       @id @default(autoincrement())
+  cliente                    String
+  contacto                   String?
+  telefono                   String?
+  correo                     String?
+  tipoCliente                String?
+  rutEmpresa                 String?
+  region                     String?
+  comuna                     String?
+  unidadNegocio              String?
+  productoId                 Int?
+  cantidadEstimada           Int?
+  urgencia                   String?
+  tipoUso                    String?
+  necesidadSoporteTecnico    Boolean?
+  alternativaProducto        String?
+  comision                   Float?
+  margenEstimado             Float?
+  fechaComprometidaEnvio     DateTime?
+  versionCotizacion          String?
+  comentariosCliente         String?
+  objeciones                 String?
+  ordenCompra                String?
+  correoAceptacion           String?
+  condicionesComerciales     String?
+  coordinacionAdministrativa String?
+  estadoDocumentacion        String?
+  traspasoAdministracion     Boolean?
+  traspasoERP                Boolean?
+  coordinacionDespacho       String?
+  estadoComercialOrden       String?
+  estadoDocumentacionVenta   String?
+  responsable                String?
+  etapa                      String    @default("PROSPECTO")
+  montoEstimado              Float     @default(0)
+  probabilidadCierre         Int?
+  proximaAccion              String?
+  fechaProximaAccion         DateTime?
+  observaciones              String?
+  origen                     String?
+  estadoStock                String?
+  cotizacionId               Int?
+  motivoPerdida              String?
+  motivoPostergacion         String?
+  fechaReactivacion          DateTime?
+  documentoRespaldo          String?
+  fechaCierre                DateTime?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+  probabilidad               Int?      @default(50)
+  flujoPosterior             String?
+  motivoDescarte             String?
+  tipoBroker                 String?
+  fechaEstimadaDespacho      DateTime?
+  fechaSeguimientoPostventa  DateTime?
+  nombreOportunidad          String?   @map("nombre_oportunidad")
+  cargoContacto              String?   @map("cargo_contacto")
+  direccionProyecto          String?   @map("direccion_proyecto")
+  tipoOportunidad            String?   @map("tipo_oportunidad")
+  fechaProbableCierre        DateTime? @map("fecha_probable_cierre")
+  riesgoTecnico              String?   @map("riesgo_tecnico")
+  comentariosInternos        String?   @map("comentarios_internos")
+  observacionesTecnicas      String?   @map("observaciones_tecnicas")
+  observacionCamposFaltantes String?   @map("observacion_campos_faltantes")
+  lineaProducto              String?   @map("linea_producto") @db.VarChar(150)
+  descuento                  Float?
+  stockOportunidad           String?   @map("stock_oportunidad") @db.VarChar(20)
+  reprogramacionesCount      Int       @default(0) @map("reprogramaciones_count")
+  fechaUltimoCambioEtapa     DateTime? @map("fecha_ultimo_cambio_etapa")
+  esReactivacion             Boolean   @default(false) @map("es_reactivacion")
+
+  archivos        FunnelTragerArchivo[]
+  historialEtapas HistorialEtapaTrager[]
+}
+
+model FunnelTragerArchivo {
+  id            Int      @id @default(autoincrement())
+  oportunidadId Int
+  tipo          String
+  url           String
+  publicId      String
+  nombreArchivo String?
+  mimeType      String?
+  bytes         Int?
+  etapa         String?
+  observaciones String?
+  createdAt     DateTime @default(now())
+
+  oportunidad FunnelTragerOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+
+  @@index([oportunidadId])
+  @@index([tipo])
+  @@index([etapa])
+  @@map("funnel_trager_archivos")
+}
+
+model HistorialEtapaTrager {
+  id            Int      @id @default(autoincrement())
+  oportunidadId Int      @map("oportunidad_id")
+  etapaAnterior String?  @map("etapa_anterior") @db.VarChar(100)
+  etapaNueva    String   @map("etapa_nueva") @db.VarChar(100)
+  usuarioId     String?  @map("usuario_id") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  oportunidad FunnelTragerOpportunity @relation(fields: [oportunidadId], references: [id], onDelete: Cascade)
+
+  @@index([oportunidadId])
+  @@index([etapaNueva])
+  @@index([createdAt])
+  @@map("historial_etapas_trager")
+}
+
+model Categoria {
+  id       Int        @id @default(autoincrement())
+  nombre   String
+  Producto Producto[]
+}
+
+model Producto {
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  descripcion    String?
+  stock          Int
+  ubicacion      String?
+  createdAt      DateTime @default(now())
+  precio         Float
+  minStock       Int      @default(0)
+  activo         Boolean  @default(true)
+  criticidad     String   @default("Media")
+  imagen         String?
+  categoriaId    Int
+  stockReservado Int      @default(0)
+  sku            String?  @unique
+  disponibilidad String?
+  formato        String?
+  cantidadCaja   String?
+  precioUsd      Float?
+  precioSugerido Float?
+  stockInicial   Int?     @default(0)
+
+  Categoria               Categoria                 @relation(fields: [categoriaId], references: [id])
+  CotizacionTragerDetalle CotizacionTragerDetalle[]
+}
+
+model CotizacionTrager {
+  id               Int                       @id @default(autoincrement())
+  cliente          String
+  contacto         String?
+  tipoCliente      String?
+  responsable      String?
+  estado           String                    @default("BORRADOR")
+  subtotal         Float                     @default(0)
+  descuento        Float                     @default(0)
+  impuesto         Float                     @default(0)
+  total            Float                     @default(0)
+  fechaCotizacion  DateTime                  @default(now())
+  fechaVencimiento DateTime?
+  fechaEnvio       DateTime?
+  fechaSeguimiento DateTime?
+  fechaCierre      DateTime?
+  observaciones    String?
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+  numero           String?                   @unique
+  detalles         CotizacionTragerDetalle[]
+}
+
+model CotizacionTragerDetalle {
+  id              Int              @id @default(autoincrement())
+  cotizacionId    Int
+  productoId      Int
+  cantidad        Int
+  precioUnitario  Float
+  descuentoPct    Float            @default(0)
+  subtotal        Float
+  stockDisponible Int?
+  observacion     String?
+  cotizacion      CotizacionTrager @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
+  producto        Producto         @relation(fields: [productoId], references: [id])
+}

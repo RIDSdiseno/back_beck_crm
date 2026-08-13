@@ -35,6 +35,12 @@ export const TODOS_LOS_MODULOS: string[] = [
   'firemat_usuarios_parametros',
   'firemat_cambiar_empresa',
   'trager_clientes',
+  'trager_funnel',
+  'trager_dashboard',
+  'trager_cambiar_empresa',
+  'trager_productos',
+  'trager_categorias',
+  'trager_cotizaciones',
 ];
 
 function buildPermisos(

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import PDFDocument from 'pdfkit';
-import { Prisma } from '../../generated/firemat-client';
-import { firematPrisma } from '../../config/firematPrisma';
+import { Prisma } from '../../generated/trager-client';
+import { tragerPrisma } from '../../config/tragerPrisma';
 import { puedeCambiarEmpresa } from '../../helpers/puedeCambiarEmpresa';
 
 const ESTADOS_PERMITIDOS = [
@@ -12,7 +12,7 @@ const ESTADOS_PERMITIDOS = [
   'VENCIDA',
 ] as const;
 
-type EstadoCotizacionFiremat = (typeof ESTADOS_PERMITIDOS)[number];
+type EstadoCotizacionTrager = (typeof ESTADOS_PERMITIDOS)[number];
 
 type DetalleInput = {
   productoId?: unknown;
@@ -46,16 +46,16 @@ type LockedProducto = {
 
 const IVA_PCT = 0.19;
 
-const FM_MARGIN    = 40;
-const FM_W         = 595;
-const FM_CONTENT_W = 515;
-const FM_RED       = '#c0392b';
-const FM_DARK      = '#111827';
-const FM_TEXT      = '#1e293b';
-const FM_MUTED     = '#64748b';
-const FM_BORDER    = '#e2e8f0';
-const FM_ROW_ALT   = '#fff8f6';
-const ESTADO_FM_COLORS: Record<string, string> = {
+const TG_MARGIN    = 40;
+const TG_W         = 595;
+const TG_CONTENT_W = 515;
+const TG_RED       = '#e63c1e';
+const TG_DARK      = '#111827';
+const TG_TEXT      = '#1e293b';
+const TG_MUTED     = '#64748b';
+const TG_BORDER    = '#e2e8f0';
+const TG_ROW_ALT   = '#fff7f5';
+const ESTADO_TG_COLORS: Record<string, string> = {
   BORRADOR:  '#64748b',
   ENVIADA:   '#2563eb',
   ACEPTADA:  '#16a34a',
@@ -107,14 +107,6 @@ const getInt = (value: unknown): number | null => {
   return n !== null && Number.isInteger(n) ? n : null;
 };
 
-const getBoolean = (value: unknown, fallback: boolean): boolean => {
-  if (value === undefined || value === null) return fallback;
-  if (typeof value === 'boolean') return value;
-  if (value === 'true') return true;
-  if (value === 'false') return false;
-  return fallback;
-};
-
 const getDate = (value: unknown): Date | null => {
   if (value === null || value === undefined || value === '') return null;
   const d = value instanceof Date ? value : new Date(String(value));
@@ -128,70 +120,11 @@ const parseIdParam = (value: string | string[] | undefined): number | null => {
   return Number.isInteger(id) && id > 0 ? id : null;
 };
 
-const parseEstado = (value: unknown): EstadoCotizacionFiremat | null => {
+const parseEstado = (value: unknown): EstadoCotizacionTrager | null => {
   if (typeof value !== 'string') return null;
-  return ESTADOS_PERMITIDOS.includes(value as EstadoCotizacionFiremat)
-    ? (value as EstadoCotizacionFiremat)
+  return ESTADOS_PERMITIDOS.includes(value as EstadoCotizacionTrager)
+    ? (value as EstadoCotizacionTrager)
     : null;
-};
-
-const resolveClienteContactoIds = async (
-  body: Record<string, unknown>
-): Promise<{ clienteFirematId: number | null; contactoFirematId: number | null }> => {
-  const clienteFirematId = getInt(body.clienteFirematId ?? body.clienteId);
-  const contactoFirematId = getInt(body.contactoFirematId ?? body.contactoId);
-
-  if (clienteFirematId !== null) {
-    const cliente = await firematPrisma.cliente.findUnique({
-      where: { id: clienteFirematId },
-      select: { id: true },
-    });
-    if (!cliente) throw new ValidationError('clienteFirematId no existe');
-  }
-
-  if (contactoFirematId !== null) {
-    const contacto = await firematPrisma.contactoClienteFiremat.findUnique({
-      where: { id: contactoFirematId },
-      select: { id: true },
-    });
-    if (!contacto) throw new ValidationError('contactoFirematId no existe');
-  }
-
-  return { clienteFirematId, contactoFirematId };
-};
-
-const resolveFunnelFirematId = async (body: Record<string, unknown>): Promise<number | null> => {
-  const funnelFirematId = getInt(body.funnelFirematId);
-  if (funnelFirematId === null) return null;
-
-  const oportunidad = await firematPrisma.funnelFirematOpportunity.findUnique({
-    where: { id: funnelFirematId },
-    select: { id: true },
-  });
-  if (!oportunidad) throw new ValidationError('funnelFirematId no existe');
-
-  return funnelFirematId;
-};
-
-const vincularOportunidadFirematACotizacion = async (
-  tx: Prisma.TransactionClient,
-  cotizacionId: number,
-  funnelFirematId: number | null
-): Promise<void> => {
-  await tx.funnelFirematOpportunity.updateMany({
-    where: {
-      cotizacionId,
-      ...(funnelFirematId !== null ? { id: { not: funnelFirematId } } : {}),
-    },
-    data: { cotizacionId: null },
-  });
-
-  if (funnelFirematId !== null) {
-    await tx.funnelFirematOpportunity.update({
-      where: { id: funnelFirematId },
-      data: { cotizacionId },
-    });
-  }
 };
 
 const formatCLP = (value: number): string =>
@@ -214,9 +147,6 @@ const buildCotizacionInclude = {
     },
     orderBy: { id: 'asc' as const },
   },
-  FunnelFirematOpportunity: {
-    select: { id: true },
-  },
 };
 
 const handleError = (res: Response, error: unknown): void => {
@@ -230,7 +160,7 @@ const handleError = (res: Response, error: unknown): void => {
     return;
   }
 
-  console.error('Error en cotizaciones Firemat:', error);
+  console.error('Error en cotizaciones Trager:', error);
   res.status(500).json({ success: false, error: 'Error interno del servidor' });
 };
 
@@ -248,7 +178,7 @@ const validateDetalles = async (rawDetalles: unknown): Promise<DetalleCalculado[
     throw new ValidationError('Todos los detalles deben incluir productoId valido');
   }
 
-  const productos = await firematPrisma.producto.findMany({
+  const productos = await tragerPrisma.producto.findMany({
     where: { id: { in: productoIds } },
   });
   const productosById = new Map(productos.map((p) => [p.id, p]));
@@ -296,8 +226,7 @@ const validateDetalles = async (rawDetalles: unknown): Promise<DetalleCalculado[
 const calcularTotales = (
   detalles: DetalleCalculado[],
   descuentoPctInput: unknown,
-  impuestoInput: unknown,
-  aplicaImpuesto: boolean
+  impuestoInput: unknown
 ) => {
   const subtotal = roundMoney(detalles.reduce((sum, detalle) => sum + detalle.subtotal, 0));
   const descuentoPct = getNumber(descuentoPctInput, 0);
@@ -308,11 +237,9 @@ const calcularTotales = (
 
   const descuento = roundMoney(subtotal * (descuentoPct / 100));
   const impuestoBody = getNumber(impuestoInput);
-  const impuesto = !aplicaImpuesto
-    ? 0
-    : impuestoBody !== null && impuestoBody >= 0
-      ? roundMoney(impuestoBody)
-      : roundMoney((subtotal - descuento) * IVA_PCT);
+  const impuesto = impuestoBody !== null && impuestoBody >= 0
+    ? roundMoney(impuestoBody)
+    : roundMoney((subtotal - descuento) * IVA_PCT);
   const total = roundMoney(subtotal - descuento + impuesto);
 
   return { subtotal, descuento, impuesto, total };
@@ -467,10 +394,10 @@ const ajustarStockCotizacion = async (
   await aplicarStockCotizacion(tx, productosById, estadoNuevo, detallesNuevos);
 };
 
-export const getCotizacionesFiremat = async (req: Request, res: Response): Promise<void> => {
+export const getCotizacionesTrager = async (req: Request, res: Response): Promise<void> => {
   try {
     const { q, estado, cliente, desde, hasta } = req.query;
-    const where: Prisma.CotizacionFirematWhereInput = {};
+    const where: Prisma.CotizacionTragerWhereInput = {};
 
     if (typeof estado === 'string' && estado.trim()) {
       where.estado = estado.trim();
@@ -489,7 +416,7 @@ export const getCotizacionesFiremat = async (req: Request, res: Response): Promi
       ];
     }
 
-    const fechaCotizacion: Prisma.DateTimeFilter<'CotizacionFiremat'> = {};
+    const fechaCotizacion: Prisma.DateTimeFilter<'CotizacionTrager'> = {};
     if (typeof desde === 'string' && desde.trim()) {
       const d = getDate(desde);
       if (d) fechaCotizacion.gte = d;
@@ -503,9 +430,8 @@ export const getCotizacionesFiremat = async (req: Request, res: Response): Promi
     }
     if (Object.keys(fechaCotizacion).length > 0) where.fechaCotizacion = fechaCotizacion;
 
-    const data = await firematPrisma.cotizacionFiremat.findMany({
+    const data = await tragerPrisma.cotizacionTrager.findMany({
       where,
-      relationLoadStrategy: 'join',
       include: buildCotizacionInclude,
       orderBy: { createdAt: 'desc' },
     });
@@ -525,7 +451,7 @@ export const getCotizacionesFiremat = async (req: Request, res: Response): Promi
   }
 };
 
-export const getCotizacionFirematById = async (req: Request, res: Response): Promise<void> => {
+export const getCotizacionTragerById = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);
     if (!id) {
@@ -533,9 +459,8 @@ export const getCotizacionFirematById = async (req: Request, res: Response): Pro
       return;
     }
 
-    const data = await firematPrisma.cotizacionFiremat.findUnique({
+    const data = await tragerPrisma.cotizacionTrager.findUnique({
       where: { id },
-      relationLoadStrategy: 'join',
       include: buildCotizacionInclude,
     });
 
@@ -550,7 +475,7 @@ export const getCotizacionFirematById = async (req: Request, res: Response): Pro
   }
 };
 
-export const createCotizacionFiremat = async (req: Request, res: Response): Promise<void> => {
+export const createCotizacionTrager = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Record<string, unknown>;
     const cliente = getString(body.cliente);
@@ -560,29 +485,19 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
     }
 
     const detalles = await validateDetalles(body.detalles);
-    const aplicaImpuesto = getBoolean(body.aplicaImpuesto, true);
-    const totales = calcularTotales(detalles, body.descuento, body.impuesto, aplicaImpuesto);
+    const totales = calcularTotales(detalles, body.descuento, body.impuesto);
     const estado = parseEstado(body.estado) ?? 'BORRADOR';
-    const { clienteFirematId, contactoFirematId } = await resolveClienteContactoIds(body);
-    const funnelFirematId = await resolveFunnelFirematId(body);
 
-    const data = await firematPrisma.$transaction(async (tx) => {
+    const data = await tragerPrisma.$transaction(async (tx) => {
       await ajustarStockCotizacion(tx, null, [], estado, detalles);
 
-      const creada = await tx.cotizacionFiremat.create({
+      return tx.cotizacionTrager.create({
         data: {
           cliente,
           contacto: getNullableString(body.contacto),
-          clienteFirematId,
-          contactoFirematId,
-          telefono: getNullableString(body.telefono),
-          correo: getNullableString(body.correo),
           tipoCliente: getNullableString(body.tipoCliente),
-          cargo: getNullableString(body.cargo),
           responsable: getNullableString(body.responsable),
           estado,
-          moneda: getString(body.moneda) ?? 'CLP',
-          aplicaImpuesto,
           descuento: totales.descuento,
           impuesto: totales.impuesto,
           subtotal: totales.subtotal,
@@ -604,18 +519,11 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
             })),
           },
         },
-      });
-
-      await vincularOportunidadFirematACotizacion(tx, creada.id, funnelFirematId);
-
-      return tx.cotizacionFiremat.findUniqueOrThrow({
-        where: { id: creada.id },
-        relationLoadStrategy: 'join',
         include: buildCotizacionInclude,
       });
     });
 
-    res.status(201).json({ success: true, data, message: 'Cotizacion Firemat creada' });
+    res.status(201).json({ success: true, data, message: 'Cotizacion Trager creada' });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -625,7 +533,7 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
   }
 };
 
-export const updateCotizacionFiremat = async (req: Request, res: Response): Promise<void> => {
+export const updateCotizacionTrager = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);
     if (!id) {
@@ -647,18 +555,15 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
     }
 
     const detalles = await validateDetalles(body.detalles);
-    const aplicaImpuesto = getBoolean(body.aplicaImpuesto, true);
-    const totales = calcularTotales(detalles, body.descuento, body.impuesto, aplicaImpuesto);
-    const { clienteFirematId, contactoFirematId } = await resolveClienteContactoIds(body);
-    const funnelFirematId = await resolveFunnelFirematId(body);
+    const totales = calcularTotales(detalles, body.descuento, body.impuesto);
 
     if (req.userId && req.userRole && req.userRole !== 'administrador') {
-      const actual = await firematPrisma.cotizacionFiremat.findUnique({
+      const actual = await tragerPrisma.cotizacionTrager.findUnique({
         where: { id },
         select: { cliente: true },
       });
       if (actual && cliente !== actual.cliente) {
-        const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'firemat');
+        const puede = await puedeCambiarEmpresa(req.userId, req.userRole, 'trager');
         if (!puede) {
           res.status(403).json({ success: false, error: 'No tienes permiso para cambiar la empresa o cliente asociado.' });
           return;
@@ -666,8 +571,8 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
       }
     }
 
-    const data = await firematPrisma.$transaction(async (tx) => {
-      const actual = await tx.cotizacionFiremat.findUnique({
+    const data = await tragerPrisma.$transaction(async (tx) => {
+      const actual = await tx.cotizacionTrager.findUnique({
         where: { id },
         include: { detalles: true },
       });
@@ -678,23 +583,16 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
 
       const estadoFinal = estado ?? actual.estado;
       await ajustarStockCotizacion(tx, actual.estado, actual.detalles, estadoFinal, detalles);
-      await tx.cotizacionFirematDetalle.deleteMany({ where: { cotizacionId: id } });
+      await tx.cotizacionTragerDetalle.deleteMany({ where: { cotizacionId: id } });
 
-      await tx.cotizacionFiremat.update({
+      return tx.cotizacionTrager.update({
         where: { id },
         data: {
           cliente,
           contacto: getNullableString(body.contacto),
-          clienteFirematId,
-          contactoFirematId,
-          telefono: getNullableString(body.telefono),
-          correo: getNullableString(body.correo),
           tipoCliente: getNullableString(body.tipoCliente),
-          cargo: getNullableString(body.cargo),
           responsable: getNullableString(body.responsable),
           estado: estadoFinal,
-          moneda: getString(body.moneda) ?? 'CLP',
-          aplicaImpuesto,
           descuento: totales.descuento,
           impuesto: totales.impuesto,
           subtotal: totales.subtotal,
@@ -714,18 +612,11 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
             })),
           },
         },
-      });
-
-      await vincularOportunidadFirematACotizacion(tx, id, funnelFirematId);
-
-      return tx.cotizacionFiremat.findUniqueOrThrow({
-        where: { id },
-        relationLoadStrategy: 'join',
         include: buildCotizacionInclude,
       });
     });
 
-    res.json({ success: true, data, message: 'Cotizacion Firemat actualizada' });
+    res.json({ success: true, data, message: 'Cotizacion Trager actualizada' });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -735,7 +626,7 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
   }
 };
 
-export const patchEstadoCotizacionFiremat = async (req: Request, res: Response): Promise<void> => {
+export const patchEstadoCotizacionTrager = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);
     if (!id) {
@@ -749,8 +640,8 @@ export const patchEstadoCotizacionFiremat = async (req: Request, res: Response):
       return;
     }
 
-    const data = await firematPrisma.$transaction(async (tx) => {
-      const actual = await tx.cotizacionFiremat.findUnique({
+    const data = await tragerPrisma.$transaction(async (tx) => {
+      const actual = await tx.cotizacionTrager.findUnique({
         where: { id },
         include: { detalles: true },
       });
@@ -761,14 +652,13 @@ export const patchEstadoCotizacionFiremat = async (req: Request, res: Response):
 
       await ajustarStockCotizacion(tx, actual.estado, actual.detalles, estado, actual.detalles);
 
-      return tx.cotizacionFiremat.update({
+      return tx.cotizacionTrager.update({
         where: { id },
         data: {
           estado,
           ...(estado === 'ENVIADA' && !actual.fechaEnvio ? { fechaEnvio: new Date() } : {}),
           ...(estado === 'ACEPTADA' && !actual.fechaCierre ? { fechaCierre: new Date() } : {}),
         },
-        relationLoadStrategy: 'join',
         include: buildCotizacionInclude,
       });
     });
@@ -783,7 +673,7 @@ export const patchEstadoCotizacionFiremat = async (req: Request, res: Response):
   }
 };
 
-export const deleteCotizacionFiremat = async (req: Request, res: Response): Promise<void> => {
+export const deleteCotizacionTrager = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);
     if (!id) {
@@ -791,8 +681,8 @@ export const deleteCotizacionFiremat = async (req: Request, res: Response): Prom
       return;
     }
 
-    await firematPrisma.$transaction(async (tx) => {
-      const actual = await tx.cotizacionFiremat.findUnique({
+    await tragerPrisma.$transaction(async (tx) => {
+      const actual = await tx.cotizacionTrager.findUnique({
         where: { id },
         include: { detalles: true },
       });
@@ -804,10 +694,10 @@ export const deleteCotizacionFiremat = async (req: Request, res: Response): Prom
       if (estadoReservaStock(actual.estado)) {
         await ajustarStockCotizacion(tx, actual.estado, actual.detalles, null, []);
       }
-      await tx.cotizacionFiremat.delete({ where: { id } });
+      await tx.cotizacionTrager.delete({ where: { id } });
     });
 
-    res.json({ success: true, message: 'Cotizacion Firemat eliminada' });
+    res.json({ success: true, message: 'Cotizacion Trager eliminada' });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -817,7 +707,7 @@ export const deleteCotizacionFiremat = async (req: Request, res: Response): Prom
   }
 };
 
-export const downloadCotizacionFirematPdf = async (req: Request, res: Response): Promise<void> => {
+export const downloadCotizacionTragerPdf = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = parseIdParam(req.params.id);
     if (!id) {
@@ -825,9 +715,8 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       return;
     }
 
-    const cotizacion = await firematPrisma.cotizacionFiremat.findUnique({
+    const cotizacion = await tragerPrisma.cotizacionTrager.findUnique({
       where: { id },
-      relationLoadStrategy: 'join',
       include: buildCotizacionInclude,
     });
 
@@ -836,11 +725,11 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       return;
     }
 
-    const fileName = `cotizacion-firemat-${cotizacion.id}.pdf`;
+    const fileName = `cotizacion-trager-${cotizacion.id}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
 
-    const doc = new PDFDocument({ size: 'A4', margin: FM_MARGIN, autoFirstPage: true });
+    const doc = new PDFDocument({ size: 'A4', margin: TG_MARGIN, autoFirstPage: true });
     doc.pipe(res);
 
     const fval = (v: unknown): string => {
@@ -849,90 +738,90 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       return s.length > 0 ? s : '—';
     };
 
-    const fmBadge = ESTADO_FM_COLORS[cotizacion.estado] ?? '#64748b';
+    const tgBadge = ESTADO_TG_COLORS[cotizacion.estado] ?? '#64748b';
 
 
-    doc.rect(0, 0, FM_W, 4).fill(FM_RED);
+    doc.rect(0, 0, TG_W, 4).fill(TG_RED);
 
-    const FM_HDR_TOP   = 14;
-    const FM_RBOX_X    = 348;
-    const FM_RBOX_W    = FM_W - FM_MARGIN - FM_RBOX_X;
-    const FM_RBOX_H    = 76;
-    const FM_RBOX_HDRH = 15;
+    const TG_HDR_TOP   = 14;
+    const TG_RBOX_X    = 348;
+    const TG_RBOX_W    = TG_W - TG_MARGIN - TG_RBOX_X;
+    const TG_RBOX_H    = 76;
+    const TG_RBOX_HDRH = 15;
 
-    doc.font('Helvetica-Bold').fontSize(13).fillColor(FM_DARK)
-      .text('FIREMAT', FM_MARGIN, FM_HDR_TOP, { lineBreak: false });
-    doc.font('Helvetica').fontSize(7.5).fillColor(FM_MUTED)
-      .text('RUT: —',       FM_MARGIN, FM_HDR_TOP + 16, { lineBreak: false })
-      .text('Dirección: —', FM_MARGIN, FM_HDR_TOP + 26, { width: FM_RBOX_X - FM_MARGIN - 10, lineBreak: false })
-      .text('Correo: —',    FM_MARGIN, FM_HDR_TOP + 36, { lineBreak: false })
-      .text('Teléfono: —',  FM_MARGIN, FM_HDR_TOP + 46, { lineBreak: false });
+    doc.font('Helvetica-Bold').fontSize(13).fillColor(TG_DARK)
+      .text('TRAGER', TG_MARGIN, TG_HDR_TOP, { lineBreak: false });
+    doc.font('Helvetica').fontSize(7.5).fillColor(TG_MUTED)
+      .text('RUT: —',       TG_MARGIN, TG_HDR_TOP + 16, { lineBreak: false })
+      .text('Dirección: —', TG_MARGIN, TG_HDR_TOP + 26, { width: TG_RBOX_X - TG_MARGIN - 10, lineBreak: false })
+      .text('Correo: —',    TG_MARGIN, TG_HDR_TOP + 36, { lineBreak: false })
+      .text('Teléfono: —',  TG_MARGIN, TG_HDR_TOP + 46, { lineBreak: false });
 
-    doc.lineWidth(0.8).rect(FM_RBOX_X, FM_HDR_TOP - 1, FM_RBOX_W, FM_RBOX_H).stroke(FM_BORDER);
-    doc.rect(FM_RBOX_X, FM_HDR_TOP - 1, FM_RBOX_W, FM_RBOX_HDRH).fill(FM_RED);
+    doc.lineWidth(0.8).rect(TG_RBOX_X, TG_HDR_TOP - 1, TG_RBOX_W, TG_RBOX_H).stroke(TG_BORDER);
+    doc.rect(TG_RBOX_X, TG_HDR_TOP - 1, TG_RBOX_W, TG_RBOX_HDRH).fill(TG_RED);
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#ffffff')
-      .text('COTIZACIÓN', FM_RBOX_X, FM_HDR_TOP + 2, { width: FM_RBOX_W, align: 'center', lineBreak: false });
+      .text('COTIZACIÓN', TG_RBOX_X, TG_HDR_TOP + 2, { width: TG_RBOX_W, align: 'center', lineBreak: false });
 
-    const FM_BLX = FM_RBOX_X + 6;
-    const FM_BVX = FM_RBOX_X + 76;
-    const FM_BVW = FM_RBOX_W - 82;
+    const TG_BLX = TG_RBOX_X + 6;
+    const TG_BVX = TG_RBOX_X + 76;
+    const TG_BVW = TG_RBOX_W - 82;
 
-    const fmRLine = (label: string, value: string, y: number): void => {
-      doc.font('Helvetica-Bold').fontSize(8).fillColor(FM_MUTED)
-        .text(label, FM_BLX, y, { width: 68, lineBreak: false });
-      doc.font('Helvetica').fontSize(8).fillColor(FM_TEXT)
-        .text(value, FM_BVX, y, { width: FM_BVW, lineBreak: false });
+    const tgRLine = (label: string, value: string, y: number): void => {
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(TG_MUTED)
+        .text(label, TG_BLX, y, { width: 68, lineBreak: false });
+      doc.font('Helvetica').fontSize(8).fillColor(TG_TEXT)
+        .text(value, TG_BVX, y, { width: TG_BVW, lineBreak: false });
     };
-    fmRLine('N°:',       fval(cotizacion.numero),               FM_HDR_TOP + 20);
-    fmRLine('Emisión:',  formatDate(cotizacion.fechaCotizacion), FM_HDR_TOP + 32);
-    fmRLine('Vigencia:', formatDate(cotizacion.fechaVencimiento), FM_HDR_TOP + 44);
+    tgRLine('N°:',       fval(cotizacion.numero),               TG_HDR_TOP + 20);
+    tgRLine('Emisión:',  formatDate(cotizacion.fechaCotizacion), TG_HDR_TOP + 32);
+    tgRLine('Vigencia:', formatDate(cotizacion.fechaVencimiento), TG_HDR_TOP + 44);
 
-    const FM_BDGE_Y = FM_HDR_TOP + 57;
-    doc.rect(FM_RBOX_X + 6, FM_BDGE_Y, FM_RBOX_W - 12, 13).fill(fmBadge);
+    const TG_BDGE_Y = TG_HDR_TOP + 57;
+    doc.rect(TG_RBOX_X + 6, TG_BDGE_Y, TG_RBOX_W - 12, 13).fill(tgBadge);
     doc.font('Helvetica-Bold').fontSize(7).fillColor('#ffffff')
-      .text(cotizacion.estado, FM_RBOX_X + 6, FM_BDGE_Y + 3,
-        { width: FM_RBOX_W - 12, align: 'center', lineBreak: false });
+      .text(cotizacion.estado, TG_RBOX_X + 6, TG_BDGE_Y + 3,
+        { width: TG_RBOX_W - 12, align: 'center', lineBreak: false });
 
-    doc.y = FM_HDR_TOP + FM_RBOX_H + 4;
+    doc.y = TG_HDR_TOP + TG_RBOX_H + 4;
 
-    doc.rect(FM_MARGIN, doc.y, FM_CONTENT_W, 1.5).fill(FM_RED);
+    doc.rect(TG_MARGIN, doc.y, TG_CONTENT_W, 1.5).fill(TG_RED);
     doc.y += 8;
 
 
-    const FM_BINFO_TOP = doc.y;
-    const FM_BINFO_LX  = FM_MARGIN;
-    const FM_BINFO_LW  = 254;
-    const FM_BINFO_RX  = FM_MARGIN + FM_BINFO_LW + 7;
-    const FM_BINFO_RW  = FM_W - FM_MARGIN - FM_BINFO_RX;
-    const FM_BI_HDR_H  = 16;
-    const FM_BI_ROW_H  = 14;
-    const FM_BI_ROWS   = 5;
-    const FM_BI_BODY_H = FM_BI_ROWS * FM_BI_ROW_H + 8;
-    const FM_BI_TOTAL  = FM_BI_HDR_H + FM_BI_BODY_H;
+    const TG_BINFO_TOP = doc.y;
+    const TG_BINFO_LX  = TG_MARGIN;
+    const TG_BINFO_LW  = 254;
+    const TG_BINFO_RX  = TG_MARGIN + TG_BINFO_LW + 7;
+    const TG_BINFO_RW  = TG_W - TG_MARGIN - TG_BINFO_RX;
+    const TG_BI_HDR_H  = 16;
+    const TG_BI_ROW_H  = 14;
+    const TG_BI_ROWS   = 5;
+    const TG_BI_BODY_H = TG_BI_ROWS * TG_BI_ROW_H + 8;
+    const TG_BI_TOTAL  = TG_BI_HDR_H + TG_BI_BODY_H;
 
-    const fmDrawInfoBox = (
+    const tgDrawInfoBox = (
       bx: number,
       bw: number,
       title: string,
       rows: Array<[string, string]>,
     ): void => {
-      doc.rect(bx, FM_BINFO_TOP, bw, FM_BI_HDR_H).fill(FM_DARK);
+      doc.rect(bx, TG_BINFO_TOP, bw, TG_BI_HDR_H).fill(TG_DARK);
       doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
-        .text(title, bx + 6, FM_BINFO_TOP + 4, { width: bw - 12, lineBreak: false });
-      doc.lineWidth(0.5).rect(bx, FM_BINFO_TOP + FM_BI_HDR_H, bw, FM_BI_BODY_H).stroke(FM_BORDER);
+        .text(title, bx + 6, TG_BINFO_TOP + 4, { width: bw - 12, lineBreak: false });
+      doc.lineWidth(0.5).rect(bx, TG_BINFO_TOP + TG_BI_HDR_H, bw, TG_BI_BODY_H).stroke(TG_BORDER);
       const kw = 82;
       const vw = bw - kw - 14;
-      let ry = FM_BINFO_TOP + FM_BI_HDR_H + 5;
+      let ry = TG_BINFO_TOP + TG_BI_HDR_H + 5;
       for (const [key, value] of rows) {
-        doc.font('Helvetica-Bold').fontSize(7.5).fillColor(FM_MUTED)
+        doc.font('Helvetica-Bold').fontSize(7.5).fillColor(TG_MUTED)
           .text(key, bx + 6, ry, { width: kw, lineBreak: false });
-        doc.font('Helvetica').fontSize(7.5).fillColor(FM_TEXT)
+        doc.font('Helvetica').fontSize(7.5).fillColor(TG_TEXT)
           .text(value, bx + kw + 6, ry, { width: vw, lineBreak: false });
-        ry += FM_BI_ROW_H;
+        ry += TG_BI_ROW_H;
       }
     };
 
-    fmDrawInfoBox(FM_BINFO_LX, FM_BINFO_LW, 'DATOS DEL CLIENTE', [
+    tgDrawInfoBox(TG_BINFO_LX, TG_BINFO_LW, 'DATOS DEL CLIENTE', [
       ['Cliente:',  cotizacion.cliente],
       ['Contacto:', fval(cotizacion.contacto)],
       ['Correo:',   '—'],
@@ -940,152 +829,152 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       ['Tipo:',     fval(cotizacion.tipoCliente)],
     ]);
 
-    fmDrawInfoBox(FM_BINFO_RX, FM_BINFO_RW, 'DATOS DE COTIZACIÓN', [
+    tgDrawInfoBox(TG_BINFO_RX, TG_BINFO_RW, 'DATOS DE COTIZACIÓN', [
       ['Responsable:',   fval(cotizacion.responsable)],
       ['Fecha emisión:', formatDate(cotizacion.fechaCotizacion)],
       ['Vigencia:',      formatDate(cotizacion.fechaVencimiento)],
       ['Estado:',        cotizacion.estado],
-      ['Versión:',       String(cotizacion.version ?? 1)],
+      ['Versión:',       '1'],
     ]);
 
-    doc.y = FM_BINFO_TOP + FM_BI_TOTAL + 10;
+    doc.y = TG_BINFO_TOP + TG_BI_TOTAL + 10;
 
 
-    const FM_TC_NUM = { x: FM_MARGIN,       w: 20  };
-    const FM_TC_SKU = { x: FM_MARGIN + 20,  w: 60  };
-    const FM_TC_PRD = { x: FM_MARGIN + 80,  w: 170 };
-    const FM_TC_QTY = { x: FM_MARGIN + 250, w: 35  };
-    const FM_TC_PUN = { x: FM_MARGIN + 285, w: 70  };
-    const FM_TC_DSC = { x: FM_MARGIN + 355, w: 45  };
-    const FM_TC_SUB = { x: FM_MARGIN + 400, w: 115 };
+    const TG_TC_NUM = { x: TG_MARGIN,       w: 20  };
+    const TG_TC_SKU = { x: TG_MARGIN + 20,  w: 60  };
+    const TG_TC_PRD = { x: TG_MARGIN + 80,  w: 170 };
+    const TG_TC_QTY = { x: TG_MARGIN + 250, w: 35  };
+    const TG_TC_PUN = { x: TG_MARGIN + 285, w: 70  };
+    const TG_TC_DSC = { x: TG_MARGIN + 355, w: 45  };
+    const TG_TC_SUB = { x: TG_MARGIN + 400, w: 115 };
 
-    const fmDrawTableHeader = (): void => {
+    const tgDrawTableHeader = (): void => {
       const ty = doc.y;
-      doc.rect(FM_MARGIN, ty, FM_CONTENT_W, 17).fill(FM_RED);
+      doc.rect(TG_MARGIN, ty, TG_CONTENT_W, 17).fill(TG_RED);
       doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff');
-      doc.text('#',        FM_TC_NUM.x + 2, ty + 4, { width: FM_TC_NUM.w,                  lineBreak: false });
-      doc.text('SKU',      FM_TC_SKU.x + 2, ty + 4, { width: FM_TC_SKU.w,                  lineBreak: false });
-      doc.text('PRODUCTO', FM_TC_PRD.x + 2, ty + 4, { width: FM_TC_PRD.w,                  lineBreak: false });
-      doc.text('CANT.',    FM_TC_QTY.x,     ty + 4, { width: FM_TC_QTY.w, align: 'right',  lineBreak: false });
-      doc.text('P. UNIT.', FM_TC_PUN.x,     ty + 4, { width: FM_TC_PUN.w, align: 'right',  lineBreak: false });
-      doc.text('DESC.',    FM_TC_DSC.x,     ty + 4, { width: FM_TC_DSC.w, align: 'right',  lineBreak: false });
-      doc.text('SUBTOTAL', FM_TC_SUB.x,     ty + 4, { width: FM_TC_SUB.w - 4, align: 'right', lineBreak: false });
+      doc.text('#',        TG_TC_NUM.x + 2, ty + 4, { width: TG_TC_NUM.w,                  lineBreak: false });
+      doc.text('SKU',      TG_TC_SKU.x + 2, ty + 4, { width: TG_TC_SKU.w,                  lineBreak: false });
+      doc.text('PRODUCTO', TG_TC_PRD.x + 2, ty + 4, { width: TG_TC_PRD.w,                  lineBreak: false });
+      doc.text('CANT.',    TG_TC_QTY.x,     ty + 4, { width: TG_TC_QTY.w, align: 'right',  lineBreak: false });
+      doc.text('P. UNIT.', TG_TC_PUN.x,     ty + 4, { width: TG_TC_PUN.w, align: 'right',  lineBreak: false });
+      doc.text('DESC.',    TG_TC_DSC.x,     ty + 4, { width: TG_TC_DSC.w, align: 'right',  lineBreak: false });
+      doc.text('SUBTOTAL', TG_TC_SUB.x,     ty + 4, { width: TG_TC_SUB.w - 4, align: 'right', lineBreak: false });
       doc.y = ty + 17;
     };
 
-    fmDrawTableHeader();
+    tgDrawTableHeader();
 
-    let fmRowIdx = 0;
+    let tgRowIdx = 0;
     for (const detalle of cotizacion.detalles) {
       if (doc.y > 740) {
         doc.addPage();
-        doc.y = FM_MARGIN;
-        fmDrawTableHeader();
-        fmRowIdx = 0;
+        doc.y = TG_MARGIN;
+        tgDrawTableHeader();
+        tgRowIdx = 0;
       }
       const rowY = doc.y;
       const rowH = 18;
 
-      if (fmRowIdx % 2 === 1) {
-        doc.rect(FM_MARGIN, rowY, FM_CONTENT_W, rowH).fill(FM_ROW_ALT);
+      if (tgRowIdx % 2 === 1) {
+        doc.rect(TG_MARGIN, rowY, TG_CONTENT_W, rowH).fill(TG_ROW_ALT);
       }
 
-      doc.font('Helvetica').fontSize(8).fillColor(FM_TEXT);
-      doc.text(String(fmRowIdx + 1),             FM_TC_NUM.x + 2, rowY + 4, { width: FM_TC_NUM.w,                  lineBreak: false });
-      doc.text(fval(detalle.producto.sku),        FM_TC_SKU.x + 2, rowY + 4, { width: FM_TC_SKU.w,                  lineBreak: false });
-      doc.text(detalle.producto.nombre,           FM_TC_PRD.x + 2, rowY + 4, { width: FM_TC_PRD.w,                  lineBreak: false });
-      doc.text(String(detalle.cantidad),          FM_TC_QTY.x,     rowY + 4, { width: FM_TC_QTY.w, align: 'right',  lineBreak: false });
-      doc.text(formatCLP(detalle.precioUnitario), FM_TC_PUN.x,     rowY + 4, { width: FM_TC_PUN.w, align: 'right',  lineBreak: false });
-      doc.text(`${detalle.descuentoPct}%`,        FM_TC_DSC.x,     rowY + 4, { width: FM_TC_DSC.w, align: 'right',  lineBreak: false });
-      doc.text(formatCLP(detalle.subtotal),       FM_TC_SUB.x,     rowY + 4, { width: FM_TC_SUB.w - 4, align: 'right', lineBreak: false });
+      doc.font('Helvetica').fontSize(8).fillColor(TG_TEXT);
+      doc.text(String(tgRowIdx + 1),             TG_TC_NUM.x + 2, rowY + 4, { width: TG_TC_NUM.w,                  lineBreak: false });
+      doc.text(fval(detalle.producto.sku),        TG_TC_SKU.x + 2, rowY + 4, { width: TG_TC_SKU.w,                  lineBreak: false });
+      doc.text(detalle.producto.nombre,           TG_TC_PRD.x + 2, rowY + 4, { width: TG_TC_PRD.w,                  lineBreak: false });
+      doc.text(String(detalle.cantidad),          TG_TC_QTY.x,     rowY + 4, { width: TG_TC_QTY.w, align: 'right',  lineBreak: false });
+      doc.text(formatCLP(detalle.precioUnitario), TG_TC_PUN.x,     rowY + 4, { width: TG_TC_PUN.w, align: 'right',  lineBreak: false });
+      doc.text(`${detalle.descuentoPct}%`,        TG_TC_DSC.x,     rowY + 4, { width: TG_TC_DSC.w, align: 'right',  lineBreak: false });
+      doc.text(formatCLP(detalle.subtotal),       TG_TC_SUB.x,     rowY + 4, { width: TG_TC_SUB.w - 4, align: 'right', lineBreak: false });
 
       doc.y = rowY + rowH;
 
       if (detalle.observacion) {
-        doc.font('Helvetica').fontSize(7.5).fillColor(FM_MUTED)
-          .text(`Obs: ${detalle.observacion}`, FM_TC_PRD.x + 2, doc.y, { width: FM_TC_PRD.w });
+        doc.font('Helvetica').fontSize(7.5).fillColor(TG_MUTED)
+          .text(`Obs: ${detalle.observacion}`, TG_TC_PRD.x + 2, doc.y, { width: TG_TC_PRD.w });
       }
 
-      fmRowIdx++;
+      tgRowIdx++;
     }
 
     doc.lineWidth(0.5)
-      .moveTo(FM_MARGIN, doc.y).lineTo(FM_W - FM_MARGIN, doc.y).stroke(FM_BORDER);
+      .moveTo(TG_MARGIN, doc.y).lineTo(TG_W - TG_MARGIN, doc.y).stroke(TG_BORDER);
     doc.y += 12;
 
 
-    const FM_TT_X  = 358;
-    const FM_TT_LW = 112;
-    const FM_TT_VX = FM_TT_X + FM_TT_LW;
-    const FM_TT_VW = FM_W - FM_MARGIN - FM_TT_VX;
-    let   fmTotY   = doc.y;
+    const TG_TT_X  = 358;
+    const TG_TT_LW = 112;
+    const TG_TT_VX = TG_TT_X + TG_TT_LW;
+    const TG_TT_VW = TG_W - TG_MARGIN - TG_TT_VX;
+    let   tgTotY   = doc.y;
 
-    const fmDrawTotRow = (
+    const tgDrawTotRow = (
       label: string,
       value: string,
       opts: { bold?: boolean; highlight?: boolean } = {},
     ): void => {
       const { bold = false, highlight = false } = opts;
       if (highlight) {
-        doc.rect(FM_TT_X - 6, fmTotY - 2, FM_W - FM_MARGIN - FM_TT_X + 6, 18).fill(FM_RED);
+        doc.rect(TG_TT_X - 6, tgTotY - 2, TG_W - TG_MARGIN - TG_TT_X + 6, 18).fill(TG_RED);
       }
       doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(9)
-        .fillColor(highlight ? '#ffffff' : FM_TEXT);
-      doc.text(label, FM_TT_X,  fmTotY, { width: FM_TT_LW,                  lineBreak: false });
-      doc.text(value, FM_TT_VX, fmTotY, { width: FM_TT_VW, align: 'right',  lineBreak: false });
-      fmTotY += 16;
+        .fillColor(highlight ? '#ffffff' : TG_TEXT);
+      doc.text(label, TG_TT_X,  tgTotY, { width: TG_TT_LW,                  lineBreak: false });
+      doc.text(value, TG_TT_VX, tgTotY, { width: TG_TT_VW, align: 'right',  lineBreak: false });
+      tgTotY += 16;
     };
 
-    fmDrawTotRow('Subtotal:', formatCLP(cotizacion.subtotal));
+    tgDrawTotRow('Subtotal:', formatCLP(cotizacion.subtotal));
     if (cotizacion.descuento > 0) {
-      fmDrawTotRow('Descuento:', `− ${formatCLP(cotizacion.descuento)}`);
+      tgDrawTotRow('Descuento:', `− ${formatCLP(cotizacion.descuento)}`);
     }
     if (cotizacion.impuesto > 0) {
-      fmDrawTotRow('IVA (19%):', formatCLP(cotizacion.impuesto));
+      tgDrawTotRow('IVA (19%):', formatCLP(cotizacion.impuesto));
     }
 
     doc.lineWidth(0.5)
-      .moveTo(FM_TT_X - 6, fmTotY - 3).lineTo(FM_W - FM_MARGIN, fmTotY - 3).stroke(FM_BORDER);
-    fmTotY += 4;
+      .moveTo(TG_TT_X - 6, tgTotY - 3).lineTo(TG_W - TG_MARGIN, tgTotY - 3).stroke(TG_BORDER);
+    tgTotY += 4;
 
-    fmDrawTotRow('TOTAL:', formatCLP(cotizacion.total), { bold: true, highlight: true });
-    doc.y = fmTotY + 10;
+    tgDrawTotRow('TOTAL:', formatCLP(cotizacion.total), { bold: true, highlight: true });
+    doc.y = tgTotY + 10;
 
 
     if (cotizacion.observaciones) {
-      if (doc.y > 720) { doc.addPage(); doc.y = FM_MARGIN; }
+      if (doc.y > 720) { doc.addPage(); doc.y = TG_MARGIN; }
       doc.y += 6;
 
       const obsY = doc.y;
-      doc.rect(FM_MARGIN, obsY, FM_CONTENT_W, 16).fill(FM_DARK);
+      doc.rect(TG_MARGIN, obsY, TG_CONTENT_W, 16).fill(TG_DARK);
       doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#ffffff')
-        .text('OBSERVACIONES', FM_MARGIN + 8, obsY + 4, { width: FM_CONTENT_W - 16, lineBreak: false });
+        .text('OBSERVACIONES', TG_MARGIN + 8, obsY + 4, { width: TG_CONTENT_W - 16, lineBreak: false });
 
       doc.y = obsY + 16;
       doc.lineWidth(0.5)
-        .moveTo(FM_MARGIN, doc.y).lineTo(FM_W - FM_MARGIN, doc.y).stroke(FM_BORDER);
+        .moveTo(TG_MARGIN, doc.y).lineTo(TG_W - TG_MARGIN, doc.y).stroke(TG_BORDER);
 
-      doc.font('Helvetica').fontSize(8.5).fillColor(FM_TEXT)
-        .text(cotizacion.observaciones, FM_MARGIN + 6, doc.y + 6, { width: FM_CONTENT_W - 12 });
+      doc.font('Helvetica').fontSize(8.5).fillColor(TG_TEXT)
+        .text(cotizacion.observaciones, TG_MARGIN + 6, doc.y + 6, { width: TG_CONTENT_W - 12 });
 
       doc.y += 8;
       doc.lineWidth(0.5)
-        .moveTo(FM_MARGIN, doc.y).lineTo(FM_W - FM_MARGIN, doc.y).stroke(FM_BORDER);
+        .moveTo(TG_MARGIN, doc.y).lineTo(TG_W - TG_MARGIN, doc.y).stroke(TG_BORDER);
       doc.y += 8;
     }
 
 
-    if (doc.y > 760) { doc.addPage(); doc.y = FM_MARGIN; }
+    if (doc.y > 760) { doc.addPage(); doc.y = TG_MARGIN; }
 
-    const fmSigY = doc.y < 690 ? 710 : doc.y + 24;
+    const tgSigY = doc.y < 690 ? 710 : doc.y + 24;
     doc.lineWidth(0.5)
-      .moveTo(FM_MARGIN, fmSigY).lineTo(FM_MARGIN + 190, fmSigY).stroke('#94a3b8');
-    doc.font('Helvetica').fontSize(8).fillColor(FM_MUTED)
-      .text('Firma y Aclaración', FM_MARGIN, fmSigY + 5, { lineBreak: false });
+      .moveTo(TG_MARGIN, tgSigY).lineTo(TG_MARGIN + 190, tgSigY).stroke('#94a3b8');
+    doc.font('Helvetica').fontSize(8).fillColor(TG_MUTED)
+      .text('Firma y Aclaración', TG_MARGIN, tgSigY + 5, { lineBreak: false });
 
     doc.end();
   } catch (error) {
     if (!res.headersSent) handleError(res, error);
-    else console.error('Error generando PDF Firemat:', error);
+    else console.error('Error generando PDF Trager:', error);
   }
 };
