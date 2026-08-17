@@ -287,7 +287,8 @@ exports.Prisma.CotizacionFirematDetalleScalarFieldEnum = {
   descuentoPct: 'descuentoPct',
   subtotal: 'subtotal',
   stockDisponible: 'stockDisponible',
-  observacion: 'observacion'
+  observacion: 'observacion',
+  gananciaPct: 'gananciaPct'
 };
 
 exports.Prisma.FunnelFirematOpportunityScalarFieldEnum = {

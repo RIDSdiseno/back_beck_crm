@@ -64,6 +64,8 @@ export function getTramosHolguraPorDefecto(tipoRegistro: string): TramoHolgura[]
 }
 
 function resolveHolguraFactor(holgura: number, tramos: TramoHolgura[]): number {
+  if (holgura === 0) return 1;
+
   const ordenados = [...tramos].sort((a, b) => a.holguraMax - b.holguraMax);
   for (const tramo of ordenados) {
     if (holgura <= tramo.holguraMax) return tramo.factor;
@@ -102,14 +104,17 @@ export function resolveAccesibilidadFactor(
 
   if (accesibilidad === null || accesibilidad === undefined) return buscarFactorNivel(1, factores);
   if (typeof accesibilidad === 'number' && Number.isFinite(accesibilidad)) {
+    if (accesibilidad === 0) return 1;
     return esNivelConfigurable(accesibilidad) ? buscarFactorNivel(accesibilidad, factores) : accesibilidad;
   }
   const str = String(accesibilidad).trim();
   const n = parseFloat(str.replace(',', '.'));
   if (!isNaN(n) && Number.isFinite(n)) {
+    if (n === 0) return 1;
     return esNivelConfigurable(n) ? buscarFactorNivel(n, factores) : n;
   }
   const norm = str.toLowerCase().normalize('NFD').replace(/\p{Mn}/gu, '');
+  if (norm === 'no aplica') return 1;
   if (norm === 'normal') return buscarFactorNivel(1, factores);
   if (norm.includes('cielo') && norm.includes('duro')) return buscarFactorNivel(3, factores);
   if (norm.includes('cielo') && (norm.includes('americano') || norm.includes('estructurado'))) {

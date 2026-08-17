@@ -202,6 +202,7 @@ model CotizacionFirematDetalle {
   subtotal        Float
   stockDisponible Int?
   observacion     String?
+  gananciaPct     Float             @default(0)
   cotizacion      CotizacionFiremat @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
   producto        Producto          @relation(fields: [productoId], references: [id])
 }
@@ -284,18 +285,18 @@ model FunnelFirematOpportunity {
 }
 
 model ContactoClienteFiremat {
-  id            Int      @id @default(autoincrement())
+  id            Int                 @id @default(autoincrement())
   clienteId     Int
   nombre        String
   cargo         String?
   telefono      String?
   correo        String?
-  principal     Boolean  @default(false)
-  activo        Boolean  @default(true)
+  principal     Boolean             @default(false)
+  activo        Boolean             @default(true)
   observaciones String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  cliente       Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  cliente       Cliente             @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   cotizaciones  CotizacionFiremat[]
 
   @@index([clienteId])

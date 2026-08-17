@@ -14356,6 +14356,7 @@ export namespace Prisma {
     descuentoPct: number | null
     subtotal: number | null
     stockDisponible: number | null
+    gananciaPct: number | null
   }
 
   export type CotizacionFirematDetalleSumAggregateOutputType = {
@@ -14367,6 +14368,7 @@ export namespace Prisma {
     descuentoPct: number | null
     subtotal: number | null
     stockDisponible: number | null
+    gananciaPct: number | null
   }
 
   export type CotizacionFirematDetalleMinAggregateOutputType = {
@@ -14379,6 +14381,7 @@ export namespace Prisma {
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
+    gananciaPct: number | null
   }
 
   export type CotizacionFirematDetalleMaxAggregateOutputType = {
@@ -14391,6 +14394,7 @@ export namespace Prisma {
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
+    gananciaPct: number | null
   }
 
   export type CotizacionFirematDetalleCountAggregateOutputType = {
@@ -14403,6 +14407,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible: number
     observacion: number
+    gananciaPct: number
     _all: number
   }
 
@@ -14416,6 +14421,7 @@ export namespace Prisma {
     descuentoPct?: true
     subtotal?: true
     stockDisponible?: true
+    gananciaPct?: true
   }
 
   export type CotizacionFirematDetalleSumAggregateInputType = {
@@ -14427,6 +14433,7 @@ export namespace Prisma {
     descuentoPct?: true
     subtotal?: true
     stockDisponible?: true
+    gananciaPct?: true
   }
 
   export type CotizacionFirematDetalleMinAggregateInputType = {
@@ -14439,6 +14446,7 @@ export namespace Prisma {
     subtotal?: true
     stockDisponible?: true
     observacion?: true
+    gananciaPct?: true
   }
 
   export type CotizacionFirematDetalleMaxAggregateInputType = {
@@ -14451,6 +14459,7 @@ export namespace Prisma {
     subtotal?: true
     stockDisponible?: true
     observacion?: true
+    gananciaPct?: true
   }
 
   export type CotizacionFirematDetalleCountAggregateInputType = {
@@ -14463,6 +14472,7 @@ export namespace Prisma {
     subtotal?: true
     stockDisponible?: true
     observacion?: true
+    gananciaPct?: true
     _all?: true
   }
 
@@ -14562,6 +14572,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible: number | null
     observacion: string | null
+    gananciaPct: number
     _count: CotizacionFirematDetalleCountAggregateOutputType | null
     _avg: CotizacionFirematDetalleAvgAggregateOutputType | null
     _sum: CotizacionFirematDetalleSumAggregateOutputType | null
@@ -14593,6 +14604,7 @@ export namespace Prisma {
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
+    gananciaPct?: boolean
     cotizacion?: boolean | CotizacionFirematDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFirematDetalle"]>
@@ -14607,6 +14619,7 @@ export namespace Prisma {
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
+    gananciaPct?: boolean
     cotizacion?: boolean | CotizacionFirematDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFirematDetalle"]>
@@ -14621,6 +14634,7 @@ export namespace Prisma {
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
+    gananciaPct?: boolean
     cotizacion?: boolean | CotizacionFirematDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionFirematDetalle"]>
@@ -14635,9 +14649,10 @@ export namespace Prisma {
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
+    gananciaPct?: boolean
   }
 
-  export type CotizacionFirematDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "subtotal" | "stockDisponible" | "observacion", ExtArgs["result"]["cotizacionFirematDetalle"]>
+  export type CotizacionFirematDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "subtotal" | "stockDisponible" | "observacion" | "gananciaPct", ExtArgs["result"]["cotizacionFirematDetalle"]>
   export type CotizacionFirematDetalleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | CotizacionFirematDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
@@ -14667,6 +14682,7 @@ export namespace Prisma {
       subtotal: number
       stockDisponible: number | null
       observacion: string | null
+      gananciaPct: number
     }, ExtArgs["result"]["cotizacionFirematDetalle"]>
     composites: {}
   }
@@ -15101,6 +15117,7 @@ export namespace Prisma {
     readonly subtotal: FieldRef<"CotizacionFirematDetalle", 'Float'>
     readonly stockDisponible: FieldRef<"CotizacionFirematDetalle", 'Int'>
     readonly observacion: FieldRef<"CotizacionFirematDetalle", 'String'>
+    readonly gananciaPct: FieldRef<"CotizacionFirematDetalle", 'Float'>
   }
     
 
@@ -25838,7 +25855,8 @@ export namespace Prisma {
     descuentoPct: 'descuentoPct',
     subtotal: 'subtotal',
     stockDisponible: 'stockDisponible',
-    observacion: 'observacion'
+    observacion: 'observacion',
+    gananciaPct: 'gananciaPct'
   };
 
   export type CotizacionFirematDetalleScalarFieldEnum = (typeof CotizacionFirematDetalleScalarFieldEnum)[keyof typeof CotizacionFirematDetalleScalarFieldEnum]
@@ -27114,6 +27132,7 @@ export namespace Prisma {
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
     cotizacion?: XOR<CotizacionFirematScalarRelationFilter, CotizacionFirematWhereInput>
     producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
   }
@@ -27128,6 +27147,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
+    gananciaPct?: SortOrder
     cotizacion?: CotizacionFirematOrderByWithRelationInput
     producto?: ProductoOrderByWithRelationInput
   }
@@ -27145,6 +27165,7 @@ export namespace Prisma {
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
     cotizacion?: XOR<CotizacionFirematScalarRelationFilter, CotizacionFirematWhereInput>
     producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
   }, "id">
@@ -27159,6 +27180,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
+    gananciaPct?: SortOrder
     _count?: CotizacionFirematDetalleCountOrderByAggregateInput
     _avg?: CotizacionFirematDetalleAvgOrderByAggregateInput
     _max?: CotizacionFirematDetalleMaxOrderByAggregateInput
@@ -27179,6 +27201,7 @@ export namespace Prisma {
     subtotal?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableWithAggregatesFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableWithAggregatesFilter<"CotizacionFirematDetalle"> | string | null
+    gananciaPct?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
   }
 
   export type FunnelFirematOpportunityWhereInput = {
@@ -29178,6 +29201,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
     cotizacion: CotizacionFirematCreateNestedOneWithoutDetallesInput
     producto: ProductoCreateNestedOneWithoutCotizacionFirematDetalleInput
   }
@@ -29192,6 +29216,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type CotizacionFirematDetalleUpdateInput = {
@@ -29201,6 +29226,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     cotizacion?: CotizacionFirematUpdateOneRequiredWithoutDetallesNestedInput
     producto?: ProductoUpdateOneRequiredWithoutCotizacionFirematDetalleNestedInput
   }
@@ -29215,6 +29241,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type CotizacionFirematDetalleCreateManyInput = {
@@ -29227,6 +29254,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type CotizacionFirematDetalleUpdateManyMutationInput = {
@@ -29236,6 +29264,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type CotizacionFirematDetalleUncheckedUpdateManyInput = {
@@ -29248,6 +29277,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type FunnelFirematOpportunityCreateInput = {
@@ -31315,6 +31345,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
+    gananciaPct?: SortOrder
   }
 
   export type CotizacionFirematDetalleAvgOrderByAggregateInput = {
@@ -31326,6 +31357,7 @@ export namespace Prisma {
     descuentoPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
+    gananciaPct?: SortOrder
   }
 
   export type CotizacionFirematDetalleMaxOrderByAggregateInput = {
@@ -31338,6 +31370,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
+    gananciaPct?: SortOrder
   }
 
   export type CotizacionFirematDetalleMinOrderByAggregateInput = {
@@ -31350,6 +31383,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
+    gananciaPct?: SortOrder
   }
 
   export type CotizacionFirematDetalleSumOrderByAggregateInput = {
@@ -31361,6 +31395,7 @@ export namespace Prisma {
     descuentoPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
+    gananciaPct?: SortOrder
   }
 
   export type BoolNullableFilter<$PrismaModel = never> = {
@@ -33765,6 +33800,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
     cotizacion: CotizacionFirematCreateNestedOneWithoutDetallesInput
   }
 
@@ -33777,6 +33813,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type CotizacionFirematDetalleCreateOrConnectWithoutProductoInput = {
@@ -34193,6 +34230,7 @@ export namespace Prisma {
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
   }
 
   export type FunnelFirematOpportunityUpsertWithWhereUniqueWithoutProductoInput = {
@@ -35452,6 +35490,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
     producto: ProductoCreateNestedOneWithoutCotizacionFirematDetalleInput
   }
 
@@ -35464,6 +35503,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type CotizacionFirematDetalleCreateOrConnectWithoutCotizacionInput = {
@@ -37936,6 +37976,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type FunnelFirematOpportunityCreateManyProductoInput = {
@@ -38091,6 +38132,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     cotizacion?: CotizacionFirematUpdateOneRequiredWithoutDetallesNestedInput
   }
 
@@ -38103,6 +38145,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type CotizacionFirematDetalleUncheckedUpdateManyWithoutProductoInput = {
@@ -38114,6 +38157,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type FunnelFirematOpportunityUpdateWithoutProductoInput = {
@@ -38856,6 +38900,7 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+    gananciaPct?: number
   }
 
   export type FunnelFirematOpportunityCreateManyCotizacionInput = {
@@ -38937,6 +38982,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     producto?: ProductoUpdateOneRequiredWithoutCotizacionFirematDetalleNestedInput
   }
 
@@ -38949,6 +38995,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type CotizacionFirematDetalleUncheckedUpdateManyWithoutCotizacionInput = {
@@ -38960,6 +39007,7 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
   }
 
   export type FunnelFirematOpportunityUpdateWithoutCotizacionInput = {

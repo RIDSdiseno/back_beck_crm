@@ -202,6 +202,7 @@ model CotizacionFirematDetalle {
   subtotal        Float
   stockDisponible Int?
   observacion     String?
+  gananciaPct     Float             @default(0)
   cotizacion      CotizacionFiremat @relation(fields: [cotizacionId], references: [id], onDelete: Cascade)
   producto        Producto          @relation(fields: [productoId], references: [id])
 }
