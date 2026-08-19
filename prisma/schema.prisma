@@ -348,8 +348,9 @@ model InventarioBeckHerramienta {
   modelo    String?   @db.VarChar(150)
   categoria String?   @db.VarChar(150)
   sku       String?   @db.VarChar(100)
-  ubicacion String?   @db.VarChar(255)
-  fecha     DateTime? @db.Date
+  ubicacion       String?   @db.VarChar(255)
+  fechaCompra     DateTime? @map("fecha_compra") @db.Date
+  fechaMantencion DateTime? @map("fecha_mantencion") @db.Date
   encargado String?   @db.VarChar(255)
   activo    Boolean   @default(true)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)

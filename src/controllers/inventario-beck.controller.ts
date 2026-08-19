@@ -9,6 +9,8 @@ import {
   crearInventarioEpp,
   crearInventarioHerramienta,
   crearInventarioImplemento,
+  generarSkuInventarioEpp,
+  generarSkuInventarioEppMasivo,
   listarInventarioEpp,
   listarInventarioHerramientas,
   listarInventarioImplementos,
@@ -93,6 +95,22 @@ export const cambiarEstadoEpp = async (req: Request, res: Response): Promise<voi
     res.json(await cambiarEstadoInventarioEpp(getId(req), getActivo(req.body)));
   } catch (error) {
     handleError(res, error, 'cambiar estado de EPP');
+  }
+};
+
+export const generarSkuEpp = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.json(await generarSkuInventarioEpp(getId(req)));
+  } catch (error) {
+    handleError(res, error, 'generar SKU de EPP');
+  }
+};
+
+export const generarSkuEppMasivo = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    res.json(await generarSkuInventarioEppMasivo());
+  } catch (error) {
+    handleError(res, error, 'generar SKU masivo de EPP');
   }
 };
 

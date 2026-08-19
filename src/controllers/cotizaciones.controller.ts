@@ -677,6 +677,12 @@ export const downloadCotizacionPdf = async (req: Request, res: Response): Promis
       doc.text(formatCLP(linea.subtotal),       TC_SUB.x,      rowY + 4, { width: TC_SUB.w - 4, align: 'right', lineBreak: false });
 
       doc.y = rowY + rowH;
+
+      if (linea.notasLinea) {
+        doc.font('Helvetica').fontSize(7.5).fillColor(TEXT_MUTED)
+          .text(`Obs: ${linea.notasLinea}`, TC_DESC.x + 3, doc.y, { width: TC_DESC.w });
+      }
+
       rowIdx++;
     }
 

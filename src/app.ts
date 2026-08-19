@@ -95,14 +95,19 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use("/api/indicadores", indicadoresRoutes);
 
+// Los roles de Firemat (bodeguero, vendedor_firemat, visualizador_firemat) ya NO se bloquean
+// aqui: cada ruta de Beck exige su propio requirePermission('beck_x', 'ver'|'editar'), que es
+// el que realmente decide el acceso segun lo otorgado en Gestion de permisos. 'terreno' y
+// 'jefeobra' siguen bloqueados porque son roles propios de Beck con restricciones de negocio
+// independientes del cruce de plataforma.
 const blockBeckCommercial = [
   authenticate,
-  denyRoles('terreno', 'jefeobra', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
+  denyRoles('terreno', 'jefeobra'),
 ];
 
 const blockBeckOperacional = [
   authenticate,
-  denyRoles('terreno', 'bodeguero', 'vendedor_firemat', 'visualizador_firemat'),
+  denyRoles('terreno'),
 ];
 
 app.use('/api/registros', blockBeckOperacional, registrosRoutes);

@@ -14354,6 +14354,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
   }
@@ -14365,6 +14366,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
   }
@@ -14376,6 +14378,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
@@ -14388,6 +14391,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
@@ -14400,6 +14404,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct: number
+    gananciaPct: number
     subtotal: number
     stockDisponible: number
     observacion: number
@@ -14414,6 +14419,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
   }
@@ -14425,6 +14431,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
   }
@@ -14436,6 +14443,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -14448,6 +14456,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -14460,6 +14469,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -14559,6 +14569,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct: number
+    gananciaPct: number
     subtotal: number
     stockDisponible: number | null
     observacion: string | null
@@ -14590,6 +14601,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -14604,6 +14616,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -14618,6 +14631,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -14632,12 +14646,13 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
   }
 
-  export type CotizacionFirematDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "subtotal" | "stockDisponible" | "observacion", ExtArgs["result"]["cotizacionFirematDetalle"]>
+  export type CotizacionFirematDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "gananciaPct" | "subtotal" | "stockDisponible" | "observacion", ExtArgs["result"]["cotizacionFirematDetalle"]>
   export type CotizacionFirematDetalleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | CotizacionFirematDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
@@ -14664,6 +14679,7 @@ export namespace Prisma {
       cantidad: number
       precioUnitario: number
       descuentoPct: number
+      gananciaPct: number
       subtotal: number
       stockDisponible: number | null
       observacion: string | null
@@ -15098,6 +15114,7 @@ export namespace Prisma {
     readonly cantidad: FieldRef<"CotizacionFirematDetalle", 'Int'>
     readonly precioUnitario: FieldRef<"CotizacionFirematDetalle", 'Float'>
     readonly descuentoPct: FieldRef<"CotizacionFirematDetalle", 'Float'>
+    readonly gananciaPct: FieldRef<"CotizacionFirematDetalle", 'Float'>
     readonly subtotal: FieldRef<"CotizacionFirematDetalle", 'Float'>
     readonly stockDisponible: FieldRef<"CotizacionFirematDetalle", 'Int'>
     readonly observacion: FieldRef<"CotizacionFirematDetalle", 'String'>
@@ -25836,6 +25853,7 @@ export namespace Prisma {
     cantidad: 'cantidad',
     precioUnitario: 'precioUnitario',
     descuentoPct: 'descuentoPct',
+    gananciaPct: 'gananciaPct',
     subtotal: 'subtotal',
     stockDisponible: 'stockDisponible',
     observacion: 'observacion'
@@ -27111,6 +27129,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionFirematDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionFirematDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionFirematDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
@@ -27125,6 +27144,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
@@ -27142,6 +27162,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionFirematDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionFirematDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionFirematDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
@@ -27156,6 +27177,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
@@ -27176,6 +27198,7 @@ export namespace Prisma {
     cantidad?: IntWithAggregatesFilter<"CotizacionFirematDetalle"> | number
     precioUnitario?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
     descuentoPct?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
+    gananciaPct?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
     subtotal?: FloatWithAggregatesFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableWithAggregatesFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableWithAggregatesFilter<"CotizacionFirematDetalle"> | string | null
@@ -29175,6 +29198,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -29189,6 +29213,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -29198,6 +29223,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29212,6 +29238,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29224,6 +29251,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -29233,6 +29261,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29245,6 +29274,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31312,6 +31342,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -31324,6 +31355,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
   }
@@ -31335,6 +31367,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -31347,6 +31380,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -31359,6 +31393,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
   }
@@ -33762,6 +33797,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -33774,6 +33810,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -34190,6 +34227,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionFirematDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionFirematDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionFirematDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionFirematDetalle"> | number
     subtotal?: FloatFilter<"CotizacionFirematDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionFirematDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionFirematDetalle"> | string | null
@@ -35449,6 +35487,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -35461,6 +35500,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -37933,6 +37973,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -38088,6 +38129,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38100,6 +38142,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38111,6 +38154,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38853,6 +38897,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -38934,6 +38979,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38946,6 +38992,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38957,6 +39004,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null

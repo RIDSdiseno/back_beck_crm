@@ -285,6 +285,7 @@ exports.Prisma.CotizacionFirematDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precioUnitario: 'precioUnitario',
   descuentoPct: 'descuentoPct',
+  gananciaPct: 'gananciaPct',
   subtotal: 'subtotal',
   stockDisponible: 'stockDisponible',
   observacion: 'observacion'

@@ -9,6 +9,7 @@ export const ALERTAS_CONFIG = {
     diasAvisoReactivacion: 3,
     montoAltoClp: 50000000,
     diasAltoMontoDetenida: 7,
+    diasAvisoMantencionHerramienta: 5,
   },
   firemat: {
     diasAvisoProximaAccion: 3,
@@ -19,5 +20,6 @@ export const ALERTAS_CONFIG = {
     diasAvisoReactivacion: 3,
     montoAltoClp: 5000000,
     diasAltoMontoDetenida: 7,
+    diasAvisoVencimientoCotizacion: 5,
   },
 } as const;

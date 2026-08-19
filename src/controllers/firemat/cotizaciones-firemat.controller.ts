@@ -19,6 +19,7 @@ type DetalleInput = {
   cantidad?: unknown;
   precioUnitario?: unknown;
   descuentoPct?: unknown;
+  gananciaPct?: unknown;
   observacion?: unknown;
 };
 
@@ -27,6 +28,7 @@ type DetalleCalculado = {
   cantidad: number;
   precioUnitario: number;
   descuentoPct: number;
+  gananciaPct: number;
   subtotal: number;
   stockDisponible: number;
   observacion: string | null;
@@ -81,6 +83,41 @@ class NotFoundError extends Error {
     this.name = 'NotFoundError';
   }
 }
+
+const canViewGanancia = (req: Request): boolean => req.userRole === 'administrador';
+
+const stripGananciaPctFromRawDetalles = (raw: unknown): unknown => {
+  if (!Array.isArray(raw)) return raw;
+
+  return raw.map((item) => (
+    item && typeof item === 'object'
+      ? { ...(item as Record<string, unknown>), gananciaPct: 0 }
+      : item
+  ));
+};
+
+export const maskCotizacionFirematGanancia = <T>(value: T, showGanancia: boolean): T => {
+  if (showGanancia) return value;
+
+  if (Array.isArray(value)) {
+    return value.map((item) => maskCotizacionFirematGanancia(item, false)) as T;
+  }
+
+  if (!value || typeof value !== 'object') return value;
+
+  const record = value as Record<string, unknown>;
+  const masked: Record<string, unknown> = { ...record };
+
+  if (Array.isArray(record.detalles)) {
+    masked.detalles = record.detalles.map((detalle) => (
+      detalle && typeof detalle === 'object'
+        ? { ...(detalle as Record<string, unknown>), gananciaPct: 0 }
+        : detalle
+    ));
+  }
+
+  return masked as T;
+};
 
 const roundMoney = (value: number): number =>
   Math.round((value + Number.EPSILON) * 100) / 100;
@@ -279,13 +316,20 @@ const validateDetalles = async (rawDetalles: unknown): Promise<DetalleCalculado[
       throw new ValidationError(`Descuento invalido para ${producto.nombre}`);
     }
 
-    const subtotal = roundMoney(cantidad * precioUnitario * (1 - descuentoPct / 100));
+    const gananciaPct = getNumber(detalle.gananciaPct, 0);
+    if (gananciaPct === null || gananciaPct < 0 || gananciaPct > 100) {
+      throw new ValidationError(`Ganancia invalida para ${producto.nombre}`);
+    }
+
+    const precioConMargen = precioUnitario * (1 + gananciaPct / 100);
+    const subtotal = roundMoney(cantidad * precioConMargen * (1 - descuentoPct / 100));
 
     return {
       productoId: producto.id,
       cantidad,
       precioUnitario,
       descuentoPct,
+      gananciaPct,
       subtotal,
       stockDisponible: producto.stock - producto.stockReservado,
       observacion: getNullableString(detalle.observacion),
@@ -519,7 +563,7 @@ export const getCotizacionesFiremat = async (req: Request, res: Response): Promi
       montoTotal: roundMoney(data.reduce((sum, c) => sum + c.total, 0)),
     };
 
-    res.json({ success: true, data, resumen });
+    res.json({ success: true, data: maskCotizacionFirematGanancia(data, canViewGanancia(req)), resumen });
   } catch (error) {
     handleError(res, error);
   }
@@ -544,7 +588,7 @@ export const getCotizacionFirematById = async (req: Request, res: Response): Pro
       return;
     }
 
-    res.json({ success: true, data });
+    res.json({ success: true, data: maskCotizacionFirematGanancia(data, canViewGanancia(req)) });
   } catch (error) {
     handleError(res, error);
   }
@@ -559,7 +603,8 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
       return;
     }
 
-    const detalles = await validateDetalles(body.detalles);
+    const detallesRaw = canViewGanancia(req) ? body.detalles : stripGananciaPctFromRawDetalles(body.detalles);
+    const detalles = await validateDetalles(detallesRaw);
     const aplicaImpuesto = getBoolean(body.aplicaImpuesto, true);
     const totales = calcularTotales(detalles, body.descuento, body.impuesto, aplicaImpuesto);
     const estado = parseEstado(body.estado) ?? 'BORRADOR';
@@ -598,6 +643,7 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
               cantidad: detalle.cantidad,
               precioUnitario: detalle.precioUnitario,
               descuentoPct: detalle.descuentoPct,
+              gananciaPct: detalle.gananciaPct,
               subtotal: detalle.subtotal,
               stockDisponible: detalle.stockDisponible,
               observacion: detalle.observacion,
@@ -615,7 +661,11 @@ export const createCotizacionFiremat = async (req: Request, res: Response): Prom
       });
     });
 
-    res.status(201).json({ success: true, data, message: 'Cotizacion Firemat creada' });
+    res.status(201).json({
+      success: true,
+      data: maskCotizacionFirematGanancia(data, canViewGanancia(req)),
+      message: 'Cotizacion Firemat creada',
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -646,7 +696,8 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
       return;
     }
 
-    const detalles = await validateDetalles(body.detalles);
+    const detallesRaw = canViewGanancia(req) ? body.detalles : stripGananciaPctFromRawDetalles(body.detalles);
+    const detalles = await validateDetalles(detallesRaw);
     const aplicaImpuesto = getBoolean(body.aplicaImpuesto, true);
     const totales = calcularTotales(detalles, body.descuento, body.impuesto, aplicaImpuesto);
     const { clienteFirematId, contactoFirematId } = await resolveClienteContactoIds(body);
@@ -708,6 +759,7 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
               cantidad: detalle.cantidad,
               precioUnitario: detalle.precioUnitario,
               descuentoPct: detalle.descuentoPct,
+              gananciaPct: detalle.gananciaPct,
               subtotal: detalle.subtotal,
               stockDisponible: detalle.stockDisponible,
               observacion: detalle.observacion,
@@ -725,7 +777,11 @@ export const updateCotizacionFiremat = async (req: Request, res: Response): Prom
       });
     });
 
-    res.json({ success: true, data, message: 'Cotizacion Firemat actualizada' });
+    res.json({
+      success: true,
+      data: maskCotizacionFirematGanancia(data, canViewGanancia(req)),
+      message: 'Cotizacion Firemat actualizada',
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -773,7 +829,11 @@ export const patchEstadoCotizacionFiremat = async (req: Request, res: Response):
       });
     });
 
-    res.json({ success: true, data, message: 'Estado actualizado' });
+    res.json({
+      success: true,
+      data: maskCotizacionFirematGanancia(data, canViewGanancia(req)),
+      message: 'Estado actualizado',
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ success: false, error: error.message });
@@ -994,8 +1054,11 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       doc.text(String(fmRowIdx + 1),             FM_TC_NUM.x + 2, rowY + 4, { width: FM_TC_NUM.w,                  lineBreak: false });
       doc.text(fval(detalle.producto.sku),        FM_TC_SKU.x + 2, rowY + 4, { width: FM_TC_SKU.w,                  lineBreak: false });
       doc.text(detalle.producto.nombre,           FM_TC_PRD.x + 2, rowY + 4, { width: FM_TC_PRD.w,                  lineBreak: false });
+      const precioClientePdf = roundMoney(
+        Number(detalle.precioUnitario) * (1 + Number(detalle.gananciaPct) / 100)
+      );
       doc.text(String(detalle.cantidad),          FM_TC_QTY.x,     rowY + 4, { width: FM_TC_QTY.w, align: 'right',  lineBreak: false });
-      doc.text(formatCLP(detalle.precioUnitario), FM_TC_PUN.x,     rowY + 4, { width: FM_TC_PUN.w, align: 'right',  lineBreak: false });
+      doc.text(formatCLP(precioClientePdf),       FM_TC_PUN.x,     rowY + 4, { width: FM_TC_PUN.w, align: 'right',  lineBreak: false });
       doc.text(`${detalle.descuentoPct}%`,        FM_TC_DSC.x,     rowY + 4, { width: FM_TC_DSC.w, align: 'right',  lineBreak: false });
       doc.text(formatCLP(detalle.subtotal),       FM_TC_SUB.x,     rowY + 4, { width: FM_TC_SUB.w - 4, align: 'right', lineBreak: false });
 

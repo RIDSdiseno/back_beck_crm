@@ -2,12 +2,15 @@ import { prisma } from "../config/prisma";
 import { ALERTAS_CONFIG } from "../config/alertas.config";
 
 type SeveridadAlerta = "ALTA" | "MEDIA" | "BAJA";
+type CategoriaAlerta = "FUNNEL" | "HERRAMIENTA";
 
 export type AlertaBeck = {
   alertaKey: string;
   modulo: "BECK";
+  categoria: CategoriaAlerta;
   tipo: string;
-  oportunidadId: string;
+  oportunidadId?: string;
+  herramientaId?: string;
   titulo: string;
   descripcion: string;
   responsable: string | null;
@@ -33,7 +36,7 @@ export interface FiltroVendedor {
   email: string;
 }
 
-export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promise<AlertaBeck[]> {
+async function generarAlertasFunnelBeck(filtroVendedor?: FiltroVendedor): Promise<AlertaBeck[]> {
   const cfg = ALERTAS_CONFIG.beck;
   const hoy = toStartOfDay(new Date());
 
@@ -80,6 +83,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       alertas.push({
         alertaKey: `BECK-SIN_PROXIMA_ACCION-${op.id}`,
         modulo: "BECK",
+        categoria: "FUNNEL",
         tipo: "SIN_PROXIMA_ACCION",
         oportunidadId: op.id,
         titulo: "Oportunidad sin próxima acción",
@@ -98,6 +102,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-PROXIMA_ACCION_VENCIDA-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "PROXIMA_ACCION_VENCIDA",
           oportunidadId: op.id,
           titulo: "Próxima acción vencida",
@@ -111,6 +116,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-PROXIMA_ACCION_HOY-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "PROXIMA_ACCION_HOY",
           oportunidadId: op.id,
           titulo: "Próxima acción vence hoy",
@@ -130,6 +136,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-PROXIMA_ACCION_POR_VENCER-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "PROXIMA_ACCION_POR_VENCER",
           oportunidadId: op.id,
           titulo: "Próxima acción por vencer",
@@ -148,6 +155,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-COTIZACION_ENVIADA_SIN_SEGUIMIENTO-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "COTIZACION_ENVIADA_SIN_SEGUIMIENTO",
           oportunidadId: op.id,
           titulo: "Cotización enviada sin seguimiento",
@@ -168,6 +176,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-DESARROLLO_PROPUESTA_DETENIDO-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "DESARROLLO_PROPUESTA_DETENIDO",
           oportunidadId: op.id,
           titulo: "Desarrollo de propuesta detenido",
@@ -189,6 +198,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-DOCUMENTACION_VENTA_PENDIENTE-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "DOCUMENTACION_VENTA_PENDIENTE",
           oportunidadId: op.id,
           titulo: "Documentación de venta pendiente",
@@ -213,6 +223,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-POSTERGADA_REACTIVAR-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "POSTERGADA_REACTIVAR",
           oportunidadId: op.id,
           titulo: "Oportunidad postergada próxima a reactivar",
@@ -232,6 +243,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
         alertas.push({
           alertaKey: `BECK-ALTO_MONTO_DETENIDA-${op.id}`,
           modulo: "BECK",
+          categoria: "FUNNEL",
           tipo: "ALTO_MONTO_DETENIDA",
           oportunidadId: op.id,
           titulo: "Oportunidad de alto monto detenida",
@@ -247,6 +259,7 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
       alertas.push({
         alertaKey: `BECK-MULTIPLES_REPROGRAMACIONES-${op.id}`,
         modulo: "BECK",
+        categoria: "FUNNEL",
         tipo: "MULTIPLES_REPROGRAMACIONES",
         oportunidadId: op.id,
         titulo: "Múltiples reprogramaciones",
@@ -258,4 +271,87 @@ export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promi
   }
 
   return alertas;
+}
+
+async function generarAlertasHerramientasBeck(): Promise<AlertaBeck[]> {
+  const cfg = ALERTAS_CONFIG.beck;
+  const hoy = toStartOfDay(new Date());
+
+  const herramientas = await prisma.inventarioBeckHerramienta.findMany({
+    where: { activo: true, fechaMantencion: { not: null } },
+    select: {
+      id: true,
+      nombre: true,
+      encargado: true,
+      fechaMantencion: true,
+    },
+  });
+
+  const alertas: AlertaBeck[] = [];
+
+  for (const h of herramientas) {
+    const fechaMant = toStartOfDay(new Date(h.fechaMantencion!));
+    const diasDiff = diffDias(fechaMant, hoy);
+
+    if (diasDiff < 0) {
+      const diasAtraso = Math.abs(diasDiff);
+      alertas.push({
+        alertaKey: `BECK-MANTENCION_VENCIDA-${h.id}`,
+        modulo: "BECK",
+        categoria: "HERRAMIENTA",
+        tipo: "MANTENCION_VENCIDA",
+        herramientaId: h.id,
+        titulo: "Mantención vencida",
+        descripcion: `La mantención de "${h.nombre}" está vencida hace ${diasAtraso} días.`,
+        responsable: h.encargado,
+        severidad: "ALTA",
+        fechaReferencia: h.fechaMantencion!.toISOString(),
+        diasAtraso,
+      });
+    } else if (diasDiff === 0) {
+      alertas.push({
+        alertaKey: `BECK-MANTENCION_HOY-${h.id}`,
+        modulo: "BECK",
+        categoria: "HERRAMIENTA",
+        tipo: "MANTENCION_HOY",
+        herramientaId: h.id,
+        titulo: "Mantención vence hoy",
+        descripcion: `Hoy corresponde la mantención de "${h.nombre}".`,
+        responsable: h.encargado,
+        severidad: "ALTA",
+        fechaReferencia: h.fechaMantencion!.toISOString(),
+        diasRestantes: 0,
+      });
+    } else if (diasDiff <= cfg.diasAvisoMantencionHerramienta) {
+      const severidad: SeveridadAlerta = diasDiff >= 3 ? "BAJA" : "MEDIA";
+      const descripcion =
+        diasDiff === 1
+          ? `Mañana corresponde la mantención de "${h.nombre}".`
+          : `Quedan ${diasDiff} días para la mantención de "${h.nombre}".`;
+
+      alertas.push({
+        alertaKey: `BECK-MANTENCION_POR_VENCER-${h.id}`,
+        modulo: "BECK",
+        categoria: "HERRAMIENTA",
+        tipo: "MANTENCION_POR_VENCER",
+        herramientaId: h.id,
+        titulo: "Mantención por vencer",
+        descripcion,
+        responsable: h.encargado,
+        severidad,
+        fechaReferencia: h.fechaMantencion!.toISOString(),
+        diasRestantes: diasDiff,
+      });
+    }
+  }
+
+  return alertas;
+}
+
+export async function generarAlertasBeck(filtroVendedor?: FiltroVendedor): Promise<AlertaBeck[]> {
+  const [funnel, herramientas] = await Promise.all([
+    generarAlertasFunnelBeck(filtroVendedor),
+    generarAlertasHerramientasBeck(),
+  ]);
+  return [...funnel, ...herramientas];
 }

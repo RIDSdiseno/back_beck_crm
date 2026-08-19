@@ -1,6 +1,11 @@
 import XLSX from 'xlsx';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { SKU_GENERADO_REGEX } from './inventario-beck.service';
+
+function esSkuGenerado(sku: string | null | undefined): boolean {
+  return !!sku && SKU_GENERADO_REGEX.test(sku);
+}
 
 type SheetKind = 'epp' | 'implementos' | 'herramientas';
 
@@ -157,6 +162,8 @@ function normalizarHeader(header: string): string | null {
     cantidad: 'cantidad',
     ubicacion: 'ubicacion',
     fecha: 'fecha',
+    'fecha mantencion': 'fechaMantencion',
+    'fecha de mantencion': 'fechaMantencion',
     encargado: 'encargado',
   };
   return map[normalized] ?? null;
@@ -296,7 +303,8 @@ function parseHerramientaRows(sheetName: string, rows: Row[], headers: HeaderInf
         categoria: normalizarValorTexto(getCell(row, headers, 'categoria')),
         sku: normalizarSku(getCell(row, headers, 'sku')),
         ubicacion: normalizarValorTexto(getCell(row, headers, 'ubicacion')),
-        fecha: parseDate(getCell(row, headers, 'fecha')),
+        fechaCompra: parseDate(getCell(row, headers, 'fecha')),
+        fechaMantencion: parseDate(getCell(row, headers, 'fechaMantencion')),
         encargado: normalizarValorTexto(getCell(row, headers, 'encargado')),
         activo: true,
       };
@@ -351,6 +359,7 @@ async function procesarEpp(sheetName: string, rows: Row[], errores: ImportacionI
   resumen.filasValidas = parsed.length;
   const skuCounts = countKeys(parsed);
   const existing = await prisma.inventarioBeckEpp.findMany();
+  const existingById = new Map(existing.map((item) => [item.id, item]));
   const dbSkuCounts = countDbSku(existing);
   const bySku = new Map(
     existing
@@ -362,7 +371,7 @@ async function procesarEpp(sheetName: string, rows: Row[], errores: ImportacionI
   );
   const byNoSkuComposite = new Map(
     existing
-      .filter((item) => !item.sku)
+      .filter((item) => !item.sku || esSkuGenerado(item.sku))
       .map((item) => [[item.item, item.modeloMarca, item.talla, item.color].map(keyPart).join('|'), item.id]),
   );
 
@@ -373,7 +382,11 @@ async function procesarEpp(sheetName: string, rows: Row[], errores: ImportacionI
         ? (skuCounts.get(row.skuKey) === 1 ? bySku.get(row.skuKey) : bySkuComposite.get(eppSkuComposite(row.data)))
         : byNoSkuComposite.get(row.compositeKey);
       if (id) {
-        await prisma.inventarioBeckEpp.update({ where: { id }, data: row.data });
+        const existenteActual = existingById.get(id);
+        const data = !row.data.sku && existenteActual && esSkuGenerado(existenteActual.sku)
+          ? { ...row.data, sku: existenteActual.sku }
+          : row.data;
+        await prisma.inventarioBeckEpp.update({ where: { id }, data });
         resumen.actualizados += 1;
       } else {
         const created = await prisma.inventarioBeckEpp.create({ data: row.data });

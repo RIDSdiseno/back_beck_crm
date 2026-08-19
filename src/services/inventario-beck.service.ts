@@ -34,7 +34,8 @@ type HerramientaInput = {
   categoria?: unknown;
   sku?: unknown;
   ubicacion?: unknown;
-  fecha?: unknown;
+  fechaCompra?: unknown;
+  fechaMantencion?: unknown;
   encargado?: unknown;
   activo?: unknown;
 };
@@ -129,7 +130,8 @@ function buildHerramientaData(raw: HerramientaInput, isUpdate = false) {
     ...(raw.categoria !== undefined && { categoria: optStr(raw.categoria) }),
     ...(raw.sku !== undefined && { sku: optStr(raw.sku) }),
     ...(raw.ubicacion !== undefined && { ubicacion: optStr(raw.ubicacion) }),
-    ...(raw.fecha !== undefined && { fecha: parseOptionalDate(raw.fecha) }),
+    ...(raw.fechaCompra !== undefined && { fechaCompra: parseOptionalDate(raw.fechaCompra) }),
+    ...(raw.fechaMantencion !== undefined && { fechaMantencion: parseOptionalDate(raw.fechaMantencion) }),
     ...(raw.encargado !== undefined && { encargado: optStr(raw.encargado) }),
     ...(raw.activo !== undefined && { activo: parseActivo(raw.activo) }),
   };
@@ -175,6 +177,64 @@ export async function actualizarInventarioEpp(id: string, raw: EppInput) {
 export async function cambiarEstadoInventarioEpp(id: string, activo: boolean) {
   await obtenerInventarioEpp(id);
   return prisma.inventarioBeckEpp.update({ where: { id }, data: { activo } });
+}
+
+const SKU_GENERADO_INICIO = 900000;
+export const SKU_GENERADO_REGEX = /^9\d{5}$/;
+
+async function siguienteSkuEppDisponible(reservados: Set<string>): Promise<number> {
+  const rows = await prisma.inventarioBeckEpp.findMany({
+    where: { sku: { startsWith: '9' } },
+    select: { sku: true },
+  });
+
+  let max = SKU_GENERADO_INICIO;
+  for (const row of rows) {
+    if (row.sku && SKU_GENERADO_REGEX.test(row.sku)) {
+      const n = Number(row.sku);
+      if (n > max) max = n;
+    }
+  }
+
+  let next = max + 1;
+  while (reservados.has(String(next))) next += 1;
+  return next;
+}
+
+export async function generarSkuInventarioEpp(id: string) {
+  const item = await obtenerInventarioEpp(id);
+  if (item.sku && item.sku.trim()) {
+    throw new Error('Este EPP ya tiene un SKU asignado.');
+  }
+
+  const existentes = await prisma.inventarioBeckEpp.findMany({ select: { sku: true } });
+  const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
+
+  const next = await siguienteSkuEppDisponible(reservados);
+  return prisma.inventarioBeckEpp.update({ where: { id }, data: { sku: String(next) } });
+}
+
+export async function generarSkuInventarioEppMasivo(): Promise<{ actualizados: number }> {
+  const sinSku = await prisma.inventarioBeckEpp.findMany({
+    where: { OR: [{ sku: null }, { sku: '' }] },
+    select: { id: true },
+  });
+
+  if (sinSku.length === 0) return { actualizados: 0 };
+
+  const existentes = await prisma.inventarioBeckEpp.findMany({ select: { sku: true } });
+  const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
+
+  let actualizados = 0;
+  for (const item of sinSku) {
+    const next = await siguienteSkuEppDisponible(reservados);
+    const nextStr = String(next);
+    reservados.add(nextStr);
+    await prisma.inventarioBeckEpp.update({ where: { id: item.id }, data: { sku: nextStr } });
+    actualizados += 1;
+  }
+
+  return { actualizados };
 }
 
 export async function listarInventarioImplementos(params: BaseParams = {}) {
