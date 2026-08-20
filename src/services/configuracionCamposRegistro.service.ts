@@ -35,6 +35,7 @@ interface ConfiguracionRow {
 const ALIAS_CAMPO_CONFIGURACION: Record<string, string> = {
   codigo_beck: 'codigoBeck',
   itemizado_beck: 'itemizadoBeck',
+  dimensiones: 'dimensiones',
   itemizado_mandante: 'itemizadoMandante',
   fecha_ejecucion_sello: 'fechaEjecucionSello',
   dia_semana: 'diaSemana',
@@ -249,6 +250,7 @@ function mapearRegistroAExcel(registro: Record<string, unknown>): Record<string,
   return {
     codigoBeck: getValue(registro, 'codigoBeck', 'codigo_beck'),
     itemizadoBeck,
+    dimensiones: getValue(registro, 'dimensiones'),
     itemizadoMandante: itemizadoMandante
       ? {
         id: itemizadoMandante.id ?? null,

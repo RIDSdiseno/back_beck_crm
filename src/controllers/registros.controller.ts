@@ -57,6 +57,22 @@ function parseIntegerOrNull(value: unknown): number | null {
   return parsed === null ? null : Math.trunc(parsed);
 }
 
+function parseBinaryOrNull(value: unknown): { value: number | null; error: string | null } {
+  if (value === null || value === undefined || String(value).trim() === '') {
+    return { value: null, error: null };
+  }
+
+  const parsed = Number(value);
+  if (parsed !== 0 && parsed !== 1) {
+    return {
+      value: null,
+      error: 'reparacion_tabique debe ser 0 (No aplica) o 1 (Aplica)',
+    };
+  }
+
+  return { value: parsed, error: null };
+}
+
 function getBodyValue(body: Record<string, unknown>, snake: string, camel: string): unknown {
   if (body[snake] !== undefined) return body[snake];
   return body[camel];
@@ -115,6 +131,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     );
     const aislacion_raw = getBodyValue(req.body, 'aislacion', 'aislacion');
     const reparacion_tabique_raw = getBodyValue(req.body, 'reparacion_tabique', 'reparacionTabique');
+    const reparacionTabiqueParsed = parseBinaryOrNull(reparacion_tabique_raw);
+    if (reparacionTabiqueParsed.error) {
+      res.status(400).json({ error: reparacionTabiqueParsed.error });
+      return;
+    }
 
     const usuario_id = req.userId; // Del middleware auth
 
@@ -203,7 +224,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
         holgura: Number(holgura),
         accesibilidad: accesibilidadFinal ?? 1,
         aislacion: aislacion_raw,
-        reparacion_tabique: reparacion_tabique_raw,
+        reparacion_tabique: reparacionTabiqueParsed.value,
         piso: String(piso),
         tipoRegistro: tipoRegistroFinal,
         tramosHolgura: tramosHolguraObra,
@@ -584,6 +605,7 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             codigoBeck:                existente.codigoBeck,
             itemizadoMandanteId:       existente.itemizadoMandanteId,
             itemizadoBeck:             existente.itemizadoBeck,
+            dimensiones:               existente.dimensiones,
             itemizadoMandanteTexto:    existente.itemizadoMandanteTexto,
             fotoUrl:                   existente.fotoUrl,
             recinto:                   existente.recinto,
@@ -877,8 +899,13 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
       : (existente.accesibilidad ?? 1);
     const aislacionRaw = getBodyValue(body as Record<string, unknown>, 'aislacion', 'aislacion');
     const reparacionRaw = getBodyValue(body as Record<string, unknown>, 'reparacion_tabique', 'reparacionTabique');
+    const reparacionParsed = parseBinaryOrNull(reparacionRaw);
+    if (reparacionRaw !== undefined && reparacionParsed.error) {
+      res.status(400).json({ error: reparacionParsed.error });
+      return;
+    }
     const aislacionBase = aislacionRaw !== undefined ? aislacionRaw : existente.aislacion;
-    const reparacionBase = reparacionRaw !== undefined ? reparacionRaw : existente.reparacionTabique;
+    const reparacionBase = reparacionRaw !== undefined ? reparacionParsed.value : existente.reparacionTabique;
     const pisoFinal = body.piso !== undefined ? String(body.piso) : existente.piso;
 
     const tramosHolguraObraUpdate = await getTramosHolguraObra(existente.obraId, existente.tipoRegistro);
