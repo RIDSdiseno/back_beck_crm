@@ -1,8 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { Request, Response } from 'express';
 import PDFDocument from 'pdfkit';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 import { puedeCambiarEmpresa } from '../../helpers/puedeCambiarEmpresa';
+
+const FM_LOGO_PATH = path.join(__dirname, '../../assets/firemat-logo.png');
+const FM_LOGO_BUFFER = fs.existsSync(FM_LOGO_PATH) ? fs.readFileSync(FM_LOGO_PATH) : null;
+const FM_LOGO_ASPECT = 214 / 375;
 
 const ESTADOS_PERMITIDOS = [
   'BORRADOR',
@@ -917,16 +923,24 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
     const FM_HDR_TOP   = 14;
     const FM_RBOX_X    = 348;
     const FM_RBOX_W    = FM_W - FM_MARGIN - FM_RBOX_X;
-    const FM_RBOX_H    = 76;
+    const FM_RBOX_H    = 108;
     const FM_RBOX_HDRH = 15;
 
-    doc.font('Helvetica-Bold').fontSize(13).fillColor(FM_DARK)
-      .text('FIREMAT', FM_MARGIN, FM_HDR_TOP, { lineBreak: false });
+    if (FM_LOGO_BUFFER) {
+      const logoWidth = 110;
+      doc.image(FM_LOGO_BUFFER, FM_MARGIN, FM_HDR_TOP - 4, {
+        width: logoWidth,
+        height: logoWidth * FM_LOGO_ASPECT,
+      });
+    } else {
+      doc.font('Helvetica-Bold').fontSize(13).fillColor(FM_DARK)
+        .text('FIREMAT', FM_MARGIN, FM_HDR_TOP, { lineBreak: false });
+    }
     doc.font('Helvetica').fontSize(7.5).fillColor(FM_MUTED)
-      .text('RUT: —',       FM_MARGIN, FM_HDR_TOP + 16, { lineBreak: false })
-      .text('Dirección: —', FM_MARGIN, FM_HDR_TOP + 26, { width: FM_RBOX_X - FM_MARGIN - 10, lineBreak: false })
-      .text('Correo: —',    FM_MARGIN, FM_HDR_TOP + 36, { lineBreak: false })
-      .text('Teléfono: —',  FM_MARGIN, FM_HDR_TOP + 46, { lineBreak: false });
+      .text('RUT: —',       FM_MARGIN, FM_HDR_TOP + 66, { lineBreak: false })
+      .text('Dirección: —', FM_MARGIN, FM_HDR_TOP + 75, { width: FM_RBOX_X - FM_MARGIN - 10, lineBreak: false })
+      .text('Correo: —',    FM_MARGIN, FM_HDR_TOP + 84, { lineBreak: false })
+      .text('Teléfono: —',  FM_MARGIN, FM_HDR_TOP + 93, { lineBreak: false });
 
     doc.lineWidth(0.8).rect(FM_RBOX_X, FM_HDR_TOP - 1, FM_RBOX_W, FM_RBOX_H).stroke(FM_BORDER);
     doc.rect(FM_RBOX_X, FM_HDR_TOP - 1, FM_RBOX_W, FM_RBOX_HDRH).fill(FM_RED);
@@ -943,14 +957,14 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       doc.font('Helvetica').fontSize(8).fillColor(FM_TEXT)
         .text(value, FM_BVX, y, { width: FM_BVW, lineBreak: false });
     };
-    fmRLine('N°:',       fval(cotizacion.numero),               FM_HDR_TOP + 20);
-    fmRLine('Emisión:',  formatDate(cotizacion.fechaCotizacion), FM_HDR_TOP + 32);
-    fmRLine('Vigencia:', formatDate(cotizacion.fechaVencimiento), FM_HDR_TOP + 44);
+    fmRLine('N°:',       fval(cotizacion.numero),               FM_HDR_TOP + 30);
+    fmRLine('Emisión:',  formatDate(cotizacion.fechaCotizacion), FM_HDR_TOP + 46);
+    fmRLine('Vigencia:', formatDate(cotizacion.fechaVencimiento), FM_HDR_TOP + 62);
 
-    const FM_BDGE_Y = FM_HDR_TOP + 57;
-    doc.rect(FM_RBOX_X + 6, FM_BDGE_Y, FM_RBOX_W - 12, 13).fill(fmBadge);
+    const FM_BDGE_Y = FM_HDR_TOP + 82;
+    doc.rect(FM_RBOX_X + 6, FM_BDGE_Y, FM_RBOX_W - 12, 15).fill(fmBadge);
     doc.font('Helvetica-Bold').fontSize(7).fillColor('#ffffff')
-      .text(cotizacion.estado, FM_RBOX_X + 6, FM_BDGE_Y + 3,
+      .text(cotizacion.estado, FM_RBOX_X + 6, FM_BDGE_Y + 4,
         { width: FM_RBOX_W - 12, align: 'center', lineBreak: false });
 
     doc.y = FM_HDR_TOP + FM_RBOX_H + 4;
@@ -1115,7 +1129,7 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
     doc.y = fmTotY + 10;
 
 
-    if (cotizacion.observaciones) {
+    {
       if (doc.y > 720) { doc.addPage(); doc.y = FM_MARGIN; }
       doc.y += 6;
 
@@ -1128,8 +1142,12 @@ export const downloadCotizacionFirematPdf = async (req: Request, res: Response):
       doc.lineWidth(0.5)
         .moveTo(FM_MARGIN, doc.y).lineTo(FM_W - FM_MARGIN, doc.y).stroke(FM_BORDER);
 
-      doc.font('Helvetica').fontSize(8.5).fillColor(FM_TEXT)
-        .text(cotizacion.observaciones, FM_MARGIN + 6, doc.y + 6, { width: FM_CONTENT_W - 12 });
+      if (cotizacion.observaciones) {
+        doc.font('Helvetica').fontSize(8.5).fillColor(FM_TEXT)
+          .text(cotizacion.observaciones, FM_MARGIN + 6, doc.y + 6, { width: FM_CONTENT_W - 12 });
+      } else {
+        doc.y += 26;
+      }
 
       doc.y += 8;
       doc.lineWidth(0.5)

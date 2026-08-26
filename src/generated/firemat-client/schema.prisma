@@ -188,8 +188,8 @@ model CotizacionFiremat {
   numero                   String?                    @unique
   detalles                 CotizacionFirematDetalle[]
   FunnelFirematOpportunity FunnelFirematOpportunity[]
-  clienteFiremat           Cliente?                   @relation(fields: [clienteFirematId], references: [id], onDelete: SetNull)
-  contactoFiremat          ContactoClienteFiremat?    @relation(fields: [contactoFirematId], references: [id], onDelete: SetNull)
+  clienteFiremat           Cliente?                   @relation(fields: [clienteFirematId], references: [id])
+  contactoFiremat          ContactoClienteFiremat?    @relation(fields: [contactoFirematId], references: [id])
 }
 
 model CotizacionFirematDetalle {

@@ -18,3 +18,18 @@ function copyGenerated(name) {
 
 copyGenerated('firemat-client');
 copyGenerated('trager-client');
+
+function copyAssets() {
+  const source = path.join(root, 'src', 'assets');
+  const target = path.join(root, 'dist', 'assets');
+
+  if (!fs.existsSync(source)) {
+    return;
+  }
+
+  fs.rmSync(target, { recursive: true, force: true });
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.cpSync(source, target, { recursive: true });
+}
+
+copyAssets();
