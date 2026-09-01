@@ -618,9 +618,11 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
             cantidadFinal:             existente.cantidadFinal,
             folio:                     existente.folio,
             estado:                    EstadoRegistroTerreno.pendiente,
-            devuelto_a_tecnico:        true,
+            devuelto_a_tecnico:        false,
             esCorreccion:              true,
             registroOrigenId:          id,
+            enviadoIngenieriaPorId:    existente.enviadoIngenieriaPorId,
+            enviadoIngenieriaAt:       existente.enviadoIngenieriaAt,
           },
         });
 
@@ -655,6 +657,17 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       const [withCodigo] = await adjuntarCodigosBeck([rechazado as unknown as Record<string, unknown>]);
       const [withItemizado] = await adjuntarItemizadosMandante([withCodigo]);
       res.json({ ...withItemizado, correccionId: copia.id });
+      return;
+    }
+
+    if (
+      estado === EstadoRegistroTerreno.en_revision &&
+      existente.estado === EstadoRegistroTerreno.pendiente &&
+      existente.esCorreccion
+    ) {
+      res.status(409).json({
+        error: 'La corrección todavía debe ser revisada y enviada por el supervisor',
+      });
       return;
     }
 
@@ -781,6 +794,17 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     const pideTransicionDeEstado = body.estado !== undefined && body.estado !== existente.estado;
+
+    if (
+      pideTransicionDeEstado &&
+      body.estado === EstadoRegistroTerreno.en_revision &&
+      existente.esCorreccion
+    ) {
+      res.status(409).json({
+        error: 'La corrección todavía debe ser revisada y enviada por el supervisor',
+      });
+      return;
+    }
 
     if (
       pideTransicionDeEstado &&
@@ -1117,6 +1141,7 @@ export const listarPendientes = async (_req: Request, res: Response): Promise<vo
        LEFT JOIN obras o ON rt.obra_id = o.id
        LEFT JOIN usuarios u ON rt.usuario_id = u.id
        LEFT JOIN usuarios ui ON rt.seleccionado_inspeccion_por_id = ui.id
+       WHERE NOT (rt.es_correccion = TRUE AND rt.estado = 'pendiente')
        ORDER BY rt.created_at ASC`
     );
 
@@ -1145,6 +1170,7 @@ export const getResumenRegistros = async (_req: Request, res: Response): Promise
     const result = await dbQuery<{ estado: string; cantidad: string }>(
       `SELECT estado, COUNT(*) AS cantidad
        FROM registros_terreno
+       WHERE NOT (es_correccion = TRUE AND estado = 'pendiente')
        GROUP BY estado`
     );
 
@@ -1189,6 +1215,13 @@ export const iniciarRevision = async (req: Request, res: Response): Promise<void
     if (existente.estado !== EstadoRegistroTerreno.pendiente) {
       res.status(400).json({
         error: `Solo se puede iniciar revisión de un registro en estado pendiente. Estado actual: ${existente.estado}`,
+      });
+      return;
+    }
+
+    if (existente.esCorreccion) {
+      res.status(409).json({
+        error: 'La corrección todavía debe ser revisada y enviada por el supervisor',
       });
       return;
     }
