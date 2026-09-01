@@ -71,6 +71,11 @@ function normalizarValorTexto(value: unknown): string | null {
   return text;
 }
 
+function capitalizar(value: string): string {
+  if (!value) return value;
+  return value.charAt(0).toLocaleUpperCase('es-CL') + value.slice(1);
+}
+
 function keyPart(value: unknown): string {
   return normalizarClave(value) || '-';
 }
@@ -218,7 +223,7 @@ function parseEppRows(sheetName: string, rows: Row[], headers: HeaderInfo, error
       }
       const data = {
         sku: normalizarSku(getCell(row, headers, 'sku')),
-        item,
+        item: capitalizar(item),
         modeloMarca: normalizarValorTexto(getCell(row, headers, 'modeloMarca')),
         unidadMedida: normalizarValorTexto(getCell(row, headers, 'unidadMedida')),
         talla: normalizarValorTexto(getCell(row, headers, 'talla')),
@@ -257,7 +262,7 @@ function parseImplementoRows(sheetName: string, rows: Row[], headers: HeaderInfo
       }
       const data = {
         sku: normalizarSku(getCell(row, headers, 'sku')),
-        item,
+        item: capitalizar(item),
         modeloMarca: normalizarValorTexto(getCell(row, headers, 'modeloMarca')),
         cantidad: parseInteger(getCell(row, headers, 'cantidad'), 'cantidad'),
         unidadMedida: normalizarValorTexto(getCell(row, headers, 'unidadMedida')),
@@ -297,7 +302,7 @@ function parseHerramientaRows(sheetName: string, rows: Row[], headers: HeaderInf
         throw new Error('El nombre es obligatorio.');
       }
       const data = {
-        nombre,
+        nombre: capitalizar(nombre),
         marca: normalizarValorTexto(getCell(row, headers, 'marca')),
         modelo: normalizarValorTexto(getCell(row, headers, 'modelo')),
         categoria: normalizarValorTexto(getCell(row, headers, 'categoria')),

@@ -44,6 +44,11 @@ function normalizeString(value: unknown): string {
   return String(value ?? '').trim();
 }
 
+function capitalizar(value: string): string {
+  if (!value) return value;
+  return value.charAt(0).toLocaleUpperCase('es-CL') + value.slice(1);
+}
+
 function optStr(value: unknown): string | null {
   const valueString = normalizeString(value);
   return valueString || null;
@@ -84,7 +89,7 @@ function buildEppData(raw: EppInput, isUpdate = false) {
 
   return {
     ...(raw.sku !== undefined && { sku: optStr(raw.sku) }),
-    ...(raw.item !== undefined && { item: normalizeString(raw.item) }),
+    ...(raw.item !== undefined && { item: capitalizar(normalizeString(raw.item)) }),
     ...(raw.modeloMarca !== undefined && { modeloMarca: optStr(raw.modeloMarca) }),
     ...(raw.unidadMedida !== undefined && { unidadMedida: optStr(raw.unidadMedida) }),
     ...(raw.talla !== undefined && { talla: optStr(raw.talla) }),
@@ -104,7 +109,7 @@ function buildImplementoData(raw: ImplementoInput, isUpdate = false) {
 
   return {
     ...(raw.sku !== undefined && { sku: optStr(raw.sku) }),
-    ...(raw.item !== undefined && { item: normalizeString(raw.item) }),
+    ...(raw.item !== undefined && { item: capitalizar(normalizeString(raw.item)) }),
     ...(raw.modeloMarca !== undefined && { modeloMarca: optStr(raw.modeloMarca) }),
     ...(raw.cantidad !== undefined && { cantidad: parseNonNegativeInt(raw.cantidad, 'cantidad') }),
     ...(raw.unidadMedida !== undefined && { unidadMedida: optStr(raw.unidadMedida) }),
@@ -124,7 +129,7 @@ function buildHerramientaData(raw: HerramientaInput, isUpdate = false) {
   }
 
   return {
-    ...(raw.nombre !== undefined && { nombre: normalizeString(raw.nombre) }),
+    ...(raw.nombre !== undefined && { nombre: capitalizar(normalizeString(raw.nombre)) }),
     ...(raw.marca !== undefined && { marca: optStr(raw.marca) }),
     ...(raw.modelo !== undefined && { modelo: optStr(raw.modelo) }),
     ...(raw.categoria !== undefined && { categoria: optStr(raw.categoria) }),

@@ -19,6 +19,15 @@ import {
   obtenerHerramienta,
   obtenerImplemento,
 } from '../controllers/inventario-beck.controller';
+import {
+  crearAsignaciones,
+  devolverAsignacion,
+  listarAsignaciones,
+  listarMiInventarioDisponible,
+  listarObrasAsignables,
+  listarSupervisoresAsignables,
+  listarTrabajadoresAsignables,
+} from '../controllers/asignacionInventarioBeck.controller';
 import { authenticate } from '../middlewares/auth';
 import { requirePermission } from '../middlewares/requirePermission';
 import { uploadXlsxFile } from '../middlewares/upload';
@@ -52,5 +61,14 @@ router.get('/herramientas/:id', authenticate, requirePermission('beck_inventario
 router.post('/herramientas', authenticate, requirePermission('beck_inventario', 'editar'), crearHerramienta);
 router.put('/herramientas/:id', authenticate, requirePermission('beck_inventario', 'editar'), actualizarHerramienta);
 router.patch('/herramientas/:id/estado', authenticate, requirePermission('beck_inventario', 'editar'), cambiarEstadoHerramienta);
+
+router.get('/obras', authenticate, requirePermission('beck_inventario', 'ver'), listarObrasAsignables);
+router.get('/supervisores', authenticate, requirePermission('beck_inventario', 'ver'), listarSupervisoresAsignables);
+router.get('/trabajadores', authenticate, requirePermission('beck_inventario', 'ver'), listarTrabajadoresAsignables);
+router.get('/mi-inventario', authenticate, requirePermission('beck_inventario', 'ver'), listarMiInventarioDisponible);
+
+router.get('/asignaciones', authenticate, requirePermission('beck_inventario', 'ver'), listarAsignaciones);
+router.post('/asignaciones', authenticate, requirePermission('beck_inventario', 'editar'), crearAsignaciones);
+router.patch('/asignaciones/:id/devolver', authenticate, requirePermission('beck_inventario', 'editar'), devolverAsignacion);
 
 export default router;

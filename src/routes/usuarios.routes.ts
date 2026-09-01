@@ -5,6 +5,7 @@ import {
   listarUsuarios,
   listarUsuariosComerciales,
   listarUsuariosComercialesFiremat,
+  listarUsuariosComercialesTrager,
   listarUsuariosVendedoresFunnelBeck,
   listarUsuariosResponsablesCotizaciones,
   obtenerUsuario,
@@ -26,10 +27,13 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', requirePermission('beck_usuarios_parametros', 'ver'), listarUsuarios);
+// "beck_funnel" e "beck_inventario" tambien necesitan poder listar usuarios (ej. supervisores /
+// jefes de obra) como dato de apoyo, sin requerir el permiso completo de "Usuarios y parametros".
+router.get('/', requirePermission(['beck_usuarios_parametros', 'beck_funnel', 'beck_inventario'], 'ver'), listarUsuarios);
 router.get('/comerciales', requirePermission('beck_funnel', 'ver'), listarUsuariosComerciales);
 router.get('/vendedores-funnel-beck', requirePermission('beck_funnel', 'ver'), listarUsuariosVendedoresFunnelBeck);
 router.get('/comerciales-firemat', requirePermission('firemat_funnel', 'ver'), listarUsuariosComercialesFiremat);
+router.get('/comerciales-trager', requirePermission('trager_funnel', 'ver'), listarUsuariosComercialesTrager);
 router.get('/responsables-cotizaciones', requirePermission('beck_cotizaciones', 'ver'), listarUsuariosResponsablesCotizaciones);
 router.post('/', requirePermission('beck_usuarios_parametros', 'editar'), crearUsuario);
 router.patch('/:id/password', requirePermission('beck_usuarios_parametros', 'editar'), cambiarPassword);

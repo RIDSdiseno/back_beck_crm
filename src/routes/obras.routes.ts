@@ -39,7 +39,20 @@ import { requirePermission } from '../middlewares/requirePermission';
 
 const router = Router();
 
-router.get('/', authenticate, requirePermission('beck_obras', 'ver'), listarObras);
+// Lectura basica de obras (nombre/codigo) requerida como dato de apoyo (dropdowns) por
+// otras pantallas que no deberian necesitar el permiso completo de "Obras" para funcionar.
+const MODULOS_QUE_USAN_OBRAS_COMO_APOYO = [
+  'beck_obras',
+  'beck_registro',
+  'beck_procesamiento_ingenieria',
+  'beck_dashboard',
+  'beck_reportes',
+  'beck_inventario',
+  'beck_usuarios_parametros',
+];
+const canSeeObrasOApoyo = requirePermission(MODULOS_QUE_USAN_OBRAS_COMO_APOYO, 'ver');
+
+router.get('/', authenticate, canSeeObrasOApoyo, listarObras);
 
 router.get('/mis-obras', authenticate, misObras);
 
@@ -53,7 +66,7 @@ router.get(
 router.get(
   '/:id/tipos-registro',
   authenticate,
-  requirePermission('beck_obras', 'ver'),
+  requirePermission(['beck_obras', 'beck_registro'], 'ver'),
   obtenerTiposRegistroObra,
 );
 

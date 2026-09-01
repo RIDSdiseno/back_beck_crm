@@ -16,6 +16,7 @@ import {
 } from '../helpers/configuracionVistaCliente';
 import { PERMISOS_POR_ROL } from '../helpers/permisosPorRol';
 import { getVendedoresFunnelBeckElegibles } from '../helpers/vendedoresFunnelBeck';
+import { getPermisosEfectivos } from '../helpers/permisosEfectivos';
 
 const esRolValido = (rol: string): rol is RolUsuario => {
   return Object.values(RolUsuario).includes(rol as RolUsuario);
@@ -420,6 +421,40 @@ export const listarUsuariosComercialesFiremat = async (_req: Request, res: Respo
   } catch (error) {
     console.error('Error listando usuarios comerciales Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales Firemat.' });
+  }
+};
+
+/**
+ * GET /api/usuarios/comerciales-trager
+ * Trager no tiene roles propios (usa roles genericos de Beck/Firemat), asi que la
+ * elegibilidad se resuelve exclusivamente por permiso efectivo: cualquier usuario activo
+ * que pueda EDITAR trager_funnel o que tenga acceso a trager_cambiar_empresa.
+ */
+export const listarUsuariosComercialesTrager = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      where: { activo: true },
+      select: { id: true, nombre: true, email: true, rol: true },
+    });
+
+    const elegibles: typeof usuarios = [];
+    for (const usuario of usuarios) {
+      const permisos = await getPermisosEfectivos(usuario.id, usuario.rol);
+      const puedeEditarFunnel = permisos.some((p) => p.modulo === 'trager_funnel' && p.puedeEditar);
+      const puedeCambiarEmpresa = permisos.some(
+        (p) => p.modulo === 'trager_cambiar_empresa' && (p.puedeVer || p.puedeEditar),
+      );
+      if (puedeEditarFunnel || puedeCambiarEmpresa) elegibles.push(usuario);
+    }
+
+    const data = elegibles
+      .filter((usuario) => usuario.nombre?.trim())
+      .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error listando usuarios comerciales Trager:', error);
+    res.status(500).json({ success: false, error: 'Error al listar usuarios comerciales Trager.' });
   }
 };
 
