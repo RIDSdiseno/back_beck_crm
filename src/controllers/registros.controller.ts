@@ -554,6 +554,16 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       return;
     }
 
+    if (
+      existente.estado === EstadoRegistroTerreno.rechazado &&
+      estado !== EstadoRegistroTerreno.rechazado
+    ) {
+      res.status(409).json({
+        error: 'El registro original rechazado es histórico; debe continuarse con su copia de corrección',
+      });
+      return;
+    }
+
     const codigoBeckRaw = codigoBeck ?? codigo_beck;
     if (codigoBeckRaw !== undefined) {
       await dbQuery(
@@ -794,6 +804,16 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     const pideTransicionDeEstado = body.estado !== undefined && body.estado !== existente.estado;
+
+    if (
+      pideTransicionDeEstado &&
+      existente.estado === EstadoRegistroTerreno.rechazado
+    ) {
+      res.status(409).json({
+        error: 'El registro original rechazado es histórico; debe continuarse con su copia de corrección',
+      });
+      return;
+    }
 
     if (
       pideTransicionDeEstado &&
