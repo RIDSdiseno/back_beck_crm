@@ -163,6 +163,7 @@ exports.Prisma.ProductoScalarFieldEnum = {
   formato: 'formato',
   precioSugerido: 'precioSugerido',
   precioUsd: 'precioUsd',
+  precioInstalador: 'precioInstalador',
   entradas: 'entradas',
   fechaUltimaEntrada: 'fechaUltimaEntrada',
   fechaUltimaSalida: 'fechaUltimaSalida',

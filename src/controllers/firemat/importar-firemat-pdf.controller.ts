@@ -52,6 +52,11 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
   }
 
   const dryRun = req.query.dryRun === 'true';
+  // Modo "instalador": la lista de precios para instaladores usa la misma columna CLP
+  // intermedia (precioClp) para representar el precio distribuidor/instalador, no el
+  // precio publico. En ese modo solo se actualiza precioInstalador de productos ya
+  // existentes (por SKU); no toca nombre/precio/precioSugerido ni crea productos nuevos.
+  const modo = req.body?.modo === 'instalador' ? 'instalador' : 'general';
 
   const { productos, advertencias, noTexto } = await parsearListaPreciosPdf(req.file.buffer);
 
@@ -96,23 +101,38 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
     return;
   }
 
-  const categoriaDefaultId = await obtenerOCrearCategoriaDefault();
+  const categoriaDefaultId = modo === 'general' ? await obtenerOCrearCategoriaDefault() : 0;
 
   let creados    = 0;
   let actualizados = 0;
   let omitidos   = 0;
+  let noEncontrados = 0;
   const erroresDb: string[] = [];
 
   for (const prod of productos) {
     try {
+      const existing = await firematPrisma.producto.findUnique({
+        where: { sku: prod.sku },
+      });
+
+      if (modo === 'instalador') {
+        if (!existing) {
+          noEncontrados++;
+          advertencias.push(`SKU "${prod.sku}": no encontrado, no se creo (el modo instalador solo actualiza productos ya existentes).`);
+          continue;
+        }
+        await firematPrisma.producto.update({
+          where: { sku: prod.sku },
+          data: { precioInstalador: prod.precioClp ?? existing.precioInstalador },
+        });
+        actualizados++;
+        continue;
+      }
+
       const categoriaId =
         prod.categoria != null
           ? (await buscarCategoriaId(prod.categoria)) ?? categoriaDefaultId
           : categoriaDefaultId;
-
-      const existing = await firematPrisma.producto.findUnique({
-        where: { sku: prod.sku },
-      });
 
       if (existing) {
         await firematPrisma.producto.update({
@@ -160,9 +180,11 @@ export const importarListaPreciosPdf = async (req: Request, res: Response): Prom
   res.json({
     success: true,
     resumen: {
+      modo,
       totalEnPdf:  productos.length,
       creados,
       actualizados,
+      noEncontrados,
       omitidos,
       advertencias,
       errores: erroresDb,

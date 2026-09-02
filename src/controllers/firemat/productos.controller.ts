@@ -63,6 +63,7 @@ const toDTO = (p: ProdWithCat) => ({
   precioClp: p.precio,
   precioUsd: p.precioUsd,
   precioSugerido: p.precioSugerido,
+  precioInstalador: p.precioInstalador,
   disponibilidad: p.disponibilidad,
   formato: p.formato,
   cantidadCaja: p.cantidadCaja,
@@ -154,6 +155,7 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       cantidadCaja,
       precioUsd,
       precioSugerido,
+      precioInstalador,
     } = req.body;
 
     if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
@@ -192,6 +194,14 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
       precioSugeridoNum = normalizePriceField(precioSugerido);
       if (!Number.isFinite(precioSugeridoNum) || precioSugeridoNum < 0) {
         res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
+        return;
+      }
+    }
+    let precioInstaladorNum: number | undefined;
+    if (precioInstalador !== undefined) {
+      precioInstaladorNum = normalizePriceField(precioInstalador);
+      if (!Number.isFinite(precioInstaladorNum) || precioInstaladorNum < 0) {
+        res.status(400).json({ success: false, error: 'precioInstalador debe ser >= 0' });
         return;
       }
     }
@@ -261,6 +271,7 @@ export const createProductoFiremat = async (req: Request, res: Response): Promis
           precio: precioNum,
           precioUsd: precioUsdNum,
           precioSugerido: precioSugeridoNum,
+          precioInstalador: precioInstaladorNum,
           disponibilidad: disponibilidad?.trim() || null,
           formato: formato?.trim() || null,
           cantidadCaja: cantidadCaja?.trim() || null,
@@ -343,6 +354,7 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
       cantidadCaja,
       precioUsd,
       precioSugerido,
+      precioInstalador,
     } = req.body;
 
     const data: Prisma.ProductoUpdateInput = {};
@@ -411,6 +423,15 @@ export const updateProductoFiremat = async (req: Request, res: Response): Promis
         return;
       }
       data.precioSugerido = p;
+    }
+
+    if (precioInstalador !== undefined) {
+      const p = normalizePriceField(precioInstalador);
+      if (!Number.isFinite(p) || p < 0) {
+        res.status(400).json({ success: false, error: 'precioInstalador debe ser >= 0' });
+        return;
+      }
+      data.precioInstalador = p;
     }
 
     if (cantidadCaja !== undefined) {

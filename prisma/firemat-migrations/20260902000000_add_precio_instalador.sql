@@ -1,0 +1,1 @@
+ALTER TABLE "Producto" ADD COLUMN IF NOT EXISTS "precioInstalador" DOUBLE PRECISION;

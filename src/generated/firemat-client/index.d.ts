@@ -5089,6 +5089,7 @@ export namespace Prisma {
     stockReservado: number | null
     precioSugerido: number | null
     precioUsd: number | null
+    precioInstalador: number | null
     entradas: number | null
     salidas: number | null
     stockInicial: number | null
@@ -5103,6 +5104,7 @@ export namespace Prisma {
     stockReservado: number | null
     precioSugerido: number | null
     precioUsd: number | null
+    precioInstalador: number | null
     entradas: number | null
     salidas: number | null
     stockInicial: number | null
@@ -5128,6 +5130,7 @@ export namespace Prisma {
     formato: string | null
     precioSugerido: number | null
     precioUsd: number | null
+    precioInstalador: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
@@ -5155,6 +5158,7 @@ export namespace Prisma {
     formato: string | null
     precioSugerido: number | null
     precioUsd: number | null
+    precioInstalador: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
@@ -5182,6 +5186,7 @@ export namespace Prisma {
     formato: number
     precioSugerido: number
     precioUsd: number
+    precioInstalador: number
     entradas: number
     fechaUltimaEntrada: number
     fechaUltimaSalida: number
@@ -5200,6 +5205,7 @@ export namespace Prisma {
     stockReservado?: true
     precioSugerido?: true
     precioUsd?: true
+    precioInstalador?: true
     entradas?: true
     salidas?: true
     stockInicial?: true
@@ -5214,6 +5220,7 @@ export namespace Prisma {
     stockReservado?: true
     precioSugerido?: true
     precioUsd?: true
+    precioInstalador?: true
     entradas?: true
     salidas?: true
     stockInicial?: true
@@ -5239,6 +5246,7 @@ export namespace Prisma {
     formato?: true
     precioSugerido?: true
     precioUsd?: true
+    precioInstalador?: true
     entradas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
@@ -5266,6 +5274,7 @@ export namespace Prisma {
     formato?: true
     precioSugerido?: true
     precioUsd?: true
+    precioInstalador?: true
     entradas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
@@ -5293,6 +5302,7 @@ export namespace Prisma {
     formato?: true
     precioSugerido?: true
     precioUsd?: true
+    precioInstalador?: true
     entradas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
@@ -5407,6 +5417,7 @@ export namespace Prisma {
     formato: string | null
     precioSugerido: number | null
     precioUsd: number | null
+    precioInstalador: number | null
     entradas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
@@ -5453,6 +5464,7 @@ export namespace Prisma {
     formato?: boolean
     precioSugerido?: boolean
     precioUsd?: boolean
+    precioInstalador?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
@@ -5490,6 +5502,7 @@ export namespace Prisma {
     formato?: boolean
     precioSugerido?: boolean
     precioUsd?: boolean
+    precioInstalador?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
@@ -5518,6 +5531,7 @@ export namespace Prisma {
     formato?: boolean
     precioSugerido?: boolean
     precioUsd?: boolean
+    precioInstalador?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
@@ -5546,6 +5560,7 @@ export namespace Prisma {
     formato?: boolean
     precioSugerido?: boolean
     precioUsd?: boolean
+    precioInstalador?: boolean
     entradas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
@@ -5553,7 +5568,7 @@ export namespace Prisma {
     stockInicial?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "criticidad" | "cantidadCaja" | "disponibilidad" | "formato" | "precioSugerido" | "precioUsd" | "entradas" | "fechaUltimaEntrada" | "fechaUltimaSalida" | "salidas" | "stockInicial", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "criticidad" | "cantidadCaja" | "disponibilidad" | "formato" | "precioSugerido" | "precioUsd" | "precioInstalador" | "entradas" | "fechaUltimaEntrada" | "fechaUltimaSalida" | "salidas" | "stockInicial", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CotizacionFirematDetalle?: boolean | Producto$CotizacionFirematDetalleArgs<ExtArgs>
     FunnelFirematOpportunity?: boolean | Producto$FunnelFirematOpportunityArgs<ExtArgs>
@@ -5606,6 +5621,7 @@ export namespace Prisma {
       formato: string | null
       precioSugerido: number | null
       precioUsd: number | null
+      precioInstalador: number | null
       entradas: number | null
       fechaUltimaEntrada: Date | null
       fechaUltimaSalida: Date | null
@@ -6062,6 +6078,7 @@ export namespace Prisma {
     readonly formato: FieldRef<"Producto", 'String'>
     readonly precioSugerido: FieldRef<"Producto", 'Float'>
     readonly precioUsd: FieldRef<"Producto", 'Float'>
+    readonly precioInstalador: FieldRef<"Producto", 'Float'>
     readonly entradas: FieldRef<"Producto", 'Int'>
     readonly fechaUltimaEntrada: FieldRef<"Producto", 'DateTime'>
     readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
@@ -25710,6 +25727,7 @@ export namespace Prisma {
     formato: 'formato',
     precioSugerido: 'precioSugerido',
     precioUsd: 'precioUsd',
+    precioInstalador: 'precioInstalador',
     entradas: 'entradas',
     fechaUltimaEntrada: 'fechaUltimaEntrada',
     fechaUltimaSalida: 'fechaUltimaSalida',
@@ -26305,6 +26323,7 @@ export namespace Prisma {
     formato?: StringNullableFilter<"Producto"> | string | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
@@ -26341,6 +26360,7 @@ export namespace Prisma {
     formato?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
     precioUsd?: SortOrderInput | SortOrder
+    precioInstalador?: SortOrderInput | SortOrder
     entradas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
     fechaUltimaSalida?: SortOrderInput | SortOrder
@@ -26380,6 +26400,7 @@ export namespace Prisma {
     formato?: StringNullableFilter<"Producto"> | string | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
@@ -26416,6 +26437,7 @@ export namespace Prisma {
     formato?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
     precioUsd?: SortOrderInput | SortOrder
+    precioInstalador?: SortOrderInput | SortOrder
     entradas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
     fechaUltimaSalida?: SortOrderInput | SortOrder
@@ -26451,6 +26473,7 @@ export namespace Prisma {
     formato?: StringNullableWithAggregatesFilter<"Producto"> | string | null
     precioSugerido?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     precioUsd?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
+    precioInstalador?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     entradas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
@@ -28237,6 +28260,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -28273,6 +28297,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -28306,6 +28331,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28342,6 +28368,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28377,6 +28404,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -28402,6 +28430,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28429,6 +28458,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30698,6 +30728,7 @@ export namespace Prisma {
     formato?: SortOrder
     precioSugerido?: SortOrder
     precioUsd?: SortOrder
+    precioInstalador?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
@@ -30714,6 +30745,7 @@ export namespace Prisma {
     stockReservado?: SortOrder
     precioSugerido?: SortOrder
     precioUsd?: SortOrder
+    precioInstalador?: SortOrder
     entradas?: SortOrder
     salidas?: SortOrder
     stockInicial?: SortOrder
@@ -30739,6 +30771,7 @@ export namespace Prisma {
     formato?: SortOrder
     precioSugerido?: SortOrder
     precioUsd?: SortOrder
+    precioInstalador?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
@@ -30766,6 +30799,7 @@ export namespace Prisma {
     formato?: SortOrder
     precioSugerido?: SortOrder
     precioUsd?: SortOrder
+    precioInstalador?: SortOrder
     entradas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
@@ -30782,6 +30816,7 @@ export namespace Prisma {
     stockReservado?: SortOrder
     precioSugerido?: SortOrder
     precioUsd?: SortOrder
+    precioInstalador?: SortOrder
     entradas?: SortOrder
     salidas?: SortOrder
     stockInicial?: SortOrder
@@ -33538,6 +33573,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -33572,6 +33608,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -33636,6 +33673,7 @@ export namespace Prisma {
     formato?: StringNullableFilter<"Producto"> | string | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
     entradas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
@@ -33661,6 +33699,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -33696,6 +33735,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -33744,6 +33784,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33779,6 +33820,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34557,6 +34599,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -34592,6 +34635,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -34665,6 +34709,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34700,6 +34745,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34748,6 +34794,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -34783,6 +34830,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -34871,6 +34919,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34906,6 +34955,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35299,6 +35349,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -35334,6 +35385,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -35434,6 +35486,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35469,6 +35522,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35973,6 +36027,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -36008,6 +36063,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -36144,6 +36200,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36179,6 +36236,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36293,6 +36351,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -36328,6 +36387,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -36524,6 +36584,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36559,6 +36620,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37473,6 +37535,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -37508,6 +37571,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -37556,6 +37620,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37591,6 +37656,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37672,6 +37738,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -37707,6 +37774,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -37774,6 +37842,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37809,6 +37878,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37867,6 +37937,7 @@ export namespace Prisma {
     formato?: string | null
     precioSugerido?: number | null
     precioUsd?: number | null
+    precioInstalador?: number | null
     entradas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
@@ -37892,6 +37963,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37926,6 +37998,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37960,6 +38033,7 @@ export namespace Prisma {
     formato?: NullableStringFieldUpdateOperationsInput | string | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     entradas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

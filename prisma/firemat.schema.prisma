@@ -48,6 +48,7 @@ model Producto {
   formato                  String?
   precioSugerido           Float?
   precioUsd                Float?
+  precioInstalador         Float?
   entradas                 Int?                       @default(0)
   fechaUltimaEntrada       DateTime?
   fechaUltimaSalida        DateTime?
