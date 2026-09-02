@@ -24,6 +24,33 @@ type LineaParseada = {
 
 const TIPOS_VALIDOS = Object.values(TipoInventarioBeck);
 
+async function registrarTrazabilidad(
+  tx: Prisma.TransactionClient,
+  input: {
+    asignacionId: string;
+    obraId: string;
+    actorId: string;
+    jefeObraId: string;
+    trabajadorId?: string | null;
+    accion: string;
+    cantidad: number;
+    detalle: string;
+  },
+) {
+  await tx.trazabilidad_inventario_beck.create({
+    data: {
+      asignacion_id: input.asignacionId,
+      obra_id: input.obraId,
+      actor_id: input.actorId,
+      jefe_obra_id: input.jefeObraId,
+      trabajador_id: input.trabajadorId ?? null,
+      accion: input.accion,
+      cantidad: input.cantidad,
+      detalle: input.detalle,
+    },
+  });
+}
+
 function parseLineas(raw: unknown): LineaParseada[] {
   if (!Array.isArray(raw) || raw.length === 0) {
     throw new Error('Debes seleccionar al menos un item para asignar.');
@@ -174,7 +201,17 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
             creadas.push(
               await tx.asignacionInventarioBeck.update({
                 where: { id: lote.id },
-                data: { trabajadorId: destinatarioId, reasignadoAt: new Date() },
+                data: {
+                  trabajadorId: destinatarioId,
+                  reasignadoAt: new Date(),
+                  recepcion_confirmada_at: null,
+                  recepcion_confirmada_por_id: null,
+                  devolucion_solicitada_at: null,
+                  devolucion_solicitada_por_id: null,
+                  devolucion_motivo: null,
+                  devolucion_recibida_at: null,
+                  devolucion_recibida_por_id: null,
+                },
               }),
             );
             restante -= lote.cantidad;
@@ -193,6 +230,7 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
                   eppId: lote.eppId,
                   implementoId: lote.implementoId,
                   herramientaId: lote.herramientaId,
+                  asignacion_origen_id: lote.id,
                   cantidad: restante,
                   observacion,
                   trabajadorId: destinatarioId,
@@ -272,6 +310,21 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
         where: { usuario_id_obra_id: { usuario_id: destinatarioId, obra_id: obraId } },
         update: {},
         create: { usuario_id: destinatarioId, obra_id: obraId },
+      });
+    }
+
+    for (const asignacion of creadas) {
+      await registrarTrazabilidad(tx, {
+        asignacionId: asignacion.id,
+        obraId,
+        actorId: input.asignadoPorId,
+        jefeObraId: esReenvioDeSupervisor ? input.asignadoPorId : destinatarioId,
+        trabajadorId: esReenvioDeSupervisor ? destinatarioId : null,
+        accion: esReenvioDeSupervisor ? 'ASIGNADO_OPERARIO' : 'ASIGNADO_SUPERVISOR',
+        cantidad: asignacion.cantidad,
+        detalle: esReenvioDeSupervisor
+          ? 'Supervisor entregó el artículo al operario desde el CRM'
+          : 'Bodega asignó el artículo al supervisor desde el CRM',
       });
     }
 
@@ -368,7 +421,21 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
       }
       await tx.asignacionInventarioBeck.update({
         where: { id: asignacionId },
-        data: { trabajadorId: null, reasignadoAt: null },
+        data: {
+          trabajadorId: null,
+          devolucion_recibida_at: new Date(),
+          devolucion_recibida_por_id: devueltoPorId,
+        },
+      });
+      await registrarTrazabilidad(tx, {
+        asignacionId,
+        obraId: asignacion.obraId,
+        actorId: devueltoPorId,
+        jefeObraId: asignacion.jefeObraId,
+        trabajadorId: asignacion.trabajadorId,
+        accion: 'DEVOLUCION_RECIBIDA_SUPERVISOR',
+        cantidad: asignacion.cantidad,
+        detalle: 'Devolución de operario recibida desde el CRM',
       });
       return;
     }
@@ -393,6 +460,15 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
     await tx.asignacionInventarioBeck.update({
       where: { id: asignacionId },
       data: { estado: 'devuelto', devueltoAt: new Date(), devueltoPorId },
+    });
+    await registrarTrazabilidad(tx, {
+      asignacionId,
+      obraId: asignacion.obraId,
+      actorId: devueltoPorId,
+      jefeObraId: asignacion.jefeObraId,
+      accion: 'DEVUELTO_BODEGA',
+      cantidad: asignacion.cantidad,
+      detalle: 'Artículo devuelto a bodega desde el CRM',
     });
   });
 

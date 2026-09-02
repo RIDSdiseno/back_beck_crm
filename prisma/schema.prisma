@@ -7,47 +7,53 @@ datasource db {
 }
 
 model Usuario {
-  id                                      String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre                                  String                             @db.VarChar(255)
-  email                                   String                             @unique @db.VarChar(255)
-  passwordHash                            String?                            @map("password_hash") @db.VarChar(255)
-  rol                                     RolUsuario
-  activo                                  Boolean                            @default(true)
-  createdAt                               DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt                               DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  azureId                                 String?                            @unique @map("azure_id") @db.VarChar(255)
-  actividad_app                           actividad_app[]
-  alertasVistas                           AlertaVista[]
-  asignacionesInventarioRecibidas         AsignacionInventarioBeck[]         @relation("AsignacionInventarioJefeObra")
-  asignacionesInventarioRealizadas        AsignacionInventarioBeck[]         @relation("AsignacionInventarioAsignadoPor")
-  asignacionesInventarioDevueltas         AsignacionInventarioBeck[]         @relation("AsignacionInventarioDevueltoPor")
-  asignacionesInventarioComoTrabajador    AsignacionInventarioBeck[]         @relation("AsignacionInventarioTrabajador")
-  configuracionVistaCliente               ConfiguracionVistaClienteUsuario[]
-  controlesInspeccionCorreccionEnviada    ControlInspeccion[]                @relation("CorreccionEnviadaPorUsuario")
-  controlesInspeccion                     ControlInspeccion[]                @relation("ControlesInspeccionPorUsuario")
-  controlesInspeccionParametrosCorregidos ControlInspeccionParametro[]
-  cotizacionesCreadas                     Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
-  cotizacionesResponsable                 Cotizacion[]                       @relation("CotizacionesResponsable")
-  fotos_control_inspeccion                fotos_control_inspeccion[]
-  fotos_correccion_parametro              fotos_correccion_parametro[]
-  fotos_registro                          fotos_registro[]
-  historialEtapasBeck                     HistorialEtapaBeck[]
-  hitosTerminados                         HitoObra[]                         @relation("HitosTerminadosPorUsuario")
-  itemizadosCreados                       Itemizado[]                        @relation("ItemizadosCreadosPorUsuario")
-  movimientosCrm                          MovimientoCRM[]                    @relation("MovimientosCrmPorUsuario")
-  movimientosInventario                   MovimientoInventario[]
-  notificaciones                          Notificacion[]
-  obrasCreadas                            Obra[]                             @relation("ObrasCreadasPorUsuario")
-  itemizadosFinalizados                   Obra[]                             @relation("ItemizadoFinalizadoPorUsuario")
-  permisosModulo                          PermisoUsuarioModulo[]
-  procesamientos                          ProcesamientoIngenieria[]
-  registrosEnviadosIngenieria             RegistroTerreno[]                  @relation("RegistrosEnviadosIngenieriaPorUsuario")
-  registrosRevisionInspeccion             RegistroTerreno[]                  @relation("RegistrosRevisionInspeccionPorUsuario")
-  registrosRechazados                     RegistroTerreno[]                  @relation("RegistrosRechazadosPorUsuario")
-  registrosSeleccionadosInspeccion        RegistroTerreno[]                  @relation("RegistrosSeleccionadosInspeccion")
-  registrosTerreno                        RegistroTerreno[]
-  registrosValidadosCliente               RegistroTerreno[]                  @relation("RegistrosValidadosClientePorUsuario")
-  usuarios_obras                          usuarios_obras[]
+  id                                                                                               String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre                                                                                           String                             @db.VarChar(255)
+  email                                                                                            String                             @unique @db.VarChar(255)
+  passwordHash                                                                                     String?                            @map("password_hash") @db.VarChar(255)
+  rol                                                                                              RolUsuario
+  activo                                                                                           Boolean                            @default(true)
+  createdAt                                                                                        DateTime                           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                                                                                        DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  azureId                                                                                          String?                            @unique @map("azure_id") @db.VarChar(255)
+  actividad_app                                                                                    actividad_app[]
+  alertasVistas                                                                                    AlertaVista[]
+  asignacionesInventarioRealizadas                                                                 AsignacionInventarioBeck[]         @relation("AsignacionInventarioAsignadoPor")
+  asignaciones_inventario_beck_asignaciones_inventario_beck_devolucion_recibida_por_idTousuarios   AsignacionInventarioBeck[]         @relation("asignaciones_inventario_beck_devolucion_recibida_por_idTousuarios")
+  asignaciones_inventario_beck_asignaciones_inventario_beck_devolucion_solicitada_por_idTousuarios AsignacionInventarioBeck[]         @relation("asignaciones_inventario_beck_devolucion_solicitada_por_idTousuarios")
+  asignacionesInventarioDevueltas                                                                  AsignacionInventarioBeck[]         @relation("AsignacionInventarioDevueltoPor")
+  asignacionesInventarioRecibidas                                                                  AsignacionInventarioBeck[]         @relation("AsignacionInventarioJefeObra")
+  asignaciones_inventario_beck_asignaciones_inventario_beck_recepcion_confirmada_por_idTousuarios  AsignacionInventarioBeck[]         @relation("asignaciones_inventario_beck_recepcion_confirmada_por_idTousuarios")
+  asignacionesInventarioComoTrabajador                                                             AsignacionInventarioBeck[]         @relation("AsignacionInventarioTrabajador")
+  configuracionVistaCliente                                                                        ConfiguracionVistaClienteUsuario[]
+  controlesInspeccionCorreccionEnviada                                                             ControlInspeccion[]                @relation("CorreccionEnviadaPorUsuario")
+  controlesInspeccion                                                                              ControlInspeccion[]                @relation("ControlesInspeccionPorUsuario")
+  controlesInspeccionParametrosCorregidos                                                          ControlInspeccionParametro[]
+  cotizacionesCreadas                                                                              Cotizacion[]                       @relation("CotizacionesCreadasPorUsuario")
+  cotizacionesResponsable                                                                          Cotizacion[]                       @relation("CotizacionesResponsable")
+  fotos_control_inspeccion                                                                         fotos_control_inspeccion[]
+  fotos_correccion_parametro                                                                       fotos_correccion_parametro[]
+  fotos_registro                                                                                   fotos_registro[]
+  historialEtapasBeck                                                                              HistorialEtapaBeck[]
+  hitosTerminados                                                                                  HitoObra[]                         @relation("HitosTerminadosPorUsuario")
+  itemizadosCreados                                                                                Itemizado[]                        @relation("ItemizadosCreadosPorUsuario")
+  movimientosCrm                                                                                   MovimientoCRM[]                    @relation("MovimientosCrmPorUsuario")
+  movimientosInventario                                                                            MovimientoInventario[]
+  notificaciones                                                                                   Notificacion[]
+  obrasCreadas                                                                                     Obra[]                             @relation("ObrasCreadasPorUsuario")
+  itemizadosFinalizados                                                                            Obra[]                             @relation("ItemizadoFinalizadoPorUsuario")
+  permisosModulo                                                                                   PermisoUsuarioModulo[]
+  procesamientos                                                                                   ProcesamientoIngenieria[]
+  registrosEnviadosIngenieria                                                                      RegistroTerreno[]                  @relation("RegistrosEnviadosIngenieriaPorUsuario")
+  registrosRevisionInspeccion                                                                      RegistroTerreno[]                  @relation("RegistrosRevisionInspeccionPorUsuario")
+  registrosRechazados                                                                              RegistroTerreno[]                  @relation("RegistrosRechazadosPorUsuario")
+  registrosSeleccionadosInspeccion                                                                 RegistroTerreno[]                  @relation("RegistrosSeleccionadosInspeccion")
+  registrosTerreno                                                                                 RegistroTerreno[]
+  registrosValidadosCliente                                                                        RegistroTerreno[]                  @relation("RegistrosValidadosClientePorUsuario")
+  trazabilidad_inventario_beck_trazabilidad_inventario_beck_actor_idTousuarios                     trazabilidad_inventario_beck[]     @relation("trazabilidad_inventario_beck_actor_idTousuarios")
+  trazabilidad_inventario_beck_trazabilidad_inventario_beck_jefe_obra_idTousuarios                 trazabilidad_inventario_beck[]     @relation("trazabilidad_inventario_beck_jefe_obra_idTousuarios")
+  trazabilidad_inventario_beck_trazabilidad_inventario_beck_trabajador_idTousuarios                trazabilidad_inventario_beck[]     @relation("trazabilidad_inventario_beck_trabajador_idTousuarios")
+  usuarios_obras                                                                                   usuarios_obras[]
 
   @@index([email])
   @@index([rol])
@@ -72,6 +78,7 @@ model Obra {
   estadoPreparacionItemizado     EstadoPreparacionItemizado         @default(PREPARACION) @map("estado_preparacion_itemizado")
   itemizadoFinalizadoAt          DateTime?                          @map("itemizado_finalizado_at") @db.Timestamp(6)
   itemizadoFinalizadoPorId       String?                            @map("itemizado_finalizado_por_id") @db.Uuid
+  asignacionesInventario         AsignacionInventarioBeck[]
   configuracionesCamposRegistro  ConfiguracionCamposRegistro[]
   configuracionesItemizadoOpcion ConfiguracionItemizadoOpcionObra[]
   cotizaciones                   Cotizacion[]
@@ -85,8 +92,8 @@ model Obra {
   creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
   itemizadoFinalizadoPor         Usuario?                           @relation("ItemizadoFinalizadoPorUsuario", fields: [itemizadoFinalizadoPorId], references: [id])
   registrosTerreno               RegistroTerreno[]
+  trazabilidad_inventario_beck   trazabilidad_inventario_beck[]
   usuarios_obras                 usuarios_obras[]
-  asignacionesInventario         AsignacionInventarioBeck[]
 
   @@index([codigo])
   @@index([estado])
@@ -297,20 +304,20 @@ model MovimientoInventario {
 }
 
 model InventarioBeckEpp {
-  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  sku          String?  @db.VarChar(100)
-  item         String   @db.VarChar(255)
-  modeloMarca  String?  @map("modelo_marca") @db.VarChar(255)
-  unidadMedida String?  @map("unidad_medida") @db.VarChar(100)
-  talla        String?  @db.VarChar(100)
-  color        String?  @db.VarChar(100)
-  stockInicial Int      @default(0) @map("stock_inicial")
-  entrada      Int      @default(0)
-  salida       Int      @default(0)
-  saldo        Int      @default(0)
-  activo       Boolean  @default(true)
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku          String?                    @db.VarChar(100)
+  item         String                     @db.VarChar(255)
+  modeloMarca  String?                    @map("modelo_marca") @db.VarChar(255)
+  unidadMedida String?                    @map("unidad_medida") @db.VarChar(100)
+  talla        String?                    @db.VarChar(100)
+  color        String?                    @db.VarChar(100)
+  stockInicial Int                        @default(0) @map("stock_inicial")
+  entrada      Int                        @default(0)
+  salida       Int                        @default(0)
+  saldo        Int                        @default(0)
+  activo       Boolean                    @default(true)
+  createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   asignaciones AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -323,21 +330,21 @@ model InventarioBeckEpp {
 }
 
 model InventarioBeckImplemento {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  sku          String?   @db.VarChar(100)
-  item         String    @db.VarChar(255)
-  modeloMarca  String?   @map("modelo_marca") @db.VarChar(255)
-  cantidad     Int       @default(0)
-  unidadMedida String?   @map("unidad_medida") @db.VarChar(100)
-  tallaMedida  String?   @map("talla_medida") @db.VarChar(100)
-  color        String?   @db.VarChar(100)
-  ubicacion    String?   @db.VarChar(255)
-  fecha        DateTime? @db.Date
-  salida       Int       @default(0)
-  saldo        Int       @default(0)
-  activo       Boolean   @default(true)
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku          String?                    @db.VarChar(100)
+  item         String                     @db.VarChar(255)
+  modeloMarca  String?                    @map("modelo_marca") @db.VarChar(255)
+  cantidad     Int                        @default(0)
+  unidadMedida String?                    @map("unidad_medida") @db.VarChar(100)
+  tallaMedida  String?                    @map("talla_medida") @db.VarChar(100)
+  color        String?                    @db.VarChar(100)
+  ubicacion    String?                    @db.VarChar(255)
+  fecha        DateTime?                  @db.Date
+  salida       Int                        @default(0)
+  saldo        Int                        @default(0)
+  activo       Boolean                    @default(true)
+  createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   asignaciones AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -351,19 +358,19 @@ model InventarioBeckImplemento {
 }
 
 model InventarioBeckHerramienta {
-  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nombre          String    @db.VarChar(255)
-  marca           String?   @db.VarChar(150)
-  modelo          String?   @db.VarChar(150)
-  categoria       String?   @db.VarChar(150)
-  sku             String?   @db.VarChar(100)
-  ubicacion       String?   @db.VarChar(255)
-  fechaCompra     DateTime? @map("fecha_compra") @db.Date
-  encargado       String?   @db.VarChar(255)
-  activo          Boolean   @default(true)
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  fechaMantencion DateTime? @map("fecha_mantencion") @db.Date
+  id              String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  nombre          String                     @db.VarChar(255)
+  marca           String?                    @db.VarChar(150)
+  modelo          String?                    @db.VarChar(150)
+  categoria       String?                    @db.VarChar(150)
+  sku             String?                    @db.VarChar(100)
+  ubicacion       String?                    @db.VarChar(255)
+  fechaCompra     DateTime?                  @map("fecha_compra") @db.Date
+  encargado       String?                    @db.VarChar(255)
+  activo          Boolean                    @default(true)
+  createdAt       DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  fechaMantencion DateTime?                  @map("fecha_mantencion") @db.Date
   asignaciones    AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -377,43 +384,45 @@ model InventarioBeckHerramienta {
   @@map("inventario_beck_herramientas")
 }
 
-enum TipoInventarioBeck {
-  epp
-  implemento
-  herramienta
-}
-
-enum EstadoAsignacionInventario {
-  asignado
-  devuelto
-}
-
 model AsignacionInventarioBeck {
-  id            String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  obraId        String                     @map("obra_id") @db.Uuid
-  jefeObraId    String                     @map("jefe_obra_id") @db.Uuid
-  asignadoPorId String                     @map("asignado_por_id") @db.Uuid
-  tipoItem      TipoInventarioBeck         @map("tipo_item")
-  eppId         String?                    @map("epp_id") @db.Uuid
-  implementoId  String?                    @map("implemento_id") @db.Uuid
-  herramientaId String?                    @map("herramienta_id") @db.Uuid
-  cantidad      Int                        @default(1)
-  observacion   String?
-  estado        EstadoAsignacionInventario @default(asignado)
-  devueltoAt    DateTime?                  @map("devuelto_at") @db.Timestamp(6)
-  devueltoPorId String?                    @map("devuelto_por_id") @db.Uuid
-  trabajadorId  String?                    @map("trabajador_id") @db.Uuid
-  reasignadoAt  DateTime?                  @map("reasignado_at") @db.Timestamp(6)
-  createdAt     DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
-
-  obra          Obra                       @relation(fields: [obraId], references: [id])
-  jefeObra      Usuario                    @relation("AsignacionInventarioJefeObra", fields: [jefeObraId], references: [id])
-  asignadoPor   Usuario                    @relation("AsignacionInventarioAsignadoPor", fields: [asignadoPorId], references: [id])
-  devueltoPor   Usuario?                   @relation("AsignacionInventarioDevueltoPor", fields: [devueltoPorId], references: [id])
-  trabajador    Usuario?                   @relation("AsignacionInventarioTrabajador", fields: [trabajadorId], references: [id])
-  epp           InventarioBeckEpp?         @relation(fields: [eppId], references: [id])
-  implemento    InventarioBeckImplemento?  @relation(fields: [implementoId], references: [id])
-  herramienta   InventarioBeckHerramienta? @relation(fields: [herramientaId], references: [id])
+  id                                                                           String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId                                                                       String                         @map("obra_id") @db.Uuid
+  jefeObraId                                                                   String                         @map("jefe_obra_id") @db.Uuid
+  asignadoPorId                                                                String                         @map("asignado_por_id") @db.Uuid
+  tipoItem                                                                     TipoInventarioBeck             @map("tipo_item")
+  eppId                                                                        String?                        @map("epp_id") @db.Uuid
+  implementoId                                                                 String?                        @map("implemento_id") @db.Uuid
+  herramientaId                                                                String?                        @map("herramienta_id") @db.Uuid
+  cantidad                                                                     Int                            @default(1)
+  observacion                                                                  String?
+  createdAt                                                                    DateTime                       @default(now()) @map("created_at") @db.Timestamp(6)
+  estado                                                                       EstadoAsignacionInventario     @default(asignado)
+  devueltoAt                                                                   DateTime?                      @map("devuelto_at") @db.Timestamp(6)
+  devueltoPorId                                                                String?                        @map("devuelto_por_id") @db.Uuid
+  trabajadorId                                                                 String?                        @map("trabajador_id") @db.Uuid
+  reasignadoAt                                                                 DateTime?                      @map("reasignado_at") @db.Timestamp(6)
+  asignacion_origen_id                                                         String?                        @db.Uuid
+  recepcion_confirmada_at                                                      DateTime?                      @db.Timestamp(6)
+  recepcion_confirmada_por_id                                                  String?                        @db.Uuid
+  devolucion_solicitada_at                                                     DateTime?                      @db.Timestamp(6)
+  devolucion_solicitada_por_id                                                 String?                        @db.Uuid
+  devolucion_motivo                                                            String?
+  devolucion_recibida_at                                                       DateTime?                      @db.Timestamp(6)
+  devolucion_recibida_por_id                                                   String?                        @db.Uuid
+  asignaciones_inventario_beck                                                 AsignacionInventarioBeck?      @relation("asignaciones_inventario_beckToasignaciones_inventario_beck", fields: [asignacion_origen_id], references: [id])
+  other_asignaciones_inventario_beck                                           AsignacionInventarioBeck[]     @relation("asignaciones_inventario_beckToasignaciones_inventario_beck")
+  asignadoPor                                                                  Usuario                        @relation("AsignacionInventarioAsignadoPor", fields: [asignadoPorId], references: [id])
+  usuarios_asignaciones_inventario_beck_devolucion_recibida_por_idTousuarios   Usuario?                       @relation("asignaciones_inventario_beck_devolucion_recibida_por_idTousuarios", fields: [devolucion_recibida_por_id], references: [id])
+  usuarios_asignaciones_inventario_beck_devolucion_solicitada_por_idTousuarios Usuario?                       @relation("asignaciones_inventario_beck_devolucion_solicitada_por_idTousuarios", fields: [devolucion_solicitada_por_id], references: [id])
+  devueltoPor                                                                  Usuario?                       @relation("AsignacionInventarioDevueltoPor", fields: [devueltoPorId], references: [id])
+  epp                                                                          InventarioBeckEpp?             @relation(fields: [eppId], references: [id])
+  herramienta                                                                  InventarioBeckHerramienta?     @relation(fields: [herramientaId], references: [id])
+  implemento                                                                   InventarioBeckImplemento?      @relation(fields: [implementoId], references: [id])
+  jefeObra                                                                     Usuario                        @relation("AsignacionInventarioJefeObra", fields: [jefeObraId], references: [id])
+  obra                                                                         Obra                           @relation(fields: [obraId], references: [id])
+  usuarios_asignaciones_inventario_beck_recepcion_confirmada_por_idTousuarios  Usuario?                       @relation("asignaciones_inventario_beck_recepcion_confirmada_por_idTousuarios", fields: [recepcion_confirmada_por_id], references: [id])
+  trabajador                                                                   Usuario?                       @relation("AsignacionInventarioTrabajador", fields: [trabajadorId], references: [id])
+  trazabilidad_inventario_beck                                                 trazabilidad_inventario_beck[]
 
   @@index([obraId])
   @@index([jefeObraId])
@@ -421,6 +430,8 @@ model AsignacionInventarioBeck {
   @@index([tipoItem])
   @@index([estado])
   @@index([createdAt(sort: Desc)])
+  @@index([asignacion_origen_id])
+  @@index([devolucion_solicitada_at])
   @@map("asignaciones_inventario_beck")
 }
 
@@ -1316,6 +1327,42 @@ model actividad_app {
   @@index([entidad_id])
   @@index([modulo])
   @@index([usuario_id, created_at(sort: Desc)], map: "actividad_app_usuario_created_at_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model trazabilidad_inventario_beck {
+  id                                                            String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  asignacion_id                                                 String                   @db.Uuid
+  obra_id                                                       String                   @db.Uuid
+  actor_id                                                      String                   @db.Uuid
+  jefe_obra_id                                                  String                   @db.Uuid
+  trabajador_id                                                 String?                  @db.Uuid
+  accion                                                        String                   @db.VarChar(60)
+  cantidad                                                      Int
+  detalle                                                       String?
+  datos                                                         Json?
+  created_at                                                    DateTime                 @default(now()) @db.Timestamp(6)
+  usuarios_trazabilidad_inventario_beck_actor_idTousuarios      Usuario                  @relation("trazabilidad_inventario_beck_actor_idTousuarios", fields: [actor_id], references: [id])
+  asignaciones_inventario_beck                                  AsignacionInventarioBeck @relation(fields: [asignacion_id], references: [id])
+  usuarios_trazabilidad_inventario_beck_jefe_obra_idTousuarios  Usuario                  @relation("trazabilidad_inventario_beck_jefe_obra_idTousuarios", fields: [jefe_obra_id], references: [id])
+  obras                                                         Obra                     @relation(fields: [obra_id], references: [id])
+  usuarios_trazabilidad_inventario_beck_trabajador_idTousuarios Usuario?                 @relation("trazabilidad_inventario_beck_trabajador_idTousuarios", fields: [trabajador_id], references: [id])
+
+  @@index([actor_id])
+  @@index([asignacion_id, created_at(sort: Desc)], map: "trazabilidad_inventario_beck_asignacion_created_at_idx")
+  @@index([obra_id, created_at(sort: Desc)], map: "trazabilidad_inventario_beck_obra_created_at_idx")
+  @@index([trabajador_id])
+}
+
+enum TipoInventarioBeck {
+  epp
+  implemento
+  herramienta
+}
+
+enum EstadoAsignacionInventario {
+  asignado
+  devuelto
 }
 
 enum RolUsuario {
