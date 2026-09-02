@@ -1,4 +1,4 @@
-import { Prisma, RolUsuario, TipoInventarioBeck } from '@prisma/client';
+import { EstadoAsignacionInventario, Prisma, RolUsuario, TipoInventarioBeck } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { registrarMovimientoCRM } from './movimientoCrm.service';
 
@@ -385,11 +385,16 @@ export async function listarTrabajadoresParaAsignacion(obraId: string) {
   return { trabajadores: usuarios, esFallback };
 }
 
-export async function listarAsignacionesInventario(params: { obraId?: string; jefeObraId?: string } = {}) {
+export async function listarAsignacionesInventario(params: {
+  obraId?: string;
+  jefeObraId?: string;
+  estado?: EstadoAsignacionInventario;
+} = {}) {
   return prisma.asignacionInventarioBeck.findMany({
     where: {
       ...(params.obraId && { obraId: params.obraId }),
       ...(params.jefeObraId && { jefeObraId: params.jefeObraId }),
+      ...(params.estado && { estado: params.estado }),
     },
     include: ASIGNACION_INCLUDE,
     orderBy: { createdAt: 'desc' },

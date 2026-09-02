@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { EstadoAsignacionInventario } from '@prisma/client';
 import {
   crearAsignacionesInventario,
   devolverAsignacionInventario,
@@ -85,7 +86,13 @@ export const listarAsignaciones = async (req: Request, res: Response): Promise<v
   try {
     const obraId = typeof req.query.obraId === 'string' ? req.query.obraId : undefined;
     const jefeObraId = typeof req.query.jefeObraId === 'string' ? req.query.jefeObraId : undefined;
-    const asignaciones = await listarAsignacionesInventario({ obraId, jefeObraId });
+    const estadoRaw = typeof req.query.estado === 'string' ? req.query.estado : undefined;
+    if (estadoRaw && !Object.values(EstadoAsignacionInventario).includes(estadoRaw as EstadoAsignacionInventario)) {
+      res.status(400).json({ success: false, error: 'Estado de asignación inválido.' });
+      return;
+    }
+    const estado = estadoRaw as EstadoAsignacionInventario | undefined;
+    const asignaciones = await listarAsignacionesInventario({ obraId, jefeObraId, estado });
     res.json({ success: true, data: asignaciones });
   } catch (error) {
     console.error('Error al listar asignaciones de inventario:', error);
