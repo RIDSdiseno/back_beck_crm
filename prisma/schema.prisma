@@ -304,22 +304,22 @@ model MovimientoInventario {
 }
 
 model InventarioBeckEpp {
-  id           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  sku          String?                    @db.VarChar(100)
-  item         String                     @db.VarChar(255)
-  modeloMarca  String?                    @map("modelo_marca") @db.VarChar(255)
-  unidadMedida String?                    @map("unidad_medida") @db.VarChar(100)
-  talla        String?                    @db.VarChar(100)
-  color        String?                    @db.VarChar(100)
-  stockInicial Int                        @default(0) @map("stock_inicial")
-  entrada      Int                        @default(0)
-  salida       Int                        @default(0)
-  saldo        Int                        @default(0)
-  activo       Boolean                    @default(true)
-  createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  unidadesGeneradas Int                   @default(0) @map("unidades_generadas")
-  asignaciones AsignacionInventarioBeck[]
+  id                String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku               String?                    @db.VarChar(100)
+  item              String                     @db.VarChar(255)
+  modeloMarca       String?                    @map("modelo_marca") @db.VarChar(255)
+  unidadMedida      String?                    @map("unidad_medida") @db.VarChar(100)
+  talla             String?                    @db.VarChar(100)
+  color             String?                    @db.VarChar(100)
+  stockInicial      Int                        @default(0) @map("stock_inicial")
+  entrada           Int                        @default(0)
+  salida            Int                        @default(0)
+  saldo             Int                        @default(0)
+  activo            Boolean                    @default(true)
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  unidadesGeneradas Int                        @default(0) @map("unidades_generadas")
+  asignaciones      AsignacionInventarioBeck[]
 
   @@index([sku])
   @@index([item])
@@ -331,23 +331,23 @@ model InventarioBeckEpp {
 }
 
 model InventarioBeckImplemento {
-  id           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  sku          String?                    @db.VarChar(100)
-  item         String                     @db.VarChar(255)
-  modeloMarca  String?                    @map("modelo_marca") @db.VarChar(255)
-  cantidad     Int                        @default(0)
-  unidadMedida String?                    @map("unidad_medida") @db.VarChar(100)
-  tallaMedida  String?                    @map("talla_medida") @db.VarChar(100)
-  color        String?                    @db.VarChar(100)
-  ubicacion    String?                    @db.VarChar(255)
-  fecha        DateTime?                  @db.Date
-  salida       Int                        @default(0)
-  saldo        Int                        @default(0)
-  activo       Boolean                    @default(true)
-  createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
-  unidadesGeneradas Int                   @default(0) @map("unidades_generadas")
-  asignaciones AsignacionInventarioBeck[]
+  id                String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sku               String?                    @db.VarChar(100)
+  item              String                     @db.VarChar(255)
+  modeloMarca       String?                    @map("modelo_marca") @db.VarChar(255)
+  cantidad          Int                        @default(0)
+  unidadMedida      String?                    @map("unidad_medida") @db.VarChar(100)
+  tallaMedida       String?                    @map("talla_medida") @db.VarChar(100)
+  color             String?                    @db.VarChar(100)
+  ubicacion         String?                    @db.VarChar(255)
+  fecha             DateTime?                  @db.Date
+  salida            Int                        @default(0)
+  saldo             Int                        @default(0)
+  activo            Boolean                    @default(true)
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  unidadesGeneradas Int                        @default(0) @map("unidades_generadas")
+  asignaciones      AsignacionInventarioBeck[]
 
   @@index([sku])
   @@index([item])

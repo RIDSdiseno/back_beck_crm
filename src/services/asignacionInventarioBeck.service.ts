@@ -35,6 +35,7 @@ async function registrarTrazabilidad(
     accion: string;
     cantidad: number;
     detalle: string;
+    datos?: Prisma.InputJsonValue;
   },
 ) {
   await tx.trazabilidad_inventario_beck.create({
@@ -47,6 +48,7 @@ async function registrarTrazabilidad(
       accion: input.accion,
       cantidad: input.cantidad,
       detalle: input.detalle,
+      datos: input.datos,
     },
   });
 }
@@ -103,6 +105,34 @@ function generarSubSkus(sku: string | null, totalGenerado: number, cantidad: num
   if (!sku?.trim() || cantidad <= 0) return [];
   const inicio = totalGenerado - cantidad + 1;
   return Array.from({ length: cantidad }, (_, i) => `${sku}-${inicio + i}`);
+}
+
+async function obtenerSubSkusDevueltosDisponibles(
+  tx: Prisma.TransactionClient,
+  tipoItem: TipoInventarioBeck,
+  itemId: string,
+  cantidad: number,
+): Promise<string[]> {
+  if (cantidad <= 0) return [];
+  const asignaciones = await tx.asignacionInventarioBeck.findMany({
+    where: { [campoItem(tipoItem)]: itemId },
+    select: { estado: true, subSkus: true, devueltoAt: true, createdAt: true },
+    orderBy: [{ devueltoAt: 'desc' }, { createdAt: 'desc' }],
+  });
+  const codigosActivos = new Set(
+    asignaciones
+      .filter((asignacion) => asignacion.estado === EstadoAsignacionInventario.asignado)
+      .flatMap((asignacion) => asignacion.subSkus),
+  );
+  const reutilizables = new Set<string>();
+  for (const asignacion of asignaciones) {
+    if (asignacion.estado !== EstadoAsignacionInventario.devuelto) continue;
+    for (const subSku of asignacion.subSkus) {
+      if (!codigosActivos.has(subSku)) reutilizables.add(subSku);
+      if (reutilizables.size === cantidad) return Array.from(reutilizables);
+    }
+  }
+  return Array.from(reutilizables);
 }
 
 const ASIGNACION_INCLUDE = {
@@ -276,15 +306,25 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
           if (epp.saldo < linea.cantidad) {
             throw new Error(`Stock insuficiente de "${epp.item}" (disponible: ${epp.saldo}).`);
           }
+          const subSkusReutilizados = await obtenerSubSkusDevueltosDisponibles(
+            tx,
+            linea.tipoItem,
+            epp.id,
+            linea.cantidad,
+          );
+          const cantidadNueva = linea.cantidad - subSkusReutilizados.length;
           const eppActualizado = await tx.inventarioBeckEpp.update({
             where: { id: epp.id },
             data: {
               saldo: { decrement: linea.cantidad },
               salida: { increment: linea.cantidad },
-              ...(epp.sku?.trim() && { unidadesGeneradas: { increment: linea.cantidad } }),
+              ...(epp.sku?.trim() && cantidadNueva > 0 && { unidadesGeneradas: { increment: cantidadNueva } }),
             },
           });
-          const subSkusEpp = generarSubSkus(epp.sku, eppActualizado.unidadesGeneradas, linea.cantidad);
+          const subSkusEpp = [
+            ...subSkusReutilizados,
+            ...generarSubSkus(epp.sku, eppActualizado.unidadesGeneradas, cantidadNueva),
+          ];
           creadas.push(
             await tx.asignacionInventarioBeck.create({
               data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, eppId: epp.id, cantidad: linea.cantidad, observacion, subSkus: subSkusEpp },
@@ -300,15 +340,25 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
           if (implemento.saldo < linea.cantidad) {
             throw new Error(`Stock insuficiente de "${implemento.item}" (disponible: ${implemento.saldo}).`);
           }
+          const subSkusReutilizados = await obtenerSubSkusDevueltosDisponibles(
+            tx,
+            linea.tipoItem,
+            implemento.id,
+            linea.cantidad,
+          );
+          const cantidadNueva = linea.cantidad - subSkusReutilizados.length;
           const implementoActualizado = await tx.inventarioBeckImplemento.update({
             where: { id: implemento.id },
             data: {
               saldo: { decrement: linea.cantidad },
               salida: { increment: linea.cantidad },
-              ...(implemento.sku?.trim() && { unidadesGeneradas: { increment: linea.cantidad } }),
+              ...(implemento.sku?.trim() && cantidadNueva > 0 && { unidadesGeneradas: { increment: cantidadNueva } }),
             },
           });
-          const subSkusImplemento = generarSubSkus(implemento.sku, implementoActualizado.unidadesGeneradas, linea.cantidad);
+          const subSkusImplemento = [
+            ...subSkusReutilizados,
+            ...generarSubSkus(implemento.sku, implementoActualizado.unidadesGeneradas, cantidadNueva),
+          ];
           creadas.push(
             await tx.asignacionInventarioBeck.create({
               data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, implementoId: implemento.id, cantidad: linea.cantidad, observacion, subSkus: subSkusImplemento },
@@ -365,11 +415,12 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
         detalle: esReenvioDeSupervisor
           ? 'Supervisor entregó el artículo al operario desde el CRM'
           : 'Bodega asignó el artículo al supervisor desde el CRM',
+        datos: asignacion.subSkus.length ? { subSkus: asignacion.subSkus } : undefined,
       });
     }
 
     return creadas;
-  });
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
   await registrarMovimientoCRM({
     usuarioId: input.asignadoPorId,
@@ -481,6 +532,7 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
         accion: 'DEVOLUCION_RECIBIDA_SUPERVISOR',
         cantidad: asignacion.cantidad,
         detalle: 'Devolución de operario recibida desde el CRM',
+        datos: asignacion.subSkus.length ? { subSkus: asignacion.subSkus } : undefined,
       });
       return;
     }
@@ -514,6 +566,7 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
       accion: 'DEVUELTO_BODEGA',
       cantidad: asignacion.cantidad,
       detalle: 'Artículo devuelto a bodega desde el CRM',
+      datos: asignacion.subSkus.length ? { subSkus: asignacion.subSkus } : undefined,
     });
   });
 
