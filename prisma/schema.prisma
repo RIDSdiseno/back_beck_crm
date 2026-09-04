@@ -318,6 +318,7 @@ model InventarioBeckEpp {
   activo       Boolean                    @default(true)
   createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  unidadesGeneradas Int                   @default(0) @map("unidades_generadas")
   asignaciones AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -345,6 +346,7 @@ model InventarioBeckImplemento {
   activo       Boolean                    @default(true)
   createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  unidadesGeneradas Int                   @default(0) @map("unidades_generadas")
   asignaciones AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -371,6 +373,7 @@ model InventarioBeckHerramienta {
   createdAt       DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   fechaMantencion DateTime?                  @map("fecha_mantencion") @db.Date
+  subSkuUnidad    String?                    @map("sub_sku_unidad") @db.VarChar(120)
   asignaciones    AsignacionInventarioBeck[]
 
   @@index([sku])
@@ -401,6 +404,7 @@ model AsignacionInventarioBeck {
   devueltoPorId                                                                String?                        @map("devuelto_por_id") @db.Uuid
   trabajadorId                                                                 String?                        @map("trabajador_id") @db.Uuid
   reasignadoAt                                                                 DateTime?                      @map("reasignado_at") @db.Timestamp(6)
+  subSkus                                                                      String[]                       @default([]) @map("sub_skus")
   asignacion_origen_id                                                         String?                        @db.Uuid
   recepcion_confirmada_at                                                      DateTime?                      @db.Timestamp(6)
   recepcion_confirmada_por_id                                                  String?                        @db.Uuid

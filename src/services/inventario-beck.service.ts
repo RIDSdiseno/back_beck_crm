@@ -285,6 +285,64 @@ export async function cambiarEstadoInventarioImplemento(id: string, activo: bool
   return prisma.inventarioBeckImplemento.update({ where: { id }, data: { activo } });
 }
 
+const SKU_GENERADO_INICIO_IMPLEMENTO = 800000;
+export const SKU_GENERADO_REGEX_IMPLEMENTO = /^8\d{5}$/;
+
+async function siguienteSkuImplementoDisponible(reservados: Set<string>): Promise<number> {
+  const rows = await prisma.inventarioBeckImplemento.findMany({
+    where: { sku: { startsWith: '8' } },
+    select: { sku: true },
+  });
+
+  let max = SKU_GENERADO_INICIO_IMPLEMENTO;
+  for (const row of rows) {
+    if (row.sku && SKU_GENERADO_REGEX_IMPLEMENTO.test(row.sku)) {
+      const n = Number(row.sku);
+      if (n > max) max = n;
+    }
+  }
+
+  let next = max + 1;
+  while (reservados.has(String(next))) next += 1;
+  return next;
+}
+
+export async function generarSkuInventarioImplemento(id: string) {
+  const item = await obtenerInventarioImplemento(id);
+  if (item.sku && item.sku.trim()) {
+    throw new Error('Este implemento ya tiene un SKU asignado.');
+  }
+
+  const existentes = await prisma.inventarioBeckImplemento.findMany({ select: { sku: true } });
+  const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
+
+  const next = await siguienteSkuImplementoDisponible(reservados);
+  return prisma.inventarioBeckImplemento.update({ where: { id }, data: { sku: String(next) } });
+}
+
+export async function generarSkuInventarioImplementoMasivo(): Promise<{ actualizados: number }> {
+  const sinSku = await prisma.inventarioBeckImplemento.findMany({
+    where: { OR: [{ sku: null }, { sku: '' }] },
+    select: { id: true },
+  });
+
+  if (sinSku.length === 0) return { actualizados: 0 };
+
+  const existentes = await prisma.inventarioBeckImplemento.findMany({ select: { sku: true } });
+  const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
+
+  let actualizados = 0;
+  for (const item of sinSku) {
+    const next = await siguienteSkuImplementoDisponible(reservados);
+    const nextStr = String(next);
+    reservados.add(nextStr);
+    await prisma.inventarioBeckImplemento.update({ where: { id: item.id }, data: { sku: nextStr } });
+    actualizados += 1;
+  }
+
+  return { actualizados };
+}
+
 export async function listarInventarioHerramientas(params: BaseParams = {}) {
   const q = normalizeString(params.q);
   return prisma.inventarioBeckHerramienta.findMany({

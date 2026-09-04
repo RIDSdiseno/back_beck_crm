@@ -11,6 +11,8 @@ import {
   crearImplemento,
   generarSkuEpp,
   generarSkuEppMasivo,
+  generarSkuImplemento,
+  generarSkuImplementoMasivo,
   importarExcelInventarioBeck,
   listarEpp,
   listarHerramientas,
@@ -51,10 +53,12 @@ router.patch('/epp/:id/estado', authenticate, requirePermission('beck_inventario
 router.post('/epp/:id/generar-sku', authenticate, requirePermission('beck_inventario', 'editar'), generarSkuEpp);
 
 router.get('/implementos', authenticate, requirePermission('beck_inventario', 'ver'), listarImplementos);
+router.post('/implementos/generar-sku-masivo', authenticate, requirePermission('beck_inventario', 'editar'), generarSkuImplementoMasivo);
 router.get('/implementos/:id', authenticate, requirePermission('beck_inventario', 'ver'), obtenerImplemento);
 router.post('/implementos', authenticate, requirePermission('beck_inventario', 'editar'), crearImplemento);
 router.put('/implementos/:id', authenticate, requirePermission('beck_inventario', 'editar'), actualizarImplemento);
 router.patch('/implementos/:id/estado', authenticate, requirePermission('beck_inventario', 'editar'), cambiarEstadoImplemento);
+router.post('/implementos/:id/generar-sku', authenticate, requirePermission('beck_inventario', 'editar'), generarSkuImplemento);
 
 router.get('/herramientas', authenticate, requirePermission('beck_inventario', 'ver'), listarHerramientas);
 router.get('/herramientas/:id', authenticate, requirePermission('beck_inventario', 'ver'), obtenerHerramienta);

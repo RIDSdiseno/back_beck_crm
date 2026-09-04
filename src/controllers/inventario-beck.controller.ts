@@ -11,6 +11,8 @@ import {
   crearInventarioImplemento,
   generarSkuInventarioEpp,
   generarSkuInventarioEppMasivo,
+  generarSkuInventarioImplemento,
+  generarSkuInventarioImplementoMasivo,
   listarInventarioEpp,
   listarInventarioHerramientas,
   listarInventarioImplementos,
@@ -151,6 +153,22 @@ export const cambiarEstadoImplemento = async (req: Request, res: Response): Prom
     res.json(await cambiarEstadoInventarioImplemento(getId(req), getActivo(req.body)));
   } catch (error) {
     handleError(res, error, 'cambiar estado de implemento');
+  }
+};
+
+export const generarSkuImplemento = async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.json(await generarSkuInventarioImplemento(getId(req)));
+  } catch (error) {
+    handleError(res, error, 'generar SKU de implemento');
+  }
+};
+
+export const generarSkuImplementoMasivo = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    res.json(await generarSkuInventarioImplementoMasivo());
+  } catch (error) {
+    handleError(res, error, 'generar SKU masivo de implementos');
   }
 };
 

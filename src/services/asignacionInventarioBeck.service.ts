@@ -94,6 +94,17 @@ function campoItem(tipoItem: TipoInventarioBeck): 'eppId' | 'implementoId' | 'he
   return 'herramientaId';
 }
 
+/**
+ * Sub-SKU por unidad fisica: "BASE-N", con N correlativo y nunca reutilizado
+ * (unidadesGeneradas del item solo incrementa). totalGenerado ya incluye la
+ * cantidad recien sumada, por eso el rango termina justo en ese valor.
+ */
+function generarSubSkus(sku: string | null, totalGenerado: number, cantidad: number): string[] {
+  if (!sku?.trim() || cantidad <= 0) return [];
+  const inicio = totalGenerado - cantidad + 1;
+  return Array.from({ length: cantidad }, (_, i) => `${sku}-${inicio + i}`);
+}
+
 const ASIGNACION_INCLUDE = {
   obra: { select: { id: true, nombre: true, codigo: true } },
   jefeObra: { select: { id: true, nombre: true, email: true, rol: true } },
@@ -216,9 +227,11 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
             );
             restante -= lote.cantidad;
           } else {
+            const subSkusAMover = lote.subSkus.slice(0, restante);
+            const subSkusRestantes = lote.subSkus.slice(restante);
             await tx.asignacionInventarioBeck.update({
               where: { id: lote.id },
-              data: { cantidad: { decrement: restante } },
+              data: { cantidad: { decrement: restante }, subSkus: subSkusRestantes },
             });
             creadas.push(
               await tx.asignacionInventarioBeck.create({
@@ -235,6 +248,7 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
                   observacion,
                   trabajadorId: destinatarioId,
                   reasignadoAt: new Date(),
+                  subSkus: subSkusAMover,
                 },
               }),
             );
@@ -262,13 +276,18 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
           if (epp.saldo < linea.cantidad) {
             throw new Error(`Stock insuficiente de "${epp.item}" (disponible: ${epp.saldo}).`);
           }
-          await tx.inventarioBeckEpp.update({
+          const eppActualizado = await tx.inventarioBeckEpp.update({
             where: { id: epp.id },
-            data: { saldo: { decrement: linea.cantidad }, salida: { increment: linea.cantidad } },
+            data: {
+              saldo: { decrement: linea.cantidad },
+              salida: { increment: linea.cantidad },
+              ...(epp.sku?.trim() && { unidadesGeneradas: { increment: linea.cantidad } }),
+            },
           });
+          const subSkusEpp = generarSubSkus(epp.sku, eppActualizado.unidadesGeneradas, linea.cantidad);
           creadas.push(
             await tx.asignacionInventarioBeck.create({
-              data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, eppId: epp.id, cantidad: linea.cantidad, observacion },
+              data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, eppId: epp.id, cantidad: linea.cantidad, observacion, subSkus: subSkusEpp },
             }),
           );
           continue;
@@ -281,13 +300,18 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
           if (implemento.saldo < linea.cantidad) {
             throw new Error(`Stock insuficiente de "${implemento.item}" (disponible: ${implemento.saldo}).`);
           }
-          await tx.inventarioBeckImplemento.update({
+          const implementoActualizado = await tx.inventarioBeckImplemento.update({
             where: { id: implemento.id },
-            data: { saldo: { decrement: linea.cantidad }, salida: { increment: linea.cantidad } },
+            data: {
+              saldo: { decrement: linea.cantidad },
+              salida: { increment: linea.cantidad },
+              ...(implemento.sku?.trim() && { unidadesGeneradas: { increment: linea.cantidad } }),
+            },
           });
+          const subSkusImplemento = generarSubSkus(implemento.sku, implementoActualizado.unidadesGeneradas, linea.cantidad);
           creadas.push(
             await tx.asignacionInventarioBeck.create({
-              data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, implementoId: implemento.id, cantidad: linea.cantidad, observacion },
+              data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, implementoId: implemento.id, cantidad: linea.cantidad, observacion, subSkus: subSkusImplemento },
             }),
           );
           continue;
@@ -298,10 +322,26 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
         if (!herramienta.activo) throw new Error(`La herramienta "${herramienta.nombre}" esta inactiva.`);
         if (linea.cantidad !== 1) throw new Error(`La herramienta "${herramienta.nombre}" solo admite cantidad 1 (es un activo unico).`);
 
-        await tx.inventarioBeckHerramienta.update({ where: { id: herramienta.id }, data: { encargado: destinatario.nombre } });
+        let subSkuHerramienta = herramienta.subSkuUnidad;
+        if (!subSkuHerramienta && herramienta.sku?.trim()) {
+          subSkuHerramienta = `${herramienta.sku}-1`;
+        }
+        await tx.inventarioBeckHerramienta.update({
+          where: { id: herramienta.id },
+          data: { encargado: destinatario.nombre, ...(!herramienta.subSkuUnidad && subSkuHerramienta && { subSkuUnidad: subSkuHerramienta }) },
+        });
         creadas.push(
           await tx.asignacionInventarioBeck.create({
-            data: { obraId, jefeObraId: destinatarioId, asignadoPorId: input.asignadoPorId, tipoItem: linea.tipoItem, herramientaId: herramienta.id, cantidad: 1, observacion },
+            data: {
+              obraId,
+              jefeObraId: destinatarioId,
+              asignadoPorId: input.asignadoPorId,
+              tipoItem: linea.tipoItem,
+              herramientaId: herramienta.id,
+              cantidad: 1,
+              observacion,
+              subSkus: subSkuHerramienta ? [subSkuHerramienta] : [],
+            },
           }),
         );
       }

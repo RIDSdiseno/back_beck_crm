@@ -118,10 +118,9 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     const kpis = {
       sellosEjecutados: 0,
       metrosLineales: 0,
-      registrosPendientes: 0,
-      registrosEnRevision: 0,
-      registrosValidados: 0,
-      registrosRechazados: 0,
+      enRevision: 0,
+      validados: 0,
+      rechazados: 0,
       pisosConRegistros: 0,
       selladoresDistintos: 0,
     };
@@ -136,10 +135,9 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
       kpis.sellosEjecutados += sellos;
       kpis.metrosLineales += metrosLineales;
 
-      if (registro.estado === EstadoRegistroTerreno.pendiente) kpis.registrosPendientes += 1;
-      if (registro.estado === EstadoRegistroTerreno.en_revision) kpis.registrosEnRevision += 1;
-      if (registro.estado === EstadoRegistroTerreno.validado) kpis.registrosValidados += 1;
-      if (registro.estado === EstadoRegistroTerreno.rechazado) kpis.registrosRechazados += 1;
+      if (registro.estado === EstadoRegistroTerreno.en_revision) kpis.enRevision += 1;
+      if (registro.estado === EstadoRegistroTerreno.validado) kpis.validados += 1;
+      if (registro.estado === EstadoRegistroTerreno.rechazado) kpis.rechazados += 1;
 
       pisosConRegistros.add(piso);
       selladoresDistintos.add(nombreSellador);
