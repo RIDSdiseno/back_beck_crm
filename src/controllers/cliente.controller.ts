@@ -1370,3 +1370,9 @@ export const getDashboardCliente = async (req: Request, res: Response): Promise<
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
+
+
+
+
+// YO ESTUVE AQUI: MAXIMILIANO GONZALEZ
+// TERMINEN TRAGGER, GITHUB: MAXI1004

@@ -150,3 +150,9 @@ export const eliminarItemizadoMandante = async (req: Request, res: Response): Pr
     res.status(500).json({ error: 'Error al desactivar itemizado mandante' });
   }
 };
+
+
+
+
+// YO ESTUVE AQUI: MAXIMILIANO GONZALEZ
+// TERMINEN TRAGGER, GITHUB: MAXI1004

@@ -147,3 +147,10 @@ export const getObrasStats = async (_req: Request, res: Response): Promise<void>
     res.status(500).json({ error: 'Error al obtener estadísticas de obras' });
   }
 };
+
+
+
+
+
+// YO ESTUVE AQUI: MAXIMILIANO GONZALEZ
+// TERMINEN TRAGGER, GITHUB: MAXI1004
