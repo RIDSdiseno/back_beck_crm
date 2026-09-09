@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getInventarioFiremat,
   getMovimientosInventarioFiremat,
+  exportInventarioFiremat,
   updateInventarioFiremat,
 } from '../../controllers/firemat/inventario.controller';
 import { importarInventarioPdf } from '../../controllers/firemat/importar-firemat-pdf.controller';
@@ -23,6 +24,7 @@ router.post('/importar-pdf', canEditInventario, uploadPdfFile, importarInventari
 router.post('/importar-excel', canEditInventario, uploadExcelFile, importarInventarioExcel);
 
 router.get('/', canSeeInventario, getInventarioFiremat);
+router.get('/exportar', requirePermission('firemat_inventario', 'ver'), exportInventarioFiremat);
 router.post('/', canEditInventario, methodNotAllowed);
 router.put('/', canEditInventario, methodNotAllowed);
 router.get('/movimientos', canSeeMovimientos, getMovimientosInventarioFiremat);

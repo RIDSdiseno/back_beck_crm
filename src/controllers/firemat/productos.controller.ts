@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import ExcelJS from 'exceljs';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 import { uploadImageDetailed, deleteImage } from '../../config/cloudinary';
@@ -80,26 +81,64 @@ const toDTO = (p: ProdWithCat) => ({
   createdAt: p.createdAt,
 });
 
+const excelText = (value: unknown): string => {
+  if (value === null || value === undefined) return '';
+  const text = String(value);
+  return /^[=+\-@]/.test(text.trimStart()) ? `'${text}` : text;
+};
+
+const formatExcelDate = (value: Date | null | undefined): string => {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('es-CL', {
+    timeZone: 'America/Santiago',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(value);
+};
+
+const buildProductosWhere = (query: Request['query']): Prisma.ProductoWhereInput => {
+  const { q, activo, categoriaId } = query;
+  const where: Prisma.ProductoWhereInput = {};
+
+  if (typeof activo === 'string') where.activo = activo === 'true';
+  if (typeof categoriaId === 'string' && categoriaId.trim()) {
+    const id = parseInt(categoriaId, 10);
+    if (!isNaN(id)) where.categoriaId = id;
+  }
+  if (typeof q === 'string' && q.trim()) {
+    where.OR = [
+      { sku: { contains: q.trim(), mode: 'insensitive' } },
+      { nombre: { contains: q.trim(), mode: 'insensitive' } },
+      { descripcion: { contains: q.trim(), mode: 'insensitive' } },
+    ];
+  }
+
+  return where;
+};
+
+const styleWorksheet = (worksheet: ExcelJS.Worksheet): void => {
+  const header = worksheet.getRow(1);
+  header.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
+  header.alignment = { vertical: 'middle', horizontal: 'center' };
+  header.height = 24;
+  worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+  if (worksheet.columnCount > 0) {
+    worksheet.autoFilter = {
+      from: { row: 1, column: 1 },
+      to: { row: 1, column: worksheet.columnCount },
+    };
+  }
+};
+
 export const getProductosFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { q, activo, categoriaId } = req.query;
-    const where: Prisma.ProductoWhereInput = {};
-
-    if (typeof activo === 'string') where.activo = activo === 'true';
-    if (typeof categoriaId === 'string' && categoriaId.trim()) {
-      const id = parseInt(categoriaId, 10);
-      if (!isNaN(id)) where.categoriaId = id;
-    }
-    if (typeof q === 'string' && q.trim()) {
-      where.OR = [
-        { sku: { contains: q.trim(), mode: 'insensitive' } },
-        { nombre: { contains: q.trim(), mode: 'insensitive' } },
-        { descripcion: { contains: q.trim(), mode: 'insensitive' } },
-      ];
-    }
-
     const productos = await firematPrisma.producto.findMany({
-      where,
+      where: buildProductosWhere(req.query),
       include: { Categoria: true },
       orderBy: { createdAt: 'desc' },
     });
@@ -108,6 +147,123 @@ export const getProductosFiremat = async (req: Request, res: Response): Promise<
   } catch (error) {
     console.error('Error al obtener productos Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al obtener productos' });
+  }
+};
+
+export const exportProductosFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const productos = await firematPrisma.producto.findMany({
+      where: buildProductosWhere(req.query),
+      include: {
+        Categoria: true,
+        ProductoCodigoBarra: { orderBy: { id: 'asc' } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'CRM Firemat';
+    workbook.created = new Date();
+
+    const productosSheet = workbook.addWorksheet('Productos');
+    productosSheet.columns = [
+      { header: 'SKU / Product Code', key: 'sku', width: 22 },
+      { header: 'Producto', key: 'nombre', width: 35 },
+      { header: 'Descripción', key: 'descripcion', width: 45 },
+      { header: 'Categoría', key: 'categoria', width: 22 },
+      { header: 'Disponibilidad', key: 'disponibilidad', width: 18 },
+      { header: 'Formato', key: 'formato', width: 18 },
+      { header: 'Cantidad por caja', key: 'cantidadCaja', width: 18 },
+      { header: 'Precio USD', key: 'precioUsd', width: 16 },
+      { header: 'Precio CLP', key: 'precio', width: 16 },
+      { header: 'Precio sugerido', key: 'precioSugerido', width: 18 },
+      { header: 'Precio instalador', key: 'precioInstalador', width: 18 },
+      { header: 'Stock inicial', key: 'stockInicial', width: 14 },
+      { header: 'Stock actual', key: 'stock', width: 14 },
+      { header: 'Stock reservado', key: 'stockReservado', width: 16 },
+      { header: 'Stock disponible', key: 'stockDisponible', width: 16 },
+      { header: 'Stock mínimo', key: 'minStock', width: 14 },
+      { header: 'Ubicación', key: 'ubicacion', width: 24 },
+      { header: 'Criticidad', key: 'criticidad', width: 14 },
+      { header: 'Estado', key: 'activo', width: 12 },
+      { header: 'Fecha creación', key: 'createdAt', width: 20 },
+      { header: 'URL imagen', key: 'imagen', width: 45 },
+    ];
+
+    for (const producto of productos) {
+      productosSheet.addRow({
+        sku: excelText(producto.sku),
+        nombre: excelText(producto.nombre),
+        descripcion: excelText(producto.descripcion),
+        categoria: excelText(producto.Categoria.nombre),
+        disponibilidad: excelText(producto.disponibilidad),
+        formato: excelText(producto.formato),
+        cantidadCaja: excelText(producto.cantidadCaja),
+        precioUsd: producto.precioUsd ?? 0,
+        precio: producto.precio,
+        precioSugerido: producto.precioSugerido ?? 0,
+        precioInstalador: producto.precioInstalador ?? 0,
+        stockInicial: producto.stockInicial ?? 0,
+        stock: producto.stock,
+        stockReservado: producto.stockReservado,
+        stockDisponible: producto.stock - producto.stockReservado,
+        minStock: producto.minStock,
+        ubicacion: excelText(producto.ubicacion),
+        criticidad: excelText(producto.criticidad),
+        activo: producto.activo ? 'Activo' : 'Inactivo',
+        createdAt: formatExcelDate(producto.createdAt),
+        imagen: excelText(producto.imagen),
+      });
+    }
+
+    productosSheet.getColumn('precioUsd').numFmt = 'US$#,##0.00';
+    productosSheet.getColumn('precio').numFmt = '$#,##0';
+    productosSheet.getColumn('precioSugerido').numFmt = '$#,##0';
+    productosSheet.getColumn('precioInstalador').numFmt = '$#,##0';
+    styleWorksheet(productosSheet);
+
+    const codigosSheet = workbook.addWorksheet('Códigos de barra');
+    codigosSheet.columns = [
+      { header: 'SKU / Product Code', key: 'sku', width: 22 },
+      { header: 'Producto', key: 'nombre', width: 35 },
+      { header: 'Código de barra', key: 'codigo', width: 28 },
+      { header: 'Unidades por escaneo', key: 'unidadesPorEscaneo', width: 22 },
+      { header: 'Descripción', key: 'descripcion', width: 35 },
+      { header: 'Estado', key: 'activo', width: 12 },
+      { header: 'Fecha creación', key: 'createdAt', width: 20 },
+    ];
+
+    for (const producto of productos) {
+      for (const codigo of producto.ProductoCodigoBarra) {
+        codigosSheet.addRow({
+          sku: excelText(producto.sku),
+          nombre: excelText(producto.nombre),
+          codigo: excelText(codigo.codigo),
+          unidadesPorEscaneo: codigo.unidadesPorEscaneo,
+          descripcion: excelText(codigo.descripcion),
+          activo: codigo.activo ? 'Activo' : 'Inactivo',
+          createdAt: formatExcelDate(codigo.createdAt),
+        });
+      }
+    }
+    styleWorksheet(codigosSheet);
+
+    const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="productos_firemat_${timestamp}.xlsx"`,
+    );
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Error al exportar productos Firemat:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ success: false, error: 'Error al exportar productos' });
+    }
   }
 };
 

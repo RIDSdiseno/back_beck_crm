@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import ExcelJS from 'exceljs';
 import { Prisma } from '../../generated/firemat-client';
 import { firematPrisma } from '../../config/firematPrisma';
 
@@ -94,77 +95,218 @@ const toInventarioDTO = (producto: ProductoInventario) => {
   };
 };
 
+const excelText = (value: unknown): string => {
+  if (value === null || value === undefined) return '';
+  const text = String(value);
+  return /^[=+\-@]/.test(text.trimStart()) ? `'${text}` : text;
+};
+
+const formatExcelDate = (value: Date | null | undefined): string => {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('es-CL', {
+    timeZone: 'America/Santiago',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(value);
+};
+
+const buildInventarioWhere = (query: Request['query']): Prisma.ProductoWhereInput => {
+  const { q, activo, categoriaId, criticidad } = query;
+  const where: Prisma.ProductoWhereInput = {};
+
+  if (typeof activo === 'string') {
+    where.activo = activo === 'true';
+  }
+
+  if (typeof categoriaId === 'string' && categoriaId.trim()) {
+    const id = parseInt(categoriaId, 10);
+    if (!isNaN(id)) where.categoriaId = id;
+  }
+
+  if (typeof criticidad === 'string' && criticidad.trim()) {
+    where.criticidad = criticidad.trim();
+  }
+
+  if (typeof q === 'string' && q.trim()) {
+    where.OR = [
+      { sku: { contains: q.trim(), mode: 'insensitive' } },
+      { nombre: { contains: q.trim(), mode: 'insensitive' } },
+      { descripcion: { contains: q.trim(), mode: 'insensitive' } },
+    ];
+  }
+
+  return where;
+};
+
+const getInventarioFiltrado = async (query: Request['query']) => {
+  const productos = await firematPrisma.producto.findMany({
+    where: buildInventarioWhere(query),
+    include: { Categoria: true },
+    orderBy: { nombre: 'asc' },
+  });
+
+  let data = productos.map(toInventarioDTO);
+
+  if (query.bajoStock === 'true') {
+    data = data.filter((producto) => producto.alertaStockBajo);
+  }
+
+  data.sort((a, b) => {
+    if (a.alertaStockBajo && !b.alertaStockBajo) return -1;
+    if (!a.alertaStockBajo && b.alertaStockBajo) return 1;
+    return a.nombre.localeCompare(b.nombre);
+  });
+
+  return data;
+};
+
+const buildInventarioResumen = (data: ReturnType<typeof toInventarioDTO>[]) => {
+  const totalProductos = data.length;
+  const productosActivos = data.filter((producto) => producto.activo).length;
+  return {
+    totalProductos,
+    productosActivos,
+    productosInactivos: totalProductos - productosActivos,
+    productosSinStock: data.filter((producto) => producto.estadoStock === 'SIN_STOCK').length,
+    productosBajoStock: data.filter((producto) => producto.estadoStock === 'BAJO_STOCK').length,
+    stockTotal: data.reduce((sum, producto) => sum + producto.stock, 0),
+    stockReservadoTotal: data.reduce((sum, producto) => sum + producto.stockReservado, 0),
+    stockDisponibleTotal: data.reduce((sum, producto) => sum + producto.stockDisponible, 0),
+  };
+};
+
+const styleWorksheet = (worksheet: ExcelJS.Worksheet): void => {
+  const header = worksheet.getRow(1);
+  header.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
+  header.alignment = { vertical: 'middle', horizontal: 'center' };
+  header.height = 24;
+  worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+  if (worksheet.columnCount > 0) {
+    worksheet.autoFilter = {
+      from: { row: 1, column: 1 },
+      to: { row: 1, column: worksheet.columnCount },
+    };
+  }
+};
+
 export const getInventarioFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { q, activo, categoriaId, bajoStock, criticidad } = req.query;
-
-    const where: Prisma.ProductoWhereInput = {};
-
-    if (typeof activo === 'string') {
-      where.activo = activo === 'true';
-    }
-
-    if (typeof categoriaId === 'string' && categoriaId.trim()) {
-      const id = parseInt(categoriaId, 10);
-      if (!isNaN(id)) where.categoriaId = id;
-    }
-
-    if (typeof criticidad === 'string' && criticidad.trim()) {
-      where.criticidad = criticidad.trim();
-    }
-
-    if (typeof q === 'string' && q.trim()) {
-      where.OR = [
-        { sku: { contains: q.trim(), mode: 'insensitive' } },
-        { nombre: { contains: q.trim(), mode: 'insensitive' } },
-        { descripcion: { contains: q.trim(), mode: 'insensitive' } },
-      ];
-    }
-
-    const productos = await firematPrisma.producto.findMany({
-      where,
-      include: { Categoria: true },
-      orderBy: { nombre: 'asc' },
-    });
-
-    let data = productos.map(toInventarioDTO);
-
-    if (bajoStock === 'true') {
-      data = data.filter((p) => p.alertaStockBajo);
-    }
-
-    data.sort((a, b) => {
-      if (a.alertaStockBajo && !b.alertaStockBajo) return -1;
-      if (!a.alertaStockBajo && b.alertaStockBajo) return 1;
-      return a.nombre.localeCompare(b.nombre);
-    });
-
-    const totalProductos = data.length;
-    const productosActivos = data.filter((p) => p.activo).length;
-    const productosInactivos = totalProductos - productosActivos;
-    const productosSinStock = data.filter((p) => p.estadoStock === 'SIN_STOCK').length;
-    const productosBajoStock = data.filter((p) => p.estadoStock === 'BAJO_STOCK').length;
-    const stockTotal = data.reduce((sum, p) => sum + p.stock, 0);
-    const stockReservadoTotal = data.reduce((sum, p) => sum + p.stockReservado, 0);
-    const stockDisponibleTotal = data.reduce((sum, p) => sum + p.stockDisponible, 0);
+    const data = await getInventarioFiltrado(req.query);
+    const resumen = buildInventarioResumen(data);
 
     res.json({
       success: true,
       data,
-      resumen: {
-        totalProductos,
-        productosActivos,
-        productosInactivos,
-        productosSinStock,
-        productosBajoStock,
-        stockTotal,
-        stockReservadoTotal,
-        stockDisponibleTotal,
-      },
+      resumen,
     });
   } catch (error) {
     console.error('Error al obtener inventario Firemat:', error);
     res.status(500).json({ success: false, error: 'Error al obtener inventario' });
+  }
+};
+
+export const exportInventarioFiremat = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = await getInventarioFiltrado(req.query);
+    const resumen = buildInventarioResumen(data);
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'CRM Firemat';
+    workbook.created = new Date();
+
+    const inventarioSheet = workbook.addWorksheet('Inventario');
+    inventarioSheet.columns = [
+      { header: 'SKU', key: 'sku', width: 18 },
+      { header: 'Producto', key: 'nombre', width: 35 },
+      { header: 'Descripción', key: 'descripcion', width: 45 },
+      { header: 'Categoría', key: 'categoria', width: 22 },
+      { header: 'Stock inicial', key: 'stockInicial', width: 14 },
+      { header: 'Entradas', key: 'entradas', width: 12 },
+      { header: 'Última entrada', key: 'fechaUltimaEntrada', width: 20 },
+      { header: 'Salidas', key: 'salidas', width: 12 },
+      { header: 'Última salida', key: 'fechaUltimaSalida', width: 20 },
+      { header: 'Stock actual', key: 'stock', width: 14 },
+      { header: 'Stock reservado', key: 'stockReservado', width: 16 },
+      { header: 'Stock disponible', key: 'stockDisponible', width: 16 },
+      { header: 'Stock mínimo', key: 'minStock', width: 14 },
+      { header: 'Estado stock', key: 'estadoStock', width: 16 },
+      { header: 'Criticidad', key: 'criticidad', width: 14 },
+      { header: 'Ubicación', key: 'ubicacion', width: 24 },
+      { header: 'Estado', key: 'activo', width: 12 },
+      { header: 'Precio CLP', key: 'precio', width: 16 },
+      { header: 'Fecha creación', key: 'createdAt', width: 20 },
+      { header: 'URL imagen', key: 'imagen', width: 45 },
+    ];
+
+    for (const producto of data) {
+      inventarioSheet.addRow({
+        sku: excelText(producto.sku),
+        nombre: excelText(producto.nombre),
+        descripcion: excelText(producto.descripcion),
+        categoria: excelText(producto.categoria),
+        stockInicial: producto.stockInicial ?? 0,
+        entradas: producto.entradas ?? 0,
+        fechaUltimaEntrada: formatExcelDate(producto.fechaUltimaEntrada),
+        salidas: producto.salidas ?? 0,
+        fechaUltimaSalida: formatExcelDate(producto.fechaUltimaSalida),
+        stock: producto.stock,
+        stockReservado: producto.stockReservado,
+        stockDisponible: producto.stockDisponible,
+        minStock: producto.minStock,
+        estadoStock: producto.estadoStock === 'SIN_STOCK'
+          ? 'Sin stock'
+          : producto.estadoStock === 'BAJO_STOCK'
+            ? 'Bajo stock'
+            : 'OK',
+        criticidad: excelText(producto.criticidad),
+        ubicacion: excelText(producto.ubicacion),
+        activo: producto.activo ? 'Activo' : 'Inactivo',
+        precio: producto.precio,
+        createdAt: formatExcelDate(producto.createdAt),
+        imagen: excelText(producto.imagen),
+      });
+    }
+
+    inventarioSheet.getColumn('precio').numFmt = '$#,##0';
+    styleWorksheet(inventarioSheet);
+
+    const resumenSheet = workbook.addWorksheet('Resumen');
+    resumenSheet.columns = [
+      { header: 'Indicador', key: 'indicador', width: 30 },
+      { header: 'Valor', key: 'valor', width: 18 },
+    ];
+    resumenSheet.addRows([
+      { indicador: 'Total productos', valor: resumen.totalProductos },
+      { indicador: 'Productos activos', valor: resumen.productosActivos },
+      { indicador: 'Productos inactivos', valor: resumen.productosInactivos },
+      { indicador: 'Productos sin stock', valor: resumen.productosSinStock },
+      { indicador: 'Productos bajo stock', valor: resumen.productosBajoStock },
+      { indicador: 'Stock total', valor: resumen.stockTotal },
+      { indicador: 'Stock reservado', valor: resumen.stockReservadoTotal },
+      { indicador: 'Stock disponible', valor: resumen.stockDisponibleTotal },
+    ]);
+    styleWorksheet(resumenSheet);
+
+    const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="inventario_firemat_${timestamp}.xlsx"`,
+    );
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Error al exportar inventario Firemat:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ success: false, error: 'Error al exportar inventario' });
+    }
   }
 };
 

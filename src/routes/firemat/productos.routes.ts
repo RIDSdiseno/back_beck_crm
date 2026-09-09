@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getProductosFiremat,
+  exportProductosFiremat,
   getProductoFirematById,
   createProductoFiremat,
   updateProductoFiremat,
@@ -20,6 +21,7 @@ router.post('/importar-lista-precios-pdf', canEdit, uploadPdfFile, importarLista
 router.patch('/asignar-categoria', canEdit, asignarCategoriaProductosFiremat);
 
 router.get('/', canSee, getProductosFiremat);
+router.get('/exportar', requirePermission('firemat_productos', 'ver'), exportProductosFiremat);
 router.get('/:id', canSee, getProductoFirematById);
 router.post('/', canEdit, uploadFirematProductoImage, createProductoFiremat);
 router.put('/:id', canEdit, uploadFirematProductoImage, updateProductoFiremat);
