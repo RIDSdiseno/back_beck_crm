@@ -3,6 +3,7 @@ import { EstadoRegistroTerreno, Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { calcularRendimientoPorTrabajador, calcularRendimientoDetallado, ValidacionIngenieriaFiltro, validacionesIngenieriaValidas } from '../services/rendimientoTrabajador.service';
 import { getDateRange, rangosRapidosValidos, RangoRapido } from '../helpers/rangoFechas';
+import { idsProduccionVigente } from '../utils/produccionDashboard';
 
 type RangoDashboard = RangoRapido;
 
@@ -63,7 +64,7 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
       };
     }
 
-    const [obras, registros] = await Promise.all([
+    const [obras, registros, versiones] = await Promise.all([
       prisma.obra.findMany({
         where: obraId ? { id: obraId } : undefined,
         select: {
@@ -108,7 +109,19 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
           { createdAt: 'desc' },
         ],
       }),
+      prisma.registroTerreno.findMany({
+        where: obraId ? { obraId } : undefined,
+        select: {
+          id: true,
+          registroOrigenId: true,
+          createdAt: true,
+          cargaCompleta: true,
+          estado: true,
+        },
+      }),
     ]);
+
+    const idsVigentes = idsProduccionVigente(versiones);
 
     const produccionPorPiso = new Map<string, { piso: string; sellos: number; metrosLineales: number; registros: number }>();
     const produccionPorPersona = new Map<string, { nombreSellador: string; sellos: number; metrosLineales: number; registros: number }>();
@@ -126,6 +139,13 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
     };
 
     registros.forEach((registro) => {
+      // Estos contadores describen estados, no cantidades de producción.
+      if (registro.estado === EstadoRegistroTerreno.en_revision) kpis.enRevision += 1;
+      if (registro.estado === EstadoRegistroTerreno.validado) kpis.validados += 1;
+      if (registro.estado === EstadoRegistroTerreno.rechazado) kpis.rechazados += 1;
+
+      if (!idsVigentes.has(registro.id)) return;
+
       const piso = normalizePiso(registro.piso);
       const nombreSellador = normalizeNombreSellador(registro.nombreSellador);
       const esMetrosLineales = registro.tipoRegistro === 'junta_lineal_espuma';
@@ -134,10 +154,6 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
 
       kpis.sellosEjecutados += sellos;
       kpis.metrosLineales += metrosLineales;
-
-      if (registro.estado === EstadoRegistroTerreno.en_revision) kpis.enRevision += 1;
-      if (registro.estado === EstadoRegistroTerreno.validado) kpis.validados += 1;
-      if (registro.estado === EstadoRegistroTerreno.rechazado) kpis.rechazados += 1;
 
       pisosConRegistros.add(piso);
       selladoresDistintos.add(nombreSellador);
