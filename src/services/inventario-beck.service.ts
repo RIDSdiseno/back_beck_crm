@@ -187,8 +187,8 @@ export async function cambiarEstadoInventarioEpp(id: string, activo: boolean) {
 const SKU_GENERADO_INICIO = 900000;
 export const SKU_GENERADO_REGEX = /^9\d{5}$/;
 
-async function siguienteSkuEppDisponible(reservados: Set<string>): Promise<number> {
-  const rows = await prisma.inventarioBeckEpp.findMany({
+async function siguienteSkuEppDisponible(db: Prisma.TransactionClient, reservados: Set<string>): Promise<number> {
+  const rows = await db.inventarioBeckEpp.findMany({
     where: { sku: { startsWith: '9' } },
     select: { sku: true },
   });
@@ -206,36 +206,37 @@ async function siguienteSkuEppDisponible(reservados: Set<string>): Promise<numbe
   return next;
 }
 
-export async function generarSkuInventarioEpp(id: string) {
-  const item = await obtenerInventarioEpp(id);
+async function generarSkuInventarioEppSinBloqueo(db: Prisma.TransactionClient, id: string) {
+  const item = await db.inventarioBeckEpp.findUnique({ where: { id } });
+  if (!item) throw new Error('EPP no encontrado.');
   if (item.sku && item.sku.trim()) {
     throw new Error('Este EPP ya tiene un SKU asignado.');
   }
 
-  const existentes = await prisma.inventarioBeckEpp.findMany({ select: { sku: true } });
+  const existentes = await db.inventarioBeckEpp.findMany({ select: { sku: true } });
   const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
 
-  const next = await siguienteSkuEppDisponible(reservados);
-  return prisma.inventarioBeckEpp.update({ where: { id }, data: { sku: String(next) } });
+  const next = await siguienteSkuEppDisponible(db, reservados);
+  return db.inventarioBeckEpp.update({ where: { id }, data: { sku: String(next) } });
 }
 
-export async function generarSkuInventarioEppMasivo(): Promise<{ actualizados: number }> {
-  const sinSku = await prisma.inventarioBeckEpp.findMany({
+async function generarSkuInventarioEppMasivoSinBloqueo(db: Prisma.TransactionClient): Promise<{ actualizados: number }> {
+  const sinSku = await db.inventarioBeckEpp.findMany({
     where: { OR: [{ sku: null }, { sku: '' }] },
     select: { id: true },
   });
 
   if (sinSku.length === 0) return { actualizados: 0 };
 
-  const existentes = await prisma.inventarioBeckEpp.findMany({ select: { sku: true } });
+  const existentes = await db.inventarioBeckEpp.findMany({ select: { sku: true } });
   const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
 
   let actualizados = 0;
   for (const item of sinSku) {
-    const next = await siguienteSkuEppDisponible(reservados);
+    const next = await siguienteSkuEppDisponible(db, reservados);
     const nextStr = String(next);
     reservados.add(nextStr);
-    await prisma.inventarioBeckEpp.update({ where: { id: item.id }, data: { sku: nextStr } });
+    await db.inventarioBeckEpp.update({ where: { id: item.id }, data: { sku: nextStr } });
     actualizados += 1;
   }
 
@@ -288,8 +289,8 @@ export async function cambiarEstadoInventarioImplemento(id: string, activo: bool
 const SKU_GENERADO_INICIO_IMPLEMENTO = 800000;
 export const SKU_GENERADO_REGEX_IMPLEMENTO = /^8\d{5}$/;
 
-async function siguienteSkuImplementoDisponible(reservados: Set<string>): Promise<number> {
-  const rows = await prisma.inventarioBeckImplemento.findMany({
+async function siguienteSkuImplementoDisponible(db: Prisma.TransactionClient, reservados: Set<string>): Promise<number> {
+  const rows = await db.inventarioBeckImplemento.findMany({
     where: { sku: { startsWith: '8' } },
     select: { sku: true },
   });
@@ -307,41 +308,54 @@ async function siguienteSkuImplementoDisponible(reservados: Set<string>): Promis
   return next;
 }
 
-export async function generarSkuInventarioImplemento(id: string) {
-  const item = await obtenerInventarioImplemento(id);
+async function generarSkuInventarioImplementoSinBloqueo(db: Prisma.TransactionClient, id: string) {
+  const item = await db.inventarioBeckImplemento.findUnique({ where: { id } });
+  if (!item) throw new Error('Implemento no encontrado.');
   if (item.sku && item.sku.trim()) {
     throw new Error('Este implemento ya tiene un SKU asignado.');
   }
 
-  const existentes = await prisma.inventarioBeckImplemento.findMany({ select: { sku: true } });
+  const existentes = await db.inventarioBeckImplemento.findMany({ select: { sku: true } });
   const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
 
-  const next = await siguienteSkuImplementoDisponible(reservados);
-  return prisma.inventarioBeckImplemento.update({ where: { id }, data: { sku: String(next) } });
+  const next = await siguienteSkuImplementoDisponible(db, reservados);
+  return db.inventarioBeckImplemento.update({ where: { id }, data: { sku: String(next) } });
 }
 
-export async function generarSkuInventarioImplementoMasivo(): Promise<{ actualizados: number }> {
-  const sinSku = await prisma.inventarioBeckImplemento.findMany({
+async function generarSkuInventarioImplementoMasivoSinBloqueo(db: Prisma.TransactionClient): Promise<{ actualizados: number }> {
+  const sinSku = await db.inventarioBeckImplemento.findMany({
     where: { OR: [{ sku: null }, { sku: '' }] },
     select: { id: true },
   });
 
   if (sinSku.length === 0) return { actualizados: 0 };
 
-  const existentes = await prisma.inventarioBeckImplemento.findMany({ select: { sku: true } });
+  const existentes = await db.inventarioBeckImplemento.findMany({ select: { sku: true } });
   const reservados = new Set(existentes.map((row) => row.sku).filter((sku): sku is string => !!sku));
 
   let actualizados = 0;
   for (const item of sinSku) {
-    const next = await siguienteSkuImplementoDisponible(reservados);
+    const next = await siguienteSkuImplementoDisponible(db, reservados);
     const nextStr = String(next);
     reservados.add(nextStr);
-    await prisma.inventarioBeckImplemento.update({ where: { id: item.id }, data: { sku: nextStr } });
+    await db.inventarioBeckImplemento.update({ where: { id: item.id }, data: { sku: nextStr } });
     actualizados += 1;
   }
 
   return { actualizados };
 }
+
+// Serializa la reserva de códigos con la bodega móvil y el resto de generadores del CRM.
+async function conBloqueoSku<T>(operacion: (db: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+  return prisma.$transaction(async tx => {
+    await tx.$queryRaw`SELECT pg_advisory_xact_lock(749182)::text`;
+    return operacion(tx);
+  }, { timeout: 60000 });
+}
+export const generarSkuInventarioEpp = (id: string) => conBloqueoSku(tx => generarSkuInventarioEppSinBloqueo(tx, id));
+export const generarSkuInventarioEppMasivo = () => conBloqueoSku(generarSkuInventarioEppMasivoSinBloqueo);
+export const generarSkuInventarioImplemento = (id: string) => conBloqueoSku(tx => generarSkuInventarioImplementoSinBloqueo(tx, id));
+export const generarSkuInventarioImplementoMasivo = () => conBloqueoSku(generarSkuInventarioImplementoMasivoSinBloqueo);
 
 export async function listarInventarioHerramientas(params: BaseParams = {}) {
   const q = normalizeString(params.q);

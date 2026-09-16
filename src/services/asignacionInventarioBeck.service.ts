@@ -159,7 +159,9 @@ async function obtenerLotesDisponiblesSupervisor(
   obraId: string,
 ) {
   return db.asignacionInventarioBeck.findMany({
-    where: { jefeObraId: supervisorId, obraId, estado: 'asignado', trabajadorId: null },
+    where: { jefeObraId: supervisorId, obraId, estado: 'asignado', trabajadorId: null,
+      OR: [{ devolucion_solicitada_at: null }, { devolucion_recibida_at: { not: null } }],
+    },
     include: {
       epp: { select: { item: true } },
       implemento: { select: { item: true } },
@@ -219,6 +221,7 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
   }
 
   const resultado = await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT pg_advisory_xact_lock(749182)::text`;
     const creadas = [];
 
     if (esReenvioDeSupervisor) {
@@ -229,6 +232,7 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
             obraId,
             estado: 'asignado',
             trabajadorId: null,
+            OR: [{ devolucion_solicitada_at: null }, { devolucion_recibida_at: { not: null } }],
             [campoItem(linea.tipoItem)]: linea.itemId,
           },
           orderBy: { createdAt: 'asc' },
@@ -371,6 +375,8 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
         if (!herramienta) throw new Error(`Herramienta no encontrada: ${linea.itemId}`);
         if (!herramienta.activo) throw new Error(`La herramienta "${herramienta.nombre}" esta inactiva.`);
         if (linea.cantidad !== 1) throw new Error(`La herramienta "${herramienta.nombre}" solo admite cantidad 1 (es un activo unico).`);
+        const asignacionActiva = await tx.asignacionInventarioBeck.findFirst({ where: { herramientaId: herramienta.id, estado: 'asignado' }, select: { id: true } });
+        if (asignacionActiva) throw new Error('La herramienta ya está asignada. Debe devolverse a bodega antes de entregarla nuevamente.');
 
         let subSkuHerramienta = herramienta.subSkuUnidad;
         if (!subSkuHerramienta && herramienta.sku?.trim()) {
@@ -501,6 +507,12 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
   });
   if (!asignacion) throw new Error('Asignacion no encontrada.');
   if (asignacion.estado === 'devuelto') throw new Error('Esta asignacion ya fue devuelta.');
+  if (!asignacion.trabajadorId) {
+    const actor = await prisma.usuario.findUnique({ where: { id: devueltoPorId }, select: { rol: true } });
+    if (actor?.rol === RolUsuario.jefeobra || actor?.rol === RolUsuario.terreno) {
+      throw new Error('La recepción en bodega debe confirmarla un encargado de inventario; solicita la devolución desde la app.');
+    }
+  }
 
   // Si el lote esta actualmente con un trabajador, "devolver" significa que el trabajador
   // se lo devuelve al supervisor (un paso atras en la cadena): no toca el inventario
@@ -508,6 +520,11 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
   const seReclamaDeTrabajador = asignacion.trabajadorId !== null;
 
   await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT pg_advisory_xact_lock(749182)::text`;
+    const vigente = await tx.asignacionInventarioBeck.findUnique({ where: { id: asignacionId } });
+    if (!vigente || vigente.estado !== 'asignado' || vigente.trabajadorId !== asignacion.trabajadorId || vigente.cantidad !== asignacion.cantidad) {
+      throw new Error('La asignación cambió. Recarga antes de confirmar la devolución.');
+    }
     if (seReclamaDeTrabajador) {
       if (asignacion.tipoItem === TipoInventarioBeck.herramienta && asignacion.herramientaId) {
         await tx.inventarioBeckHerramienta.update({
@@ -556,7 +573,8 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
 
     await tx.asignacionInventarioBeck.update({
       where: { id: asignacionId },
-      data: { estado: 'devuelto', devueltoAt: new Date(), devueltoPorId },
+      data: { estado: 'devuelto', devueltoAt: new Date(), devueltoPorId,
+        devolucion_recibida_at: new Date(), devolucion_recibida_por_id: devueltoPorId },
     });
     await registrarTrazabilidad(tx, {
       asignacionId,
