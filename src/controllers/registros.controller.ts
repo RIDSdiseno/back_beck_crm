@@ -22,6 +22,7 @@ import { calcularRendimientoIndividual } from '../helpers/rendimientoRegistro';
 import { adjuntarRendimientoRegistros, calcularRendimientoPorTrabajador } from '../services/rendimientoTrabajador.service';
 import { generateRegistroPdfBuffer, generateInspeccionPdfBuffer } from '../services/registroPdf.service';
 import { PDFDocument } from 'pdf-lib';
+import { correccionDebePasarPorSupervisor, ErrorSeleccionItemizado, prepararCambioItemizado, validarSeleccionItemizado } from '../utils/seleccionItemizadoRegistro';
 
 function parseEjeNumericoTexto(value: unknown): string {
   const raw = String(value ?? '').trim();
@@ -736,6 +737,7 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
  * GET /api/registros/pendientes
  */
 interface ActualizarRegistroTerrenoBody {
+  itemizadoOpcionId?: unknown;
   fecha?: unknown;
   descripcion_material?: unknown;
   modulo?: unknown;
@@ -816,9 +818,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     if (
-      pideTransicionDeEstado &&
-      body.estado === EstadoRegistroTerreno.en_revision &&
-      existente.esCorreccion
+      correccionDebePasarPorSupervisor(existente.estado, body.estado, existente.esCorreccion)
     ) {
       res.status(409).json({
         error: 'La corrección todavía debe ser revisada y enviada por el supervisor',
@@ -850,6 +850,15 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     }
 
     const data: Prisma.RegistroTerrenoUpdateInput = {};
+    let cambioItemizado: Prisma.RegistroTerrenoUpdateInput | undefined;
+    if (body.itemizadoOpcionId !== undefined) {
+      validarSeleccionItemizado(body.itemizadoOpcionId, existente.estado);
+      const opcion = await prisma.itemizadoOpcion.findUnique({
+        where: { id: body.itemizadoOpcionId },
+        include: { configuracionesPorObra: { where: { obraId: existente.obraId } } },
+      });
+      cambioItemizado = prepararCambioItemizado(opcion, existente.estado);
+    }
     if (body.fecha !== undefined) {
       const nuevaFecha = new Date(String(body.fecha));
       if (Number.isNaN(nuevaFecha.getTime())) {
@@ -860,15 +869,15 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
       data.fecha = nuevaFecha;
       data.diaSemana = dias[nuevaFecha.getUTCDay()];
     }
-    const codigoBeckRaw = body.codigoBeck ?? body.codigo_beck;
-    const itemizadoMandanteIdRaw = body.itemizadoMandanteId ?? body.itemizado_mandante_id;
+    const codigoBeckRaw = getBodyValue(body as Record<string, unknown>, 'codigo_beck', 'codigoBeck');
+    const itemizadoMandanteIdRaw = getBodyValue(body as Record<string, unknown>, 'itemizado_mandante_id', 'itemizadoMandanteId');
     let itemizadoMandanteIdFinal: string | null | undefined;
     let codigoBeckFinal: string | null | undefined =
       codigoBeckRaw === undefined
         ? undefined
         : codigoBeckRaw === null ? null : String(codigoBeckRaw) || null;
 
-    if (itemizadoMandanteIdRaw !== undefined) {
+    if (!cambioItemizado && itemizadoMandanteIdRaw !== undefined) {
       if (itemizadoMandanteIdRaw === null || String(itemizadoMandanteIdRaw).trim() === '') {
         itemizadoMandanteIdFinal = null;
       } else {
@@ -984,8 +993,17 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     data.reparacionTabique = calcResult.reparacion_tabique_normalizada;
     data.cantidadFinal = calcResult.cantidad_final;
 
+    if (codigoBeckFinal !== undefined) data.codigoBeck = codigoBeckFinal;
+    if (itemizadoMandanteIdFinal !== undefined) {
+      data.itemizadoMandante = itemizadoMandanteIdFinal === null
+        ? { disconnect: true }
+        : { connect: { id: itemizadoMandanteIdFinal } };
+    }
+    // La selección validada en el servidor prevalece sobre los textos del cliente.
+    if (cambioItemizado) Object.assign(data, cambioItemizado);
+
     const registro = await prisma.registroTerreno.update({
-      where: { id },
+      where: { id, estado: existente.estado },
       data,
       include: {
         obra: {
@@ -1006,26 +1024,18 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
       },
     });
 
-    if (itemizadoMandanteIdFinal !== undefined || codigoBeckFinal !== undefined) {
-      await dbQuery(
-        `UPDATE registros_terreno
-         SET itemizado_mandante_id = CASE WHEN $1::boolean THEN $2::uuid ELSE itemizado_mandante_id END,
-             codigo_beck = CASE WHEN $3::boolean THEN $4 ELSE codigo_beck END
-         WHERE id = $5`,
-        [
-          itemizadoMandanteIdFinal !== undefined,
-          itemizadoMandanteIdFinal,
-          codigoBeckFinal !== undefined,
-          codigoBeckFinal,
-          id,
-        ],
-      );
-    }
-
     const [registroConCodigo] = await adjuntarCodigosBeck([registro as unknown as Record<string, unknown>]);
     const [registroConItemizado] = await adjuntarItemizadosMandante([registroConCodigo]);
     res.json(registroConItemizado);
   } catch (error) {
+    if (error instanceof ErrorSeleccionItemizado) {
+      res.status(error.status).json({ error: error.message });
+      return;
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      res.status(409).json({ error: 'El registro cambió mientras lo editabas. Recarga el detalle y vuelve a intentarlo.' });
+      return;
+    }
     console.error('Error al actualizar registro:', error);
     res.status(500).json({ error: 'Error al actualizar registro' });
   }

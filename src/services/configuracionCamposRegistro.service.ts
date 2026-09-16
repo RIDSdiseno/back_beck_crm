@@ -401,6 +401,7 @@ export async function adjuntarItemizadosMandante<T extends Record<string, unknow
     const rows = await prisma.$queryRaw<{
       registro_id: string;
       itemizado_mandante_id: string | null;
+      nombre_texto: string | null;
       codigo_beck: string | null;
       nombre: string | null;
       descripcion: string | null;
@@ -409,6 +410,7 @@ export async function adjuntarItemizadosMandante<T extends Record<string, unknow
       SELECT
         rt.id AS registro_id,
         rt.itemizado_mandante_id,
+        rt.itemizado_mandante AS nombre_texto,
         im.codigo_beck,
         im.nombre,
         im.descripcion,
@@ -431,13 +433,14 @@ export async function adjuntarItemizadosMandante<T extends Record<string, unknow
         : null,
     ]));
 
+    const nombresTexto = new Map(rows.map(row => [row.registro_id, row.nombre_texto]));
     return registros.map(reg => {
       const itemizadoMandante = typeof reg.id === 'string' ? itemizados.get(reg.id) ?? null : null;
       return {
         ...reg,
         itemizadoMandanteId: itemizadoMandante?.id ?? null,
         itemizadoMandante,
-        itemizadoMandanteNombre: itemizadoMandante?.nombre ?? null,
+        itemizadoMandanteNombre: itemizadoMandante?.nombre ?? nombresTexto.get(String(reg.id)) ?? null,
       };
     });
   } catch {
