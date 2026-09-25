@@ -1,5 +1,6 @@
 import { EstadoAsignacionInventario, Prisma, RolUsuario, TipoInventarioBeck } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { bloquearConsumoPendiente } from './consumosInventario.service';
 import { registrarMovimientoCRM } from './movimientoCrm.service';
 
 type LineaAsignacionInput = {
@@ -121,7 +122,7 @@ async function obtenerSubSkusDevueltosDisponibles(
   });
   const codigosActivos = new Set(
     asignaciones
-      .filter((asignacion) => asignacion.estado === EstadoAsignacionInventario.asignado)
+      .filter((asignacion) => asignacion.estado === EstadoAsignacionInventario.asignado || asignacion.estado === EstadoAsignacionInventario.consumido)
       .flatMap((asignacion) => asignacion.subSkus),
   );
   const reutilizables = new Set<string>();
@@ -375,7 +376,7 @@ export async function crearAsignacionesInventario(input: CrearAsignacionesInput)
         if (!herramienta) throw new Error(`Herramienta no encontrada: ${linea.itemId}`);
         if (!herramienta.activo) throw new Error(`La herramienta "${herramienta.nombre}" esta inactiva.`);
         if (linea.cantidad !== 1) throw new Error(`La herramienta "${herramienta.nombre}" solo admite cantidad 1 (es un activo unico).`);
-        const asignacionActiva = await tx.asignacionInventarioBeck.findFirst({ where: { herramientaId: herramienta.id, estado: 'asignado' }, select: { id: true } });
+        const asignacionActiva = await tx.asignacionInventarioBeck.findFirst({ where: { herramientaId: herramienta.id, estado: { not: 'devuelto' } }, select: { id: true } });
         if (asignacionActiva) throw new Error('La herramienta ya está asignada. Debe devolverse a bodega antes de entregarla nuevamente.');
 
         let subSkuHerramienta = herramienta.subSkuUnidad;
@@ -521,6 +522,7 @@ export async function devolverAsignacionInventario(asignacionId: string, devuelt
 
   await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT pg_advisory_xact_lock(749182)::text`;
+    await bloquearConsumoPendiente(tx, asignacionId);
     const vigente = await tx.asignacionInventarioBeck.findUnique({ where: { id: asignacionId } });
     if (!vigente || vigente.estado !== 'asignado' || vigente.trabajadorId !== asignacion.trabajadorId || vigente.cantidad !== asignacion.cantidad) {
       throw new Error('La asignación cambió. Recarga antes de confirmar la devolución.');

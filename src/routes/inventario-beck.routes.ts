@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { listarConsumos, politicaConsumo, ConsumoError } from '../services/consumosInventario.service';
 import {
   actualizarEpp,
   actualizarHerramienta,
@@ -35,6 +36,13 @@ import { requirePermission } from '../middlewares/requirePermission';
 import { uploadXlsxFile } from '../middlewares/upload';
 
 const router = Router();
+const consumoAction = (fn: (req: import('express').Request) => Promise<unknown>) => async (req: import('express').Request, res: import('express').Response) => {
+  try { res.json({ success: true, data: await fn(req) }); }
+  catch (e) { res.status(e instanceof ConsumoError ? e.status : 500).json({ success: false, error: e instanceof ConsumoError ? e.message : 'No se pudo consultar el consumo.' }); }
+};
+router.get('/consumos', authenticate, requirePermission('beck_inventario', 'ver'), consumoAction(req => listarConsumos('bodega', req.userId!, req.query)));
+router.get('/consumos/politica/:tipo/:id', authenticate, requirePermission('beck_inventario', 'ver'), consumoAction(req => politicaConsumo(req.params.tipo, req.params.id)));
+router.put('/consumos/politica/:tipo/:id', authenticate, requirePermission('beck_inventario', 'editar'), consumoAction(req => politicaConsumo(req.params.tipo, req.params.id, req.userId!, req.body?.consumible)));
 
 router.post(
   '/importar-excel',

@@ -40,6 +40,7 @@ import itemizadoOpcionesRoutes from './routes/itemizadoOpciones.routes';
 import alertasRoutes from './routes/alertas.routes';
 import configuracionValidacionRoutes from './routes/configuracionValidacion.routes';
 import clienteRoutes from './routes/cliente.routes';
+import pdfsFirmadosRoutes from './routes/pdfsFirmados.routes';
 import vistaClienteConfigRoutes from './routes/vistaClienteConfig.routes';
 import meRoutes from './routes/me.routes';
 import permisosRolRoutes from './routes/permisos-rol.routes';
@@ -159,6 +160,7 @@ app.use('/api/me', meRoutes);
 app.use('/api/permisos', authenticate, permisosRolRoutes);
 
 app.use('/api/cliente', clienteRoutes);
+app.use('/api/pdfs-firmados', pdfsFirmadosRoutes);
 
 app.use('/api/vista-cliente', blockBeckOperacional, vistaClienteConfigRoutes);
 
