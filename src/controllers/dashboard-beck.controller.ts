@@ -149,7 +149,7 @@ export const getDashboardBeck = async (req: Request, res: Response): Promise<voi
       const piso = normalizePiso(registro.piso);
       const nombreSellador = normalizeNombreSellador(registro.nombreSellador);
       const esMetrosLineales = registro.tipoRegistro === 'junta_lineal_espuma';
-      const sellos = esMetrosLineales ? 0 : registro.cantidadSellos;
+      const sellos = registro.tipoRegistro === 'sello_cortafuego' ? registro.cantidadSellos : 0;
       const metrosLineales = esMetrosLineales ? registro.metrosLineales ?? 0 : 0;
 
       kpis.sellosEjecutados += sellos;

@@ -281,12 +281,13 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
       const sheetName = worksheet.name;
       const sheetNorm = normalize(sheetName);
 
-      let tipoRegistro: 'sello_cortafuego' | 'junta_lineal_espuma' | null = null;
+      let tipoRegistro: 'sello_cortafuego' | 'junta_lineal_espuma' | 'tabiqueria' | null = null;
       if (sheetNorm.includes('sellos') && (sheetNorm.includes('cortafuego') || sheetNorm.includes('cortafuegos'))) {
         tipoRegistro = 'sello_cortafuego';
       } else if (sheetNorm.includes('junta') || sheetNorm.includes('espuma')) {
         tipoRegistro = 'junta_lineal_espuma';
       }
+      if (sheetNorm.includes('tabiquer')) tipoRegistro = 'tabiqueria';
       if (!tipoRegistro) continue;
 
       const sheetObraNombre = extractObraFromHeader(worksheet, 10);
@@ -394,7 +395,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           let folio: string | null = null;
           let holgura: number = 1.0;
 
-          if (tipoRegistro === 'sello_cortafuego') {
+          if (tipoRegistro !== 'junta_lineal_espuma') {
             const fechaRaw = getCell(
               rowObj,
               'Fecha ejecucion sello', 'Fecha Ejecucion Sello', 'Fecha ejecución sello',
@@ -408,7 +409,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             codigoBeck =
               getCell(rowObj, 'Código BECK', 'Codigo BECK', 'CODIGO BECK', 'CÓDIGO BECK') ?? null;
             itemizadoBeck =
-              getCell(rowObj, 'Itemizado BECK', 'Itemizado Beck', 'ITEMIZADO BECK', 'Itemizado') ?? null;
+              getCell(rowObj, 'Itemizado BECK', 'Itemizado Beck', 'ITEMIZADO BECK', 'Itemizado BASICO', 'Itemizado básico', 'Itemizado') ?? null;
             descripcion_material = itemizadoBeck ?? '';
             itemizadoSacyr =
               getCell(rowObj, 'Itemizado SACYR', 'Itemizado Sacyr', 'ITEMIZADO SACYR') ?? null;
@@ -462,7 +463,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
             );
 
             folio = nullIfNA(getCell(rowObj, 'FOLIO', 'Folio', 'folio', 'Nº FOLIO', 'N° FOLIO'));
-            numero_sello = folio ?? `JLE-${rowIdx}`;
+            numero_sello = getCell(rowObj, 'N° DEL SELLO', 'Numero Sello', 'NUMERO SELLO') ?? folio ?? String(rowIdx);
 
             const fechaRaw = getCell(
               rowObj,
@@ -489,16 +490,16 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               'Longitud',
               'Longitud m',
               'Metros Lineales',
-              'METROS LINEALES'
+              'METROS LINEALES', 'Cantidad de ml', 'Cantidad ml'
             );
             if (longitudRaw === null || longitudRaw === '') {
               metros_lineales = null;
-              errores.push(`Fila ${rowIdx}: advertencia – Longitud (m) vacía, se guardará como NULL`);
+              errores.push(`Fila ${rowIdx}: Longitud (m) vacía; la fila no se importará`);
             } else {
               const parsed = parseDecimal(longitudRaw);
               if (parsed === null) {
                 metros_lineales = null;
-                errores.push(`Fila ${rowIdx}: advertencia – Longitud (m) inválida ('${longitudRaw}'), se guardará como NULL`);
+                errores.push(`Fila ${rowIdx}: advertencia – Longitud (m) inválida ('${longitudRaw}'), la fila no se importará`);
               } else {
                 metros_lineales = parsed;
               }
@@ -509,6 +510,15 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
               getCell(rowObj, 'Nombre sellador', 'Nombre Sellador', 'NOMBRE SELLADOR', 'Sellador') ?? '';
             observaciones =
               getCell(rowObj, 'Observaciones', 'OBSERVACIONES', 'observaciones', 'Obs') ?? null;
+          }
+
+          if (tipoRegistro === 'junta_lineal_espuma') {
+            itemizadoBeck = getCell(rowObj, 'Itemizado BECK', 'Itemizado BASICO', 'Itemizado básico', 'Itemizado');
+            descripcion_material = itemizadoBeck || descripcion_material;
+            itemizadoMandanteTexto = getCell(rowObj, 'Itemizado Mandante', 'Itemizado SACYR');
+            recinto = nullIfNA(getCell(rowObj, 'Recinto'));
+            modulo = getCell(rowObj, 'Módulo o edificio', 'Modulo o edificio') ?? modulo;
+            holgura = parseDecimal(getCell(rowObj, 'Separación (cm)', 'Separacion (cm)', 'Factor por separación (cm)', 'Factor por separacion (cm)', 'Holgura (cm)', 'Holgura')) ?? 0;
           }
 
           const accesibilidadParsed = parseDecimal(getCell(rowObj, 'Accesibilidad', 'Cielo modular', 'cielo_modular', 'cieloModular'));
@@ -559,6 +569,14 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           }
 
           const metrosFinal = toFloatOrNull(metros_lineales);
+          if (tipoRegistro === 'junta_lineal_espuma' && (metrosFinal == null || metrosFinal <= 0)) {
+            errores.push(`Fila ${rowIdx}: la longitud de Juntas debe ser un número mayor a cero`);
+            continue;
+          }
+          if (tipoRegistro !== 'junta_lineal_espuma' && (!Number.isInteger(cantidad_sellos) || cantidad_sellos <= 0)) {
+            errores.push(`Fila ${rowIdx}: la cantidad debe ser entera y mayor a cero`);
+            continue;
+          }
           let itemizadoMandanteIdFinal: string | null = null;
           let codigoBeckFinal = codigoBeck && codigoBeck.trim() ? codigoBeck.trim() : null;
 
@@ -594,6 +612,7 @@ export const importarRegistrosExcel = async (req: Request, res: Response): Promi
           try {
             calcResult = calcularCamposRegistroTerreno({
               cantidad_sellos: toInt(cantidad_sellos),
+              metros_lineales: metrosFinal,
               holgura,
               accesibilidad: accesibilidad ?? 1,
               aislacion: aislacion_raw,

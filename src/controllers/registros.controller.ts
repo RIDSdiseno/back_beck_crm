@@ -13,7 +13,7 @@ import {
   sanitizarRegistroPorRol,
   sanitizarRegistrosPorRol,
 } from '../services/configuracionCamposRegistro.service';
-import { calcularCamposRegistroTerreno, CalcRegistroResult, resolveAccesibilidadFactor } from '../utils/calculosRegistroTerreno';
+import { calcularCamposRegistroTerreno, CalcRegistroResult } from '../utils/calculosRegistroTerreno';
 import { getTramosHolguraObra } from '../services/factorHolgura.service';
 import { getFactoresAccesibilidadObra } from '../services/factorAccesibilidad.service';
 import { getFactoresAislacionObra } from '../services/factorAislacion.service';
@@ -155,7 +155,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
       !numero_sello ||
       (tipoIntentado !== 'junta_lineal_espuma' && !cantidad_sellos) ||
       !nombre_sellador ||
-      !holgura ||
+      (holgura === undefined || holgura === null || holgura === '') ||
       accesibilidadFinal == null
     ) {
       res.status(400).json({ error: 'Faltan campos obligatorios' });
@@ -186,6 +186,11 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     const tipoRegistroFinal = validacionTipo.tipoNormalizado!;
     const warningTipoRegistro = validacionTipo.warning;
 
+    const cantidadProduccion = tipoRegistroFinal === 'junta_lineal_espuma' ? metros_lineales : Number(cantidad_sellos);
+    if (cantidadProduccion == null || !Number.isFinite(cantidadProduccion) || cantidadProduccion <= 0 || (tipoRegistroFinal !== 'junta_lineal_espuma' && !Number.isInteger(cantidadProduccion))) {
+      res.status(400).json({ error: 'Cantidad inválida: usa metros positivos para Juntas y unidades enteras para Sellos/Tabiquería' });
+      return;
+    }
     const fecha = new Date();
     const folder = buildCloudinaryFolder(
       obraCheck.rows[0].codigo || obra_id,
@@ -212,7 +217,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
 
     const cantidadSellosNorm =
       tipoRegistroFinal === 'junta_lineal_espuma'
-        ? Number(cantidad_sellos ?? 0)
+        ? 0
         : Number(cantidad_sellos);
 
     const tramosHolguraObra = await getTramosHolguraObra(obra_id, tipoRegistroFinal);
@@ -222,6 +227,7 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     try {
       calcResult = calcularCamposRegistroTerreno({
         cantidad_sellos: cantidadSellosNorm,
+        metros_lineales,
         holgura: Number(holgura),
         accesibilidad: accesibilidadFinal ?? 1,
         aislacion: aislacion_raw,
@@ -682,6 +688,27 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
       return;
     }
 
+    let total_sellos_calculado = 0;
+    if (estado === EstadoRegistroTerreno.validado) {
+      if (existente.estado !== EstadoRegistroTerreno.en_revision) {
+        res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
+        return;
+      }
+      // Es una proyección del cálculo autoritativo, no una segunda fórmula
+      // usando la medida física de holgura ni el contador de sellos para Juntas.
+      total_sellos_calculado = Number(existente.cantidadSellosConFactores ??
+        calcularCamposRegistroTerreno({
+          tipoRegistro: existente.tipoRegistro, cantidad_sellos: existente.cantidadSellos,
+          metros_lineales: existente.metrosLineales, holgura: Number(existente.holgura),
+          accesibilidad: existente.accesibilidad, aislacion: existente.aislacion,
+          reparacion_tabique: existente.reparacionTabique, piso: existente.piso,
+          tramosHolgura: await getTramosHolguraObra(existente.obraId, existente.tipoRegistro),
+          factoresAccesibilidad: await getFactoresAccesibilidadObra(existente.obraId),
+          factoresAislacion: await getFactoresAislacionObra(existente.obraId),
+        }).cantidad_sellos_con_factores);
+
+    }
+
     const registro = await prisma.registroTerreno.update({
       where: { id },
       data: { estado: estado as EstadoRegistroTerreno },
@@ -698,16 +725,6 @@ export const actualizarEstadoRegistro = async (req: Request, res: Response): Pro
         [id, usuario_id]
       );
     } else if (estado === EstadoRegistroTerreno.validado) {
-      if (existente.estado !== EstadoRegistroTerreno.en_revision) {
-        res.status(400).json({ error: 'Solo se puede validar un registro en estado en_revision' });
-        return;
-      }
-      const factoresAccesibilidadObraValidar = await getFactoresAccesibilidadObra(existente.obraId);
-      const total_sellos_calculado =
-        Number(existente.cantidadSellos) *
-        Number(existente.holgura) *
-        resolveAccesibilidadFactor(existente.accesibilidad, factoresAccesibilidadObraValidar);
-
       await dbQuery(
         `INSERT INTO procesamiento_ingenieria
            (registro_terreno_id, usuario_id, codigo, itemizado_id, total_sellos_calculado, notas, procesado_at)
@@ -747,6 +764,8 @@ interface ActualizarRegistroTerrenoBody {
   eje_alfabetico?: unknown;
   numero_sello?: unknown;
   cantidad_sellos?: unknown;
+  metros_lineales?: unknown;
+  metrosLineales?: unknown;
   nombre_sellador?: unknown;
   holgura?: unknown;
   accesibilidad?: unknown;
@@ -912,9 +931,11 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     if (body.numero_sello !== undefined) {
       data.numeroSello = String(body.numero_sello);
     }
-    if (body.cantidad_sellos !== undefined) {
+    if (body.cantidad_sellos !== undefined && existente.tipoRegistro !== 'junta_lineal_espuma') {
       data.cantidadSellos = Number(body.cantidad_sellos);
     }
+    const metrosRaw = body.metros_lineales ?? body.metrosLineales;
+    if (metrosRaw !== undefined && existente.tipoRegistro === 'junta_lineal_espuma') data.metrosLineales = Number(metrosRaw);
     if (body.nombre_sellador !== undefined) {
       data.nombreSellador = String(body.nombre_sellador);
     }
@@ -947,6 +968,12 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     const cantidadSellosBase = body.cantidad_sellos !== undefined
       ? Number(body.cantidad_sellos)
       : existente.cantidadSellos;
+    const metrosBase = metrosRaw !== undefined ? Number(metrosRaw) : existente.metrosLineales;
+    const cantidadProduccion = existente.tipoRegistro === 'junta_lineal_espuma' ? metrosBase : cantidadSellosBase;
+    if (cantidadProduccion == null || !Number.isFinite(cantidadProduccion) || cantidadProduccion <= 0 || (existente.tipoRegistro !== 'junta_lineal_espuma' && !Number.isInteger(cantidadProduccion))) {
+      res.status(400).json({ error: 'Cantidad de producción inválida' });
+      return;
+    }
     const accesibilidadBase = data.accesibilidad !== undefined
       ? (data.accesibilidad ?? 1)
       : (existente.accesibilidad ?? 1);
@@ -968,6 +995,7 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
     try {
       calcResult = calcularCamposRegistroTerreno({
         cantidad_sellos: cantidadSellosBase,
+        metros_lineales: metrosBase,
         holgura: holguraFinal,
         accesibilidad: accesibilidadBase,
         aislacion: aislacionBase,
