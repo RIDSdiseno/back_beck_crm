@@ -72,3 +72,17 @@ test('valida los largos antes de guardar sin truncar información', () => {
     configuracionesPorObra: [{ visible: true, nombrePersonalizado: 'x'.repeat(256) }],
   }, 'en_revision'), ErrorSeleccionItemizado);
 });
+
+test('una obra con itemizado antiguo guarda su propio código, no el del catálogo', () => {
+  const cambio = prepararCambioItemizado({ ...opcion, codigoBeck: '1-140',
+    configuracionesPorObra: [{ visible: true, nombrePersonalizado: null, codigoPersonalizado: ' 1-141 ' }],
+  }, 'en_revision');
+  assert.equal(cambio.codigoBeck, '1-141');
+});
+
+test('sin código propio en la obra se conserva el código del catálogo', () => {
+  const cambio = prepararCambioItemizado({ ...opcion, codigoBeck: '1-140',
+    configuracionesPorObra: [{ visible: true, nombrePersonalizado: null, codigoPersonalizado: null }],
+  }, 'en_revision');
+  assert.equal(cambio.codigoBeck, '1-140');
+});

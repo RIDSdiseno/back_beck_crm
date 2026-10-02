@@ -1,10 +1,11 @@
 import type { Prisma } from '@prisma/client';
+import { codigoEfectivo } from './codigoItemizadoObra';
 
 type OpcionItemizado = {
   codigoBeck: string | null;
   elementoPasante: string | null;
   visible: boolean;
-  configuracionesPorObra: { visible: boolean; nombrePersonalizado: string | null }[];
+  configuracionesPorObra: { visible: boolean; nombrePersonalizado: string | null; codigoPersonalizado?: string | null }[];
 };
 
 export class ErrorSeleccionItemizado extends Error {
@@ -43,7 +44,7 @@ export function prepararCambioItemizado(
   return {
     descripcionMaterial: descripcion,
     itemizadoBeck: descripcion,
-    codigoBeck: opcion.codigoBeck,
+    codigoBeck: codigoEfectivo(opcion.codigoBeck, configuracion?.codigoPersonalizado),
     itemizadoMandanteTexto: mandante,
     // El catálogo de opciones BECK no es la tabla histórica itemizados_mandante.
     itemizadoMandante: { disconnect: true },

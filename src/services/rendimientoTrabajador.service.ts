@@ -111,9 +111,35 @@ async function resolverRendimientosEsperados(
     ),
   );
 
+  const obraIds = Array.from(
+    new Set(
+      registros
+        .map(getObraId)
+        .filter((id): id is string => id !== null),
+    ),
+  );
+
+  // Una obra con itemizado antiguo registra con su propio código (codigo_personalizado), que
+  // puede coincidir con el código de OTRO ítem del catálogo. Dentro de esa obra, el código
+  // propio manda: si no, el rendimiento se calcularía contra el ítem equivocado.
+  const personalizados = obraIds.length > 0 && codigosBeck.length > 0
+    ? await prisma.configuracionItemizadoOpcionObra.findMany({
+        where: { obraId: { in: obraIds }, codigoPersonalizado: { in: codigosBeck } },
+        select: { obraId: true, itemizadoOpcionId: true, codigoPersonalizado: true },
+      })
+    : [];
+  const opcionPorCodigoDeObra = new Map(
+    personalizados.map((p) => [`${p.obraId}:${p.codigoPersonalizado}`, p.itemizadoOpcionId]),
+  );
+
   const itemizados = codigosBeck.length > 0
     ? await prisma.itemizadoOpcion.findMany({
-        where: { codigoBeck: { in: codigosBeck } },
+        where: {
+          OR: [
+            { codigoBeck: { in: codigosBeck } },
+            ...(personalizados.length > 0 ? [{ id: { in: personalizados.map((p) => p.itemizadoOpcionId) } }] : []),
+          ],
+        },
         select: {
           id: true,
           codigoBeck: true,
@@ -126,14 +152,8 @@ async function resolverRendimientosEsperados(
   const itemizadoPorCodigo = new Map(
     itemizados.filter((i) => i.codigoBeck).map((i) => [i.codigoBeck as string, i]),
   );
+  const itemizadoPorId = new Map(itemizados.map((i) => [i.id, i]));
 
-  const obraIds = Array.from(
-    new Set(
-      registros
-        .map(getObraId)
-        .filter((id): id is string => id !== null),
-    ),
-  );
   const itemizadoIds = Array.from(new Set(itemizados.map((i) => i.id)));
 
   const overrides = obraIds.length > 0 && itemizadoIds.length > 0
@@ -156,7 +176,8 @@ async function resolverRendimientosEsperados(
     const obraId = getObraId(reg);
     if (!codigoBeck || !obraId) continue;
 
-    const itemizado = itemizadoPorCodigo.get(codigoBeck);
+    const idDeObra = opcionPorCodigoDeObra.get(`${obraId}:${codigoBeck}`);
+    const itemizado = idDeObra ? itemizadoPorId.get(idDeObra) : itemizadoPorCodigo.get(codigoBeck);
     if (!itemizado) continue;
 
     const override = overrideMap.get(`${obraId}:${itemizado.id}`);

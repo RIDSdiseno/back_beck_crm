@@ -929,6 +929,7 @@ model ConfiguracionItemizadoOpcionObra {
   createdAt                           DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt                           DateTime         @updatedAt @map("updated_at") @db.Timestamp(6)
   nombrePersonalizado                 String?          @map("nombre_personalizado") @db.VarChar(255)
+  codigoPersonalizado                 String?          @map("codigo_personalizado") @db.VarChar(100)
   orden                               Int?
   rendimientoReparacionEsperadoDiario Int?             @map("rendimiento_reparacion_esperado_diario")
   rendimientoSellosEsperadoDiario     Int?             @map("rendimiento_sellos_esperado_diario")

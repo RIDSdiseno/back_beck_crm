@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { codigoEfectivo } from '../utils/codigoItemizadoObra';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -248,6 +249,7 @@ const resolverItemizadosDeObra = async (
       itemizadoOpcionId: true,
       visible: true,
       nombrePersonalizado: true,
+      codigoPersonalizado: true,
       orden: true,
       precioUnitario: true,
       moneda: true,
@@ -272,7 +274,8 @@ const resolverItemizadosDeObra = async (
     .map((c) => ({
       itemizadoOpcionId: c.itemizadoOpcionId,
       configId: c.id,
-      codigoBeck: c.itemizadoOpcion.codigoBeck,
+      // Los registros guardan el código que vio la obra; hay que cruzarlos con ese mismo código.
+      codigoBeck: codigoEfectivo(c.itemizadoOpcion.codigoBeck, c.codigoPersonalizado),
       itemizadoBeck: c.itemizadoOpcion.elementoPasante,
       itemizadoMandante:
         c.nombrePersonalizado && c.nombrePersonalizado.trim()

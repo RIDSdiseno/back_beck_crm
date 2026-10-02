@@ -1,5 +1,6 @@
 import { EstadoPreparacionItemizado } from '@prisma/client';
 import { prisma } from '../config/prisma';
+import { codigoEfectivo } from '../utils/codigoItemizadoObra';
 
 export class ItemizadoObraError extends Error {
   constructor(
@@ -156,6 +157,7 @@ export async function listarItemizadosPropuestosParaObra(
     select: {
       itemizadoOpcionId: true,
       nombrePersonalizado: true,
+      codigoPersonalizado: true,
       seleccionadoPorCliente: true,
       itemizadoOpcion: { select: { codigoBeck: true, elementoPasante: true } },
     },
@@ -164,7 +166,7 @@ export async function listarItemizadosPropuestosParaObra(
   return configs
     .map((c) => ({
       itemizadoOpcionId: c.itemizadoOpcionId,
-      codigoBeck: c.itemizadoOpcion.codigoBeck,
+      codigoBeck: codigoEfectivo(c.itemizadoOpcion.codigoBeck, c.codigoPersonalizado),
       nombreBeck: c.itemizadoOpcion.elementoPasante,
       nombrePersonalizado: c.nombrePersonalizado,
       propuestoAlCliente: true as const,

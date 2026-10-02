@@ -8,6 +8,16 @@ import {
   assertItemizadoObraEditableAdmin,
   listarItemizadosPropuestosParaObra,
 } from '../services/itemizadoPreparacionObra.service';
+import {
+  codigoEfectivo,
+  ErrorCodigoPersonalizado,
+  normalizarCodigoPersonalizado,
+} from '../utils/codigoItemizadoObra';
+import {
+  codigosRepetidosEnObra,
+  mensajeCodigosRepetidos,
+  obrasConCodigosRepetidos,
+} from '../services/codigoItemizadoObra.service';
 
 const getString = (value: unknown): string | null => {
   if (typeof value !== 'string') return null;
@@ -21,6 +31,10 @@ const hasOwn = (body: Record<string, unknown>, key: string): boolean =>
 const handleError = (res: Response, error: unknown): void => {
   if (error instanceof ItemizadoObraError) {
     res.status(error.statusCode).json({ success: false, error: error.message });
+    return;
+  }
+  if (error instanceof ErrorCodigoPersonalizado) {
+    res.status(400).json({ success: false, error: error.message });
     return;
   }
   if (
@@ -86,6 +100,7 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
         propuestoAlCliente: true,
         seleccionadoPorCliente: true,
         nombrePersonalizado: true,
+        codigoPersonalizado: true,
         orden: true,
         rendimientoSellosEsperadoDiario: true,
         rendimientoReparacionEsperadoDiario: true,
@@ -103,6 +118,8 @@ export const listarItemizadoOpciones = async (req: Request, res: Response): Prom
         propuestoAlCliente: config?.propuestoAlCliente ?? false,
         seleccionadoPorCliente: config?.seleccionadoPorCliente ?? false,
         nombrePersonalizado: config?.nombrePersonalizado ?? null,
+        codigoPersonalizado: config?.codigoPersonalizado ?? null,
+        codigoObra: codigoEfectivo(op.codigoBeck, config?.codigoPersonalizado),
         orden: config?.orden ?? null,
         rendimientoSellosEsperadoDiario:
           config?.rendimientoSellosEsperadoDiario ?? op.rendimientoSellosEsperadoDiario,
@@ -141,6 +158,22 @@ export const getItemizadoOpcionById = async (req: Request, res: Response): Promi
 export const crearItemizadoOpcion = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Record<string, unknown>;
+
+    const codigoNuevo = getString(body.codigoBeck);
+    if (body.visible === true && codigoNuevo) {
+      const choques = await prisma.configuracionItemizadoOpcionObra.findMany({
+        where: { visible: true, codigoPersonalizado: { equals: codigoNuevo, mode: 'insensitive' } },
+        select: { obraId: true },
+      });
+      if (choques.length > 0) {
+        res.status(409).json({
+          success: false,
+          error: mensajeCodigosRepetidos([codigoNuevo]),
+          obras: [...new Set(choques.map((c) => c.obraId))],
+        });
+        return;
+      }
+    }
 
     const data = await prisma.itemizadoOpcion.create({
       data: {
@@ -182,6 +215,37 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
       if (hasOwn(body, 'visible') && typeof body.visible === 'boolean') {
         obraData.visible = body.visible;
       }
+      // Solo se toca si viene explícito: un cliente que no conoce el campo nunca lo borra.
+      const codigoProvisto = hasOwn(body, 'codigoPersonalizado');
+      if (codigoProvisto) {
+        obraData.codigoPersonalizado = normalizarCodigoPersonalizado(body.codigoPersonalizado);
+      }
+
+      const cambioObra: { visible?: boolean; codigoPersonalizado?: string | null } = {};
+      if (typeof obraData.visible === 'boolean') cambioObra.visible = obraData.visible;
+      if (codigoProvisto) cambioObra.codigoPersonalizado = obraData.codigoPersonalizado as string | null;
+      const cambioCatalogo = hasOwn(body, 'codigoBeck')
+        ? new Map([[id, { codigoBeck: updateData.codigoBeck as string | null }]])
+        : undefined;
+      const repetidos = await codigosRepetidosEnObra(obraId, {
+        obra: new Map([[id, cambioObra]]),
+        catalogo: cambioCatalogo,
+      });
+      if (repetidos.length > 0) {
+        res.status(409).json({ success: false, error: mensajeCodigosRepetidos(repetidos), codigos: repetidos });
+        return;
+      }
+      if (cambioCatalogo) {
+        const conflictos = (await obrasConCodigosRepetidos(cambioCatalogo)).filter((c) => c.obraId !== obraId);
+        if (conflictos.length > 0) {
+          res.status(409).json({
+            success: false,
+            error: mensajeCodigosRepetidos(conflictos.flatMap((c) => c.codigos)),
+            obras: conflictos.map((c) => c.obraId),
+          });
+          return;
+        }
+      }
 
       const [, config] = await prisma.$transaction([
         prisma.itemizadoOpcion.update({ where: { id }, data: updateData }),
@@ -191,6 +255,7 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
             obraId,
             itemizadoOpcionId: id,
             visible: typeof obraData.visible === 'boolean' ? obraData.visible : true,
+            codigoPersonalizado: codigoProvisto ? (obraData.codigoPersonalizado as string | null) : null,
           },
           update: obraData,
         }),
@@ -222,6 +287,21 @@ export const actualizarItemizadoOpcion = async (req: Request, res: Response): Pr
       updateData.rendimientoReparacionEsperadoDiario = getNumber(body.rendimientoReparacionEsperadoDiario);
     }
 
+    const cambioGlobal: { visible?: boolean; codigoBeck?: string | null } = {};
+    if (hasOwn(body, 'codigoBeck')) cambioGlobal.codigoBeck = updateData.codigoBeck as string | null;
+    if (typeof updateData.visible === 'boolean') cambioGlobal.visible = updateData.visible;
+    if (Object.keys(cambioGlobal).length > 0) {
+      const conflictos = await obrasConCodigosRepetidos(new Map([[id, cambioGlobal]]));
+      if (conflictos.length > 0) {
+        res.status(409).json({
+          success: false,
+          error: mensajeCodigosRepetidos(conflictos.flatMap((c) => c.codigos)),
+          obras: conflictos.map((c) => c.obraId),
+        });
+        return;
+      }
+    }
+
     const data = await prisma.itemizadoOpcion.update({
       where: { id },
       data: updateData,
@@ -248,6 +328,14 @@ export const patchVisibleItemizadoOpcion = async (req: Request, res: Response): 
     if (obraId) {
       await assertItemizadoObraEditableAdmin(obraId);
 
+      if (body.visible) {
+        const repetidos = await codigosRepetidosEnObra(obraId, { obra: new Map([[id, { visible: true }]]) });
+        if (repetidos.length > 0) {
+          res.status(409).json({ success: false, error: mensajeCodigosRepetidos(repetidos), codigos: repetidos });
+          return;
+        }
+      }
+
       const config = await prisma.configuracionItemizadoOpcionObra.upsert({
         where: { obraId_itemizadoOpcionId: { obraId, itemizadoOpcionId: id } },
         create: { obraId, itemizadoOpcionId: id, visible: body.visible },
@@ -256,6 +344,18 @@ export const patchVisibleItemizadoOpcion = async (req: Request, res: Response): 
 
       res.json({ success: true, data: config, scope: 'obra' });
       return;
+    }
+
+    if (body.visible) {
+      const conflictos = await obrasConCodigosRepetidos(new Map([[id, { visible: true }]]));
+      if (conflictos.length > 0) {
+        res.status(409).json({
+          success: false,
+          error: mensajeCodigosRepetidos(conflictos.flatMap((c) => c.codigos)),
+          obras: conflictos.map((c) => c.obraId),
+        });
+        return;
+      }
     }
 
     const data = await prisma.itemizadoOpcion.update({
@@ -362,6 +462,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       visible: boolean;
       orden: number | null;
       nombrePersonalizado: string | null;
+      codigoPersonalizado: string | null;
+      codigoObra: string | null;
       precioUnitario: Prisma.Decimal | null;
       moneda: string | null;
       itemizadoOpcion: {
@@ -386,6 +488,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
         visible: c.visible,
         orden: c.orden,
         nombrePersonalizado: c.nombrePersonalizado,
+        codigoPersonalizado: c.codigoPersonalizado,
+        codigoObra: codigoEfectivo(c.itemizadoOpcion.codigoBeck, c.codigoPersonalizado),
         precioUnitario: c.precioUnitario,
         moneda: c.moneda,
         itemizadoOpcion: c.itemizadoOpcion,
@@ -402,6 +506,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       visible: true,
       orden: null,
       nombrePersonalizado: null,
+      codigoPersonalizado: null,
+      codigoObra: op.codigoBeck,
       precioUnitario: null,
       moneda: null,
       itemizadoOpcion: op,
@@ -412,8 +518,8 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       if (a.orden !== null && b.orden !== null) return a.orden - b.orden;
       if (a.orden !== null) return -1;
       if (b.orden !== null) return 1;
-      return (a.itemizadoOpcion.codigoBeck ?? '').localeCompare(
-        b.itemizadoOpcion.codigoBeck ?? '',
+      return (a.codigoObra ?? '').localeCompare(
+        b.codigoObra ?? '',
         'es',
       );
     });
@@ -530,6 +636,7 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       itemizadoOpcionId: string;
       orden?: number | null;
       nombrePersonalizado?: string | null;
+      codigoPersonalizado?: string | null;
       visible?: boolean;
       rendimientoSellosEsperadoDiario?: number | null;
       rendimientoReparacionEsperadoDiario?: number | null;
@@ -592,6 +699,33 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       }
     }
 
+    // Código propio: solo cuenta si viene explícito; valida formato y que no quede repetido en la obra.
+    const codigosPorItem = new Map<string, string | null>();
+    for (const item of items) {
+      if (!hasOwn(item as unknown as Record<string, unknown>, 'codigoPersonalizado')) continue;
+      try {
+        codigosPorItem.set(item.itemizadoOpcionId, normalizarCodigoPersonalizado(item.codigoPersonalizado));
+      } catch (err) {
+        res.status(400).json({ success: false, error: (err as Error).message, itemizadoOpcionId: item.itemizadoOpcionId });
+        return;
+      }
+    }
+    const cambiosObra = new Map(
+      items.map((item) => {
+        const cambio: { visible?: boolean; codigoPersonalizado?: string | null } = {};
+        if (typeof item.visible === 'boolean') cambio.visible = item.visible;
+        if (codigosPorItem.has(item.itemizadoOpcionId)) {
+          cambio.codigoPersonalizado = codigosPorItem.get(item.itemizadoOpcionId) ?? null;
+        }
+        return [item.itemizadoOpcionId, cambio];
+      }),
+    );
+    const repetidos = await codigosRepetidosEnObra(obraId, { obra: cambiosObra });
+    if (repetidos.length > 0) {
+      res.status(409).json({ success: false, error: mensajeCodigosRepetidos(repetidos), codigos: repetidos });
+      return;
+    }
+
     const idsSinVisibleExplicito = items
       .filter((item) => typeof item.visible !== 'boolean')
       .map((item) => item.itemizadoOpcionId);
@@ -624,10 +758,14 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         const precioProvisto = hasOwn(item as unknown as Record<string, unknown>, 'precioUnitario');
         const monedaProvisto = hasOwn(item as unknown as Record<string, unknown>, 'moneda');
 
+        const codigoProvisto = codigosPorItem.has(item.itemizadoOpcionId);
+        const codigoVal = codigosPorItem.get(item.itemizadoOpcionId) ?? null;
+
         const updateData: Prisma.ConfiguracionItemizadoOpcionObraUpdateInput = {
           orden: ordenVal,
           nombrePersonalizado: nombreVal,
         };
+        if (codigoProvisto) updateData.codigoPersonalizado = codigoVal;
         if (visibleProvisto) updateData.visible = item.visible;
         if (sellosProvisto) updateData.rendimientoSellosEsperadoDiario = item.rendimientoSellosEsperadoDiario ?? null;
         if (reparacionProvisto) updateData.rendimientoReparacionEsperadoDiario = item.rendimientoReparacionEsperadoDiario ?? null;
@@ -644,6 +782,7 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
             visible: visibleProvisto ? (item.visible as boolean) : true,
             orden: ordenVal,
             nombrePersonalizado: nombreVal,
+            codigoPersonalizado: codigoProvisto ? codigoVal : null,
             rendimientoSellosEsperadoDiario: sellosProvisto ? (item.rendimientoSellosEsperadoDiario ?? null) : null,
             rendimientoReparacionEsperadoDiario: reparacionProvisto ? (item.rendimientoReparacionEsperadoDiario ?? null) : null,
             precioUnitario: precioProvisto ? (item.precioUnitario ?? null) : null,
@@ -711,6 +850,22 @@ export const patchVisibleMasivoObra = async (req: Request, res: Response): Promi
 
     const todasLasOpciones = await prisma.itemizadoOpcion.findMany({ select: { id: true } });
     const todosLosIds = todasLasOpciones.map((op) => op.id);
+
+    // En una obra con códigos propios, activar todo el catálogo deja visible el ítem vigente
+    // con el mismo código que uno renumerado: se rechaza y hay que activarlos de a uno.
+    if (visible && todosLosIds.length > 0) {
+      const repetidos = await codigosRepetidosEnObra(obraId, {
+        obra: new Map(todosLosIds.map((idOpcion) => [idOpcion, { visible: true }])),
+      });
+      if (repetidos.length > 0) {
+        res.status(409).json({
+          success: false,
+          error: `${mensajeCodigosRepetidos(repetidos)} Esta obra usa códigos propios: activa los ítems de a uno.`,
+          codigos: repetidos,
+        });
+        return;
+      }
+    }
 
     if (todosLosIds.length === 0) {
       res.json({ success: true, actualizados: 0, visible });
