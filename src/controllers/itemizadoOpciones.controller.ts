@@ -699,7 +699,9 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       }
     }
 
-    // Código propio: solo cuenta si viene explícito; valida formato y que no quede repetido en la obra.
+    // Código propio: solo cuenta si viene explícito; valida formato. Un repetido no bloquea el
+    // guardado: al renumerar un itemizado antiguo los códigos van en cadena (1-140 → 1-141,
+    // 1-141 → 1-143…) y se configuran de a uno antes de registrar. Se avisa en la respuesta.
     const codigosPorItem = new Map<string, string | null>();
     for (const item of items) {
       if (!hasOwn(item as unknown as Record<string, unknown>, 'codigoPersonalizado')) continue;
@@ -721,10 +723,6 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       }),
     );
     const repetidos = await codigosRepetidosEnObra(obraId, { obra: cambiosObra });
-    if (repetidos.length > 0) {
-      res.status(409).json({ success: false, error: mensajeCodigosRepetidos(repetidos), codigos: repetidos });
-      return;
-    }
 
     const idsSinVisibleExplicito = items
       .filter((item) => typeof item.visible !== 'boolean')
@@ -793,7 +791,13 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       }),
     );
 
-    res.json({ success: true, data: results });
+    res.json({
+      success: true,
+      data: results,
+      ...(repetidos.length > 0
+        ? { advertencia: mensajeCodigosRepetidos(repetidos), codigosRepetidos: repetidos }
+        : {}),
+    });
   } catch (error) {
     handleError(res, error);
   }
