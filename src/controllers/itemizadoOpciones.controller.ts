@@ -13,6 +13,7 @@ import {
   ErrorCodigoPersonalizado,
   normalizarCodigoPersonalizado,
 } from '../utils/codigoItemizadoObra';
+import { TIPOS_CONTRATO } from '../utils/estadoAvance';
 import {
   codigosRepetidosEnObra,
   mensajeCodigosRepetidos,
@@ -524,6 +525,18 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
       );
     });
 
+    // Cantidad contratada de cada ítem por tipo de registro (contrato total del estado de avance).
+    const contratos = await prisma.contratoItemizadoObra.findMany({
+      where: { obraId },
+      select: { itemizadoOpcionId: true, tipoRegistro: true, cantidadContratada: true },
+    });
+    const contratosPorItem = new Map<string, Record<string, number>>();
+    for (const c of contratos) {
+      const porTipo = contratosPorItem.get(c.itemizadoOpcionId) ?? {};
+      porTipo[c.tipoRegistro] = c.cantidadContratada.toNumber();
+      contratosPorItem.set(c.itemizadoOpcionId, porTipo);
+    }
+
     res.json({
       success: true,
       obra: {
@@ -532,7 +545,7 @@ export const getConfiguracionItemizadosPorObra = async (req: Request, res: Respo
         itemizadoFinalizadoAt: obra.itemizadoFinalizadoAt,
         itemizadoFinalizadoPor: obra.itemizadoFinalizadoPor,
       },
-      data,
+      data: data.map((item) => ({ ...item, contratos: contratosPorItem.get(item.itemizadoOpcionId) ?? {} })),
     });
   } catch (error) {
     handleError(res, error);
@@ -642,6 +655,8 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
       rendimientoReparacionEsperadoDiario?: number | null;
       precioUnitario?: number | null;
       moneda?: 'CLP' | 'UF' | 'USD' | null;
+      /** Cantidad contratada por tipo de registro; null borra el contrato de ese tipo. */
+      contratos?: Record<string, number | null>;
     };
 
     const items = itemsRaw as ItemInput[];
@@ -696,6 +711,27 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
           error: `La moneda es obligatoria cuando se configura un precio unitario (item ${item.itemizadoOpcionId})`,
         });
         return;
+      }
+    }
+
+    // Contrato total por tipo de registro: solo los tipos que vienen se modifican.
+    const cambiosContrato: { itemizadoOpcionId: string; tipoRegistro: string; cantidad: number | null }[] = [];
+    for (const item of items) {
+      if (item.contratos === undefined) continue;
+      if (item.contratos === null || typeof item.contratos !== 'object' || Array.isArray(item.contratos)) {
+        res.status(400).json({ success: false, error: 'contratos debe ser un objeto por tipo de registro' });
+        return;
+      }
+      for (const [tipoRegistro, cantidad] of Object.entries(item.contratos)) {
+        if (!(TIPOS_CONTRATO as readonly string[]).includes(tipoRegistro)) {
+          res.status(400).json({ success: false, error: `Tipo de registro de contrato no válido: ${tipoRegistro}` });
+          return;
+        }
+        if (cantidad !== null && (typeof cantidad !== 'number' || !Number.isFinite(cantidad) || cantidad < 0 || cantidad >= 1e12)) {
+          res.status(400).json({ success: false, error: 'La cantidad contratada debe ser un número mayor o igual a 0' });
+          return;
+        }
+        cambiosContrato.push({ itemizadoOpcionId: item.itemizadoOpcionId, tipoRegistro, cantidad });
       }
     }
 
@@ -790,6 +826,20 @@ export const guardarConfiguracionItemizadosPorObra = async (req: Request, res: R
         });
       }),
     );
+
+    if (cambiosContrato.length > 0) {
+      await prisma.$transaction(
+        cambiosContrato.map(({ itemizadoOpcionId, tipoRegistro, cantidad }) =>
+          cantidad === null
+            ? prisma.contratoItemizadoObra.deleteMany({ where: { obraId, itemizadoOpcionId, tipoRegistro } })
+            : prisma.contratoItemizadoObra.upsert({
+                where: { obraId_itemizadoOpcionId_tipoRegistro: { obraId, itemizadoOpcionId, tipoRegistro } },
+                create: { obraId, itemizadoOpcionId, tipoRegistro, cantidadContratada: cantidad },
+                update: { cantidadContratada: cantidad },
+              }),
+        ),
+      );
+    }
 
     res.json({
       success: true,

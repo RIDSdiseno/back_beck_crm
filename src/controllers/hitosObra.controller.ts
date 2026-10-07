@@ -3,6 +3,12 @@ import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { codigoEfectivo } from '../utils/codigoItemizadoObra';
+import {
+  armarCierre,
+  calcularEstadoAvance,
+  type CierreHito,
+  type RegistroAvance,
+} from '../utils/estadoAvance';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -143,106 +149,61 @@ type ItemizadoResuelto = {
   codigoBeck: string | null;
   itemizadoBeck: string | null;
   itemizadoMandante: string | null;
+  elementoPenetra: string | null;
+  materialidad: string | null;
   precioUnitario: Prisma.Decimal | null;
   moneda: string | null;
   orden: number | null;
 };
 
-const calcularSubtotal = (
-  precioUnitario: Prisma.Decimal | null,
-  cantidadEjecutada: number,
-): Prisma.Decimal | null =>
-  precioUnitario === null ? null : precioUnitario.mul(cantidadEjecutada);
+type Db = Prisma.TransactionClient;
 
-const toCantidadSegura = (valor: unknown): number => {
-  if (valor === null || valor === undefined) return 0;
-  const n = Number(valor);
-  return Number.isFinite(n) ? n : 0;
-};
-
-const cantidadFisicaDe = (registro: {
+type CantidadesRegistro = {
   tipoRegistro: string;
   cantidadSellos: number;
   metrosLineales: number | null;
-}): number =>
-  registro.tipoRegistro === 'junta_lineal_espuma'
-    ? toCantidadSegura(registro.metrosLineales)
-    : toCantidadSegura(registro.cantidadSellos);
-
-type RegistroValidado = {
-  codigoBeck: string;
-  fecha: Date;
-  tipoRegistro: string;
-  cantidadSellos: number;
-  metrosLineales: number | null;
+  cantidadFinal: Prisma.Decimal | null;
 };
 
-// Una sola consulta por obra: sirve tanto para la ejecución GLOBAL (saldo
-// pendiente) como para la ejecución POR PERÍODO de cada hito (filtrando en
-// memoria), evitando repetir la misma query por cada hito (sin N+1).
-// Mismo criterio de "registro válido" que ya usaba la lógica anterior:
-// misma obra, estado === 'validado', codigoBeck no nulo ni vacío.
-const obtenerRegistrosValidados = async (obraId: string): Promise<RegistroValidado[]> => {
-  const registros = await prisma.registroTerreno.findMany({
-    where: {
-      obraId,
-      estado: 'validado',
-      codigoBeck: { not: null },
-      cargaCompleta: true,
+// Cantidad física sin factores (S/F): sellos, o metros lineales en juntas.
+const cantidadFisicaDe = (registro: CantidadesRegistro): number => {
+  const fisica = Number(registro.tipoRegistro === 'junta_lineal_espuma' ? registro.metrosLineales : registro.cantidadSellos);
+  return Number.isFinite(fisica) ? fisica : 0;
+};
+
+// Cantidad del estado de avance: la cantidad final, con factores (C/F). La física
+// solo queda como respaldo si un registro no la tuviera.
+const cantidadDe = (registro: CantidadesRegistro): number =>
+  registro.cantidadFinal !== null ? Number(registro.cantidadFinal) : cantidadFisicaDe(registro);
+
+// Registros validados por ingeniería de la obra, con código asignado.
+const obtenerRegistrosValidados = async (db: Db, obraId: string): Promise<RegistroAvance[]> => {
+  const registros = await db.registroTerreno.findMany({
+    where: { obraId, estado: 'validado', codigoBeck: { not: null }, cargaCompleta: true },
+    select: {
+      id: true,
+      codigoBeck: true,
+      fecha: true,
+      tipoRegistro: true,
+      cantidadSellos: true,
+      metrosLineales: true,
+      cantidadFinal: true,
     },
-    select: { codigoBeck: true, fecha: true, tipoRegistro: true, cantidadSellos: true, metrosLineales: true },
   });
-
-  const resultado: RegistroValidado[] = [];
-  for (const r of registros) {
-    if (!r.codigoBeck || !r.codigoBeck.trim()) continue;
-    resultado.push({
-      codigoBeck: r.codigoBeck,
+  return registros
+    .filter((r) => r.codigoBeck && r.codigoBeck.trim())
+    .map((r) => ({
+      id: r.id,
       fecha: r.fecha,
       tipoRegistro: r.tipoRegistro,
-      cantidadSellos: r.cantidadSellos,
-      metrosLineales: r.metrosLineales,
-    });
-  }
-  return resultado;
+      codigoBeck: r.codigoBeck as string,
+      cantidad: cantidadDe(r),
+      cantidadFisica: cantidadFisicaDe(r),
+    }));
 };
 
-const sumarCantidadPorCodigoBeck = (registros: RegistroValidado[]): Map<string, number> => {
-  const mapa = new Map<string, number>();
-  for (const r of registros) {
-    mapa.set(r.codigoBeck, (mapa.get(r.codigoBeck) ?? 0) + cantidadFisicaDe(r));
-  }
-  return mapa;
-};
-
-// Compara solo año/mes/día en UTC. RegistroTerreno.fecha y
-// HitoObra.fechaDesde/fechaHasta son ambos @db.Date (sin componente de
-// hora), pero llegan como Date de JS — normalizar explícitamente a una
-// clave de día evita cualquier desajuste de zona horaria en la comparación.
-const aClaveDia = (d: Date): number => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-
-// Ambos límites incluidos (fechaDesde <= fecha <= fechaHasta).
-const dentroDePeriodo = (fecha: Date, fechaDesde: Date, fechaHasta: Date): boolean => {
-  const clave = aClaveDia(fecha);
-  return clave >= aClaveDia(fechaDesde) && clave <= aClaveDia(fechaHasta);
-};
-
-// Ejecución de UN hito: solo registros cuya fecha cae dentro de su período.
-// Reutiliza cantidadFisicaDe (misma regla sellos/metros lineales por
-// tipoRegistro que ya existía) — no se inventa una regla nueva, solo se le
-// agrega el filtro de fecha.
-const cantidadEjecutadaPorCodigoBeckEnPeriodo = (
-  registros: RegistroValidado[],
-  fechaDesde: Date,
-  fechaHasta: Date,
-): Map<string, number> =>
-  sumarCantidadPorCodigoBeck(registros.filter((r) => dentroDePeriodo(r.fecha, fechaDesde, fechaHasta)));
-
-const resolverItemizadosDeObra = async (
-  obraId: string,
-  registrosValidados: RegistroValidado[],
-): Promise<ItemizadoResuelto[]> => {
-  const configs = await prisma.configuracionItemizadoOpcionObra.findMany({
+const resolverItemizadosDeObra = async (db: Db, obraId: string): Promise<ItemizadoResuelto[]> => {
+  const configs = await db.configuracionItemizadoOpcionObra.findMany({
     where: { obraId },
     select: {
       id: true,
@@ -254,19 +215,19 @@ const resolverItemizadosDeObra = async (
       precioUnitario: true,
       moneda: true,
       itemizadoOpcion: {
-        select: { id: true, codigoBeck: true, elementoPasante: true },
+        select: { id: true, codigoBeck: true, elementoPasante: true, elementoPenetra: true, materialidad: true },
       },
     },
   });
 
   const configuredIds = configs.map((c) => c.itemizadoOpcionId);
 
-  const globalVisibles = await prisma.itemizadoOpcion.findMany({
+  const globalVisibles = await db.itemizadoOpcion.findMany({
     where: {
       visible: true,
       ...(configuredIds.length > 0 ? { id: { notIn: configuredIds } } : {}),
     },
-    select: { id: true, codigoBeck: true, elementoPasante: true },
+    select: { id: true, codigoBeck: true, elementoPasante: true, elementoPenetra: true, materialidad: true },
   });
 
   const fromConfigs: ItemizadoResuelto[] = configs
@@ -277,6 +238,8 @@ const resolverItemizadosDeObra = async (
       // Los registros guardan el código que vio la obra; hay que cruzarlos con ese mismo código.
       codigoBeck: codigoEfectivo(c.itemizadoOpcion.codigoBeck, c.codigoPersonalizado),
       itemizadoBeck: c.itemizadoOpcion.elementoPasante,
+      elementoPenetra: c.itemizadoOpcion.elementoPenetra,
+      materialidad: c.itemizadoOpcion.materialidad,
       itemizadoMandante:
         c.nombrePersonalizado && c.nombrePersonalizado.trim()
           ? c.nombrePersonalizado.trim()
@@ -291,6 +254,8 @@ const resolverItemizadosDeObra = async (
     configId: null,
     codigoBeck: op.codigoBeck,
     itemizadoBeck: op.elementoPasante,
+    elementoPenetra: op.elementoPenetra,
+    materialidad: op.materialidad,
     itemizadoMandante: op.elementoPasante,
     precioUnitario: null,
     moneda: null,
@@ -305,55 +270,62 @@ const resolverItemizadosDeObra = async (
   });
 };
 
+// Todo lo que necesita el cálculo del estado de avance de una obra.
+const cargarEstadoAvance = async (db: Db, obraId: string) => {
+  const [registros, items, contratos, hitos, congelados] = await Promise.all([
+    obtenerRegistrosValidados(db, obraId),
+    resolverItemizadosDeObra(db, obraId),
+    db.contratoItemizadoObra.findMany({
+      where: { obraId },
+      select: { itemizadoOpcionId: true, tipoRegistro: true, cantidadContratada: true },
+    }),
+    db.hitoObra.findMany({
+      where: { obraId },
+      orderBy: { orden: 'asc' },
+      select: {
+        id: true,
+        nombre: true,
+        orden: true,
+        activo: true,
+        terminado: true,
+        terminadoAt: true,
+        terminadoPorId: true,
+        fechaDesde: true,
+        fechaHasta: true,
+        cierre: true,
+      },
+    }),
+    db.hitoObraRegistro.findMany({ where: { hito: { obraId } }, select: { registroId: true } }),
+  ]);
+
+  const resultado = calcularEstadoAvance({
+    hitos: hitos.map((h) => ({ ...h, cierre: (h.cierre as CierreHito | null) ?? null })),
+    registros,
+    registrosCongelados: new Set(congelados.map((c) => c.registroId)),
+    items: items.map((i) => ({
+      itemizadoOpcionId: i.itemizadoOpcionId,
+      codigoBeck: i.codigoBeck,
+      itemizadoBeck: i.itemizadoBeck,
+      itemizadoMandante: i.itemizadoMandante,
+      precioUnitario: i.precioUnitario === null ? null : i.precioUnitario.toNumber(),
+      moneda: i.moneda,
+    })),
+    contratos: contratos.map((c) => ({ ...c, cantidadContratada: c.cantidadContratada.toNumber() })),
+  });
+
+  return { items, hitos, resultado };
+};
+
 export const listarHitosObra = async (req: Request, res: Response): Promise<void> => {
   try {
     const obraId = req.params.obraId as string;
     const obra = await getObraOr404(obraId, res);
     if (!obra) return;
 
-    // Una sola consulta de registros para toda la respuesta: alimenta tanto
-    // la ejecución global de `items` (saldo pendiente, sin tocar) como la
-    // ejecución por período de cada hito, calculada abajo en memoria.
-    const registrosValidados = await obtenerRegistrosValidados(obraId);
-
-    const [items, hitos] = await Promise.all([
-      resolverItemizadosDeObra(obraId, registrosValidados),
-      prisma.hitoObra.findMany({
-        where: { obraId },
-        orderBy: { orden: 'asc' },
-        select: {
-          id: true,
-          nombre: true,
-          orden: true,
-          activo: true,
-          terminado: true,
-          terminadoAt: true,
-          terminadoPorId: true,
-          fechaDesde: true,
-          fechaHasta: true,
-        },
-      }),
-    ]);
+    const { items, hitos, resultado } = await cargarEstadoAvance(prisma, obraId);
 
     const data = hitos.map((h) => {
-      // Hito legado sin período completo: 0 explícito para todos los
-      // itemizados, NUNCA el total global como fallback (no se mezcla
-      // lógica global con lógica por período).
-      const tienePeriodo = h.fechaDesde !== null && h.fechaHasta !== null;
-      const mapaPeriodo = tienePeriodo
-        ? cantidadEjecutadaPorCodigoBeckEnPeriodo(registrosValidados, h.fechaDesde as Date, h.fechaHasta as Date)
-        : new Map<string, number>();
-
-      const cantidadesEjecutadas: Record<string, number> = {};
-      const subtotales: Record<string, number | null> = {};
-      for (const item of items) {
-        const cantidadEjecutadaDelPeriodo =
-          tienePeriodo && item.codigoBeck ? mapaPeriodo.get(item.codigoBeck) ?? 0 : 0;
-        cantidadesEjecutadas[item.itemizadoOpcionId] = cantidadEjecutadaDelPeriodo;
-        const subtotalDecimal = calcularSubtotal(item.precioUnitario, cantidadEjecutadaDelPeriodo);
-        subtotales[item.itemizadoOpcionId] = subtotalDecimal === null ? null : subtotalDecimal.toNumber();
-      }
-
+      const calculo = resultado.porHito.get(h.id);
       return {
         id: h.id,
         nombre: h.nombre,
@@ -364,12 +336,25 @@ export const listarHitosObra = async (req: Request, res: Response): Promise<void
         terminadoPorId: h.terminadoPorId,
         fechaDesde: h.fechaDesde ? h.fechaDesde.toISOString() : null,
         fechaHasta: h.fechaHasta ? h.fechaHasta.toISOString() : null,
-        cantidadesEjecutadas,
-        subtotales,
+        lineas: calculo?.lineas ?? [],
+        cantidadRegistros: calculo?.cantidadRegistros ?? 0,
+        registrosAtrasados: calculo?.registrosAtrasados ?? 0,
       };
     });
 
-    res.json({ success: true, obra, items, hitos: data });
+    // Validados que todavía no caen en ningún estado de avance (ejecutados después del
+    // último período): orientan la fecha del próximo.
+    const fechasSinEstado = resultado.sinEstado.map((r) => r.fecha.getTime());
+    res.json({
+      success: true,
+      obra,
+      items,
+      hitos: data,
+      registrosSinEstado: {
+        cantidad: resultado.sinEstado.length,
+        primeraFecha: fechasSinEstado.length > 0 ? new Date(Math.min(...fechasSinEstado)).toISOString() : null,
+      },
+    });
   } catch (error) {
     handleError(res, error);
   }
@@ -581,14 +566,49 @@ export const terminarHitoObra = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const data = await prisma.hitoObra.update({
-      where: { id: hitoId },
-      data: {
-        terminado: true,
-        terminadoAt: new Date(),
-        terminadoPorId: req.userId ?? null,
-      },
+    if (!hito.fechaDesde || !hito.fechaHasta) {
+      res.status(400).json({ success: false, error: 'Define el período del estado de avance antes de terminarlo.' });
+      return;
+    }
+
+    // Se cierran en orden: un estado de avance anterior abierto todavía puede recibir registros.
+    const anteriorAbierto = await prisma.hitoObra.findFirst({
+      where: { obraId, terminado: false, id: { not: hitoId }, fechaDesde: { not: null, lt: hito.fechaDesde } },
+      orderBy: { fechaDesde: 'asc' },
+      select: { nombre: true },
     });
+    if (anteriorAbierto) {
+      res.status(409).json({
+        success: false,
+        error: `Primero termina "${anteriorAbierto.nombre}": los estados de avance se cierran en orden.`,
+      });
+      return;
+    }
+
+    // Congela los registros y las líneas de este momento: lo que se valide después pasa
+    // al siguiente estado de avance y este ya no cambia.
+    const data = await prisma.$transaction(
+      async (tx) => {
+        const { resultado } = await cargarEstadoAvance(tx, obraId);
+        const calculo = resultado.porHito.get(hitoId);
+        if (!calculo) throw new Error('No se pudo calcular el estado de avance a terminar');
+        if (calculo.registroIds.length > 0) {
+          await tx.hitoObraRegistro.createMany({
+            data: calculo.registroIds.map((registroId) => ({ hitoId, registroId })),
+          });
+        }
+        return tx.hitoObra.update({
+          where: { id: hitoId },
+          data: {
+            terminado: true,
+            terminadoAt: new Date(),
+            terminadoPorId: req.userId ?? null,
+            cierre: armarCierre(calculo) as unknown as Prisma.InputJsonValue,
+          },
+        });
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, timeout: 20000 },
+    );
 
     res.json({ success: true, data });
   } catch (error) {

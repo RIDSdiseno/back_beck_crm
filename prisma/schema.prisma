@@ -87,6 +87,7 @@ model Obra {
   factoresHolgura                FactorHolguraTramo[]
   oportunidades                  OperadorBeck[]
   hitos                          HitoObra[]
+  contratosItemizado             ContratoItemizadoObra[]
   tiposRegistro                  ObraTipoRegistro[]
   clienteBeck                    ClienteBeck?                       @relation(fields: [clienteBeckId], references: [id])
   creadoPor                      Usuario                            @relation("ObrasCreadasPorUsuario", fields: [creadoPorId], references: [id])
@@ -199,6 +200,7 @@ model RegistroTerreno {
   controlesInspeccion         ControlInspeccion[]
   fotos_registro              fotos_registro[]
   procesamiento               ProcesamientoIngenieria?
+  hitoObraRegistro            HitoObraRegistro?
   enviadoIngenieriaPor        Usuario?                 @relation("RegistrosEnviadosIngenieriaPorUsuario", fields: [enviadoIngenieriaPorId], references: [id], onUpdate: NoAction)
   inspeccionRevisionPor       Usuario?                 @relation("RegistrosRevisionInspeccionPorUsuario", fields: [inspeccionRevisionPorId], references: [id])
   itemizadoMandante           ItemizadoMandante?       @relation(fields: [itemizadoMandanteId], references: [id])
@@ -914,6 +916,7 @@ model ItemizadoOpcion {
   rendimientoReparacionEsperadoDiario Int?                               @map("rendimiento_reparacion_esperado_diario")
   rendimientoSellosEsperadoDiario     Int?                               @map("rendimiento_sellos_esperado_diario")
   configuracionesPorObra              ConfiguracionItemizadoOpcionObra[]
+  contratosPorObra                    ContratoItemizadoObra[]
 
   @@index([codigoBeck])
   @@index([materialidad])
@@ -959,13 +962,43 @@ model HitoObra {
   terminadoPorId String?   @map("terminado_por_id") @db.Uuid
   fechaDesde     DateTime? @map("fecha_desde") @db.Date
   fechaHasta     DateTime? @map("fecha_hasta") @db.Date
+  cierre         Json?
   obra           Obra      @relation(fields: [obraId], references: [id], onDelete: Cascade)
   terminadoPor   Usuario?  @relation("HitosTerminadosPorUsuario", fields: [terminadoPorId], references: [id])
+  registros      HitoObraRegistro[]
 
   @@unique([obraId, orden])
   @@index([obraId])
   @@index([terminadoPorId])
   @@map("hitos_obra")
+}
+
+model ContratoItemizadoObra {
+  id                 String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  obraId             String          @map("obra_id") @db.Uuid
+  itemizadoOpcionId  String          @map("itemizado_opcion_id") @db.Uuid
+  tipoRegistro       String          @map("tipo_registro") @db.VarChar(50)
+  cantidadContratada Decimal         @map("cantidad_contratada") @db.Decimal(14, 2)
+  createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  obra               Obra            @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  itemizadoOpcion    ItemizadoOpcion @relation(fields: [itemizadoOpcionId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, itemizadoOpcionId, tipoRegistro])
+  @@index([obraId])
+  @@map("contrato_itemizado_obra")
+}
+
+model HitoObraRegistro {
+  id         String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  hitoId     String          @map("hito_id") @db.Uuid
+  registroId String          @unique @map("registro_id") @db.Uuid
+  createdAt  DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  hito       HitoObra        @relation(fields: [hitoId], references: [id], onDelete: Cascade)
+  registro   RegistroTerreno @relation(fields: [registroId], references: [id], onDelete: Cascade)
+
+  @@index([hitoId])
+  @@map("hito_obra_registro")
 }
 
 model ConfiguracionValidacion {
