@@ -17,6 +17,20 @@ export async function codigosRepetidosEnObra(obraId: string, cambios: CambiosIte
   return buscarCodigosRepetidos(proyectarItemsObra(catalogo, configuraciones, cambios));
 }
 
+/** Códigos con que se ven hoy los ítems visibles de la obra. */
+export async function codigosVisiblesEnObra(obraId: string): Promise<string[]> {
+  const [catalogo, configuraciones] = await Promise.all([
+    prisma.itemizadoOpcion.findMany({ select: { id: true, codigoBeck: true, visible: true } }),
+    prisma.configuracionItemizadoOpcionObra.findMany({
+      where: { obraId },
+      select: { itemizadoOpcionId: true, visible: true, codigoPersonalizado: true },
+    }),
+  ]);
+  return proyectarItemsObra(catalogo, configuraciones)
+    .filter((i) => i.visible && i.codigoEfectivo)
+    .map((i) => i.codigoEfectivo as string);
+}
+
 /**
  * Para cambios del catálogo global (que afectan a todas las obras): revisa las obras que
  * usan códigos propios, que son las únicas donde puede aparecer un código repetido, porque

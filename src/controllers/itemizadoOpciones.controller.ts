@@ -16,6 +16,7 @@ import {
 import { TIPOS_CONTRATO } from '../utils/estadoAvance';
 import {
   codigosRepetidosEnObra,
+  codigosVisiblesEnObra,
   mensajeCodigosRepetidos,
   obrasConCodigosRepetidos,
 } from '../services/codigoItemizadoObra.service';
@@ -159,9 +160,46 @@ export const getItemizadoOpcionById = async (req: Request, res: Response): Promi
 export const crearItemizadoOpcion = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Record<string, unknown>;
-
+    const obraId = typeof body.obraId === 'string' && body.obraId.trim() ? body.obraId.trim() : null;
+    const visible = typeof body.visible === 'boolean' ? body.visible : false;
     const codigoNuevo = getString(body.codigoBeck);
-    if (body.visible === true && codigoNuevo) {
+
+    const datosCatalogo = {
+      codigoBeck: codigoNuevo,
+      tipo: getString(body.tipo),
+      elementoPasante: getString(body.elementoPasante),
+      elementoPenetra: getString(body.elementoPenetra),
+      materialidad: getString(body.materialidad),
+      rendimientoSellosEsperadoDiario: getNumber(body.rendimientoSellosEsperadoDiario),
+      rendimientoReparacionEsperadoDiario: getNumber(body.rendimientoReparacionEsperadoDiario),
+    };
+
+    // Creada desde una obra: el ítem queda oculto en el catálogo global y su visibilidad
+    // se guarda solo para esa obra. Si quedara visible en el catálogo, aparecería en
+    // todas las obras que no lo tienen configurado.
+    if (obraId) {
+      await assertItemizadoObraEditableAdmin(obraId);
+      // La opción nueva todavía no existe: su código se compara con los visibles de la obra.
+      if (visible && codigoNuevo) {
+        const clave = codigoNuevo.trim().toUpperCase();
+        const enUso = (await codigosVisiblesEnObra(obraId)).some((c) => c.trim().toUpperCase() === clave);
+        if (enUso) {
+          res.status(409).json({ success: false, error: mensajeCodigosRepetidos([codigoNuevo]), codigos: [codigoNuevo] });
+          return;
+        }
+      }
+      const data = await prisma.$transaction(async (tx) => {
+        const opcion = await tx.itemizadoOpcion.create({ data: { ...datosCatalogo, visible: false } });
+        await tx.configuracionItemizadoOpcionObra.create({
+          data: { obraId, itemizadoOpcionId: opcion.id, visible },
+        });
+        return opcion;
+      });
+      res.status(201).json({ success: true, data: { ...data, visible }, scope: 'obra' });
+      return;
+    }
+
+    if (visible && codigoNuevo) {
       const choques = await prisma.configuracionItemizadoOpcionObra.findMany({
         where: { visible: true, codigoPersonalizado: { equals: codigoNuevo, mode: 'insensitive' } },
         select: { obraId: true },
@@ -176,18 +214,7 @@ export const crearItemizadoOpcion = async (req: Request, res: Response): Promise
       }
     }
 
-    const data = await prisma.itemizadoOpcion.create({
-      data: {
-        codigoBeck: getString(body.codigoBeck),
-        tipo: getString(body.tipo),
-        elementoPasante: getString(body.elementoPasante),
-        elementoPenetra: getString(body.elementoPenetra),
-        materialidad: getString(body.materialidad),
-        visible: typeof body.visible === 'boolean' ? body.visible : false,
-        rendimientoSellosEsperadoDiario: getNumber(body.rendimientoSellosEsperadoDiario),
-        rendimientoReparacionEsperadoDiario: getNumber(body.rendimientoReparacionEsperadoDiario),
-      },
-    });
+    const data = await prisma.itemizadoOpcion.create({ data: { ...datosCatalogo, visible } });
 
     res.status(201).json({ success: true, data });
   } catch (error) {
