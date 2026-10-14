@@ -249,7 +249,10 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
       }
     }
 
-    const producto = await tragerPrisma.producto.create({
+    // Igual que Firemat: el stock inicial cuenta como entrada y queda en el kardex.
+    const ahora = new Date();
+    const producto = await tragerPrisma.$transaction(async (tx) => {
+      const prod = await tx.producto.create({
       data: {
         nombre: nombre.trim(),
         sku: sku.trim(),
@@ -263,6 +266,8 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
         cantidadCaja: cantidadCaja?.trim() || null,
         stock: stockIni,
         stockInicial: stockIni,
+        entradas: stockIni,
+        fechaUltimaEntrada: stockIni > 0 ? ahora : null,
         minStock: stockMin,
         ubicacion: ubicacion?.trim() ?? null,
         criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
@@ -270,6 +275,22 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
         imagen: imagenFinal,
       },
       include: { Categoria: true },
+      });
+
+      if (stockIni > 0) {
+        await tx.movimiento.create({
+          data: {
+            tipo: 'ENTRADA_INICIAL',
+            cantidad: stockIni,
+            stockAnterior: 0,
+            stockNuevo: stockIni,
+            motivo: 'Creación de producto',
+            productoId: prod.id,
+          },
+        });
+      }
+
+      return prod;
     });
 
     res.status(201).json({ success: true, data: toDTO(producto) });

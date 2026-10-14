@@ -49,6 +49,11 @@ export type Categoria = $Result.DefaultSelection<Prisma.$CategoriaPayload>
  */
 export type Producto = $Result.DefaultSelection<Prisma.$ProductoPayload>
 /**
+ * Model Movimiento
+ * 
+ */
+export type Movimiento = $Result.DefaultSelection<Prisma.$MovimientoPayload>
+/**
  * Model CotizacionTrager
  * 
  */
@@ -249,6 +254,16 @@ export class PrismaClient<
     * ```
     */
   get producto(): Prisma.ProductoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.movimiento`: Exposes CRUD operations for the **Movimiento** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Movimientos
+    * const movimientos = await prisma.movimiento.findMany()
+    * ```
+    */
+  get movimiento(): Prisma.MovimientoDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.cotizacionTrager`: Exposes CRUD operations for the **CotizacionTrager** model.
@@ -710,6 +725,7 @@ export namespace Prisma {
     HistorialEtapaTrager: 'HistorialEtapaTrager',
     Categoria: 'Categoria',
     Producto: 'Producto',
+    Movimiento: 'Movimiento',
     CotizacionTrager: 'CotizacionTrager',
     CotizacionTragerDetalle: 'CotizacionTragerDetalle'
   };
@@ -727,7 +743,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "contactoClienteTrager" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "cotizacionTrager" | "cotizacionTragerDetalle"
+      modelProps: "cliente" | "contactoClienteTrager" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "movimiento" | "cotizacionTrager" | "cotizacionTragerDetalle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1249,6 +1265,80 @@ export namespace Prisma {
           }
         }
       }
+      Movimiento: {
+        payload: Prisma.$MovimientoPayload<ExtArgs>
+        fields: Prisma.MovimientoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MovimientoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MovimientoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          findFirst: {
+            args: Prisma.MovimientoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MovimientoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          findMany: {
+            args: Prisma.MovimientoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>[]
+          }
+          create: {
+            args: Prisma.MovimientoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          createMany: {
+            args: Prisma.MovimientoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MovimientoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>[]
+          }
+          delete: {
+            args: Prisma.MovimientoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          update: {
+            args: Prisma.MovimientoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          deleteMany: {
+            args: Prisma.MovimientoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MovimientoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MovimientoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>[]
+          }
+          upsert: {
+            args: Prisma.MovimientoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoPayload>
+          }
+          aggregate: {
+            args: Prisma.MovimientoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMovimiento>
+          }
+          groupBy: {
+            args: Prisma.MovimientoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MovimientoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MovimientoCountArgs<ExtArgs>
+            result: $Utils.Optional<MovimientoCountAggregateOutputType> | number
+          }
+        }
+      }
       CotizacionTrager: {
         payload: Prisma.$CotizacionTragerPayload<ExtArgs>
         fields: Prisma.CotizacionTragerFieldRefs
@@ -1512,6 +1602,7 @@ export namespace Prisma {
     historialEtapaTrager?: HistorialEtapaTragerOmit
     categoria?: CategoriaOmit
     producto?: ProductoOmit
+    movimiento?: MovimientoOmit
     cotizacionTrager?: CotizacionTragerOmit
     cotizacionTragerDetalle?: CotizacionTragerDetalleOmit
   }
@@ -1697,10 +1788,12 @@ export namespace Prisma {
 
   export type ProductoCountOutputType = {
     CotizacionTragerDetalle: number
+    Movimiento: number
   }
 
   export type ProductoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CotizacionTragerDetalle?: boolean | ProductoCountOutputTypeCountCotizacionTragerDetalleArgs
+    Movimiento?: boolean | ProductoCountOutputTypeCountMovimientoArgs
   }
 
   // Custom InputTypes
@@ -1719,6 +1812,13 @@ export namespace Prisma {
    */
   export type ProductoCountOutputTypeCountCotizacionTragerDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CotizacionTragerDetalleWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountMovimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MovimientoWhereInput
   }
 
 
@@ -9638,6 +9738,8 @@ export namespace Prisma {
     precioUsd: number | null
     precioSugerido: number | null
     stockInicial: number | null
+    entradas: number | null
+    salidas: number | null
   }
 
   export type ProductoSumAggregateOutputType = {
@@ -9650,6 +9752,8 @@ export namespace Prisma {
     precioUsd: number | null
     precioSugerido: number | null
     stockInicial: number | null
+    entradas: number | null
+    salidas: number | null
   }
 
   export type ProductoMinAggregateOutputType = {
@@ -9673,6 +9777,10 @@ export namespace Prisma {
     precioUsd: number | null
     precioSugerido: number | null
     stockInicial: number | null
+    entradas: number | null
+    salidas: number | null
+    fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
   }
 
   export type ProductoMaxAggregateOutputType = {
@@ -9696,6 +9804,10 @@ export namespace Prisma {
     precioUsd: number | null
     precioSugerido: number | null
     stockInicial: number | null
+    entradas: number | null
+    salidas: number | null
+    fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
   }
 
   export type ProductoCountAggregateOutputType = {
@@ -9719,6 +9831,10 @@ export namespace Prisma {
     precioUsd: number
     precioSugerido: number
     stockInicial: number
+    entradas: number
+    salidas: number
+    fechaUltimaEntrada: number
+    fechaUltimaSalida: number
     _all: number
   }
 
@@ -9733,6 +9849,8 @@ export namespace Prisma {
     precioUsd?: true
     precioSugerido?: true
     stockInicial?: true
+    entradas?: true
+    salidas?: true
   }
 
   export type ProductoSumAggregateInputType = {
@@ -9745,6 +9863,8 @@ export namespace Prisma {
     precioUsd?: true
     precioSugerido?: true
     stockInicial?: true
+    entradas?: true
+    salidas?: true
   }
 
   export type ProductoMinAggregateInputType = {
@@ -9768,6 +9888,10 @@ export namespace Prisma {
     precioUsd?: true
     precioSugerido?: true
     stockInicial?: true
+    entradas?: true
+    salidas?: true
+    fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
   }
 
   export type ProductoMaxAggregateInputType = {
@@ -9791,6 +9915,10 @@ export namespace Prisma {
     precioUsd?: true
     precioSugerido?: true
     stockInicial?: true
+    entradas?: true
+    salidas?: true
+    fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
   }
 
   export type ProductoCountAggregateInputType = {
@@ -9814,6 +9942,10 @@ export namespace Prisma {
     precioUsd?: true
     precioSugerido?: true
     stockInicial?: true
+    entradas?: true
+    salidas?: true
+    fechaUltimaEntrada?: true
+    fechaUltimaSalida?: true
     _all?: true
   }
 
@@ -9924,6 +10056,10 @@ export namespace Prisma {
     precioUsd: number | null
     precioSugerido: number | null
     stockInicial: number | null
+    entradas: number | null
+    salidas: number | null
+    fechaUltimaEntrada: Date | null
+    fechaUltimaSalida: Date | null
     _count: ProductoCountAggregateOutputType | null
     _avg: ProductoAvgAggregateOutputType | null
     _sum: ProductoSumAggregateOutputType | null
@@ -9966,8 +10102,13 @@ export namespace Prisma {
     precioUsd?: boolean
     precioSugerido?: boolean
     stockInicial?: boolean
+    entradas?: boolean
+    salidas?: boolean
+    fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     CotizacionTragerDetalle?: boolean | Producto$CotizacionTragerDetalleArgs<ExtArgs>
+    Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -9992,6 +10133,10 @@ export namespace Prisma {
     precioUsd?: boolean
     precioSugerido?: boolean
     stockInicial?: boolean
+    entradas?: boolean
+    salidas?: boolean
+    fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -10016,6 +10161,10 @@ export namespace Prisma {
     precioUsd?: boolean
     precioSugerido?: boolean
     stockInicial?: boolean
+    entradas?: boolean
+    salidas?: boolean
+    fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -10040,12 +10189,17 @@ export namespace Prisma {
     precioUsd?: boolean
     precioSugerido?: boolean
     stockInicial?: boolean
+    entradas?: boolean
+    salidas?: boolean
+    fechaUltimaEntrada?: boolean
+    fechaUltimaSalida?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial" | "entradas" | "salidas" | "fechaUltimaEntrada" | "fechaUltimaSalida", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     CotizacionTragerDetalle?: boolean | Producto$CotizacionTragerDetalleArgs<ExtArgs>
+    Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10060,6 +10214,7 @@ export namespace Prisma {
     objects: {
       Categoria: Prisma.$CategoriaPayload<ExtArgs>
       CotizacionTragerDetalle: Prisma.$CotizacionTragerDetallePayload<ExtArgs>[]
+      Movimiento: Prisma.$MovimientoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10082,6 +10237,10 @@ export namespace Prisma {
       precioUsd: number | null
       precioSugerido: number | null
       stockInicial: number | null
+      entradas: number | null
+      salidas: number | null
+      fechaUltimaEntrada: Date | null
+      fechaUltimaSalida: Date | null
     }, ExtArgs["result"]["producto"]>
     composites: {}
   }
@@ -10478,6 +10637,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Categoria<T extends CategoriaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoriaDefaultArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     CotizacionTragerDetalle<T extends Producto$CotizacionTragerDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Producto$CotizacionTragerDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionTragerDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Movimiento<T extends Producto$MovimientoArgs<ExtArgs> = {}>(args?: Subset<T, Producto$MovimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10527,6 +10687,10 @@ export namespace Prisma {
     readonly precioUsd: FieldRef<"Producto", 'Float'>
     readonly precioSugerido: FieldRef<"Producto", 'Float'>
     readonly stockInicial: FieldRef<"Producto", 'Int'>
+    readonly entradas: FieldRef<"Producto", 'Int'>
+    readonly salidas: FieldRef<"Producto", 'Int'>
+    readonly fechaUltimaEntrada: FieldRef<"Producto", 'DateTime'>
+    readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
   }
     
 
@@ -10952,6 +11116,30 @@ export namespace Prisma {
   }
 
   /**
+   * Producto.Movimiento
+   */
+  export type Producto$MovimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    where?: MovimientoWhereInput
+    orderBy?: MovimientoOrderByWithRelationInput | MovimientoOrderByWithRelationInput[]
+    cursor?: MovimientoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+  }
+
+  /**
    * Producto without action
    */
   export type ProductoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10967,6 +11155,1188 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductoInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Movimiento
+   */
+
+  export type AggregateMovimiento = {
+    _count: MovimientoCountAggregateOutputType | null
+    _avg: MovimientoAvgAggregateOutputType | null
+    _sum: MovimientoSumAggregateOutputType | null
+    _min: MovimientoMinAggregateOutputType | null
+    _max: MovimientoMaxAggregateOutputType | null
+  }
+
+  export type MovimientoAvgAggregateOutputType = {
+    id: number | null
+    cantidad: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    productoId: number | null
+    userId: number | null
+  }
+
+  export type MovimientoSumAggregateOutputType = {
+    id: number | null
+    cantidad: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    productoId: number | null
+    userId: number | null
+  }
+
+  export type MovimientoMinAggregateOutputType = {
+    id: number | null
+    tipo: string | null
+    cantidad: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    motivo: string | null
+    documento: string | null
+    createdAt: Date | null
+    productoId: number | null
+    userId: number | null
+  }
+
+  export type MovimientoMaxAggregateOutputType = {
+    id: number | null
+    tipo: string | null
+    cantidad: number | null
+    stockAnterior: number | null
+    stockNuevo: number | null
+    motivo: string | null
+    documento: string | null
+    createdAt: Date | null
+    productoId: number | null
+    userId: number | null
+  }
+
+  export type MovimientoCountAggregateOutputType = {
+    id: number
+    tipo: number
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo: number
+    documento: number
+    createdAt: number
+    productoId: number
+    userId: number
+    _all: number
+  }
+
+
+  export type MovimientoAvgAggregateInputType = {
+    id?: true
+    cantidad?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    productoId?: true
+    userId?: true
+  }
+
+  export type MovimientoSumAggregateInputType = {
+    id?: true
+    cantidad?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    productoId?: true
+    userId?: true
+  }
+
+  export type MovimientoMinAggregateInputType = {
+    id?: true
+    tipo?: true
+    cantidad?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    motivo?: true
+    documento?: true
+    createdAt?: true
+    productoId?: true
+    userId?: true
+  }
+
+  export type MovimientoMaxAggregateInputType = {
+    id?: true
+    tipo?: true
+    cantidad?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    motivo?: true
+    documento?: true
+    createdAt?: true
+    productoId?: true
+    userId?: true
+  }
+
+  export type MovimientoCountAggregateInputType = {
+    id?: true
+    tipo?: true
+    cantidad?: true
+    stockAnterior?: true
+    stockNuevo?: true
+    motivo?: true
+    documento?: true
+    createdAt?: true
+    productoId?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type MovimientoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Movimiento to aggregate.
+     */
+    where?: MovimientoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Movimientos to fetch.
+     */
+    orderBy?: MovimientoOrderByWithRelationInput | MovimientoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MovimientoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Movimientos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Movimientos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Movimientos
+    **/
+    _count?: true | MovimientoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MovimientoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MovimientoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MovimientoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MovimientoMaxAggregateInputType
+  }
+
+  export type GetMovimientoAggregateType<T extends MovimientoAggregateArgs> = {
+        [P in keyof T & keyof AggregateMovimiento]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMovimiento[P]>
+      : GetScalarType<T[P], AggregateMovimiento[P]>
+  }
+
+
+
+
+  export type MovimientoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MovimientoWhereInput
+    orderBy?: MovimientoOrderByWithAggregationInput | MovimientoOrderByWithAggregationInput[]
+    by: MovimientoScalarFieldEnum[] | MovimientoScalarFieldEnum
+    having?: MovimientoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MovimientoCountAggregateInputType | true
+    _avg?: MovimientoAvgAggregateInputType
+    _sum?: MovimientoSumAggregateInputType
+    _min?: MovimientoMinAggregateInputType
+    _max?: MovimientoMaxAggregateInputType
+  }
+
+  export type MovimientoGroupByOutputType = {
+    id: number
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo: string | null
+    documento: string | null
+    createdAt: Date
+    productoId: number
+    userId: number | null
+    _count: MovimientoCountAggregateOutputType | null
+    _avg: MovimientoAvgAggregateOutputType | null
+    _sum: MovimientoSumAggregateOutputType | null
+    _min: MovimientoMinAggregateOutputType | null
+    _max: MovimientoMaxAggregateOutputType | null
+  }
+
+  type GetMovimientoGroupByPayload<T extends MovimientoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MovimientoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MovimientoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MovimientoGroupByOutputType[P]>
+            : GetScalarType<T[P], MovimientoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MovimientoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tipo?: boolean
+    cantidad?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    motivo?: boolean
+    documento?: boolean
+    createdAt?: boolean
+    productoId?: boolean
+    userId?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimiento"]>
+
+  export type MovimientoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tipo?: boolean
+    cantidad?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    motivo?: boolean
+    documento?: boolean
+    createdAt?: boolean
+    productoId?: boolean
+    userId?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimiento"]>
+
+  export type MovimientoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tipo?: boolean
+    cantidad?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    motivo?: boolean
+    documento?: boolean
+    createdAt?: boolean
+    productoId?: boolean
+    userId?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimiento"]>
+
+  export type MovimientoSelectScalar = {
+    id?: boolean
+    tipo?: boolean
+    cantidad?: boolean
+    stockAnterior?: boolean
+    stockNuevo?: boolean
+    motivo?: boolean
+    documento?: boolean
+    createdAt?: boolean
+    productoId?: boolean
+    userId?: boolean
+  }
+
+  export type MovimientoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tipo" | "cantidad" | "stockAnterior" | "stockNuevo" | "motivo" | "documento" | "createdAt" | "productoId" | "userId", ExtArgs["result"]["movimiento"]>
+  export type MovimientoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+  export type MovimientoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+  export type MovimientoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+
+  export type $MovimientoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Movimiento"
+    objects: {
+      Producto: Prisma.$ProductoPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      tipo: string
+      cantidad: number
+      stockAnterior: number
+      stockNuevo: number
+      motivo: string | null
+      documento: string | null
+      createdAt: Date
+      productoId: number
+      userId: number | null
+    }, ExtArgs["result"]["movimiento"]>
+    composites: {}
+  }
+
+  type MovimientoGetPayload<S extends boolean | null | undefined | MovimientoDefaultArgs> = $Result.GetResult<Prisma.$MovimientoPayload, S>
+
+  type MovimientoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MovimientoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MovimientoCountAggregateInputType | true
+    }
+
+  export interface MovimientoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Movimiento'], meta: { name: 'Movimiento' } }
+    /**
+     * Find zero or one Movimiento that matches the filter.
+     * @param {MovimientoFindUniqueArgs} args - Arguments to find a Movimiento
+     * @example
+     * // Get one Movimiento
+     * const movimiento = await prisma.movimiento.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MovimientoFindUniqueArgs>(args: SelectSubset<T, MovimientoFindUniqueArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Movimiento that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MovimientoFindUniqueOrThrowArgs} args - Arguments to find a Movimiento
+     * @example
+     * // Get one Movimiento
+     * const movimiento = await prisma.movimiento.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MovimientoFindUniqueOrThrowArgs>(args: SelectSubset<T, MovimientoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Movimiento that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoFindFirstArgs} args - Arguments to find a Movimiento
+     * @example
+     * // Get one Movimiento
+     * const movimiento = await prisma.movimiento.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MovimientoFindFirstArgs>(args?: SelectSubset<T, MovimientoFindFirstArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Movimiento that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoFindFirstOrThrowArgs} args - Arguments to find a Movimiento
+     * @example
+     * // Get one Movimiento
+     * const movimiento = await prisma.movimiento.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MovimientoFindFirstOrThrowArgs>(args?: SelectSubset<T, MovimientoFindFirstOrThrowArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Movimientos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Movimientos
+     * const movimientos = await prisma.movimiento.findMany()
+     * 
+     * // Get first 10 Movimientos
+     * const movimientos = await prisma.movimiento.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const movimientoWithIdOnly = await prisma.movimiento.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MovimientoFindManyArgs>(args?: SelectSubset<T, MovimientoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Movimiento.
+     * @param {MovimientoCreateArgs} args - Arguments to create a Movimiento.
+     * @example
+     * // Create one Movimiento
+     * const Movimiento = await prisma.movimiento.create({
+     *   data: {
+     *     // ... data to create a Movimiento
+     *   }
+     * })
+     * 
+     */
+    create<T extends MovimientoCreateArgs>(args: SelectSubset<T, MovimientoCreateArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Movimientos.
+     * @param {MovimientoCreateManyArgs} args - Arguments to create many Movimientos.
+     * @example
+     * // Create many Movimientos
+     * const movimiento = await prisma.movimiento.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MovimientoCreateManyArgs>(args?: SelectSubset<T, MovimientoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Movimientos and returns the data saved in the database.
+     * @param {MovimientoCreateManyAndReturnArgs} args - Arguments to create many Movimientos.
+     * @example
+     * // Create many Movimientos
+     * const movimiento = await prisma.movimiento.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Movimientos and only return the `id`
+     * const movimientoWithIdOnly = await prisma.movimiento.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MovimientoCreateManyAndReturnArgs>(args?: SelectSubset<T, MovimientoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Movimiento.
+     * @param {MovimientoDeleteArgs} args - Arguments to delete one Movimiento.
+     * @example
+     * // Delete one Movimiento
+     * const Movimiento = await prisma.movimiento.delete({
+     *   where: {
+     *     // ... filter to delete one Movimiento
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MovimientoDeleteArgs>(args: SelectSubset<T, MovimientoDeleteArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Movimiento.
+     * @param {MovimientoUpdateArgs} args - Arguments to update one Movimiento.
+     * @example
+     * // Update one Movimiento
+     * const movimiento = await prisma.movimiento.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MovimientoUpdateArgs>(args: SelectSubset<T, MovimientoUpdateArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Movimientos.
+     * @param {MovimientoDeleteManyArgs} args - Arguments to filter Movimientos to delete.
+     * @example
+     * // Delete a few Movimientos
+     * const { count } = await prisma.movimiento.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MovimientoDeleteManyArgs>(args?: SelectSubset<T, MovimientoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Movimientos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Movimientos
+     * const movimiento = await prisma.movimiento.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MovimientoUpdateManyArgs>(args: SelectSubset<T, MovimientoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Movimientos and returns the data updated in the database.
+     * @param {MovimientoUpdateManyAndReturnArgs} args - Arguments to update many Movimientos.
+     * @example
+     * // Update many Movimientos
+     * const movimiento = await prisma.movimiento.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Movimientos and only return the `id`
+     * const movimientoWithIdOnly = await prisma.movimiento.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MovimientoUpdateManyAndReturnArgs>(args: SelectSubset<T, MovimientoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Movimiento.
+     * @param {MovimientoUpsertArgs} args - Arguments to update or create a Movimiento.
+     * @example
+     * // Update or create a Movimiento
+     * const movimiento = await prisma.movimiento.upsert({
+     *   create: {
+     *     // ... data to create a Movimiento
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Movimiento we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MovimientoUpsertArgs>(args: SelectSubset<T, MovimientoUpsertArgs<ExtArgs>>): Prisma__MovimientoClient<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Movimientos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoCountArgs} args - Arguments to filter Movimientos to count.
+     * @example
+     * // Count the number of Movimientos
+     * const count = await prisma.movimiento.count({
+     *   where: {
+     *     // ... the filter for the Movimientos we want to count
+     *   }
+     * })
+    **/
+    count<T extends MovimientoCountArgs>(
+      args?: Subset<T, MovimientoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MovimientoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Movimiento.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MovimientoAggregateArgs>(args: Subset<T, MovimientoAggregateArgs>): Prisma.PrismaPromise<GetMovimientoAggregateType<T>>
+
+    /**
+     * Group by Movimiento.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MovimientoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MovimientoGroupByArgs['orderBy'] }
+        : { orderBy?: MovimientoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MovimientoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMovimientoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Movimiento model
+   */
+  readonly fields: MovimientoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Movimiento.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MovimientoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Movimiento model
+   */
+  interface MovimientoFieldRefs {
+    readonly id: FieldRef<"Movimiento", 'Int'>
+    readonly tipo: FieldRef<"Movimiento", 'String'>
+    readonly cantidad: FieldRef<"Movimiento", 'Int'>
+    readonly stockAnterior: FieldRef<"Movimiento", 'Int'>
+    readonly stockNuevo: FieldRef<"Movimiento", 'Int'>
+    readonly motivo: FieldRef<"Movimiento", 'String'>
+    readonly documento: FieldRef<"Movimiento", 'String'>
+    readonly createdAt: FieldRef<"Movimiento", 'DateTime'>
+    readonly productoId: FieldRef<"Movimiento", 'Int'>
+    readonly userId: FieldRef<"Movimiento", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Movimiento findUnique
+   */
+  export type MovimientoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter, which Movimiento to fetch.
+     */
+    where: MovimientoWhereUniqueInput
+  }
+
+  /**
+   * Movimiento findUniqueOrThrow
+   */
+  export type MovimientoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter, which Movimiento to fetch.
+     */
+    where: MovimientoWhereUniqueInput
+  }
+
+  /**
+   * Movimiento findFirst
+   */
+  export type MovimientoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter, which Movimiento to fetch.
+     */
+    where?: MovimientoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Movimientos to fetch.
+     */
+    orderBy?: MovimientoOrderByWithRelationInput | MovimientoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Movimientos.
+     */
+    cursor?: MovimientoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Movimientos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Movimientos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Movimientos.
+     */
+    distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+  }
+
+  /**
+   * Movimiento findFirstOrThrow
+   */
+  export type MovimientoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter, which Movimiento to fetch.
+     */
+    where?: MovimientoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Movimientos to fetch.
+     */
+    orderBy?: MovimientoOrderByWithRelationInput | MovimientoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Movimientos.
+     */
+    cursor?: MovimientoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Movimientos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Movimientos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Movimientos.
+     */
+    distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+  }
+
+  /**
+   * Movimiento findMany
+   */
+  export type MovimientoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter, which Movimientos to fetch.
+     */
+    where?: MovimientoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Movimientos to fetch.
+     */
+    orderBy?: MovimientoOrderByWithRelationInput | MovimientoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Movimientos.
+     */
+    cursor?: MovimientoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Movimientos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Movimientos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Movimientos.
+     */
+    distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+  }
+
+  /**
+   * Movimiento create
+   */
+  export type MovimientoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Movimiento.
+     */
+    data: XOR<MovimientoCreateInput, MovimientoUncheckedCreateInput>
+  }
+
+  /**
+   * Movimiento createMany
+   */
+  export type MovimientoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Movimientos.
+     */
+    data: MovimientoCreateManyInput | MovimientoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Movimiento createManyAndReturn
+   */
+  export type MovimientoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * The data used to create many Movimientos.
+     */
+    data: MovimientoCreateManyInput | MovimientoCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Movimiento update
+   */
+  export type MovimientoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Movimiento.
+     */
+    data: XOR<MovimientoUpdateInput, MovimientoUncheckedUpdateInput>
+    /**
+     * Choose, which Movimiento to update.
+     */
+    where: MovimientoWhereUniqueInput
+  }
+
+  /**
+   * Movimiento updateMany
+   */
+  export type MovimientoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Movimientos.
+     */
+    data: XOR<MovimientoUpdateManyMutationInput, MovimientoUncheckedUpdateManyInput>
+    /**
+     * Filter which Movimientos to update
+     */
+    where?: MovimientoWhereInput
+    /**
+     * Limit how many Movimientos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Movimiento updateManyAndReturn
+   */
+  export type MovimientoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * The data used to update Movimientos.
+     */
+    data: XOR<MovimientoUpdateManyMutationInput, MovimientoUncheckedUpdateManyInput>
+    /**
+     * Filter which Movimientos to update
+     */
+    where?: MovimientoWhereInput
+    /**
+     * Limit how many Movimientos to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Movimiento upsert
+   */
+  export type MovimientoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Movimiento to update in case it exists.
+     */
+    where: MovimientoWhereUniqueInput
+    /**
+     * In case the Movimiento found by the `where` argument doesn't exist, create a new Movimiento with this data.
+     */
+    create: XOR<MovimientoCreateInput, MovimientoUncheckedCreateInput>
+    /**
+     * In case the Movimiento was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MovimientoUpdateInput, MovimientoUncheckedUpdateInput>
+  }
+
+  /**
+   * Movimiento delete
+   */
+  export type MovimientoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
+    /**
+     * Filter which Movimiento to delete.
+     */
+    where: MovimientoWhereUniqueInput
+  }
+
+  /**
+   * Movimiento deleteMany
+   */
+  export type MovimientoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Movimientos to delete
+     */
+    where?: MovimientoWhereInput
+    /**
+     * Limit how many Movimientos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Movimiento without action
+   */
+  export type MovimientoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Movimiento
+     */
+    select?: MovimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Movimiento
+     */
+    omit?: MovimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoInclude<ExtArgs> | null
   }
 
 
@@ -13651,10 +15021,30 @@ export namespace Prisma {
     cantidadCaja: 'cantidadCaja',
     precioUsd: 'precioUsd',
     precioSugerido: 'precioSugerido',
-    stockInicial: 'stockInicial'
+    stockInicial: 'stockInicial',
+    entradas: 'entradas',
+    salidas: 'salidas',
+    fechaUltimaEntrada: 'fechaUltimaEntrada',
+    fechaUltimaSalida: 'fechaUltimaSalida'
   };
 
   export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
+
+
+  export const MovimientoScalarFieldEnum: {
+    id: 'id',
+    tipo: 'tipo',
+    cantidad: 'cantidad',
+    stockAnterior: 'stockAnterior',
+    stockNuevo: 'stockNuevo',
+    motivo: 'motivo',
+    documento: 'documento',
+    createdAt: 'createdAt',
+    productoId: 'productoId',
+    userId: 'userId'
+  };
+
+  export type MovimientoScalarFieldEnum = (typeof MovimientoScalarFieldEnum)[keyof typeof MovimientoScalarFieldEnum]
 
 
   export const CotizacionTragerScalarFieldEnum: {
@@ -14606,8 +15996,13 @@ export namespace Prisma {
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     stockInicial?: IntNullableFilter<"Producto"> | number | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     CotizacionTragerDetalle?: CotizacionTragerDetalleListRelationFilter
+    Movimiento?: MovimientoListRelationFilter
   }
 
   export type ProductoOrderByWithRelationInput = {
@@ -14631,8 +16026,13 @@ export namespace Prisma {
     precioUsd?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
     stockInicial?: SortOrderInput | SortOrder
+    entradas?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    fechaUltimaEntrada?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
     Categoria?: CategoriaOrderByWithRelationInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleOrderByRelationAggregateInput
+    Movimiento?: MovimientoOrderByRelationAggregateInput
   }
 
   export type ProductoWhereUniqueInput = Prisma.AtLeast<{
@@ -14659,8 +16059,13 @@ export namespace Prisma {
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     stockInicial?: IntNullableFilter<"Producto"> | number | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     CotizacionTragerDetalle?: CotizacionTragerDetalleListRelationFilter
+    Movimiento?: MovimientoListRelationFilter
   }, "id" | "sku">
 
   export type ProductoOrderByWithAggregationInput = {
@@ -14684,6 +16089,10 @@ export namespace Prisma {
     precioUsd?: SortOrderInput | SortOrder
     precioSugerido?: SortOrderInput | SortOrder
     stockInicial?: SortOrderInput | SortOrder
+    entradas?: SortOrderInput | SortOrder
+    salidas?: SortOrderInput | SortOrder
+    fechaUltimaEntrada?: SortOrderInput | SortOrder
+    fechaUltimaSalida?: SortOrderInput | SortOrder
     _count?: ProductoCountOrderByAggregateInput
     _avg?: ProductoAvgOrderByAggregateInput
     _max?: ProductoMaxOrderByAggregateInput
@@ -14715,6 +16124,92 @@ export namespace Prisma {
     precioUsd?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     stockInicial?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    entradas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    salidas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+  }
+
+  export type MovimientoWhereInput = {
+    AND?: MovimientoWhereInput | MovimientoWhereInput[]
+    OR?: MovimientoWhereInput[]
+    NOT?: MovimientoWhereInput | MovimientoWhereInput[]
+    id?: IntFilter<"Movimiento"> | number
+    tipo?: StringFilter<"Movimiento"> | string
+    cantidad?: IntFilter<"Movimiento"> | number
+    stockAnterior?: IntFilter<"Movimiento"> | number
+    stockNuevo?: IntFilter<"Movimiento"> | number
+    motivo?: StringNullableFilter<"Movimiento"> | string | null
+    documento?: StringNullableFilter<"Movimiento"> | string | null
+    createdAt?: DateTimeFilter<"Movimiento"> | Date | string
+    productoId?: IntFilter<"Movimiento"> | number
+    userId?: IntNullableFilter<"Movimiento"> | number | null
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+  }
+
+  export type MovimientoOrderByWithRelationInput = {
+    id?: SortOrder
+    tipo?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    motivo?: SortOrderInput | SortOrder
+    documento?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    Producto?: ProductoOrderByWithRelationInput
+  }
+
+  export type MovimientoWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MovimientoWhereInput | MovimientoWhereInput[]
+    OR?: MovimientoWhereInput[]
+    NOT?: MovimientoWhereInput | MovimientoWhereInput[]
+    tipo?: StringFilter<"Movimiento"> | string
+    cantidad?: IntFilter<"Movimiento"> | number
+    stockAnterior?: IntFilter<"Movimiento"> | number
+    stockNuevo?: IntFilter<"Movimiento"> | number
+    motivo?: StringNullableFilter<"Movimiento"> | string | null
+    documento?: StringNullableFilter<"Movimiento"> | string | null
+    createdAt?: DateTimeFilter<"Movimiento"> | Date | string
+    productoId?: IntFilter<"Movimiento"> | number
+    userId?: IntNullableFilter<"Movimiento"> | number | null
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+  }, "id">
+
+  export type MovimientoOrderByWithAggregationInput = {
+    id?: SortOrder
+    tipo?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    motivo?: SortOrderInput | SortOrder
+    documento?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    _count?: MovimientoCountOrderByAggregateInput
+    _avg?: MovimientoAvgOrderByAggregateInput
+    _max?: MovimientoMaxOrderByAggregateInput
+    _min?: MovimientoMinOrderByAggregateInput
+    _sum?: MovimientoSumOrderByAggregateInput
+  }
+
+  export type MovimientoScalarWhereWithAggregatesInput = {
+    AND?: MovimientoScalarWhereWithAggregatesInput | MovimientoScalarWhereWithAggregatesInput[]
+    OR?: MovimientoScalarWhereWithAggregatesInput[]
+    NOT?: MovimientoScalarWhereWithAggregatesInput | MovimientoScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Movimiento"> | number
+    tipo?: StringWithAggregatesFilter<"Movimiento"> | string
+    cantidad?: IntWithAggregatesFilter<"Movimiento"> | number
+    stockAnterior?: IntWithAggregatesFilter<"Movimiento"> | number
+    stockNuevo?: IntWithAggregatesFilter<"Movimiento"> | number
+    motivo?: StringNullableWithAggregatesFilter<"Movimiento"> | string | null
+    documento?: StringNullableWithAggregatesFilter<"Movimiento"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Movimiento"> | Date | string
+    productoId?: IntWithAggregatesFilter<"Movimiento"> | number
+    userId?: IntNullableWithAggregatesFilter<"Movimiento"> | number | null
   }
 
   export type CotizacionTragerWhereInput = {
@@ -15897,8 +17392,13 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateInput = {
@@ -15922,7 +17422,12 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUpdateInput = {
@@ -15944,8 +17449,13 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateInput = {
@@ -15969,7 +17479,12 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateManyInput = {
@@ -15993,6 +17508,10 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
   }
 
   export type ProductoUpdateManyMutationInput = {
@@ -16014,6 +17533,10 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductoUncheckedUpdateManyInput = {
@@ -16037,6 +17560,97 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MovimientoCreateInput = {
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    userId?: number | null
+    Producto: ProductoCreateNestedOneWithoutMovimientoInput
+  }
+
+  export type MovimientoUncheckedCreateInput = {
+    id?: number
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    productoId: number
+    userId?: number | null
+  }
+
+  export type MovimientoUpdateInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    Producto?: ProductoUpdateOneRequiredWithoutMovimientoNestedInput
+  }
+
+  export type MovimientoUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type MovimientoCreateManyInput = {
+    id?: number
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    productoId: number
+    userId?: number | null
+  }
+
+  export type MovimientoUpdateManyMutationInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type MovimientoUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productoId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CotizacionTragerCreateInput = {
@@ -17103,7 +18717,17 @@ export namespace Prisma {
     none?: CotizacionTragerDetalleWhereInput
   }
 
+  export type MovimientoListRelationFilter = {
+    every?: MovimientoWhereInput
+    some?: MovimientoWhereInput
+    none?: MovimientoWhereInput
+  }
+
   export type CotizacionTragerDetalleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MovimientoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17128,6 +18752,10 @@ export namespace Prisma {
     precioUsd?: SortOrder
     precioSugerido?: SortOrder
     stockInicial?: SortOrder
+    entradas?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
   }
 
   export type ProductoAvgOrderByAggregateInput = {
@@ -17140,6 +18768,8 @@ export namespace Prisma {
     precioUsd?: SortOrder
     precioSugerido?: SortOrder
     stockInicial?: SortOrder
+    entradas?: SortOrder
+    salidas?: SortOrder
   }
 
   export type ProductoMaxOrderByAggregateInput = {
@@ -17163,6 +18793,10 @@ export namespace Prisma {
     precioUsd?: SortOrder
     precioSugerido?: SortOrder
     stockInicial?: SortOrder
+    entradas?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
   }
 
   export type ProductoMinOrderByAggregateInput = {
@@ -17186,6 +18820,10 @@ export namespace Prisma {
     precioUsd?: SortOrder
     precioSugerido?: SortOrder
     stockInicial?: SortOrder
+    entradas?: SortOrder
+    salidas?: SortOrder
+    fechaUltimaEntrada?: SortOrder
+    fechaUltimaSalida?: SortOrder
   }
 
   export type ProductoSumOrderByAggregateInput = {
@@ -17198,6 +18836,70 @@ export namespace Prisma {
     precioUsd?: SortOrder
     precioSugerido?: SortOrder
     stockInicial?: SortOrder
+    entradas?: SortOrder
+    salidas?: SortOrder
+  }
+
+  export type ProductoScalarRelationFilter = {
+    is?: ProductoWhereInput
+    isNot?: ProductoWhereInput
+  }
+
+  export type MovimientoCountOrderByAggregateInput = {
+    id?: SortOrder
+    tipo?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    motivo?: SortOrder
+    documento?: SortOrder
+    createdAt?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MovimientoAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MovimientoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tipo?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    motivo?: SortOrder
+    documento?: SortOrder
+    createdAt?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MovimientoMinOrderByAggregateInput = {
+    id?: SortOrder
+    tipo?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    motivo?: SortOrder
+    documento?: SortOrder
+    createdAt?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MovimientoSumOrderByAggregateInput = {
+    id?: SortOrder
+    cantidad?: SortOrder
+    stockAnterior?: SortOrder
+    stockNuevo?: SortOrder
+    productoId?: SortOrder
+    userId?: SortOrder
   }
 
   export type CotizacionTragerCountOrderByAggregateInput = {
@@ -17285,11 +18987,6 @@ export namespace Prisma {
   export type CotizacionTragerScalarRelationFilter = {
     is?: CotizacionTragerWhereInput
     isNot?: CotizacionTragerWhereInput
-  }
-
-  export type ProductoScalarRelationFilter = {
-    is?: ProductoWhereInput
-    isNot?: ProductoWhereInput
   }
 
   export type CotizacionTragerDetalleCountOrderByAggregateInput = {
@@ -17629,11 +19326,25 @@ export namespace Prisma {
     connect?: CotizacionTragerDetalleWhereUniqueInput | CotizacionTragerDetalleWhereUniqueInput[]
   }
 
+  export type MovimientoCreateNestedManyWithoutProductoInput = {
+    create?: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput> | MovimientoCreateWithoutProductoInput[] | MovimientoUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoCreateOrConnectWithoutProductoInput | MovimientoCreateOrConnectWithoutProductoInput[]
+    createMany?: MovimientoCreateManyProductoInputEnvelope
+    connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+  }
+
   export type CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutProductoInput, CotizacionTragerDetalleUncheckedCreateWithoutProductoInput> | CotizacionTragerDetalleCreateWithoutProductoInput[] | CotizacionTragerDetalleUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutProductoInput | CotizacionTragerDetalleCreateOrConnectWithoutProductoInput[]
     createMany?: CotizacionTragerDetalleCreateManyProductoInputEnvelope
     connect?: CotizacionTragerDetalleWhereUniqueInput | CotizacionTragerDetalleWhereUniqueInput[]
+  }
+
+  export type MovimientoUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput> | MovimientoCreateWithoutProductoInput[] | MovimientoUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoCreateOrConnectWithoutProductoInput | MovimientoCreateOrConnectWithoutProductoInput[]
+    createMany?: MovimientoCreateManyProductoInputEnvelope
+    connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
   }
 
   export type CategoriaUpdateOneRequiredWithoutProductoNestedInput = {
@@ -17658,6 +19369,20 @@ export namespace Prisma {
     deleteMany?: CotizacionTragerDetalleScalarWhereInput | CotizacionTragerDetalleScalarWhereInput[]
   }
 
+  export type MovimientoUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput> | MovimientoCreateWithoutProductoInput[] | MovimientoUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoCreateOrConnectWithoutProductoInput | MovimientoCreateOrConnectWithoutProductoInput[]
+    upsert?: MovimientoUpsertWithWhereUniqueWithoutProductoInput | MovimientoUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: MovimientoCreateManyProductoInputEnvelope
+    set?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    disconnect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    delete?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    update?: MovimientoUpdateWithWhereUniqueWithoutProductoInput | MovimientoUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: MovimientoUpdateManyWithWhereWithoutProductoInput | MovimientoUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
+  }
+
   export type CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutProductoInput, CotizacionTragerDetalleUncheckedCreateWithoutProductoInput> | CotizacionTragerDetalleCreateWithoutProductoInput[] | CotizacionTragerDetalleUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutProductoInput | CotizacionTragerDetalleCreateOrConnectWithoutProductoInput[]
@@ -17670,6 +19395,34 @@ export namespace Prisma {
     update?: CotizacionTragerDetalleUpdateWithWhereUniqueWithoutProductoInput | CotizacionTragerDetalleUpdateWithWhereUniqueWithoutProductoInput[]
     updateMany?: CotizacionTragerDetalleUpdateManyWithWhereWithoutProductoInput | CotizacionTragerDetalleUpdateManyWithWhereWithoutProductoInput[]
     deleteMany?: CotizacionTragerDetalleScalarWhereInput | CotizacionTragerDetalleScalarWhereInput[]
+  }
+
+  export type MovimientoUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput> | MovimientoCreateWithoutProductoInput[] | MovimientoUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoCreateOrConnectWithoutProductoInput | MovimientoCreateOrConnectWithoutProductoInput[]
+    upsert?: MovimientoUpsertWithWhereUniqueWithoutProductoInput | MovimientoUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: MovimientoCreateManyProductoInputEnvelope
+    set?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    disconnect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    delete?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+    update?: MovimientoUpdateWithWhereUniqueWithoutProductoInput | MovimientoUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: MovimientoUpdateManyWithWhereWithoutProductoInput | MovimientoUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
+  }
+
+  export type ProductoCreateNestedOneWithoutMovimientoInput = {
+    create?: XOR<ProductoCreateWithoutMovimientoInput, ProductoUncheckedCreateWithoutMovimientoInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutMovimientoInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type ProductoUpdateOneRequiredWithoutMovimientoNestedInput = {
+    create?: XOR<ProductoCreateWithoutMovimientoInput, ProductoUncheckedCreateWithoutMovimientoInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutMovimientoInput
+    upsert?: ProductoUpsertWithoutMovimientoInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutMovimientoInput, ProductoUpdateWithoutMovimientoInput>, ProductoUncheckedUpdateWithoutMovimientoInput>
   }
 
   export type CotizacionTragerDetalleCreateNestedManyWithoutCotizacionInput = {
@@ -18943,7 +20696,12 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCategoriaInput = {
@@ -18966,7 +20724,12 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCategoriaInput = {
@@ -19019,6 +20782,10 @@ export namespace Prisma {
     precioUsd?: FloatNullableFilter<"Producto"> | number | null
     precioSugerido?: FloatNullableFilter<"Producto"> | number | null
     stockInicial?: IntNullableFilter<"Producto"> | number | null
+    entradas?: IntNullableFilter<"Producto"> | number | null
+    salidas?: IntNullableFilter<"Producto"> | number | null
+    fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
   }
 
   export type CategoriaCreateWithoutProductoInput = {
@@ -19063,6 +20830,39 @@ export namespace Prisma {
 
   export type CotizacionTragerDetalleCreateManyProductoInputEnvelope = {
     data: CotizacionTragerDetalleCreateManyProductoInput | CotizacionTragerDetalleCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MovimientoCreateWithoutProductoInput = {
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    userId?: number | null
+  }
+
+  export type MovimientoUncheckedCreateWithoutProductoInput = {
+    id?: number
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    userId?: number | null
+  }
+
+  export type MovimientoCreateOrConnectWithoutProductoInput = {
+    where: MovimientoWhereUniqueInput
+    create: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput>
+  }
+
+  export type MovimientoCreateManyProductoInputEnvelope = {
+    data: MovimientoCreateManyProductoInput | MovimientoCreateManyProductoInput[]
     skipDuplicates?: boolean
   }
 
@@ -19115,6 +20915,164 @@ export namespace Prisma {
     subtotal?: FloatFilter<"CotizacionTragerDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionTragerDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionTragerDetalle"> | string | null
+  }
+
+  export type MovimientoUpsertWithWhereUniqueWithoutProductoInput = {
+    where: MovimientoWhereUniqueInput
+    update: XOR<MovimientoUpdateWithoutProductoInput, MovimientoUncheckedUpdateWithoutProductoInput>
+    create: XOR<MovimientoCreateWithoutProductoInput, MovimientoUncheckedCreateWithoutProductoInput>
+  }
+
+  export type MovimientoUpdateWithWhereUniqueWithoutProductoInput = {
+    where: MovimientoWhereUniqueInput
+    data: XOR<MovimientoUpdateWithoutProductoInput, MovimientoUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type MovimientoUpdateManyWithWhereWithoutProductoInput = {
+    where: MovimientoScalarWhereInput
+    data: XOR<MovimientoUpdateManyMutationInput, MovimientoUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type MovimientoScalarWhereInput = {
+    AND?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
+    OR?: MovimientoScalarWhereInput[]
+    NOT?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
+    id?: IntFilter<"Movimiento"> | number
+    tipo?: StringFilter<"Movimiento"> | string
+    cantidad?: IntFilter<"Movimiento"> | number
+    stockAnterior?: IntFilter<"Movimiento"> | number
+    stockNuevo?: IntFilter<"Movimiento"> | number
+    motivo?: StringNullableFilter<"Movimiento"> | string | null
+    documento?: StringNullableFilter<"Movimiento"> | string | null
+    createdAt?: DateTimeFilter<"Movimiento"> | Date | string
+    productoId?: IntFilter<"Movimiento"> | number
+    userId?: IntNullableFilter<"Movimiento"> | number | null
+  }
+
+  export type ProductoCreateWithoutMovimientoInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutMovimientoInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutMovimientoInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutMovimientoInput, ProductoUncheckedCreateWithoutMovimientoInput>
+  }
+
+  export type ProductoUpsertWithoutMovimientoInput = {
+    update: XOR<ProductoUpdateWithoutMovimientoInput, ProductoUncheckedUpdateWithoutMovimientoInput>
+    create: XOR<ProductoCreateWithoutMovimientoInput, ProductoUncheckedCreateWithoutMovimientoInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutMovimientoInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutMovimientoInput, ProductoUncheckedUpdateWithoutMovimientoInput>
+  }
+
+  export type ProductoUpdateWithoutMovimientoInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutMovimientoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CotizacionTragerDetalleCreateWithoutCotizacionInput = {
@@ -19231,7 +21189,12 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCotizacionTragerDetalleInput = {
@@ -19255,6 +21218,11 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCotizacionTragerDetalleInput = {
@@ -19346,7 +21314,12 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCotizacionTragerDetalleInput = {
@@ -19370,6 +21343,11 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ContactoClienteTragerCreateManyClienteInput = {
@@ -19525,6 +21503,10 @@ export namespace Prisma {
     precioUsd?: number | null
     precioSugerido?: number | null
     stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
   }
 
   export type ProductoUpdateWithoutCategoriaInput = {
@@ -19546,7 +21528,12 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCategoriaInput = {
@@ -19569,7 +21556,12 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateManyWithoutCategoriaInput = {
@@ -19592,6 +21584,10 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CotizacionTragerDetalleCreateManyProductoInput = {
@@ -19603,6 +21599,18 @@ export namespace Prisma {
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+  }
+
+  export type MovimientoCreateManyProductoInput = {
+    id?: number
+    tipo: string
+    cantidad: number
+    stockAnterior: number
+    stockNuevo: number
+    motivo?: string | null
+    documento?: string | null
+    createdAt?: Date | string
+    userId?: number | null
   }
 
   export type CotizacionTragerDetalleUpdateWithoutProductoInput = {
@@ -19635,6 +21643,41 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MovimientoUpdateWithoutProductoInput = {
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type MovimientoUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type MovimientoUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    stockAnterior?: IntFieldUpdateOperationsInput | number
+    stockNuevo?: IntFieldUpdateOperationsInput | number
+    motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CotizacionTragerDetalleCreateManyCotizacionInput = {

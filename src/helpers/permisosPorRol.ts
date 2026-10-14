@@ -44,6 +44,8 @@ export const TODOS_LOS_MODULOS: string[] = [
   'trager_productos',
   'trager_categorias',
   'trager_cotizaciones',
+  'trager_inventario',
+  'trager_movimientos',
 ];
 
 function buildPermisos(

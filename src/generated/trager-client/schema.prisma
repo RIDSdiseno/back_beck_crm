@@ -172,29 +172,51 @@ model Categoria {
 }
 
 model Producto {
-  id             Int      @id @default(autoincrement())
-  nombre         String
-  descripcion    String?
-  stock          Int
-  ubicacion      String?
-  createdAt      DateTime @default(now())
-  precio         Float
-  minStock       Int      @default(0)
-  activo         Boolean  @default(true)
-  criticidad     String   @default("Media")
-  imagen         String?
-  categoriaId    Int
-  stockReservado Int      @default(0)
-  sku            String?  @unique
-  disponibilidad String?
-  formato        String?
-  cantidadCaja   String?
-  precioUsd      Float?
-  precioSugerido Float?
-  stockInicial   Int?     @default(0)
+  id                 Int       @id @default(autoincrement())
+  nombre             String
+  descripcion        String?
+  stock              Int
+  ubicacion          String?
+  createdAt          DateTime  @default(now())
+  precio             Float
+  minStock           Int       @default(0)
+  activo             Boolean   @default(true)
+  criticidad         String    @default("Media")
+  imagen             String?
+  categoriaId        Int
+  stockReservado     Int       @default(0)
+  sku                String?   @unique
+  disponibilidad     String?
+  formato            String?
+  cantidadCaja       String?
+  precioUsd          Float?
+  precioSugerido     Float?
+  stockInicial       Int?      @default(0)
+  entradas           Int?      @default(0)
+  salidas            Int?      @default(0)
+  fechaUltimaEntrada DateTime?
+  fechaUltimaSalida  DateTime?
 
   Categoria               Categoria                 @relation(fields: [categoriaId], references: [id])
   CotizacionTragerDetalle CotizacionTragerDetalle[]
+  Movimiento              Movimiento[]
+}
+
+model Movimiento {
+  id            Int      @id @default(autoincrement())
+  tipo          String
+  cantidad      Int
+  stockAnterior Int
+  stockNuevo    Int
+  motivo        String?
+  documento     String?
+  createdAt     DateTime @default(now())
+  productoId    Int
+  userId        Int?
+  Producto      Producto @relation(fields: [productoId], references: [id])
+
+  @@index([productoId])
+  @@index([createdAt])
 }
 
 model CotizacionTrager {

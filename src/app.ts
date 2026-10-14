@@ -32,6 +32,7 @@ import funnelTragerRoutes from './routes/trager/funnel-trager.routes';
 import categoriasTragerRoutes from './routes/trager/categorias-trager.routes';
 import productosTragerRoutes from './routes/trager/productos-trager.routes';
 import cotizacionesTragerRoutes from './routes/trager/cotizaciones-trager.routes';
+import inventarioTragerRoutes from './routes/trager/inventario-trager.routes';
 import reportesFirematRoutes from './routes/firemat/reportes.routes';
 import oficinaTecnicaPreventaRoutes from './routes/oficinaTecnicaPreventa.routes';
 import configuracionCamposRegistroRoutes from './routes/configuracionCamposRegistro.routes';
@@ -147,6 +148,7 @@ app.use('/api/trager/funnel', authenticate, funnelTragerRoutes);
 app.use('/api/trager/categorias', authenticate, categoriasTragerRoutes);
 app.use('/api/trager/productos', authenticate, productosTragerRoutes);
 app.use('/api/trager/cotizaciones', authenticate, cotizacionesTragerRoutes);
+app.use('/api/trager/inventario', authenticate, inventarioTragerRoutes);
 app.use('/api/firemat/reportes', authenticate, reportesFirematRoutes);
 
 app.use('/api/configuracion-campos-registro', configuracionCamposRegistroRoutes);
