@@ -37,7 +37,7 @@ const CANT_LABEL_POR_TIPO: Record<string, string> = {
 
 
 const formatRegistroDate = (fecha: Date): string =>
-  new Intl.DateTimeFormat('es-CL', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(fecha);
+  new Intl.DateTimeFormat('es-CL', { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }).format(fecha);
 
 const formatDateTime = (fecha: Date | string): string =>
   new Intl.DateTimeFormat('es-CL', {
@@ -161,7 +161,7 @@ function buildPdfContent(
   registro: any,
   validImages: Buffer[],
   logoBuffer: Buffer | null,
-  options: { reserveSignature: boolean; reservedHeight?: number },
+  options: { reserveSignature: boolean; reservedHeight?: number; strictImages?: boolean; tamanoFotos?: 'compacta' | 'grande' },
 ): void {
   const regRaw = registro as Record<string, unknown>;
   const esTipo = registro.tipoRegistro;
@@ -268,6 +268,19 @@ function buildPdfContent(
   if (validImages.length === 0) {
     doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
       .text('Sin fotos asociadas.', PDF_MARGIN, doc.y);
+  } else if (options.tamanoFotos === 'grande' && !options.reserveSignature) {
+    doc.font('Helvetica').fontSize(8).fillColor(TEXT_MUTED)
+      .text('Ver evidencia fotográfica en las páginas siguientes.', PDF_MARGIN, doc.y);
+    validImages.forEach((buf, index) => {
+      doc.addPage();
+      doc.rect(0, 0, PDF_W, 5).fill(BECK_YELLOW);
+      if (logoBuffer) doc.image(logoBuffer, PDF_MARGIN, 18, { height: 32 });
+      doc.font('Helvetica-Bold').fontSize(12).fillColor(TEXT_DARK)
+        .text('BECK Soluciones · Evidencia fotográfica', PDF_MARGIN + 46, 24);
+      doc.font('Helvetica').fontSize(9)
+        .text(`Sello ${registro.numeroSello} · Fotografía ${index + 1} de ${validImages.length}`, PDF_MARGIN, 70);
+      doc.image(buf, PDF_MARGIN, 100, { fit: [PDF_CONTENT_W, PDF_BOTTOM - 115], align: 'center', valign: 'center' });
+    });
   } else {
     const gap = 6;
     const cols = validImages.length === 1 ? 1 : 2;
@@ -290,7 +303,7 @@ function buildPdfContent(
       try {
         doc.image(buf, imgX, imgY, { fit: [imgW, imgH], align: 'center', valign: 'center' });
       } catch {
-        // Imagen no procesable, se omite
+        if (options.strictImages) throw new Error('No se pudo procesar una fotografía del registro.');
       }
     });
 
@@ -592,6 +605,7 @@ export interface SignatureOptions {
 export async function generateRegistroPdfBuffer(
   registro: any,
   signatureOptions?: SignatureOptions,
+  options: { strictImages?: boolean; tamanoFotos?: 'compacta' | 'grande' } = {},
 ): Promise<Buffer> {
   const fotoUrls: string[] =
     registro.fotos_registro && registro.fotos_registro.length > 0
@@ -600,6 +614,9 @@ export async function generateRegistroPdfBuffer(
 
   const imageBuffers = await Promise.all(fotoUrls.map(fetchImageBuffer));
   const validImages = imageBuffers.filter((b): b is Buffer => b !== null);
+  if (options.strictImages && validImages.length !== fotoUrls.length) {
+    throw new Error('No se pudieron descargar todas las fotografías. Intenta nuevamente.');
+  }
 
   const logoPath = path.join(process.cwd(), 'public', 'logo-beck.png');
   const logoBuffer = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
@@ -621,10 +638,18 @@ export async function generateRegistroPdfBuffer(
     doc.on('end', () => resolve(Buffer.concat(chunks)));
     doc.on('error', reject);
 
-    buildPdfContent(doc, registro, validImages, logoBuffer, {
-      reserveSignature: Boolean(signatureOptions?.pathData),
-      reservedHeight: signatureOptions?.reservedHeight,
-    });
+    try {
+      buildPdfContent(doc, registro, validImages, logoBuffer, {
+        reserveSignature: Boolean(signatureOptions?.pathData),
+        reservedHeight: signatureOptions?.reservedHeight,
+        strictImages: options.strictImages,
+        tamanoFotos: options.tamanoFotos,
+      });
+    } catch (error) {
+      doc.destroy();
+      reject(error);
+      return;
+    }
 
     if (signatureOptions?.pathData && !signatureOptions.skipRender) {
       doc.y += 4;

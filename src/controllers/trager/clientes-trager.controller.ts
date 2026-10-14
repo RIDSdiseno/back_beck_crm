@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { Prisma } from '../../generated/trager-client';
 import {
+  importarClientesTrager,
+  agregarContactoClienteTrager,
+  actualizarContactoClienteTrager,
+  cambiarEstadoContactoTrager,
   listarClientesTrager,
   obtenerClienteTrager,
   crearClienteTrager,
@@ -9,11 +13,15 @@ import {
   eliminarClienteTrager,
 } from '../../services/trager/clientes-trager.service';
 
+import { parseFileToRows } from '../../utils/importClientes';
+import { validarBoolean } from '../../services/trager/clientes-trager.validation';
+
 const parseId = (value: string | string[] | undefined): number | null => {
   const raw = Array.isArray(value) ? value[0] : value;
   if (!raw) return null;
-  const n = parseInt(raw, 10);
-  return Number.isInteger(n) && n > 0 ? n : null;
+  if (!/^\d+$/.test(raw)) return null;
+  const n = Number(raw);
+  return Number.isSafeInteger(n) && n > 0 ? n : null;
 };
 
 function handleError(res: Response, error: unknown, contexto: string): void {
@@ -102,7 +110,7 @@ export const cambiarEstadoCliente = async (req: Request, res: Response): Promise
       res.status(400).json({ error: 'ID de cliente inválido.' });
       return;
     }
-    const activo = Boolean((req.body as Record<string, unknown>)?.activo);
+    const activo = validarBoolean(req.body?.activo);
     const cliente = await cambiarEstadoClienteTrager(id, activo);
     res.json({ success: true, data: cliente });
   } catch (error) {
@@ -122,4 +130,34 @@ export const eliminarCliente = async (req: Request, res: Response): Promise<void
   } catch (error) {
     handleError(res, error, 'eliminar cliente');
   }
+};
+
+export const importarClientes = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.file) { res.status(400).json({ error: 'Selecciona un archivo Excel o CSV.' }); return; }
+    const filas = parseFileToRows(req.file.buffer, req.file.originalname, true);
+    if (!filas.length) { res.status(400).json({ error: 'El archivo no contiene datos.' }); return; }
+    res.json(await importarClientesTrager(filas));
+  } catch (error) { handleError(res, error, 'importar clientes'); }
+};
+export const agregarContacto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseId(req.params.id);
+    if (!id) { res.status(400).json({ error: 'ID de cliente inválido.' }); return; }
+    res.status(201).json({ success: true, data: await agregarContactoClienteTrager(id, req.body ?? {}) });
+  } catch (error) { handleError(res, error, 'agregar contacto'); }
+};
+export const actualizarContacto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseId(req.params.contactoId);
+    if (!id) { res.status(400).json({ error: 'ID de contacto inválido.' }); return; }
+    res.json({ success: true, data: await actualizarContactoClienteTrager(id, req.body ?? {}) });
+  } catch (error) { handleError(res, error, 'actualizar contacto'); }
+};
+export const cambiarEstadoContacto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id = parseId(req.params.contactoId);
+    if (!id) { res.status(400).json({ error: 'ID de contacto inválido.' }); return; }
+    res.json({ success: true, data: await cambiarEstadoContactoTrager(id, validarBoolean(req.body?.activo)) });
+  } catch (error) { handleError(res, error, 'cambiar estado del contacto'); }
 };

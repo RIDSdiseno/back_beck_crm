@@ -2,7 +2,7 @@ import XLSX from 'xlsx';
 
 export type RawFilaCliente = Record<string, string | null>;
 
-export function parseFileToRows(buffer: Buffer, filename: string): RawFilaCliente[] {
+export function parseFileToRows(buffer: Buffer, filename: string, conservarFilasVacias = false): RawFilaCliente[] {
   void filename;
   const workbook = XLSX.read(buffer, { type: 'buffer', raw: false });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -10,6 +10,7 @@ export function parseFileToRows(buffer: Buffer, filename: string): RawFilaClient
 
   const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
     defval: null,
+    blankrows: conservarFilasVacias,
     raw: false,
   });
 

@@ -124,10 +124,34 @@ exports.Prisma.ClienteScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
   rut: 'rut',
+  email: 'email',
+  telefono: 'telefono',
+  direccion: 'direccion',
+  razonSocial: 'razonSocial',
+  nombreEmpresa: 'nombreEmpresa',
+  region: 'region',
+  comuna: 'comuna',
+  tipoCliente: 'tipoCliente',
+  canalVenta: 'canalVenta',
+  observaciones: 'observaciones',
   contactoNombre: 'contactoNombre',
   contactoTelefono: 'contactoTelefono',
   contactoCorreo: 'contactoCorreo',
   activo: 'activo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContactoClienteTragerScalarFieldEnum = {
+  id: 'id',
+  clienteId: 'clienteId',
+  nombre: 'nombre',
+  cargo: 'cargo',
+  telefono: 'telefono',
+  correo: 'correo',
+  principal: 'principal',
+  activo: 'activo',
+  observaciones: 'observaciones',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -308,6 +332,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Cliente: 'Cliente',
+  ContactoClienteTrager: 'ContactoClienteTrager',
   FunnelTragerOpportunity: 'FunnelTragerOpportunity',
   FunnelTragerArchivo: 'FunnelTragerArchivo',
   HistorialEtapaTrager: 'HistorialEtapaTrager',

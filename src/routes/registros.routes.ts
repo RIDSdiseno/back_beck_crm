@@ -26,12 +26,17 @@ import {
   descargarEjemploExcel,
 } from '../controllers/importar-registros.controller';
 import { descargarPdfConsolidadoCliente } from '../controllers/cliente.controller';
-import { authenticate } from '../middlewares/auth';
+import { authenticate, authorize } from '../middlewares/auth';
+import { descargarInformeIngenieria, listarInformesIngenieria, descargarInformeTemporal } from '../controllers/informeIngenieria.controller';
 import { requirePermission } from '../middlewares/requirePermission';
 import { upload, uploadExcelFile } from '../middlewares/upload';
 import type { Request, Response, NextFunction } from 'express';
 
 const router = Router();
+router.get('/informe-ingenieria', authenticate, authorize('administrador', 'ingenieria'), requirePermission('beck_procesamiento_ingenieria', 'ver'), listarInformesIngenieria);
+router.get('/informe-ingenieria/:informeId/pdf', authenticate, authorize('administrador', 'ingenieria'), requirePermission('beck_procesamiento_ingenieria', 'ver'), descargarInformeTemporal);
+router.post('/informe-ingenieria', authenticate, authorize('administrador', 'ingenieria'),
+  requirePermission('beck_procesamiento_ingenieria', 'ver'), descargarInformeIngenieria);
 
 /**
  * POST /api/registros

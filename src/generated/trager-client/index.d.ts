@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Cliente = $Result.DefaultSelection<Prisma.$ClientePayload>
 /**
+ * Model ContactoClienteTrager
+ * 
+ */
+export type ContactoClienteTrager = $Result.DefaultSelection<Prisma.$ContactoClienteTragerPayload>
+/**
  * Model FunnelTragerOpportunity
  * 
  */
@@ -184,6 +189,16 @@ export class PrismaClient<
     * ```
     */
   get cliente(): Prisma.ClienteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactoClienteTrager`: Exposes CRUD operations for the **ContactoClienteTrager** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactoClienteTragers
+    * const contactoClienteTragers = await prisma.contactoClienteTrager.findMany()
+    * ```
+    */
+  get contactoClienteTrager(): Prisma.ContactoClienteTragerDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.funnelTragerOpportunity`: Exposes CRUD operations for the **FunnelTragerOpportunity** model.
@@ -689,6 +704,7 @@ export namespace Prisma {
 
   export const ModelName: {
     Cliente: 'Cliente',
+    ContactoClienteTrager: 'ContactoClienteTrager',
     FunnelTragerOpportunity: 'FunnelTragerOpportunity',
     FunnelTragerArchivo: 'FunnelTragerArchivo',
     HistorialEtapaTrager: 'HistorialEtapaTrager',
@@ -711,7 +727,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "cotizacionTrager" | "cotizacionTragerDetalle"
+      modelProps: "cliente" | "contactoClienteTrager" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "cotizacionTrager" | "cotizacionTragerDetalle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -786,6 +802,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ClienteCountArgs<ExtArgs>
             result: $Utils.Optional<ClienteCountAggregateOutputType> | number
+          }
+        }
+      }
+      ContactoClienteTrager: {
+        payload: Prisma.$ContactoClienteTragerPayload<ExtArgs>
+        fields: Prisma.ContactoClienteTragerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactoClienteTragerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactoClienteTragerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          findFirst: {
+            args: Prisma.ContactoClienteTragerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactoClienteTragerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          findMany: {
+            args: Prisma.ContactoClienteTragerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>[]
+          }
+          create: {
+            args: Prisma.ContactoClienteTragerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          createMany: {
+            args: Prisma.ContactoClienteTragerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactoClienteTragerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>[]
+          }
+          delete: {
+            args: Prisma.ContactoClienteTragerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          update: {
+            args: Prisma.ContactoClienteTragerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactoClienteTragerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactoClienteTragerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactoClienteTragerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactoClienteTragerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactoClienteTragerPayload>
+          }
+          aggregate: {
+            args: Prisma.ContactoClienteTragerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactoClienteTrager>
+          }
+          groupBy: {
+            args: Prisma.ContactoClienteTragerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactoClienteTragerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactoClienteTragerCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactoClienteTragerCountAggregateOutputType> | number
           }
         }
       }
@@ -1416,6 +1506,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     cliente?: ClienteOmit
+    contactoClienteTrager?: ContactoClienteTragerOmit
     funnelTragerOpportunity?: FunnelTragerOpportunityOmit
     funnelTragerArchivo?: FunnelTragerArchivoOmit
     historialEtapaTrager?: HistorialEtapaTragerOmit
@@ -1496,6 +1587,37 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type ClienteCountOutputType
+   */
+
+  export type ClienteCountOutputType = {
+    contactos: number
+  }
+
+  export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactos?: boolean | ClienteCountOutputTypeCountContactosArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClienteCountOutputType
+     */
+    select?: ClienteCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeCountContactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactoClienteTragerWhereInput
+  }
 
 
   /**
@@ -1659,6 +1781,16 @@ export namespace Prisma {
     id: number | null
     nombre: string | null
     rut: string | null
+    email: string | null
+    telefono: string | null
+    direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: string | null
+    canalVenta: string | null
+    observaciones: string | null
     contactoNombre: string | null
     contactoTelefono: string | null
     contactoCorreo: string | null
@@ -1671,6 +1803,16 @@ export namespace Prisma {
     id: number | null
     nombre: string | null
     rut: string | null
+    email: string | null
+    telefono: string | null
+    direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: string | null
+    canalVenta: string | null
+    observaciones: string | null
     contactoNombre: string | null
     contactoTelefono: string | null
     contactoCorreo: string | null
@@ -1683,6 +1825,16 @@ export namespace Prisma {
     id: number
     nombre: number
     rut: number
+    email: number
+    telefono: number
+    direccion: number
+    razonSocial: number
+    nombreEmpresa: number
+    region: number
+    comuna: number
+    tipoCliente: number
+    canalVenta: number
+    observaciones: number
     contactoNombre: number
     contactoTelefono: number
     contactoCorreo: number
@@ -1705,6 +1857,16 @@ export namespace Prisma {
     id?: true
     nombre?: true
     rut?: true
+    email?: true
+    telefono?: true
+    direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    observaciones?: true
     contactoNombre?: true
     contactoTelefono?: true
     contactoCorreo?: true
@@ -1717,6 +1879,16 @@ export namespace Prisma {
     id?: true
     nombre?: true
     rut?: true
+    email?: true
+    telefono?: true
+    direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    observaciones?: true
     contactoNombre?: true
     contactoTelefono?: true
     contactoCorreo?: true
@@ -1729,6 +1901,16 @@ export namespace Prisma {
     id?: true
     nombre?: true
     rut?: true
+    email?: true
+    telefono?: true
+    direccion?: true
+    razonSocial?: true
+    nombreEmpresa?: true
+    region?: true
+    comuna?: true
+    tipoCliente?: true
+    canalVenta?: true
+    observaciones?: true
     contactoNombre?: true
     contactoTelefono?: true
     contactoCorreo?: true
@@ -1828,6 +2010,16 @@ export namespace Prisma {
     id: number
     nombre: string
     rut: string | null
+    email: string | null
+    telefono: string | null
+    direccion: string | null
+    razonSocial: string | null
+    nombreEmpresa: string | null
+    region: string | null
+    comuna: string | null
+    tipoCliente: string | null
+    canalVenta: string | null
+    observaciones: string | null
     contactoNombre: string | null
     contactoTelefono: string | null
     contactoCorreo: string | null
@@ -1859,18 +2051,40 @@ export namespace Prisma {
     id?: boolean
     nombre?: boolean
     rut?: boolean
+    email?: boolean
+    telefono?: boolean
+    direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    observaciones?: boolean
     contactoNombre?: boolean
     contactoTelefono?: boolean
     contactoCorreo?: boolean
     activo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nombre?: boolean
     rut?: boolean
+    email?: boolean
+    telefono?: boolean
+    direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    observaciones?: boolean
     contactoNombre?: boolean
     contactoTelefono?: boolean
     contactoCorreo?: boolean
@@ -1883,6 +2097,16 @@ export namespace Prisma {
     id?: boolean
     nombre?: boolean
     rut?: boolean
+    email?: boolean
+    telefono?: boolean
+    direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    observaciones?: boolean
     contactoNombre?: boolean
     contactoTelefono?: boolean
     contactoCorreo?: boolean
@@ -1895,6 +2119,16 @@ export namespace Prisma {
     id?: boolean
     nombre?: boolean
     rut?: boolean
+    email?: boolean
+    telefono?: boolean
+    direccion?: boolean
+    razonSocial?: boolean
+    nombreEmpresa?: boolean
+    region?: boolean
+    comuna?: boolean
+    tipoCliente?: boolean
+    canalVenta?: boolean
+    observaciones?: boolean
     contactoNombre?: boolean
     contactoTelefono?: boolean
     contactoCorreo?: boolean
@@ -1903,15 +2137,33 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "contactoNombre" | "contactoTelefono" | "contactoCorreo" | "activo" | "createdAt" | "updatedAt", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "razonSocial" | "nombreEmpresa" | "region" | "comuna" | "tipoCliente" | "canalVenta" | "observaciones" | "contactoNombre" | "contactoTelefono" | "contactoCorreo" | "activo" | "createdAt" | "updatedAt", ExtArgs["result"]["cliente"]>
+  export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ClienteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ClienteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $ClientePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Cliente"
-    objects: {}
+    objects: {
+      contactos: Prisma.$ContactoClienteTragerPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       nombre: string
       rut: string | null
+      email: string | null
+      telefono: string | null
+      direccion: string | null
+      razonSocial: string | null
+      nombreEmpresa: string | null
+      region: string | null
+      comuna: string | null
+      tipoCliente: string | null
+      canalVenta: string | null
+      observaciones: string | null
       contactoNombre: string | null
       contactoTelefono: string | null
       contactoCorreo: string | null
@@ -2312,6 +2564,7 @@ export namespace Prisma {
    */
   export interface Prisma__ClienteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    contactos<T extends Cliente$contactosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$contactosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2344,6 +2597,16 @@ export namespace Prisma {
     readonly id: FieldRef<"Cliente", 'Int'>
     readonly nombre: FieldRef<"Cliente", 'String'>
     readonly rut: FieldRef<"Cliente", 'String'>
+    readonly email: FieldRef<"Cliente", 'String'>
+    readonly telefono: FieldRef<"Cliente", 'String'>
+    readonly direccion: FieldRef<"Cliente", 'String'>
+    readonly razonSocial: FieldRef<"Cliente", 'String'>
+    readonly nombreEmpresa: FieldRef<"Cliente", 'String'>
+    readonly region: FieldRef<"Cliente", 'String'>
+    readonly comuna: FieldRef<"Cliente", 'String'>
+    readonly tipoCliente: FieldRef<"Cliente", 'String'>
+    readonly canalVenta: FieldRef<"Cliente", 'String'>
+    readonly observaciones: FieldRef<"Cliente", 'String'>
     readonly contactoNombre: FieldRef<"Cliente", 'String'>
     readonly contactoTelefono: FieldRef<"Cliente", 'String'>
     readonly contactoCorreo: FieldRef<"Cliente", 'String'>
@@ -2367,6 +2630,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * Filter, which Cliente to fetch.
      */
     where: ClienteWhereUniqueInput
@@ -2385,6 +2652,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * Filter, which Cliente to fetch.
      */
     where: ClienteWhereUniqueInput
@@ -2402,6 +2673,10 @@ export namespace Prisma {
      * Omit specific fields from the Cliente
      */
     omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
     /**
      * Filter, which Cliente to fetch.
      */
@@ -2451,6 +2726,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * Filter, which Cliente to fetch.
      */
     where?: ClienteWhereInput
@@ -2498,6 +2777,10 @@ export namespace Prisma {
      * Omit specific fields from the Cliente
      */
     omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
     /**
      * Filter, which Clientes to fetch.
      */
@@ -2547,6 +2830,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * The data needed to create a Cliente.
      */
     data: XOR<ClienteCreateInput, ClienteUncheckedCreateInput>
@@ -2594,6 +2881,10 @@ export namespace Prisma {
      * Omit specific fields from the Cliente
      */
     omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
     /**
      * The data needed to update a Cliente.
      */
@@ -2661,6 +2952,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * The filter to search for the Cliente to update in case it exists.
      */
     where: ClienteWhereUniqueInput
@@ -2687,6 +2982,10 @@ export namespace Prisma {
      */
     omit?: ClienteOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    /**
      * Filter which Cliente to delete.
      */
     where: ClienteWhereUniqueInput
@@ -2707,6 +3006,30 @@ export namespace Prisma {
   }
 
   /**
+   * Cliente.contactos
+   */
+  export type Cliente$contactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    where?: ContactoClienteTragerWhereInput
+    orderBy?: ContactoClienteTragerOrderByWithRelationInput | ContactoClienteTragerOrderByWithRelationInput[]
+    cursor?: ContactoClienteTragerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactoClienteTragerScalarFieldEnum | ContactoClienteTragerScalarFieldEnum[]
+  }
+
+  /**
    * Cliente without action
    */
   export type ClienteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2718,6 +3041,1189 @@ export namespace Prisma {
      * Omit specific fields from the Cliente
      */
     omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ContactoClienteTrager
+   */
+
+  export type AggregateContactoClienteTrager = {
+    _count: ContactoClienteTragerCountAggregateOutputType | null
+    _avg: ContactoClienteTragerAvgAggregateOutputType | null
+    _sum: ContactoClienteTragerSumAggregateOutputType | null
+    _min: ContactoClienteTragerMinAggregateOutputType | null
+    _max: ContactoClienteTragerMaxAggregateOutputType | null
+  }
+
+  export type ContactoClienteTragerAvgAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+  }
+
+  export type ContactoClienteTragerSumAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+  }
+
+  export type ContactoClienteTragerMinAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+    nombre: string | null
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean | null
+    activo: boolean | null
+    observaciones: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContactoClienteTragerMaxAggregateOutputType = {
+    id: number | null
+    clienteId: number | null
+    nombre: string | null
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean | null
+    activo: boolean | null
+    observaciones: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContactoClienteTragerCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    nombre: number
+    cargo: number
+    telefono: number
+    correo: number
+    principal: number
+    activo: number
+    observaciones: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ContactoClienteTragerAvgAggregateInputType = {
+    id?: true
+    clienteId?: true
+  }
+
+  export type ContactoClienteTragerSumAggregateInputType = {
+    id?: true
+    clienteId?: true
+  }
+
+  export type ContactoClienteTragerMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContactoClienteTragerMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContactoClienteTragerCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    nombre?: true
+    cargo?: true
+    telefono?: true
+    correo?: true
+    principal?: true
+    activo?: true
+    observaciones?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ContactoClienteTragerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactoClienteTrager to aggregate.
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteTragers to fetch.
+     */
+    orderBy?: ContactoClienteTragerOrderByWithRelationInput | ContactoClienteTragerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactoClienteTragerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteTragers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteTragers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactoClienteTragers
+    **/
+    _count?: true | ContactoClienteTragerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContactoClienteTragerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContactoClienteTragerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactoClienteTragerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactoClienteTragerMaxAggregateInputType
+  }
+
+  export type GetContactoClienteTragerAggregateType<T extends ContactoClienteTragerAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactoClienteTrager]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactoClienteTrager[P]>
+      : GetScalarType<T[P], AggregateContactoClienteTrager[P]>
+  }
+
+
+
+
+  export type ContactoClienteTragerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactoClienteTragerWhereInput
+    orderBy?: ContactoClienteTragerOrderByWithAggregationInput | ContactoClienteTragerOrderByWithAggregationInput[]
+    by: ContactoClienteTragerScalarFieldEnum[] | ContactoClienteTragerScalarFieldEnum
+    having?: ContactoClienteTragerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactoClienteTragerCountAggregateInputType | true
+    _avg?: ContactoClienteTragerAvgAggregateInputType
+    _sum?: ContactoClienteTragerSumAggregateInputType
+    _min?: ContactoClienteTragerMinAggregateInputType
+    _max?: ContactoClienteTragerMaxAggregateInputType
+  }
+
+  export type ContactoClienteTragerGroupByOutputType = {
+    id: number
+    clienteId: number
+    nombre: string
+    cargo: string | null
+    telefono: string | null
+    correo: string | null
+    principal: boolean
+    activo: boolean
+    observaciones: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ContactoClienteTragerCountAggregateOutputType | null
+    _avg: ContactoClienteTragerAvgAggregateOutputType | null
+    _sum: ContactoClienteTragerSumAggregateOutputType | null
+    _min: ContactoClienteTragerMinAggregateOutputType | null
+    _max: ContactoClienteTragerMaxAggregateOutputType | null
+  }
+
+  type GetContactoClienteTragerGroupByPayload<T extends ContactoClienteTragerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactoClienteTragerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactoClienteTragerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactoClienteTragerGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactoClienteTragerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactoClienteTragerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteTrager"]>
+
+  export type ContactoClienteTragerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteTrager"]>
+
+  export type ContactoClienteTragerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactoClienteTrager"]>
+
+  export type ContactoClienteTragerSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    nombre?: boolean
+    cargo?: boolean
+    telefono?: boolean
+    correo?: boolean
+    principal?: boolean
+    activo?: boolean
+    observaciones?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ContactoClienteTragerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "nombre" | "cargo" | "telefono" | "correo" | "principal" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["contactoClienteTrager"]>
+  export type ContactoClienteTragerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type ContactoClienteTragerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type ContactoClienteTragerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+
+  export type $ContactoClienteTragerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactoClienteTrager"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      clienteId: number
+      nombre: string
+      cargo: string | null
+      telefono: string | null
+      correo: string | null
+      principal: boolean
+      activo: boolean
+      observaciones: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["contactoClienteTrager"]>
+    composites: {}
+  }
+
+  type ContactoClienteTragerGetPayload<S extends boolean | null | undefined | ContactoClienteTragerDefaultArgs> = $Result.GetResult<Prisma.$ContactoClienteTragerPayload, S>
+
+  type ContactoClienteTragerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactoClienteTragerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactoClienteTragerCountAggregateInputType | true
+    }
+
+  export interface ContactoClienteTragerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactoClienteTrager'], meta: { name: 'ContactoClienteTrager' } }
+    /**
+     * Find zero or one ContactoClienteTrager that matches the filter.
+     * @param {ContactoClienteTragerFindUniqueArgs} args - Arguments to find a ContactoClienteTrager
+     * @example
+     * // Get one ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactoClienteTragerFindUniqueArgs>(args: SelectSubset<T, ContactoClienteTragerFindUniqueArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactoClienteTrager that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactoClienteTragerFindUniqueOrThrowArgs} args - Arguments to find a ContactoClienteTrager
+     * @example
+     * // Get one ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactoClienteTragerFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactoClienteTragerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactoClienteTrager that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerFindFirstArgs} args - Arguments to find a ContactoClienteTrager
+     * @example
+     * // Get one ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactoClienteTragerFindFirstArgs>(args?: SelectSubset<T, ContactoClienteTragerFindFirstArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactoClienteTrager that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerFindFirstOrThrowArgs} args - Arguments to find a ContactoClienteTrager
+     * @example
+     * // Get one ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactoClienteTragerFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactoClienteTragerFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactoClienteTragers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactoClienteTragers
+     * const contactoClienteTragers = await prisma.contactoClienteTrager.findMany()
+     * 
+     * // Get first 10 ContactoClienteTragers
+     * const contactoClienteTragers = await prisma.contactoClienteTrager.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactoClienteTragerWithIdOnly = await prisma.contactoClienteTrager.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactoClienteTragerFindManyArgs>(args?: SelectSubset<T, ContactoClienteTragerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactoClienteTrager.
+     * @param {ContactoClienteTragerCreateArgs} args - Arguments to create a ContactoClienteTrager.
+     * @example
+     * // Create one ContactoClienteTrager
+     * const ContactoClienteTrager = await prisma.contactoClienteTrager.create({
+     *   data: {
+     *     // ... data to create a ContactoClienteTrager
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactoClienteTragerCreateArgs>(args: SelectSubset<T, ContactoClienteTragerCreateArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactoClienteTragers.
+     * @param {ContactoClienteTragerCreateManyArgs} args - Arguments to create many ContactoClienteTragers.
+     * @example
+     * // Create many ContactoClienteTragers
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactoClienteTragerCreateManyArgs>(args?: SelectSubset<T, ContactoClienteTragerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactoClienteTragers and returns the data saved in the database.
+     * @param {ContactoClienteTragerCreateManyAndReturnArgs} args - Arguments to create many ContactoClienteTragers.
+     * @example
+     * // Create many ContactoClienteTragers
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactoClienteTragers and only return the `id`
+     * const contactoClienteTragerWithIdOnly = await prisma.contactoClienteTrager.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactoClienteTragerCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactoClienteTragerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactoClienteTrager.
+     * @param {ContactoClienteTragerDeleteArgs} args - Arguments to delete one ContactoClienteTrager.
+     * @example
+     * // Delete one ContactoClienteTrager
+     * const ContactoClienteTrager = await prisma.contactoClienteTrager.delete({
+     *   where: {
+     *     // ... filter to delete one ContactoClienteTrager
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactoClienteTragerDeleteArgs>(args: SelectSubset<T, ContactoClienteTragerDeleteArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactoClienteTrager.
+     * @param {ContactoClienteTragerUpdateArgs} args - Arguments to update one ContactoClienteTrager.
+     * @example
+     * // Update one ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactoClienteTragerUpdateArgs>(args: SelectSubset<T, ContactoClienteTragerUpdateArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactoClienteTragers.
+     * @param {ContactoClienteTragerDeleteManyArgs} args - Arguments to filter ContactoClienteTragers to delete.
+     * @example
+     * // Delete a few ContactoClienteTragers
+     * const { count } = await prisma.contactoClienteTrager.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactoClienteTragerDeleteManyArgs>(args?: SelectSubset<T, ContactoClienteTragerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactoClienteTragers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactoClienteTragers
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactoClienteTragerUpdateManyArgs>(args: SelectSubset<T, ContactoClienteTragerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactoClienteTragers and returns the data updated in the database.
+     * @param {ContactoClienteTragerUpdateManyAndReturnArgs} args - Arguments to update many ContactoClienteTragers.
+     * @example
+     * // Update many ContactoClienteTragers
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactoClienteTragers and only return the `id`
+     * const contactoClienteTragerWithIdOnly = await prisma.contactoClienteTrager.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactoClienteTragerUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactoClienteTragerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactoClienteTrager.
+     * @param {ContactoClienteTragerUpsertArgs} args - Arguments to update or create a ContactoClienteTrager.
+     * @example
+     * // Update or create a ContactoClienteTrager
+     * const contactoClienteTrager = await prisma.contactoClienteTrager.upsert({
+     *   create: {
+     *     // ... data to create a ContactoClienteTrager
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactoClienteTrager we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactoClienteTragerUpsertArgs>(args: SelectSubset<T, ContactoClienteTragerUpsertArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactoClienteTragers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerCountArgs} args - Arguments to filter ContactoClienteTragers to count.
+     * @example
+     * // Count the number of ContactoClienteTragers
+     * const count = await prisma.contactoClienteTrager.count({
+     *   where: {
+     *     // ... the filter for the ContactoClienteTragers we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactoClienteTragerCountArgs>(
+      args?: Subset<T, ContactoClienteTragerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactoClienteTragerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactoClienteTrager.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactoClienteTragerAggregateArgs>(args: Subset<T, ContactoClienteTragerAggregateArgs>): Prisma.PrismaPromise<GetContactoClienteTragerAggregateType<T>>
+
+    /**
+     * Group by ContactoClienteTrager.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactoClienteTragerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactoClienteTragerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactoClienteTragerGroupByArgs['orderBy'] }
+        : { orderBy?: ContactoClienteTragerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactoClienteTragerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactoClienteTragerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactoClienteTrager model
+   */
+  readonly fields: ContactoClienteTragerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactoClienteTrager.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactoClienteTragerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactoClienteTrager model
+   */
+  interface ContactoClienteTragerFieldRefs {
+    readonly id: FieldRef<"ContactoClienteTrager", 'Int'>
+    readonly clienteId: FieldRef<"ContactoClienteTrager", 'Int'>
+    readonly nombre: FieldRef<"ContactoClienteTrager", 'String'>
+    readonly cargo: FieldRef<"ContactoClienteTrager", 'String'>
+    readonly telefono: FieldRef<"ContactoClienteTrager", 'String'>
+    readonly correo: FieldRef<"ContactoClienteTrager", 'String'>
+    readonly principal: FieldRef<"ContactoClienteTrager", 'Boolean'>
+    readonly activo: FieldRef<"ContactoClienteTrager", 'Boolean'>
+    readonly observaciones: FieldRef<"ContactoClienteTrager", 'String'>
+    readonly createdAt: FieldRef<"ContactoClienteTrager", 'DateTime'>
+    readonly updatedAt: FieldRef<"ContactoClienteTrager", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactoClienteTrager findUnique
+   */
+  export type ContactoClienteTragerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteTrager to fetch.
+     */
+    where: ContactoClienteTragerWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteTrager findUniqueOrThrow
+   */
+  export type ContactoClienteTragerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteTrager to fetch.
+     */
+    where: ContactoClienteTragerWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteTrager findFirst
+   */
+  export type ContactoClienteTragerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteTrager to fetch.
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteTragers to fetch.
+     */
+    orderBy?: ContactoClienteTragerOrderByWithRelationInput | ContactoClienteTragerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactoClienteTragers.
+     */
+    cursor?: ContactoClienteTragerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteTragers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteTragers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteTragers.
+     */
+    distinct?: ContactoClienteTragerScalarFieldEnum | ContactoClienteTragerScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteTrager findFirstOrThrow
+   */
+  export type ContactoClienteTragerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteTrager to fetch.
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteTragers to fetch.
+     */
+    orderBy?: ContactoClienteTragerOrderByWithRelationInput | ContactoClienteTragerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactoClienteTragers.
+     */
+    cursor?: ContactoClienteTragerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteTragers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteTragers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteTragers.
+     */
+    distinct?: ContactoClienteTragerScalarFieldEnum | ContactoClienteTragerScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteTrager findMany
+   */
+  export type ContactoClienteTragerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactoClienteTragers to fetch.
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactoClienteTragers to fetch.
+     */
+    orderBy?: ContactoClienteTragerOrderByWithRelationInput | ContactoClienteTragerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactoClienteTragers.
+     */
+    cursor?: ContactoClienteTragerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactoClienteTragers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactoClienteTragers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactoClienteTragers.
+     */
+    distinct?: ContactoClienteTragerScalarFieldEnum | ContactoClienteTragerScalarFieldEnum[]
+  }
+
+  /**
+   * ContactoClienteTrager create
+   */
+  export type ContactoClienteTragerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactoClienteTrager.
+     */
+    data: XOR<ContactoClienteTragerCreateInput, ContactoClienteTragerUncheckedCreateInput>
+  }
+
+  /**
+   * ContactoClienteTrager createMany
+   */
+  export type ContactoClienteTragerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactoClienteTragers.
+     */
+    data: ContactoClienteTragerCreateManyInput | ContactoClienteTragerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactoClienteTrager createManyAndReturn
+   */
+  export type ContactoClienteTragerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactoClienteTragers.
+     */
+    data: ContactoClienteTragerCreateManyInput | ContactoClienteTragerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteTrager update
+   */
+  export type ContactoClienteTragerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactoClienteTrager.
+     */
+    data: XOR<ContactoClienteTragerUpdateInput, ContactoClienteTragerUncheckedUpdateInput>
+    /**
+     * Choose, which ContactoClienteTrager to update.
+     */
+    where: ContactoClienteTragerWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteTrager updateMany
+   */
+  export type ContactoClienteTragerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactoClienteTragers.
+     */
+    data: XOR<ContactoClienteTragerUpdateManyMutationInput, ContactoClienteTragerUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactoClienteTragers to update
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * Limit how many ContactoClienteTragers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactoClienteTrager updateManyAndReturn
+   */
+  export type ContactoClienteTragerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactoClienteTragers.
+     */
+    data: XOR<ContactoClienteTragerUpdateManyMutationInput, ContactoClienteTragerUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactoClienteTragers to update
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * Limit how many ContactoClienteTragers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteTrager upsert
+   */
+  export type ContactoClienteTragerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactoClienteTrager to update in case it exists.
+     */
+    where: ContactoClienteTragerWhereUniqueInput
+    /**
+     * In case the ContactoClienteTrager found by the `where` argument doesn't exist, create a new ContactoClienteTrager with this data.
+     */
+    create: XOR<ContactoClienteTragerCreateInput, ContactoClienteTragerUncheckedCreateInput>
+    /**
+     * In case the ContactoClienteTrager was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactoClienteTragerUpdateInput, ContactoClienteTragerUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactoClienteTrager delete
+   */
+  export type ContactoClienteTragerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    /**
+     * Filter which ContactoClienteTrager to delete.
+     */
+    where: ContactoClienteTragerWhereUniqueInput
+  }
+
+  /**
+   * ContactoClienteTrager deleteMany
+   */
+  export type ContactoClienteTragerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactoClienteTragers to delete
+     */
+    where?: ContactoClienteTragerWhereInput
+    /**
+     * Limit how many ContactoClienteTragers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactoClienteTrager without action
+   */
+  export type ContactoClienteTragerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
   }
 
 
@@ -11974,6 +13480,16 @@ export namespace Prisma {
     id: 'id',
     nombre: 'nombre',
     rut: 'rut',
+    email: 'email',
+    telefono: 'telefono',
+    direccion: 'direccion',
+    razonSocial: 'razonSocial',
+    nombreEmpresa: 'nombreEmpresa',
+    region: 'region',
+    comuna: 'comuna',
+    tipoCliente: 'tipoCliente',
+    canalVenta: 'canalVenta',
+    observaciones: 'observaciones',
     contactoNombre: 'contactoNombre',
     contactoTelefono: 'contactoTelefono',
     contactoCorreo: 'contactoCorreo',
@@ -11983,6 +13499,23 @@ export namespace Prisma {
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
+
+
+  export const ContactoClienteTragerScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    nombre: 'nombre',
+    cargo: 'cargo',
+    telefono: 'telefono',
+    correo: 'correo',
+    principal: 'principal',
+    activo: 'activo',
+    observaciones: 'observaciones',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ContactoClienteTragerScalarFieldEnum = (typeof ContactoClienteTragerScalarFieldEnum)[keyof typeof ContactoClienteTragerScalarFieldEnum]
 
 
   export const FunnelTragerOpportunityScalarFieldEnum: {
@@ -12266,24 +13799,46 @@ export namespace Prisma {
     id?: IntFilter<"Cliente"> | number
     nombre?: StringFilter<"Cliente"> | string
     rut?: StringNullableFilter<"Cliente"> | string | null
+    email?: StringNullableFilter<"Cliente"> | string | null
+    telefono?: StringNullableFilter<"Cliente"> | string | null
+    direccion?: StringNullableFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
+    region?: StringNullableFilter<"Cliente"> | string | null
+    comuna?: StringNullableFilter<"Cliente"> | string | null
+    tipoCliente?: StringNullableFilter<"Cliente"> | string | null
+    canalVenta?: StringNullableFilter<"Cliente"> | string | null
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     contactoNombre?: StringNullableFilter<"Cliente"> | string | null
     contactoTelefono?: StringNullableFilter<"Cliente"> | string | null
     contactoCorreo?: StringNullableFilter<"Cliente"> | string | null
     activo?: BoolFilter<"Cliente"> | boolean
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
     updatedAt?: DateTimeFilter<"Cliente"> | Date | string
+    contactos?: ContactoClienteTragerListRelationFilter
   }
 
   export type ClienteOrderByWithRelationInput = {
     id?: SortOrder
     nombre?: SortOrder
     rut?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    direccion?: SortOrderInput | SortOrder
+    razonSocial?: SortOrderInput | SortOrder
+    nombreEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    tipoCliente?: SortOrderInput | SortOrder
+    canalVenta?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
     contactoNombre?: SortOrderInput | SortOrder
     contactoTelefono?: SortOrderInput | SortOrder
     contactoCorreo?: SortOrderInput | SortOrder
     activo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    contactos?: ContactoClienteTragerOrderByRelationAggregateInput
   }
 
   export type ClienteWhereUniqueInput = Prisma.AtLeast<{
@@ -12293,18 +13848,39 @@ export namespace Prisma {
     OR?: ClienteWhereInput[]
     NOT?: ClienteWhereInput | ClienteWhereInput[]
     nombre?: StringFilter<"Cliente"> | string
+    email?: StringNullableFilter<"Cliente"> | string | null
+    telefono?: StringNullableFilter<"Cliente"> | string | null
+    direccion?: StringNullableFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableFilter<"Cliente"> | string | null
+    region?: StringNullableFilter<"Cliente"> | string | null
+    comuna?: StringNullableFilter<"Cliente"> | string | null
+    tipoCliente?: StringNullableFilter<"Cliente"> | string | null
+    canalVenta?: StringNullableFilter<"Cliente"> | string | null
+    observaciones?: StringNullableFilter<"Cliente"> | string | null
     contactoNombre?: StringNullableFilter<"Cliente"> | string | null
     contactoTelefono?: StringNullableFilter<"Cliente"> | string | null
     contactoCorreo?: StringNullableFilter<"Cliente"> | string | null
     activo?: BoolFilter<"Cliente"> | boolean
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
     updatedAt?: DateTimeFilter<"Cliente"> | Date | string
+    contactos?: ContactoClienteTragerListRelationFilter
   }, "id" | "rut">
 
   export type ClienteOrderByWithAggregationInput = {
     id?: SortOrder
     nombre?: SortOrder
     rut?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    direccion?: SortOrderInput | SortOrder
+    razonSocial?: SortOrderInput | SortOrder
+    nombreEmpresa?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    comuna?: SortOrderInput | SortOrder
+    tipoCliente?: SortOrderInput | SortOrder
+    canalVenta?: SortOrderInput | SortOrder
+    observaciones?: SortOrderInput | SortOrder
     contactoNombre?: SortOrderInput | SortOrder
     contactoTelefono?: SortOrderInput | SortOrder
     contactoCorreo?: SortOrderInput | SortOrder
@@ -12325,12 +13901,109 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Cliente"> | number
     nombre?: StringWithAggregatesFilter<"Cliente"> | string
     rut?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    telefono?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    direccion?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    razonSocial?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    nombreEmpresa?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    region?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    comuna?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    tipoCliente?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    canalVenta?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    observaciones?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     contactoNombre?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     contactoTelefono?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     contactoCorreo?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Cliente"> | Date | string
+  }
+
+  export type ContactoClienteTragerWhereInput = {
+    AND?: ContactoClienteTragerWhereInput | ContactoClienteTragerWhereInput[]
+    OR?: ContactoClienteTragerWhereInput[]
+    NOT?: ContactoClienteTragerWhereInput | ContactoClienteTragerWhereInput[]
+    id?: IntFilter<"ContactoClienteTrager"> | number
+    clienteId?: IntFilter<"ContactoClienteTrager"> | number
+    nombre?: StringFilter<"ContactoClienteTrager"> | string
+    cargo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    principal?: BoolFilter<"ContactoClienteTrager"> | boolean
+    activo?: BoolFilter<"ContactoClienteTrager"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }
+
+  export type ContactoClienteTragerOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+  }
+
+  export type ContactoClienteTragerWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ContactoClienteTragerWhereInput | ContactoClienteTragerWhereInput[]
+    OR?: ContactoClienteTragerWhereInput[]
+    NOT?: ContactoClienteTragerWhereInput | ContactoClienteTragerWhereInput[]
+    clienteId?: IntFilter<"ContactoClienteTrager"> | number
+    nombre?: StringFilter<"ContactoClienteTrager"> | string
+    cargo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    principal?: BoolFilter<"ContactoClienteTrager"> | boolean
+    activo?: BoolFilter<"ContactoClienteTrager"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }, "id">
+
+  export type ContactoClienteTragerOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ContactoClienteTragerCountOrderByAggregateInput
+    _avg?: ContactoClienteTragerAvgOrderByAggregateInput
+    _max?: ContactoClienteTragerMaxOrderByAggregateInput
+    _min?: ContactoClienteTragerMinOrderByAggregateInput
+    _sum?: ContactoClienteTragerSumOrderByAggregateInput
+  }
+
+  export type ContactoClienteTragerScalarWhereWithAggregatesInput = {
+    AND?: ContactoClienteTragerScalarWhereWithAggregatesInput | ContactoClienteTragerScalarWhereWithAggregatesInput[]
+    OR?: ContactoClienteTragerScalarWhereWithAggregatesInput[]
+    NOT?: ContactoClienteTragerScalarWhereWithAggregatesInput | ContactoClienteTragerScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ContactoClienteTrager"> | number
+    clienteId?: IntWithAggregatesFilter<"ContactoClienteTrager"> | number
+    nombre?: StringWithAggregatesFilter<"ContactoClienteTrager"> | string
+    cargo?: StringNullableWithAggregatesFilter<"ContactoClienteTrager"> | string | null
+    telefono?: StringNullableWithAggregatesFilter<"ContactoClienteTrager"> | string | null
+    correo?: StringNullableWithAggregatesFilter<"ContactoClienteTrager"> | string | null
+    principal?: BoolWithAggregatesFilter<"ContactoClienteTrager"> | boolean
+    activo?: BoolWithAggregatesFilter<"ContactoClienteTrager"> | boolean
+    observaciones?: StringNullableWithAggregatesFilter<"ContactoClienteTrager"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ContactoClienteTrager"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ContactoClienteTrager"> | Date | string
   }
 
   export type FunnelTragerOpportunityWhereInput = {
@@ -13254,53 +14927,107 @@ export namespace Prisma {
   export type ClienteCreateInput = {
     nombre: string
     rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
     contactoNombre?: string | null
     contactoTelefono?: string | null
     contactoCorreo?: string | null
     activo?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    contactos?: ContactoClienteTragerCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateInput = {
     id?: number
     nombre: string
     rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
     contactoNombre?: string | null
     contactoTelefono?: string | null
     contactoCorreo?: string | null
     activo?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    contactos?: ContactoClienteTragerUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUpdateInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
     contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
     contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
     activo?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteTragerUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
     contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
     contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
     activo?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteTragerUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateManyInput = {
     id?: number
     nombre: string
     rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
     contactoNombre?: string | null
     contactoTelefono?: string | null
     contactoCorreo?: string | null
@@ -13312,6 +15039,16 @@ export namespace Prisma {
   export type ClienteUpdateManyMutationInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
     contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
     contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13324,10 +15061,114 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
     contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
     contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
     activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteTragerCreateInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContactosInput
+  }
+
+  export type ContactoClienteTragerUncheckedCreateInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerUpdateInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteTragerCreateManyInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerUpdateManyMutationInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14489,15 +16330,35 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type ContactoClienteTragerListRelationFilter = {
+    every?: ContactoClienteTragerWhereInput
+    some?: ContactoClienteTragerWhereInput
+    none?: ContactoClienteTragerWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type ContactoClienteTragerOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ClienteCountOrderByAggregateInput = {
     id?: SortOrder
     nombre?: SortOrder
     rut?: SortOrder
+    email?: SortOrder
+    telefono?: SortOrder
+    direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    observaciones?: SortOrder
     contactoNombre?: SortOrder
     contactoTelefono?: SortOrder
     contactoCorreo?: SortOrder
@@ -14514,6 +16375,16 @@ export namespace Prisma {
     id?: SortOrder
     nombre?: SortOrder
     rut?: SortOrder
+    email?: SortOrder
+    telefono?: SortOrder
+    direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    observaciones?: SortOrder
     contactoNombre?: SortOrder
     contactoTelefono?: SortOrder
     contactoCorreo?: SortOrder
@@ -14526,6 +16397,16 @@ export namespace Prisma {
     id?: SortOrder
     nombre?: SortOrder
     rut?: SortOrder
+    email?: SortOrder
+    telefono?: SortOrder
+    direccion?: SortOrder
+    razonSocial?: SortOrder
+    nombreEmpresa?: SortOrder
+    region?: SortOrder
+    comuna?: SortOrder
+    tipoCliente?: SortOrder
+    canalVenta?: SortOrder
+    observaciones?: SortOrder
     contactoNombre?: SortOrder
     contactoTelefono?: SortOrder
     contactoCorreo?: SortOrder
@@ -14610,6 +16491,63 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type ClienteScalarRelationFilter = {
+    is?: ClienteWhereInput
+    isNot?: ClienteWhereInput
+  }
+
+  export type ContactoClienteTragerCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteTragerAvgOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+  }
+
+  export type ContactoClienteTragerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteTragerMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    nombre?: SortOrder
+    cargo?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
+    principal?: SortOrder
+    activo?: SortOrder
+    observaciones?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContactoClienteTragerSumOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -15412,6 +17350,20 @@ export namespace Prisma {
     stockDisponible?: SortOrder
   }
 
+  export type ContactoClienteTragerCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput> | ContactoClienteTragerCreateWithoutClienteInput[] | ContactoClienteTragerUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutClienteInput | ContactoClienteTragerCreateOrConnectWithoutClienteInput[]
+    createMany?: ContactoClienteTragerCreateManyClienteInputEnvelope
+    connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+  }
+
+  export type ContactoClienteTragerUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput> | ContactoClienteTragerCreateWithoutClienteInput[] | ContactoClienteTragerUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutClienteInput | ContactoClienteTragerCreateOrConnectWithoutClienteInput[]
+    createMany?: ContactoClienteTragerCreateManyClienteInputEnvelope
+    connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -15428,12 +17380,54 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type ContactoClienteTragerUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput> | ContactoClienteTragerCreateWithoutClienteInput[] | ContactoClienteTragerUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutClienteInput | ContactoClienteTragerCreateOrConnectWithoutClienteInput[]
+    upsert?: ContactoClienteTragerUpsertWithWhereUniqueWithoutClienteInput | ContactoClienteTragerUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ContactoClienteTragerCreateManyClienteInputEnvelope
+    set?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    disconnect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    delete?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    update?: ContactoClienteTragerUpdateWithWhereUniqueWithoutClienteInput | ContactoClienteTragerUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ContactoClienteTragerUpdateManyWithWhereWithoutClienteInput | ContactoClienteTragerUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput> | ContactoClienteTragerCreateWithoutClienteInput[] | ContactoClienteTragerUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutClienteInput | ContactoClienteTragerCreateOrConnectWithoutClienteInput[]
+    upsert?: ContactoClienteTragerUpsertWithWhereUniqueWithoutClienteInput | ContactoClienteTragerUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ContactoClienteTragerCreateManyClienteInputEnvelope
+    set?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    disconnect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    delete?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+    update?: ContactoClienteTragerUpdateWithWhereUniqueWithoutClienteInput | ContactoClienteTragerUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ContactoClienteTragerUpdateManyWithWhereWithoutClienteInput | ContactoClienteTragerUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
+  }
+
+  export type ClienteCreateNestedOneWithoutContactosInput = {
+    create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ClienteUpdateOneRequiredWithoutContactosNestedInput = {
+    create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
+    upsert?: ClienteUpsertWithoutContactosInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContactosInput, ClienteUpdateWithoutContactosInput>, ClienteUncheckedUpdateWithoutContactosInput>
   }
 
   export type FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput = {
@@ -16017,6 +18011,176 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type ContactoClienteTragerCreateWithoutClienteInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerUncheckedCreateWithoutClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerCreateOrConnectWithoutClienteInput = {
+    where: ContactoClienteTragerWhereUniqueInput
+    create: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ContactoClienteTragerCreateManyClienteInputEnvelope = {
+    data: ContactoClienteTragerCreateManyClienteInput | ContactoClienteTragerCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContactoClienteTragerUpsertWithWhereUniqueWithoutClienteInput = {
+    where: ContactoClienteTragerWhereUniqueInput
+    update: XOR<ContactoClienteTragerUpdateWithoutClienteInput, ContactoClienteTragerUncheckedUpdateWithoutClienteInput>
+    create: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ContactoClienteTragerUpdateWithWhereUniqueWithoutClienteInput = {
+    where: ContactoClienteTragerWhereUniqueInput
+    data: XOR<ContactoClienteTragerUpdateWithoutClienteInput, ContactoClienteTragerUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type ContactoClienteTragerUpdateManyWithWhereWithoutClienteInput = {
+    where: ContactoClienteTragerScalarWhereInput
+    data: XOR<ContactoClienteTragerUpdateManyMutationInput, ContactoClienteTragerUncheckedUpdateManyWithoutClienteInput>
+  }
+
+  export type ContactoClienteTragerScalarWhereInput = {
+    AND?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
+    OR?: ContactoClienteTragerScalarWhereInput[]
+    NOT?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
+    id?: IntFilter<"ContactoClienteTrager"> | number
+    clienteId?: IntFilter<"ContactoClienteTrager"> | number
+    nombre?: StringFilter<"ContactoClienteTrager"> | string
+    cargo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    telefono?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    correo?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    principal?: BoolFilter<"ContactoClienteTrager"> | boolean
+    activo?: BoolFilter<"ContactoClienteTrager"> | boolean
+    observaciones?: StringNullableFilter<"ContactoClienteTrager"> | string | null
+    createdAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+    updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
+  }
+
+  export type ClienteCreateWithoutContactosInput = {
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
+    contactoNombre?: string | null
+    contactoTelefono?: string | null
+    contactoCorreo?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClienteUncheckedCreateWithoutContactosInput = {
+    id?: number
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
+    contactoNombre?: string | null
+    contactoTelefono?: string | null
+    contactoCorreo?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClienteCreateOrConnectWithoutContactosInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+  }
+
+  export type ClienteUpsertWithoutContactosInput = {
+    update: XOR<ClienteUpdateWithoutContactosInput, ClienteUncheckedUpdateWithoutContactosInput>
+    create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutContactosInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutContactosInput, ClienteUncheckedUpdateWithoutContactosInput>
+  }
+
+  export type ClienteUpdateWithoutContactosInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClienteUncheckedUpdateWithoutContactosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FunnelTragerArchivoCreateWithoutOportunidadInput = {
@@ -17206,6 +19370,57 @@ export namespace Prisma {
     precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
     precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
     stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ContactoClienteTragerCreateManyClienteInput = {
+    id?: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerUpdateWithoutClienteInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateManyWithoutClienteInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FunnelTragerArchivoCreateManyOportunidadInput = {

@@ -403,12 +403,16 @@ interface ClienteRegistradoSets {
 const cargarClientesParaMatch = async (): Promise<ClienteRegistradoSets> => {
   const clientes = await tragerPrisma.cliente.findMany({
     where: { activo: true },
-    select: { rut: true, contactoCorreo: true, contactoTelefono: true },
+    select: { rut: true, email: true, telefono: true, contactoCorreo: true, contactoTelefono: true,
+      contactos: { where: { activo: true }, select: { correo: true, telefono: true } },
+    },
   });
   return {
     ruts: new Set(clientes.map(c => c.rut).filter((r): r is string => r !== null)),
-    emails: new Set(clientes.map(c => c.contactoCorreo?.toLowerCase()).filter((e): e is string => e !== null)),
-    telefonos: new Set(clientes.map(c => c.contactoTelefono).filter((t): t is string => t !== null)),
+    emails: new Set(clientes.flatMap(c => [c.email, c.contactoCorreo, ...c.contactos.map(contacto => contacto.correo)])
+      .filter((e): e is string => typeof e === 'string' && Boolean(e)).map(e => e.toLowerCase())),
+    telefonos: new Set(clientes.flatMap(c => [c.telefono, c.contactoTelefono, ...c.contactos.map(contacto => contacto.telefono)])
+      .filter((t): t is string => typeof t === 'string' && Boolean(t))),
   };
 };
 

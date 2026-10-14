@@ -1,178 +1,123 @@
 import { tragerPrisma } from '../../config/tragerPrisma';
+import { Prisma } from '../../generated/trager-client';
+import type { RawFilaCliente } from '../../utils/importClientes';
+import { buildClienteData, buildContactoData, type ClienteInput, type ContactoInput } from './clientes-trager.validation';
+import { conContactoPrincipal } from './clientes-trager.compatibilidad';
+import { importarFilasClientesTrager } from './importar-clientes-trager';
 
-function optStr(value: unknown): string | null {
-  const s = String(value ?? '').trim();
-  return s || null;
+const clienteInclude = { contactos: { orderBy: [{ principal: 'desc' as const }, { createdAt: 'asc' as const }, { id: 'asc' as const }] } };
+type ClienteInputCompatible = ClienteInput & { contactoNombre?: unknown; contactoTelefono?: unknown; contactoCorreo?: unknown };
+
+async function bloquearCliente(tx: Prisma.TransactionClient, clienteId: number) {
+  const filas = await tx.$queryRaw<Array<{ id: number }>>`SELECT id FROM "Cliente" WHERE id = ${clienteId} FOR UPDATE`;
+  if (!filas.length) throw new Error('Cliente no encontrado.');
 }
-
-function calcularDigitoVerificador(digits: string): string {
-  let suma = 0;
-  let multiplicador = 2;
-
-  for (let i = digits.length - 1; i >= 0; i--) {
-    suma += parseInt(digits[i], 10) * multiplicador;
-    multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
-  }
-
-  const resto = 11 - (suma % 11);
-  if (resto === 11) return '0';
-  if (resto === 10) return 'K';
-  return String(resto);
+async function sincronizarContactoAnterior(tx: Prisma.TransactionClient, clienteId: number) {
+  const contacto = await tx.contactoClienteTrager.findFirst({
+    where: { clienteId, activo: true }, orderBy: [{ principal: 'desc' }, { createdAt: 'asc' }, { id: 'asc' }],
+  });
+  await tx.cliente.update({ where: { id: clienteId }, data: {
+    contactoNombre: contacto?.nombre ?? null,
+    contactoTelefono: contacto?.telefono ?? null,
+    contactoCorreo: contacto?.correo ?? null,
+  } });
 }
-
-function procesarRut(value: unknown): string | null {
-  const raw = String(value ?? '').trim();
-  if (!raw) return null;
-
-  if (!/^[\dKk.\-]+$/.test(raw)) {
-    throw new Error('RUT inválido. Solo se permiten números, puntos, guión y K.');
-  }
-
-  const limpio = raw.replace(/[.\-]/g, '').toUpperCase();
-  if (limpio.length < 8 || limpio.length > 9) {
-    throw new Error('RUT inválido. Debe tener entre 8 y 9 caracteres (sin puntos ni guión).');
-  }
-
-  const dv = limpio.slice(-1);
-  const digits = limpio.slice(0, -1);
-
-  if (!/^\d+$/.test(digits) || !/^[\dK]$/.test(dv)) {
-    throw new Error('RUT inválido. Formato incorrecto.');
-  }
-
-  if (calcularDigitoVerificador(digits) !== dv) {
-    throw new Error('RUT inválido. El dígito verificador no coincide.');
-  }
-
-  const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return `${formatted}-${dv}`;
-}
-
-function procesarTelefono(value: unknown): string | null {
-  const raw = String(value ?? '').trim();
-  if (!raw) return null;
-
-  const limpio = raw.replace(/\s/g, '');
-  if (!/^(\+?56)?9\d{8}$/.test(limpio)) {
-    throw new Error(
-      'Teléfono de contacto inválido. Formato esperado: 912345678, 56912345678 o +56912345678.'
-    );
-  }
-
-  return limpio.replace(/\D/g, '');
-}
-
-function normalizarCorreo(value: unknown): string | null {
-  const raw = String(value ?? '').trim();
-  if (!raw) return null;
-
-  if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(raw)) {
-    throw new Error('Correo de contacto inválido.');
-  }
-
-  return raw.toLowerCase();
-}
-
-type ClienteInput = {
-  nombre?: unknown;
-  rut?: unknown;
-  contactoNombre?: unknown;
-  contactoTelefono?: unknown;
-  contactoCorreo?: unknown;
-  activo?: unknown;
-};
-
-function buildClienteData(raw: ClienteInput, isUpdate = false) {
-  if (!isUpdate) {
-    const nombre = String(raw.nombre ?? '').trim();
-    if (!nombre) throw new Error('El nombre es obligatorio.');
-    if (!String(raw.contactoNombre ?? '').trim()) throw new Error('El nombre de contacto es obligatorio.');
-    if (!String(raw.contactoCorreo ?? '').trim()) throw new Error('El correo de contacto es obligatorio.');
-  }
-
-  if (isUpdate) {
-    if (raw.nombre !== undefined && !String(raw.nombre ?? '').trim()) {
-      throw new Error('El nombre no puede estar vacío.');
-    }
-    if (raw.contactoNombre !== undefined && !String(raw.contactoNombre ?? '').trim()) {
-      throw new Error('El nombre de contacto no puede estar vacío.');
-    }
-    if (raw.contactoCorreo !== undefined && !String(raw.contactoCorreo ?? '').trim()) {
-      throw new Error('El correo de contacto no puede estar vacío.');
-    }
-  }
-
-  return {
-    ...(raw.nombre !== undefined && { nombre: String(raw.nombre ?? '').trim() }),
-    ...(raw.rut !== undefined && { rut: procesarRut(raw.rut) }),
-    ...(raw.contactoNombre !== undefined && { contactoNombre: optStr(raw.contactoNombre) }),
-    ...(raw.contactoTelefono !== undefined && { contactoTelefono: procesarTelefono(raw.contactoTelefono) }),
-    ...(raw.contactoCorreo !== undefined && { contactoCorreo: normalizarCorreo(raw.contactoCorreo) }),
-    ...(raw.activo !== undefined && { activo: Boolean(raw.activo) }),
-  };
+async function guardarContactoAnterior(tx: Prisma.TransactionClient, clienteId: number, raw: ClienteInputCompatible) {
+  if (![raw.contactoNombre, raw.contactoTelefono, raw.contactoCorreo].some(v => v !== undefined)) return;
+  const existente = await tx.contactoClienteTrager.findFirst({
+    where: { clienteId, activo: true }, orderBy: [{ principal: 'desc' }, { id: 'asc' }],
+  });
+  const data = buildContactoData({
+    nombre: raw.contactoNombre ?? existente?.nombre ?? 'Contacto principal',
+    telefono: raw.contactoTelefono ?? existente?.telefono,
+    correo: raw.contactoCorreo ?? existente?.correo,
+    principal: true, activo: true,
+  });
+  await tx.contactoClienteTrager.updateMany({ where: { clienteId }, data: { principal: false } });
+  if (existente) await tx.contactoClienteTrager.update({ where: { id: existente.id }, data });
+  else await tx.contactoClienteTrager.create({ data: { ...data, clienteId, nombre: data.nombre! } });
+  await sincronizarContactoAnterior(tx, clienteId);
 }
 
 export async function listarClientesTrager(params?: { q?: string; activo?: boolean }) {
   const q = String(params?.q ?? '').trim();
-
-  return tragerPrisma.cliente.findMany({
+  const clientes = await tragerPrisma.cliente.findMany({
     where: {
       ...(params?.activo !== undefined && { activo: params.activo }),
-      ...(q && {
-        OR: [
-          { rut: { contains: q, mode: 'insensitive' } },
-          { nombre: { contains: q, mode: 'insensitive' } },
-          { contactoNombre: { contains: q, mode: 'insensitive' } },
-        ],
-      }),
-    },
-    orderBy: { createdAt: 'desc' },
+      ...(q && { OR: [
+        { rut: { contains: q, mode: 'insensitive' as const } },
+        { nombre: { contains: q, mode: 'insensitive' as const } },
+        { razonSocial: { contains: q, mode: 'insensitive' as const } },
+        { nombreEmpresa: { contains: q, mode: 'insensitive' as const } },
+        { email: { contains: q, mode: 'insensitive' as const } },
+        { contactos: { some: { nombre: { contains: q, mode: 'insensitive' as const } } } },
+      ] }),
+    }, include: clienteInclude, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
   });
+  return clientes.map(conContactoPrincipal);
 }
-
 export async function obtenerClienteTrager(id: number) {
-  const cliente = await tragerPrisma.cliente.findUnique({ where: { id } });
+  const cliente = await tragerPrisma.cliente.findUnique({ where: { id }, include: clienteInclude });
   if (!cliente) throw new Error('Cliente no encontrado.');
-  return cliente;
+  return conContactoPrincipal(cliente);
 }
-
-export async function crearClienteTrager(raw: ClienteInput) {
-  const data = buildClienteData(raw, false);
-  if (!data.nombre) throw new Error('El nombre es obligatorio.');
-
-  return tragerPrisma.cliente.create({
-    data: {
-      ...data,
-      nombre: data.nombre,
-    },
+export async function crearClienteTrager(raw: ClienteInputCompatible) {
+  const data = buildClienteData(raw);
+  return tragerPrisma.$transaction(async tx => {
+    const cliente = await tx.cliente.create({ data: { ...data, nombre: data.nombre! } });
+    await guardarContactoAnterior(tx, cliente.id, raw);
+    return conContactoPrincipal(await tx.cliente.findUniqueOrThrow({ where: { id: cliente.id }, include: clienteInclude }));
   });
 }
-
-export async function actualizarClienteTrager(id: number, raw: ClienteInput) {
-  const existente = await tragerPrisma.cliente.findUnique({ where: { id } });
-  if (!existente) throw new Error('Cliente no encontrado.');
-
+export async function actualizarClienteTrager(id: number, raw: ClienteInputCompatible) {
   const data = buildClienteData(raw, true);
-
-  return tragerPrisma.cliente.update({
-    where: { id },
-    data,
+  return tragerPrisma.$transaction(async tx => {
+    await bloquearCliente(tx, id);
+    await tx.cliente.update({ where: { id }, data });
+    await guardarContactoAnterior(tx, id, raw);
+    return conContactoPrincipal(await tx.cliente.findUniqueOrThrow({ where: { id }, include: clienteInclude }));
   });
 }
-
 export async function cambiarEstadoClienteTrager(id: number, activo: boolean) {
-  const existente = await tragerPrisma.cliente.findUnique({ where: { id } });
-  if (!existente) throw new Error('Cliente no encontrado.');
-
-  return tragerPrisma.cliente.update({
-    where: { id },
-    data: { activo },
-  });
+  return actualizarClienteTrager(id, { activo });
 }
-
 export async function eliminarClienteTrager(id: number) {
   const existente = await tragerPrisma.cliente.findUnique({ where: { id } });
   if (!existente) throw new Error('Cliente no encontrado.');
-
   await tragerPrisma.cliente.delete({ where: { id } });
+}
+export async function importarClientesTrager(filas: RawFilaCliente[]) {
+  return importarFilasClientesTrager(filas, {
+    existeRut: async rut => Boolean(await tragerPrisma.cliente.findUnique({ where: { rut }, select: { id: true } })),
+    crear: async data => tragerPrisma.cliente.create({ data, select: { id: true, rut: true, nombre: true, razonSocial: true } }),
+  });
+}
+export async function agregarContactoClienteTrager(clienteId: number, raw: ContactoInput) {
+  const data = buildContactoData(raw);
+  if (data.principal && data.activo === false) throw new Error('El contacto principal debe estar activo.');
+  return tragerPrisma.$transaction(async tx => {
+    await bloquearCliente(tx, clienteId);
+    if (data.principal) await tx.contactoClienteTrager.updateMany({ where: { clienteId }, data: { principal: false } });
+    const contacto = await tx.contactoClienteTrager.create({ data: { ...data, nombre: data.nombre!, clienteId } });
+    await sincronizarContactoAnterior(tx, clienteId);
+    return contacto;
+  });
+}
+export async function actualizarContactoClienteTrager(contactoId: number, raw: ContactoInput) {
+  const data = buildContactoData(raw, true);
+  return tragerPrisma.$transaction(async tx => {
+    const inicial = await tx.contactoClienteTrager.findUnique({ where: { id: contactoId } });
+    if (!inicial) throw new Error('Contacto no encontrado.');
+    await bloquearCliente(tx, inicial.clienteId);
+    const existente = await tx.contactoClienteTrager.findUniqueOrThrow({ where: { id: contactoId } });
+    if (data.principal && !(data.activo ?? existente.activo)) throw new Error('El contacto principal debe estar activo.');
+    if (data.activo === false) data.principal = false;
+    if (data.principal) await tx.contactoClienteTrager.updateMany({ where: { clienteId: existente.clienteId }, data: { principal: false } });
+    const contacto = await tx.contactoClienteTrager.update({ where: { id: contactoId }, data });
+    await sincronizarContactoAnterior(tx, existente.clienteId);
+    return contacto;
+  });
+}
+export async function cambiarEstadoContactoTrager(contactoId: number, activo: boolean) {
+  return actualizarContactoClienteTrager(contactoId, { activo });
 }
