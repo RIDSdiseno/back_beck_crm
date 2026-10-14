@@ -1,3 +1,4 @@
+import { resolverPermisos } from './resolverPermisos';
 import { RolUsuario } from '../types';
 import { prisma } from '../config/prisma';
 import { PERMISOS_POR_ROL, PermisoBase } from './permisosPorRol';
@@ -25,16 +26,5 @@ export async function getPermisosEfectivos(
     select: { modulo: true, puedeVer: true, puedeEditar: true },
   });
 
-  const userMap = new Map(userPermisos.map((p) => [p.modulo, p]));
-  const rolMap = new Map(rolPermisos.map((p) => [p.modulo, p]));
-
-  return codeDefaults.map((d) => {
-    const u = userMap.get(d.modulo);
-    if (u) return { modulo: d.modulo, puedeVer: u.puedeVer, puedeEditar: u.puedeEditar };
-
-    const r = rolMap.get(d.modulo);
-    if (r) return { modulo: d.modulo, puedeVer: r.puedeVer, puedeEditar: r.puedeEditar };
-
-    return d;
-  });
+  return resolverPermisos(codeDefaults, rolPermisos, userPermisos);
 }

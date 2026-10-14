@@ -1,3 +1,4 @@
+import { resolverPermisos } from '../helpers/resolverPermisos';
 import { Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 import { RolUsuario } from '../types';
@@ -79,10 +80,7 @@ export const obtenerPermisosRol = async (req: Request, res: Response): Promise<v
     const conPermisosSet = new Set(usuariosConPermisos.map((p) => p.usuarioId));
 
     const dbMap = new Map(permisosDB.map((p) => [p.modulo, p]));
-    const permisosEfectivos = codeDefaults.map((d) => {
-      const db = dbMap.get(d.modulo);
-      return db ? { modulo: d.modulo, puedeVer: db.puedeVer, puedeEditar: db.puedeEditar } : d;
-    });
+    const permisosEfectivos = resolverPermisos(codeDefaults, permisosDB);
 
     const dbProcesamiento = dbMap.get('beck_procesamiento_ingenieria');
     const efectivoProcesamiento = permisosEfectivos.find((p) => p.modulo === 'beck_procesamiento_ingenieria');

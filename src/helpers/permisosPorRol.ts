@@ -7,6 +7,9 @@ export interface PermisoBase {
 }
 
 export const TODOS_LOS_MODULOS: string[] = [
+  'beck_acceder_plataforma',
+  'firemat_acceder_plataforma',
+  'trager_acceder_plataforma',
   'beck_dashboard',
   'beck_procesamiento_ingenieria',
   'beck_oficina_tecnica',
@@ -47,7 +50,8 @@ function buildPermisos(
   acceso: Partial<Record<string, { ver: boolean; editar: boolean }>>,
 ): PermisoBase[] {
   return TODOS_LOS_MODULOS.map((modulo) => {
-    const cfg = acceso[modulo];
+    const empresa = modulo.split('_')[0];
+    const cfg = acceso[modulo] ?? (modulo.endsWith('_acceder_plataforma') && Object.entries(acceso).some(([key, value]) => key.startsWith(empresa + '_') && value?.ver) ? { ver: true, editar: true } : undefined);
     return { modulo, puedeVer: cfg?.ver ?? false, puedeEditar: cfg?.editar ?? false };
   });
 }

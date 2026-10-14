@@ -26,6 +26,7 @@ export const requirePermission = (modulo: string | string[], accion: 'ver' | 'ed
       const permiso = permisos.find((p) => {
         if (!modulos.includes(p.modulo)) return false;
         if (!p.puedeVer) return false;
+        if (p.modulo.startsWith('trager_') && !permisos.some(v => v.modulo === 'trager_acceder_plataforma' && v.puedeVer)) return false;
         if (accion === 'editar' && !p.puedeEditar) return false;
         return true;
       });
