@@ -8,6 +8,7 @@ import {
   ROLES_FIREMAT,
   ROLES_EXCLUIDOS_COMERCIALES_BECK,
   ROLES_COMERCIALES_FIREMAT,
+  ROLES_COMERCIALES_TRAGER,
   ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES,
 } from '../helpers/roles';
 import {
@@ -426,9 +427,9 @@ export const listarUsuariosComercialesFiremat = async (_req: Request, res: Respo
 
 /**
  * GET /api/usuarios/comerciales-trager
- * Trager no tiene roles propios (usa roles genericos de Beck/Firemat), asi que la
- * elegibilidad se resuelve exclusivamente por permiso efectivo: cualquier usuario activo
- * que pueda EDITAR trager_funnel o que tenga acceso a trager_cambiar_empresa.
+ * Como en Firemat: administrador y vendedor_trager (ROLES_COMERCIALES_TRAGER) siempre, mas
+ * cualquier otro usuario activo con permiso efectivo para EDITAR trager_funnel o con acceso a
+ * trager_cambiar_empresa (por ejemplo, usuarios de Firemat habilitados en Trager).
  */
 export const listarUsuariosComercialesTrager = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -439,6 +440,10 @@ export const listarUsuariosComercialesTrager = async (_req: Request, res: Respon
 
     const elegibles: typeof usuarios = [];
     for (const usuario of usuarios) {
+      if (ROLES_COMERCIALES_TRAGER.includes(usuario.rol)) {
+        elegibles.push(usuario);
+        continue;
+      }
       const permisos = await getPermisosEfectivos(usuario.id, usuario.rol);
       const puedeEditarFunnel = permisos.some((p) => p.modulo === 'trager_funnel' && p.puedeEditar);
       const puedeCambiarEmpresa = permisos.some(

@@ -1447,6 +1447,9 @@ enum RolUsuario {
   bodeguero
   visualizador_firemat
   cliente
+  vendedor_trager
+  bodeguero_trager
+  visualizador_trager
 }
 
 enum EstadoSolicitudOficinaTecnica {

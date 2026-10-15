@@ -281,7 +281,8 @@ exports.Prisma.ProductoScalarFieldEnum = {
   entradas: 'entradas',
   salidas: 'salidas',
   fechaUltimaEntrada: 'fechaUltimaEntrada',
-  fechaUltimaSalida: 'fechaUltimaSalida'
+  fechaUltimaSalida: 'fechaUltimaSalida',
+  precioInstalador: 'precioInstalador'
 };
 
 exports.Prisma.MovimientoScalarFieldEnum = {
@@ -301,9 +302,16 @@ exports.Prisma.CotizacionTragerScalarFieldEnum = {
   id: 'id',
   cliente: 'cliente',
   contacto: 'contacto',
+  clienteTragerId: 'clienteTragerId',
+  contactoTragerId: 'contactoTragerId',
+  telefono: 'telefono',
+  correo: 'correo',
   tipoCliente: 'tipoCliente',
+  cargo: 'cargo',
   responsable: 'responsable',
   estado: 'estado',
+  moneda: 'moneda',
+  aplicaImpuesto: 'aplicaImpuesto',
   subtotal: 'subtotal',
   descuento: 'descuento',
   impuesto: 'impuesto',
@@ -313,7 +321,16 @@ exports.Prisma.CotizacionTragerScalarFieldEnum = {
   fechaEnvio: 'fechaEnvio',
   fechaSeguimiento: 'fechaSeguimiento',
   fechaCierre: 'fechaCierre',
+  probabilidadCierre: 'probabilidadCierre',
+  comentariosCliente: 'comentariosCliente',
+  objeciones: 'objeciones',
   observaciones: 'observaciones',
+  motivoPerdida: 'motivoPerdida',
+  motivoPostergacion: 'motivoPostergacion',
+  fechaReactivacion: 'fechaReactivacion',
+  version: 'version',
+  esActual: 'esActual',
+  cotizacionBaseId: 'cotizacionBaseId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   numero: 'numero'
@@ -326,9 +343,37 @@ exports.Prisma.CotizacionTragerDetalleScalarFieldEnum = {
   cantidad: 'cantidad',
   precioUnitario: 'precioUnitario',
   descuentoPct: 'descuentoPct',
+  gananciaPct: 'gananciaPct',
   subtotal: 'subtotal',
   stockDisponible: 'stockDisponible',
   observacion: 'observacion'
+};
+
+exports.Prisma.VentaScalarFieldEnum = {
+  id: 'id',
+  productoId: 'productoId',
+  cliente: 'cliente',
+  contacto: 'contacto',
+  cantidad: 'cantidad',
+  precio: 'precio',
+  total: 'total',
+  estado: 'estado',
+  responsable: 'responsable',
+  fechaCierre: 'fechaCierre',
+  createdAt: 'createdAt',
+  fechaProximaAccion: 'fechaProximaAccion',
+  origen: 'origen',
+  probabilidad: 'probabilidad',
+  proximaAccion: 'proximaAccion'
+};
+
+exports.Prisma.VentaDetalleScalarFieldEnum = {
+  id: 'id',
+  ventaId: 'ventaId',
+  productoId: 'productoId',
+  cantidad: 'cantidad',
+  precio: 'precio',
+  subtotal: 'subtotal'
 };
 
 exports.Prisma.SortOrder = {
@@ -357,7 +402,9 @@ exports.Prisma.ModelName = {
   Producto: 'Producto',
   Movimiento: 'Movimiento',
   CotizacionTrager: 'CotizacionTrager',
-  CotizacionTragerDetalle: 'CotizacionTragerDetalle'
+  CotizacionTragerDetalle: 'CotizacionTragerDetalle',
+  Venta: 'Venta',
+  VentaDetalle: 'VentaDetalle'
 };
 
 /**

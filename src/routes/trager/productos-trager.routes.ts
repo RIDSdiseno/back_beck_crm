@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getProductosTrager,
+  exportProductosTrager,
   getProductoTragerById,
   createProductoTrager,
   updateProductoTrager,
@@ -18,6 +19,7 @@ const canEdit = requirePermission('trager_productos', 'editar');
 router.patch('/asignar-categoria', canEdit, asignarCategoriaProductosTrager);
 
 router.get('/', canSee, getProductosTrager);
+router.get('/exportar', requirePermission('trager_productos', 'ver'), exportProductosTrager);
 router.get('/:id', canSee, getProductoTragerById);
 router.post('/', canEdit, uploadTragerProductoImage, createProductoTrager);
 router.put('/:id', canEdit, uploadTragerProductoImage, updateProductoTrager);

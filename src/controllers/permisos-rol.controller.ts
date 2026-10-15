@@ -15,6 +15,9 @@ const ROLES_CONFIGURABLES: RolUsuario[] = [
   'vendedor_firemat',
   'bodeguero',
   'visualizador_firemat',
+  'vendedor_trager',
+  'bodeguero_trager',
+  'visualizador_trager',
 ];
 
 function esRolValido(rol: string): rol is RolUsuario {

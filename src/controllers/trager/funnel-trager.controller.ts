@@ -38,6 +38,12 @@ class ValidationError extends Error {
   }
 }
 
+// Como en Firemat: la oportunidad se devuelve con su producto y su cotización vinculados.
+const funnelInclude = {
+  producto: true,
+  cotizacion: true,
+};
+
 const parseIdParam = (value: string | string[] | undefined): number | null => {
   const raw = Array.isArray(value) ? value[0] : value;
   if (!raw) return null;
@@ -394,6 +400,27 @@ const registrarCambioEtapaTrager = async ({
   });
 };
 
+const assertLinkedRecordsExist = async (
+  productoId: number | null,
+  cotizacionId: number | null
+): Promise<void> => {
+  if (productoId !== null) {
+    const producto = await tragerPrisma.producto.findUnique({
+      where: { id: productoId },
+      select: { id: true },
+    });
+    if (!producto) throw new ValidationError('productoId no existe');
+  }
+
+  if (cotizacionId !== null) {
+    const cotizacion = await tragerPrisma.cotizacionTrager.findUnique({
+      where: { id: cotizacionId },
+      select: { id: true },
+    });
+    if (!cotizacion) throw new ValidationError('cotizacionId no existe');
+  }
+};
+
 interface ClienteRegistradoSets {
   ruts: Set<string>;
   emails: Set<string>;
@@ -715,11 +742,13 @@ export const getFunnelTrager = async (req: Request, res: Response): Promise<void
         { cliente: { contains: term, mode: 'insensitive' } },
         { contacto: { contains: term, mode: 'insensitive' } },
         { responsable: { contains: term, mode: 'insensitive' } },
+        { producto: { nombre: { contains: term, mode: 'insensitive' } } },
       ];
     }
 
     const data = await tragerPrisma.funnelTragerOpportunity.findMany({
       where,
+      include: funnelInclude,
       orderBy: { updatedAt: 'desc' },
     });
 
@@ -752,6 +781,7 @@ export const getFunnelTragerById = async (req: Request, res: Response): Promise<
 
     const data = await tragerPrisma.funnelTragerOpportunity.findUnique({
       where: { id },
+      include: funnelInclude,
     });
 
     if (!data) {
@@ -797,9 +827,15 @@ export const createFunnelTrager = async (req: Request, res: Response): Promise<v
 
     const dataInput = buildCreateData(body);
 
+    await assertLinkedRecordsExist(
+      typeof dataInput.productoId === 'number' ? dataInput.productoId : null,
+      typeof dataInput.cotizacionId === 'number' ? dataInput.cotizacionId : null
+    );
+
     const data = await tragerPrisma.$transaction(async (tx) => {
       const created = await tx.funnelTragerOpportunity.create({
         data: { ...dataInput, fechaUltimoCambioEtapa: new Date() },
+        include: funnelInclude,
       });
       await registrarCambioEtapaTrager({
         tx,
@@ -853,6 +889,11 @@ export const updateFunnelTrager = async (req: Request, res: Response): Promise<v
 
     const dataInput = buildUpdateData(current, body);
 
+    await assertLinkedRecordsExist(
+      hasOwn(body, 'productoId') ? getInt(body.productoId) : null,
+      hasOwn(body, 'cotizacionId') ? getInt(body.cotizacionId) : null
+    );
+
     const nuevaEtapa = hasOwn(body, 'etapa') ? parseEtapa(body.etapa) : null;
     let advertenciasUpdate: string[] = [];
     if (nuevaEtapa !== null && nuevaEtapa !== current.etapa) {
@@ -896,6 +937,7 @@ export const updateFunnelTrager = async (req: Request, res: Response): Promise<v
       const updated = await tx.funnelTragerOpportunity.update({
         where: { id },
         data: dataInput,
+        include: funnelInclude,
       });
       if (etapaCambio && nuevaEtapa !== null) {
         await registrarCambioEtapaTrager({
@@ -988,6 +1030,7 @@ export const patchEtapaFunnelTrager = async (req: Request, res: Response): Promi
       const updated = await tx.funnelTragerOpportunity.update({
         where: { id },
         data: dataInput,
+        include: funnelInclude,
       });
       if (etapaCambio) {
         await registrarCambioEtapaTrager({

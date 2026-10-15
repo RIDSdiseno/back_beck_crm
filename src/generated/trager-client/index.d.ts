@@ -63,6 +63,16 @@ export type CotizacionTrager = $Result.DefaultSelection<Prisma.$CotizacionTrager
  * 
  */
 export type CotizacionTragerDetalle = $Result.DefaultSelection<Prisma.$CotizacionTragerDetallePayload>
+/**
+ * Model Venta
+ * 
+ */
+export type Venta = $Result.DefaultSelection<Prisma.$VentaPayload>
+/**
+ * Model VentaDetalle
+ * 
+ */
+export type VentaDetalle = $Result.DefaultSelection<Prisma.$VentaDetallePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -284,6 +294,26 @@ export class PrismaClient<
     * ```
     */
   get cotizacionTragerDetalle(): Prisma.CotizacionTragerDetalleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.venta`: Exposes CRUD operations for the **Venta** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Ventas
+    * const ventas = await prisma.venta.findMany()
+    * ```
+    */
+  get venta(): Prisma.VentaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ventaDetalle`: Exposes CRUD operations for the **VentaDetalle** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VentaDetalles
+    * const ventaDetalles = await prisma.ventaDetalle.findMany()
+    * ```
+    */
+  get ventaDetalle(): Prisma.VentaDetalleDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -727,7 +757,9 @@ export namespace Prisma {
     Producto: 'Producto',
     Movimiento: 'Movimiento',
     CotizacionTrager: 'CotizacionTrager',
-    CotizacionTragerDetalle: 'CotizacionTragerDetalle'
+    CotizacionTragerDetalle: 'CotizacionTragerDetalle',
+    Venta: 'Venta',
+    VentaDetalle: 'VentaDetalle'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -743,7 +775,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "contactoClienteTrager" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "movimiento" | "cotizacionTrager" | "cotizacionTragerDetalle"
+      modelProps: "cliente" | "contactoClienteTrager" | "funnelTragerOpportunity" | "funnelTragerArchivo" | "historialEtapaTrager" | "categoria" | "producto" | "movimiento" | "cotizacionTrager" | "cotizacionTragerDetalle" | "venta" | "ventaDetalle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1487,6 +1519,154 @@ export namespace Prisma {
           }
         }
       }
+      Venta: {
+        payload: Prisma.$VentaPayload<ExtArgs>
+        fields: Prisma.VentaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VentaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VentaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          findFirst: {
+            args: Prisma.VentaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VentaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          findMany: {
+            args: Prisma.VentaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>[]
+          }
+          create: {
+            args: Prisma.VentaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          createMany: {
+            args: Prisma.VentaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VentaCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>[]
+          }
+          delete: {
+            args: Prisma.VentaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          update: {
+            args: Prisma.VentaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          deleteMany: {
+            args: Prisma.VentaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VentaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VentaUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>[]
+          }
+          upsert: {
+            args: Prisma.VentaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaPayload>
+          }
+          aggregate: {
+            args: Prisma.VentaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVenta>
+          }
+          groupBy: {
+            args: Prisma.VentaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VentaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VentaCountArgs<ExtArgs>
+            result: $Utils.Optional<VentaCountAggregateOutputType> | number
+          }
+        }
+      }
+      VentaDetalle: {
+        payload: Prisma.$VentaDetallePayload<ExtArgs>
+        fields: Prisma.VentaDetalleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VentaDetalleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VentaDetalleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          findFirst: {
+            args: Prisma.VentaDetalleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VentaDetalleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          findMany: {
+            args: Prisma.VentaDetalleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>[]
+          }
+          create: {
+            args: Prisma.VentaDetalleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          createMany: {
+            args: Prisma.VentaDetalleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VentaDetalleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>[]
+          }
+          delete: {
+            args: Prisma.VentaDetalleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          update: {
+            args: Prisma.VentaDetalleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          deleteMany: {
+            args: Prisma.VentaDetalleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VentaDetalleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VentaDetalleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>[]
+          }
+          upsert: {
+            args: Prisma.VentaDetalleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaDetallePayload>
+          }
+          aggregate: {
+            args: Prisma.VentaDetalleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVentaDetalle>
+          }
+          groupBy: {
+            args: Prisma.VentaDetalleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VentaDetalleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VentaDetalleCountArgs<ExtArgs>
+            result: $Utils.Optional<VentaDetalleCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1605,6 +1785,8 @@ export namespace Prisma {
     movimiento?: MovimientoOmit
     cotizacionTrager?: CotizacionTragerOmit
     cotizacionTragerDetalle?: CotizacionTragerDetalleOmit
+    venta?: VentaOmit
+    ventaDetalle?: VentaDetalleOmit
   }
 
   /* Types for Logging */
@@ -1686,10 +1868,12 @@ export namespace Prisma {
 
   export type ClienteCountOutputType = {
     contactos: number
+    cotizaciones: number
   }
 
   export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactos?: boolean | ClienteCountOutputTypeCountContactosArgs
+    cotizaciones?: boolean | ClienteCountOutputTypeCountCotizacionesArgs
   }
 
   // Custom InputTypes
@@ -1708,6 +1892,44 @@ export namespace Prisma {
    */
   export type ClienteCountOutputTypeCountContactosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ContactoClienteTragerWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeCountCotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CotizacionTragerWhereInput
+  }
+
+
+  /**
+   * Count Type ContactoClienteTragerCountOutputType
+   */
+
+  export type ContactoClienteTragerCountOutputType = {
+    cotizaciones: number
+  }
+
+  export type ContactoClienteTragerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cotizaciones?: boolean | ContactoClienteTragerCountOutputTypeCountCotizacionesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ContactoClienteTragerCountOutputType without action
+   */
+  export type ContactoClienteTragerCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTragerCountOutputType
+     */
+    select?: ContactoClienteTragerCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ContactoClienteTragerCountOutputType without action
+   */
+  export type ContactoClienteTragerCountOutputTypeCountCotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CotizacionTragerWhereInput
   }
 
 
@@ -1789,11 +2011,17 @@ export namespace Prisma {
   export type ProductoCountOutputType = {
     CotizacionTragerDetalle: number
     Movimiento: number
+    FunnelTragerOpportunity: number
+    Venta: number
+    VentaDetalle: number
   }
 
   export type ProductoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CotizacionTragerDetalle?: boolean | ProductoCountOutputTypeCountCotizacionTragerDetalleArgs
     Movimiento?: boolean | ProductoCountOutputTypeCountMovimientoArgs
+    FunnelTragerOpportunity?: boolean | ProductoCountOutputTypeCountFunnelTragerOpportunityArgs
+    Venta?: boolean | ProductoCountOutputTypeCountVentaArgs
+    VentaDetalle?: boolean | ProductoCountOutputTypeCountVentaDetalleArgs
   }
 
   // Custom InputTypes
@@ -1821,6 +2049,27 @@ export namespace Prisma {
     where?: MovimientoWhereInput
   }
 
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountFunnelTragerOpportunityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FunnelTragerOpportunityWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountVentaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountVentaDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaDetalleWhereInput
+  }
+
 
   /**
    * Count Type CotizacionTragerCountOutputType
@@ -1828,10 +2077,12 @@ export namespace Prisma {
 
   export type CotizacionTragerCountOutputType = {
     detalles: number
+    FunnelTragerOpportunity: number
   }
 
   export type CotizacionTragerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     detalles?: boolean | CotizacionTragerCountOutputTypeCountDetallesArgs
+    FunnelTragerOpportunity?: boolean | CotizacionTragerCountOutputTypeCountFunnelTragerOpportunityArgs
   }
 
   // Custom InputTypes
@@ -1850,6 +2101,44 @@ export namespace Prisma {
    */
   export type CotizacionTragerCountOutputTypeCountDetallesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CotizacionTragerDetalleWhereInput
+  }
+
+  /**
+   * CotizacionTragerCountOutputType without action
+   */
+  export type CotizacionTragerCountOutputTypeCountFunnelTragerOpportunityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FunnelTragerOpportunityWhereInput
+  }
+
+
+  /**
+   * Count Type VentaCountOutputType
+   */
+
+  export type VentaCountOutputType = {
+    VentaDetalle: number
+  }
+
+  export type VentaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    VentaDetalle?: boolean | VentaCountOutputTypeCountVentaDetalleArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * VentaCountOutputType without action
+   */
+  export type VentaCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCountOutputType
+     */
+    select?: VentaCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * VentaCountOutputType without action
+   */
+  export type VentaCountOutputTypeCountVentaDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaDetalleWhereInput
   }
 
 
@@ -2168,6 +2457,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    cotizaciones?: boolean | Cliente$cotizacionesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
 
@@ -2240,6 +2530,7 @@ export namespace Prisma {
   export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "rut" | "email" | "telefono" | "direccion" | "razonSocial" | "nombreEmpresa" | "region" | "comuna" | "tipoCliente" | "canalVenta" | "observaciones" | "contactoNombre" | "contactoTelefono" | "contactoCorreo" | "activo" | "createdAt" | "updatedAt", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactos?: boolean | Cliente$contactosArgs<ExtArgs>
+    cotizaciones?: boolean | Cliente$cotizacionesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ClienteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2249,6 +2540,7 @@ export namespace Prisma {
     name: "Cliente"
     objects: {
       contactos: Prisma.$ContactoClienteTragerPayload<ExtArgs>[]
+      cotizaciones: Prisma.$CotizacionTragerPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2665,6 +2957,7 @@ export namespace Prisma {
   export interface Prisma__ClienteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     contactos<T extends Cliente$contactosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$contactosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cotizaciones<T extends Cliente$cotizacionesArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$cotizacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3130,6 +3423,30 @@ export namespace Prisma {
   }
 
   /**
+   * Cliente.cotizaciones
+   */
+  export type Cliente$cotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotizacionTrager
+     */
+    select?: CotizacionTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CotizacionTrager
+     */
+    omit?: CotizacionTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionTragerInclude<ExtArgs> | null
+    where?: CotizacionTragerWhereInput
+    orderBy?: CotizacionTragerOrderByWithRelationInput | CotizacionTragerOrderByWithRelationInput[]
+    cursor?: CotizacionTragerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CotizacionTragerScalarFieldEnum | CotizacionTragerScalarFieldEnum[]
+  }
+
+  /**
    * Cliente without action
    */
   export type ClienteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3399,6 +3716,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cotizaciones?: boolean | ContactoClienteTrager$cotizacionesArgs<ExtArgs>
+    _count?: boolean | ContactoClienteTragerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contactoClienteTrager"]>
 
   export type ContactoClienteTragerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3448,6 +3767,8 @@ export namespace Prisma {
   export type ContactoClienteTragerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "nombre" | "cargo" | "telefono" | "correo" | "principal" | "activo" | "observaciones" | "createdAt" | "updatedAt", ExtArgs["result"]["contactoClienteTrager"]>
   export type ContactoClienteTragerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cotizaciones?: boolean | ContactoClienteTrager$cotizacionesArgs<ExtArgs>
+    _count?: boolean | ContactoClienteTragerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ContactoClienteTragerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -3460,6 +3781,7 @@ export namespace Prisma {
     name: "ContactoClienteTrager"
     objects: {
       cliente: Prisma.$ClientePayload<ExtArgs>
+      cotizaciones: Prisma.$CotizacionTragerPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3868,6 +4190,7 @@ export namespace Prisma {
   export interface Prisma__ContactoClienteTragerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cotizaciones<T extends ContactoClienteTrager$cotizacionesArgs<ExtArgs> = {}>(args?: Subset<T, ContactoClienteTrager$cotizacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4306,6 +4629,30 @@ export namespace Prisma {
      * Limit how many ContactoClienteTragers to delete.
      */
     limit?: number
+  }
+
+  /**
+   * ContactoClienteTrager.cotizaciones
+   */
+  export type ContactoClienteTrager$cotizacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotizacionTrager
+     */
+    select?: CotizacionTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CotizacionTrager
+     */
+    omit?: CotizacionTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionTragerInclude<ExtArgs> | null
+    where?: CotizacionTragerWhereInput
+    orderBy?: CotizacionTragerOrderByWithRelationInput | CotizacionTragerOrderByWithRelationInput[]
+    cursor?: CotizacionTragerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CotizacionTragerScalarFieldEnum | CotizacionTragerScalarFieldEnum[]
   }
 
   /**
@@ -5085,6 +5432,8 @@ export namespace Prisma {
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
     esReactivacion?: boolean
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelTragerOpportunity$archivosArgs<ExtArgs>
     historialEtapas?: boolean | FunnelTragerOpportunity$historialEtapasArgs<ExtArgs>
     _count?: boolean | FunnelTragerOpportunityCountOutputTypeDefaultArgs<ExtArgs>
@@ -5161,6 +5510,8 @@ export namespace Prisma {
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
     esReactivacion?: boolean
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelTragerOpportunity"]>
 
   export type FunnelTragerOpportunitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5234,6 +5585,8 @@ export namespace Prisma {
     reprogramacionesCount?: boolean
     fechaUltimoCambioEtapa?: boolean
     esReactivacion?: boolean
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
   }, ExtArgs["result"]["funnelTragerOpportunity"]>
 
   export type FunnelTragerOpportunitySelectScalar = {
@@ -5311,16 +5664,26 @@ export namespace Prisma {
 
   export type FunnelTragerOpportunityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "telefono" | "correo" | "tipoCliente" | "rutEmpresa" | "region" | "comuna" | "unidadNegocio" | "productoId" | "cantidadEstimada" | "urgencia" | "tipoUso" | "necesidadSoporteTecnico" | "alternativaProducto" | "comision" | "margenEstimado" | "fechaComprometidaEnvio" | "versionCotizacion" | "comentariosCliente" | "objeciones" | "ordenCompra" | "correoAceptacion" | "condicionesComerciales" | "coordinacionAdministrativa" | "estadoDocumentacion" | "traspasoAdministracion" | "traspasoERP" | "coordinacionDespacho" | "estadoComercialOrden" | "estadoDocumentacionVenta" | "responsable" | "etapa" | "montoEstimado" | "probabilidadCierre" | "proximaAccion" | "fechaProximaAccion" | "observaciones" | "origen" | "estadoStock" | "cotizacionId" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "documentoRespaldo" | "fechaCierre" | "createdAt" | "updatedAt" | "probabilidad" | "flujoPosterior" | "motivoDescarte" | "tipoBroker" | "fechaEstimadaDespacho" | "fechaSeguimientoPostventa" | "nombreOportunidad" | "cargoContacto" | "direccionProyecto" | "tipoOportunidad" | "fechaProbableCierre" | "riesgoTecnico" | "comentariosInternos" | "observacionesTecnicas" | "observacionCamposFaltantes" | "lineaProducto" | "descuento" | "stockOportunidad" | "reprogramacionesCount" | "fechaUltimoCambioEtapa" | "esReactivacion", ExtArgs["result"]["funnelTragerOpportunity"]>
   export type FunnelTragerOpportunityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
     archivos?: boolean | FunnelTragerOpportunity$archivosArgs<ExtArgs>
     historialEtapas?: boolean | FunnelTragerOpportunity$historialEtapasArgs<ExtArgs>
     _count?: boolean | FunnelTragerOpportunityCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type FunnelTragerOpportunityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type FunnelTragerOpportunityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type FunnelTragerOpportunityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
+  }
+  export type FunnelTragerOpportunityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cotizacion?: boolean | FunnelTragerOpportunity$cotizacionArgs<ExtArgs>
+    producto?: boolean | FunnelTragerOpportunity$productoArgs<ExtArgs>
+  }
 
   export type $FunnelTragerOpportunityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FunnelTragerOpportunity"
     objects: {
+      cotizacion: Prisma.$CotizacionTragerPayload<ExtArgs> | null
+      producto: Prisma.$ProductoPayload<ExtArgs> | null
       archivos: Prisma.$FunnelTragerArchivoPayload<ExtArgs>[]
       historialEtapas: Prisma.$HistorialEtapaTragerPayload<ExtArgs>[]
     }
@@ -5789,6 +6152,8 @@ export namespace Prisma {
    */
   export interface Prisma__FunnelTragerOpportunityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    cotizacion<T extends FunnelTragerOpportunity$cotizacionArgs<ExtArgs> = {}>(args?: Subset<T, FunnelTragerOpportunity$cotizacionArgs<ExtArgs>>): Prisma__CotizacionTragerClient<$Result.GetResult<Prisma.$CotizacionTragerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    producto<T extends FunnelTragerOpportunity$productoArgs<ExtArgs> = {}>(args?: Subset<T, FunnelTragerOpportunity$productoArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     archivos<T extends FunnelTragerOpportunity$archivosArgs<ExtArgs> = {}>(args?: Subset<T, FunnelTragerOpportunity$archivosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelTragerArchivoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     historialEtapas<T extends FunnelTragerOpportunity$historialEtapasArgs<ExtArgs> = {}>(args?: Subset<T, FunnelTragerOpportunity$historialEtapasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistorialEtapaTragerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -6144,6 +6509,10 @@ export namespace Prisma {
      */
     data: FunnelTragerOpportunityCreateManyInput | FunnelTragerOpportunityCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelTragerOpportunityIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6214,6 +6583,10 @@ export namespace Prisma {
      * Limit how many FunnelTragerOpportunities to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelTragerOpportunityIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6280,6 +6653,44 @@ export namespace Prisma {
      * Limit how many FunnelTragerOpportunities to delete.
      */
     limit?: number
+  }
+
+  /**
+   * FunnelTragerOpportunity.cotizacion
+   */
+  export type FunnelTragerOpportunity$cotizacionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotizacionTrager
+     */
+    select?: CotizacionTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CotizacionTrager
+     */
+    omit?: CotizacionTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionTragerInclude<ExtArgs> | null
+    where?: CotizacionTragerWhereInput
+  }
+
+  /**
+   * FunnelTragerOpportunity.producto
+   */
+  export type FunnelTragerOpportunity$productoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Producto
+     */
+    select?: ProductoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Producto
+     */
+    omit?: ProductoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoInclude<ExtArgs> | null
+    where?: ProductoWhereInput
   }
 
   /**
@@ -9740,6 +10151,7 @@ export namespace Prisma {
     stockInicial: number | null
     entradas: number | null
     salidas: number | null
+    precioInstalador: number | null
   }
 
   export type ProductoSumAggregateOutputType = {
@@ -9754,6 +10166,7 @@ export namespace Prisma {
     stockInicial: number | null
     entradas: number | null
     salidas: number | null
+    precioInstalador: number | null
   }
 
   export type ProductoMinAggregateOutputType = {
@@ -9781,6 +10194,7 @@ export namespace Prisma {
     salidas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
+    precioInstalador: number | null
   }
 
   export type ProductoMaxAggregateOutputType = {
@@ -9808,6 +10222,7 @@ export namespace Prisma {
     salidas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
+    precioInstalador: number | null
   }
 
   export type ProductoCountAggregateOutputType = {
@@ -9835,6 +10250,7 @@ export namespace Prisma {
     salidas: number
     fechaUltimaEntrada: number
     fechaUltimaSalida: number
+    precioInstalador: number
     _all: number
   }
 
@@ -9851,6 +10267,7 @@ export namespace Prisma {
     stockInicial?: true
     entradas?: true
     salidas?: true
+    precioInstalador?: true
   }
 
   export type ProductoSumAggregateInputType = {
@@ -9865,6 +10282,7 @@ export namespace Prisma {
     stockInicial?: true
     entradas?: true
     salidas?: true
+    precioInstalador?: true
   }
 
   export type ProductoMinAggregateInputType = {
@@ -9892,6 +10310,7 @@ export namespace Prisma {
     salidas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
+    precioInstalador?: true
   }
 
   export type ProductoMaxAggregateInputType = {
@@ -9919,6 +10338,7 @@ export namespace Prisma {
     salidas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
+    precioInstalador?: true
   }
 
   export type ProductoCountAggregateInputType = {
@@ -9946,6 +10366,7 @@ export namespace Prisma {
     salidas?: true
     fechaUltimaEntrada?: true
     fechaUltimaSalida?: true
+    precioInstalador?: true
     _all?: true
   }
 
@@ -10060,6 +10481,7 @@ export namespace Prisma {
     salidas: number | null
     fechaUltimaEntrada: Date | null
     fechaUltimaSalida: Date | null
+    precioInstalador: number | null
     _count: ProductoCountAggregateOutputType | null
     _avg: ProductoAvgAggregateOutputType | null
     _sum: ProductoSumAggregateOutputType | null
@@ -10106,9 +10528,13 @@ export namespace Prisma {
     salidas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
+    precioInstalador?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     CotizacionTragerDetalle?: boolean | Producto$CotizacionTragerDetalleArgs<ExtArgs>
     Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
+    FunnelTragerOpportunity?: boolean | Producto$FunnelTragerOpportunityArgs<ExtArgs>
+    Venta?: boolean | Producto$VentaArgs<ExtArgs>
+    VentaDetalle?: boolean | Producto$VentaDetalleArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -10137,6 +10563,7 @@ export namespace Prisma {
     salidas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
+    precioInstalador?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -10165,6 +10592,7 @@ export namespace Prisma {
     salidas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
+    precioInstalador?: boolean
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -10193,13 +10621,17 @@ export namespace Prisma {
     salidas?: boolean
     fechaUltimaEntrada?: boolean
     fechaUltimaSalida?: boolean
+    precioInstalador?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial" | "entradas" | "salidas" | "fechaUltimaEntrada" | "fechaUltimaSalida", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "descripcion" | "stock" | "ubicacion" | "createdAt" | "precio" | "minStock" | "activo" | "criticidad" | "imagen" | "categoriaId" | "stockReservado" | "sku" | "disponibilidad" | "formato" | "cantidadCaja" | "precioUsd" | "precioSugerido" | "stockInicial" | "entradas" | "salidas" | "fechaUltimaEntrada" | "fechaUltimaSalida" | "precioInstalador", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     CotizacionTragerDetalle?: boolean | Producto$CotizacionTragerDetalleArgs<ExtArgs>
     Movimiento?: boolean | Producto$MovimientoArgs<ExtArgs>
+    FunnelTragerOpportunity?: boolean | Producto$FunnelTragerOpportunityArgs<ExtArgs>
+    Venta?: boolean | Producto$VentaArgs<ExtArgs>
+    VentaDetalle?: boolean | Producto$VentaDetalleArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10215,6 +10647,9 @@ export namespace Prisma {
       Categoria: Prisma.$CategoriaPayload<ExtArgs>
       CotizacionTragerDetalle: Prisma.$CotizacionTragerDetallePayload<ExtArgs>[]
       Movimiento: Prisma.$MovimientoPayload<ExtArgs>[]
+      FunnelTragerOpportunity: Prisma.$FunnelTragerOpportunityPayload<ExtArgs>[]
+      Venta: Prisma.$VentaPayload<ExtArgs>[]
+      VentaDetalle: Prisma.$VentaDetallePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10241,6 +10676,7 @@ export namespace Prisma {
       salidas: number | null
       fechaUltimaEntrada: Date | null
       fechaUltimaSalida: Date | null
+      precioInstalador: number | null
     }, ExtArgs["result"]["producto"]>
     composites: {}
   }
@@ -10638,6 +11074,9 @@ export namespace Prisma {
     Categoria<T extends CategoriaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoriaDefaultArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     CotizacionTragerDetalle<T extends Producto$CotizacionTragerDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Producto$CotizacionTragerDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionTragerDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Movimiento<T extends Producto$MovimientoArgs<ExtArgs> = {}>(args?: Subset<T, Producto$MovimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FunnelTragerOpportunity<T extends Producto$FunnelTragerOpportunityArgs<ExtArgs> = {}>(args?: Subset<T, Producto$FunnelTragerOpportunityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelTragerOpportunityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Venta<T extends Producto$VentaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$VentaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    VentaDetalle<T extends Producto$VentaDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Producto$VentaDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10691,6 +11130,7 @@ export namespace Prisma {
     readonly salidas: FieldRef<"Producto", 'Int'>
     readonly fechaUltimaEntrada: FieldRef<"Producto", 'DateTime'>
     readonly fechaUltimaSalida: FieldRef<"Producto", 'DateTime'>
+    readonly precioInstalador: FieldRef<"Producto", 'Float'>
   }
     
 
@@ -11137,6 +11577,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MovimientoScalarFieldEnum | MovimientoScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.FunnelTragerOpportunity
+   */
+  export type Producto$FunnelTragerOpportunityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelTragerOpportunity
+     */
+    select?: FunnelTragerOpportunitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelTragerOpportunity
+     */
+    omit?: FunnelTragerOpportunityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelTragerOpportunityInclude<ExtArgs> | null
+    where?: FunnelTragerOpportunityWhereInput
+    orderBy?: FunnelTragerOpportunityOrderByWithRelationInput | FunnelTragerOpportunityOrderByWithRelationInput[]
+    cursor?: FunnelTragerOpportunityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FunnelTragerOpportunityScalarFieldEnum | FunnelTragerOpportunityScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.Venta
+   */
+  export type Producto$VentaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    where?: VentaWhereInput
+    orderBy?: VentaOrderByWithRelationInput | VentaOrderByWithRelationInput[]
+    cursor?: VentaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.VentaDetalle
+   */
+  export type Producto$VentaDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    where?: VentaDetalleWhereInput
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    cursor?: VentaDetalleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
   }
 
   /**
@@ -12354,27 +12866,44 @@ export namespace Prisma {
 
   export type CotizacionTragerAvgAggregateOutputType = {
     id: number | null
+    clienteTragerId: number | null
+    contactoTragerId: number | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
     total: number | null
+    probabilidadCierre: number | null
+    version: number | null
+    cotizacionBaseId: number | null
   }
 
   export type CotizacionTragerSumAggregateOutputType = {
     id: number | null
+    clienteTragerId: number | null
+    contactoTragerId: number | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
     total: number | null
+    probabilidadCierre: number | null
+    version: number | null
+    cotizacionBaseId: number | null
   }
 
   export type CotizacionTragerMinAggregateOutputType = {
     id: number | null
     cliente: string | null
     contacto: string | null
+    clienteTragerId: number | null
+    contactoTragerId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string | null
+    moneda: string | null
+    aplicaImpuesto: boolean | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12384,7 +12913,16 @@ export namespace Prisma {
     fechaEnvio: Date | null
     fechaSeguimiento: Date | null
     fechaCierre: Date | null
+    probabilidadCierre: number | null
+    comentariosCliente: string | null
+    objeciones: string | null
     observaciones: string | null
+    motivoPerdida: string | null
+    motivoPostergacion: string | null
+    fechaReactivacion: Date | null
+    version: number | null
+    esActual: boolean | null
+    cotizacionBaseId: number | null
     createdAt: Date | null
     updatedAt: Date | null
     numero: string | null
@@ -12394,9 +12932,16 @@ export namespace Prisma {
     id: number | null
     cliente: string | null
     contacto: string | null
+    clienteTragerId: number | null
+    contactoTragerId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string | null
+    moneda: string | null
+    aplicaImpuesto: boolean | null
     subtotal: number | null
     descuento: number | null
     impuesto: number | null
@@ -12406,7 +12951,16 @@ export namespace Prisma {
     fechaEnvio: Date | null
     fechaSeguimiento: Date | null
     fechaCierre: Date | null
+    probabilidadCierre: number | null
+    comentariosCliente: string | null
+    objeciones: string | null
     observaciones: string | null
+    motivoPerdida: string | null
+    motivoPostergacion: string | null
+    fechaReactivacion: Date | null
+    version: number | null
+    esActual: boolean | null
+    cotizacionBaseId: number | null
     createdAt: Date | null
     updatedAt: Date | null
     numero: string | null
@@ -12416,9 +12970,16 @@ export namespace Prisma {
     id: number
     cliente: number
     contacto: number
+    clienteTragerId: number
+    contactoTragerId: number
+    telefono: number
+    correo: number
     tipoCliente: number
+    cargo: number
     responsable: number
     estado: number
+    moneda: number
+    aplicaImpuesto: number
     subtotal: number
     descuento: number
     impuesto: number
@@ -12428,7 +12989,16 @@ export namespace Prisma {
     fechaEnvio: number
     fechaSeguimiento: number
     fechaCierre: number
+    probabilidadCierre: number
+    comentariosCliente: number
+    objeciones: number
     observaciones: number
+    motivoPerdida: number
+    motivoPostergacion: number
+    fechaReactivacion: number
+    version: number
+    esActual: number
+    cotizacionBaseId: number
     createdAt: number
     updatedAt: number
     numero: number
@@ -12438,27 +13008,44 @@ export namespace Prisma {
 
   export type CotizacionTragerAvgAggregateInputType = {
     id?: true
+    clienteTragerId?: true
+    contactoTragerId?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
     total?: true
+    probabilidadCierre?: true
+    version?: true
+    cotizacionBaseId?: true
   }
 
   export type CotizacionTragerSumAggregateInputType = {
     id?: true
+    clienteTragerId?: true
+    contactoTragerId?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
     total?: true
+    probabilidadCierre?: true
+    version?: true
+    cotizacionBaseId?: true
   }
 
   export type CotizacionTragerMinAggregateInputType = {
     id?: true
     cliente?: true
     contacto?: true
+    clienteTragerId?: true
+    contactoTragerId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12468,7 +13055,16 @@ export namespace Prisma {
     fechaEnvio?: true
     fechaSeguimiento?: true
     fechaCierre?: true
+    probabilidadCierre?: true
+    comentariosCliente?: true
+    objeciones?: true
     observaciones?: true
+    motivoPerdida?: true
+    motivoPostergacion?: true
+    fechaReactivacion?: true
+    version?: true
+    esActual?: true
+    cotizacionBaseId?: true
     createdAt?: true
     updatedAt?: true
     numero?: true
@@ -12478,9 +13074,16 @@ export namespace Prisma {
     id?: true
     cliente?: true
     contacto?: true
+    clienteTragerId?: true
+    contactoTragerId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12490,7 +13093,16 @@ export namespace Prisma {
     fechaEnvio?: true
     fechaSeguimiento?: true
     fechaCierre?: true
+    probabilidadCierre?: true
+    comentariosCliente?: true
+    objeciones?: true
     observaciones?: true
+    motivoPerdida?: true
+    motivoPostergacion?: true
+    fechaReactivacion?: true
+    version?: true
+    esActual?: true
+    cotizacionBaseId?: true
     createdAt?: true
     updatedAt?: true
     numero?: true
@@ -12500,9 +13112,16 @@ export namespace Prisma {
     id?: true
     cliente?: true
     contacto?: true
+    clienteTragerId?: true
+    contactoTragerId?: true
+    telefono?: true
+    correo?: true
     tipoCliente?: true
+    cargo?: true
     responsable?: true
     estado?: true
+    moneda?: true
+    aplicaImpuesto?: true
     subtotal?: true
     descuento?: true
     impuesto?: true
@@ -12512,7 +13131,16 @@ export namespace Prisma {
     fechaEnvio?: true
     fechaSeguimiento?: true
     fechaCierre?: true
+    probabilidadCierre?: true
+    comentariosCliente?: true
+    objeciones?: true
     observaciones?: true
+    motivoPerdida?: true
+    motivoPostergacion?: true
+    fechaReactivacion?: true
+    version?: true
+    esActual?: true
+    cotizacionBaseId?: true
     createdAt?: true
     updatedAt?: true
     numero?: true
@@ -12609,9 +13237,16 @@ export namespace Prisma {
     id: number
     cliente: string
     contacto: string | null
+    clienteTragerId: number | null
+    contactoTragerId: number | null
+    telefono: string | null
+    correo: string | null
     tipoCliente: string | null
+    cargo: string | null
     responsable: string | null
     estado: string
+    moneda: string
+    aplicaImpuesto: boolean
     subtotal: number
     descuento: number
     impuesto: number
@@ -12621,7 +13256,16 @@ export namespace Prisma {
     fechaEnvio: Date | null
     fechaSeguimiento: Date | null
     fechaCierre: Date | null
+    probabilidadCierre: number | null
+    comentariosCliente: string | null
+    objeciones: string | null
     observaciones: string | null
+    motivoPerdida: string | null
+    motivoPostergacion: string | null
+    fechaReactivacion: Date | null
+    version: number
+    esActual: boolean
+    cotizacionBaseId: number | null
     createdAt: Date
     updatedAt: Date
     numero: string | null
@@ -12650,9 +13294,16 @@ export namespace Prisma {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteTragerId?: boolean
+    contactoTragerId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12662,11 +13313,23 @@ export namespace Prisma {
     fechaEnvio?: boolean
     fechaSeguimiento?: boolean
     fechaCierre?: boolean
+    probabilidadCierre?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
     observaciones?: boolean
+    motivoPerdida?: boolean
+    motivoPostergacion?: boolean
+    fechaReactivacion?: boolean
+    version?: boolean
+    esActual?: boolean
+    cotizacionBaseId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
     detalles?: boolean | CotizacionTrager$detallesArgs<ExtArgs>
+    FunnelTragerOpportunity?: boolean | CotizacionTrager$FunnelTragerOpportunityArgs<ExtArgs>
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
     _count?: boolean | CotizacionTragerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionTrager"]>
 
@@ -12674,9 +13337,16 @@ export namespace Prisma {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteTragerId?: boolean
+    contactoTragerId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12686,19 +13356,37 @@ export namespace Prisma {
     fechaEnvio?: boolean
     fechaSeguimiento?: boolean
     fechaCierre?: boolean
+    probabilidadCierre?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
     observaciones?: boolean
+    motivoPerdida?: boolean
+    motivoPostergacion?: boolean
+    fechaReactivacion?: boolean
+    version?: boolean
+    esActual?: boolean
+    cotizacionBaseId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionTrager"]>
 
   export type CotizacionTragerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteTragerId?: boolean
+    contactoTragerId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12708,19 +13396,37 @@ export namespace Prisma {
     fechaEnvio?: boolean
     fechaSeguimiento?: boolean
     fechaCierre?: boolean
+    probabilidadCierre?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
     observaciones?: boolean
+    motivoPerdida?: boolean
+    motivoPostergacion?: boolean
+    fechaReactivacion?: boolean
+    version?: boolean
+    esActual?: boolean
+    cotizacionBaseId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
   }, ExtArgs["result"]["cotizacionTrager"]>
 
   export type CotizacionTragerSelectScalar = {
     id?: boolean
     cliente?: boolean
     contacto?: boolean
+    clienteTragerId?: boolean
+    contactoTragerId?: boolean
+    telefono?: boolean
+    correo?: boolean
     tipoCliente?: boolean
+    cargo?: boolean
     responsable?: boolean
     estado?: boolean
+    moneda?: boolean
+    aplicaImpuesto?: boolean
     subtotal?: boolean
     descuento?: boolean
     impuesto?: boolean
@@ -12730,32 +13436,60 @@ export namespace Prisma {
     fechaEnvio?: boolean
     fechaSeguimiento?: boolean
     fechaCierre?: boolean
+    probabilidadCierre?: boolean
+    comentariosCliente?: boolean
+    objeciones?: boolean
     observaciones?: boolean
+    motivoPerdida?: boolean
+    motivoPostergacion?: boolean
+    fechaReactivacion?: boolean
+    version?: boolean
+    esActual?: boolean
+    cotizacionBaseId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     numero?: boolean
   }
 
-  export type CotizacionTragerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "tipoCliente" | "responsable" | "estado" | "subtotal" | "descuento" | "impuesto" | "total" | "fechaCotizacion" | "fechaVencimiento" | "fechaEnvio" | "fechaSeguimiento" | "fechaCierre" | "observaciones" | "createdAt" | "updatedAt" | "numero", ExtArgs["result"]["cotizacionTrager"]>
+  export type CotizacionTragerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente" | "contacto" | "clienteTragerId" | "contactoTragerId" | "telefono" | "correo" | "tipoCliente" | "cargo" | "responsable" | "estado" | "moneda" | "aplicaImpuesto" | "subtotal" | "descuento" | "impuesto" | "total" | "fechaCotizacion" | "fechaVencimiento" | "fechaEnvio" | "fechaSeguimiento" | "fechaCierre" | "probabilidadCierre" | "comentariosCliente" | "objeciones" | "observaciones" | "motivoPerdida" | "motivoPostergacion" | "fechaReactivacion" | "version" | "esActual" | "cotizacionBaseId" | "createdAt" | "updatedAt" | "numero", ExtArgs["result"]["cotizacionTrager"]>
   export type CotizacionTragerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     detalles?: boolean | CotizacionTrager$detallesArgs<ExtArgs>
+    FunnelTragerOpportunity?: boolean | CotizacionTrager$FunnelTragerOpportunityArgs<ExtArgs>
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
     _count?: boolean | CotizacionTragerCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CotizacionTragerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type CotizacionTragerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CotizacionTragerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
+  }
+  export type CotizacionTragerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    clienteTrager?: boolean | CotizacionTrager$clienteTragerArgs<ExtArgs>
+    contactoTrager?: boolean | CotizacionTrager$contactoTragerArgs<ExtArgs>
+  }
 
   export type $CotizacionTragerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CotizacionTrager"
     objects: {
       detalles: Prisma.$CotizacionTragerDetallePayload<ExtArgs>[]
+      FunnelTragerOpportunity: Prisma.$FunnelTragerOpportunityPayload<ExtArgs>[]
+      clienteTrager: Prisma.$ClientePayload<ExtArgs> | null
+      contactoTrager: Prisma.$ContactoClienteTragerPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       cliente: string
       contacto: string | null
+      clienteTragerId: number | null
+      contactoTragerId: number | null
+      telefono: string | null
+      correo: string | null
       tipoCliente: string | null
+      cargo: string | null
       responsable: string | null
       estado: string
+      moneda: string
+      aplicaImpuesto: boolean
       subtotal: number
       descuento: number
       impuesto: number
@@ -12765,7 +13499,16 @@ export namespace Prisma {
       fechaEnvio: Date | null
       fechaSeguimiento: Date | null
       fechaCierre: Date | null
+      probabilidadCierre: number | null
+      comentariosCliente: string | null
+      objeciones: string | null
       observaciones: string | null
+      motivoPerdida: string | null
+      motivoPostergacion: string | null
+      fechaReactivacion: Date | null
+      version: number
+      esActual: boolean
+      cotizacionBaseId: number | null
       createdAt: Date
       updatedAt: Date
       numero: string | null
@@ -13164,6 +13907,9 @@ export namespace Prisma {
   export interface Prisma__CotizacionTragerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     detalles<T extends CotizacionTrager$detallesArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionTrager$detallesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CotizacionTragerDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FunnelTragerOpportunity<T extends CotizacionTrager$FunnelTragerOpportunityArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionTrager$FunnelTragerOpportunityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FunnelTragerOpportunityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    clienteTrager<T extends CotizacionTrager$clienteTragerArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionTrager$clienteTragerArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    contactoTrager<T extends CotizacionTrager$contactoTragerArgs<ExtArgs> = {}>(args?: Subset<T, CotizacionTrager$contactoTragerArgs<ExtArgs>>): Prisma__ContactoClienteTragerClient<$Result.GetResult<Prisma.$ContactoClienteTragerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13196,9 +13942,16 @@ export namespace Prisma {
     readonly id: FieldRef<"CotizacionTrager", 'Int'>
     readonly cliente: FieldRef<"CotizacionTrager", 'String'>
     readonly contacto: FieldRef<"CotizacionTrager", 'String'>
+    readonly clienteTragerId: FieldRef<"CotizacionTrager", 'Int'>
+    readonly contactoTragerId: FieldRef<"CotizacionTrager", 'Int'>
+    readonly telefono: FieldRef<"CotizacionTrager", 'String'>
+    readonly correo: FieldRef<"CotizacionTrager", 'String'>
     readonly tipoCliente: FieldRef<"CotizacionTrager", 'String'>
+    readonly cargo: FieldRef<"CotizacionTrager", 'String'>
     readonly responsable: FieldRef<"CotizacionTrager", 'String'>
     readonly estado: FieldRef<"CotizacionTrager", 'String'>
+    readonly moneda: FieldRef<"CotizacionTrager", 'String'>
+    readonly aplicaImpuesto: FieldRef<"CotizacionTrager", 'Boolean'>
     readonly subtotal: FieldRef<"CotizacionTrager", 'Float'>
     readonly descuento: FieldRef<"CotizacionTrager", 'Float'>
     readonly impuesto: FieldRef<"CotizacionTrager", 'Float'>
@@ -13208,7 +13961,16 @@ export namespace Prisma {
     readonly fechaEnvio: FieldRef<"CotizacionTrager", 'DateTime'>
     readonly fechaSeguimiento: FieldRef<"CotizacionTrager", 'DateTime'>
     readonly fechaCierre: FieldRef<"CotizacionTrager", 'DateTime'>
+    readonly probabilidadCierre: FieldRef<"CotizacionTrager", 'Int'>
+    readonly comentariosCliente: FieldRef<"CotizacionTrager", 'String'>
+    readonly objeciones: FieldRef<"CotizacionTrager", 'String'>
     readonly observaciones: FieldRef<"CotizacionTrager", 'String'>
+    readonly motivoPerdida: FieldRef<"CotizacionTrager", 'String'>
+    readonly motivoPostergacion: FieldRef<"CotizacionTrager", 'String'>
+    readonly fechaReactivacion: FieldRef<"CotizacionTrager", 'DateTime'>
+    readonly version: FieldRef<"CotizacionTrager", 'Int'>
+    readonly esActual: FieldRef<"CotizacionTrager", 'Boolean'>
+    readonly cotizacionBaseId: FieldRef<"CotizacionTrager", 'Int'>
     readonly createdAt: FieldRef<"CotizacionTrager", 'DateTime'>
     readonly updatedAt: FieldRef<"CotizacionTrager", 'DateTime'>
     readonly numero: FieldRef<"CotizacionTrager", 'String'>
@@ -13466,6 +14228,10 @@ export namespace Prisma {
      */
     data: CotizacionTragerCreateManyInput | CotizacionTragerCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionTragerIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13536,6 +14302,10 @@ export namespace Prisma {
      * Limit how many CotizacionTragers to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotizacionTragerIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13629,6 +14399,68 @@ export namespace Prisma {
   }
 
   /**
+   * CotizacionTrager.FunnelTragerOpportunity
+   */
+  export type CotizacionTrager$FunnelTragerOpportunityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FunnelTragerOpportunity
+     */
+    select?: FunnelTragerOpportunitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FunnelTragerOpportunity
+     */
+    omit?: FunnelTragerOpportunityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FunnelTragerOpportunityInclude<ExtArgs> | null
+    where?: FunnelTragerOpportunityWhereInput
+    orderBy?: FunnelTragerOpportunityOrderByWithRelationInput | FunnelTragerOpportunityOrderByWithRelationInput[]
+    cursor?: FunnelTragerOpportunityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FunnelTragerOpportunityScalarFieldEnum | FunnelTragerOpportunityScalarFieldEnum[]
+  }
+
+  /**
+   * CotizacionTrager.clienteTrager
+   */
+  export type CotizacionTrager$clienteTragerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cliente
+     */
+    select?: ClienteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cliente
+     */
+    omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    where?: ClienteWhereInput
+  }
+
+  /**
+   * CotizacionTrager.contactoTrager
+   */
+  export type CotizacionTrager$contactoTragerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactoClienteTrager
+     */
+    select?: ContactoClienteTragerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactoClienteTrager
+     */
+    omit?: ContactoClienteTragerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactoClienteTragerInclude<ExtArgs> | null
+    where?: ContactoClienteTragerWhereInput
+  }
+
+  /**
    * CotizacionTrager without action
    */
   export type CotizacionTragerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13666,6 +14498,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
   }
@@ -13677,6 +14510,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
   }
@@ -13688,6 +14522,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
@@ -13700,6 +14535,7 @@ export namespace Prisma {
     cantidad: number | null
     precioUnitario: number | null
     descuentoPct: number | null
+    gananciaPct: number | null
     subtotal: number | null
     stockDisponible: number | null
     observacion: string | null
@@ -13712,6 +14548,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct: number
+    gananciaPct: number
     subtotal: number
     stockDisponible: number
     observacion: number
@@ -13726,6 +14563,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
   }
@@ -13737,6 +14575,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
   }
@@ -13748,6 +14587,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -13760,6 +14600,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -13772,6 +14613,7 @@ export namespace Prisma {
     cantidad?: true
     precioUnitario?: true
     descuentoPct?: true
+    gananciaPct?: true
     subtotal?: true
     stockDisponible?: true
     observacion?: true
@@ -13871,6 +14713,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct: number
+    gananciaPct: number
     subtotal: number
     stockDisponible: number | null
     observacion: string | null
@@ -13902,6 +14745,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -13916,6 +14760,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -13930,6 +14775,7 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
@@ -13944,12 +14790,13 @@ export namespace Prisma {
     cantidad?: boolean
     precioUnitario?: boolean
     descuentoPct?: boolean
+    gananciaPct?: boolean
     subtotal?: boolean
     stockDisponible?: boolean
     observacion?: boolean
   }
 
-  export type CotizacionTragerDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "subtotal" | "stockDisponible" | "observacion", ExtArgs["result"]["cotizacionTragerDetalle"]>
+  export type CotizacionTragerDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cotizacionId" | "productoId" | "cantidad" | "precioUnitario" | "descuentoPct" | "gananciaPct" | "subtotal" | "stockDisponible" | "observacion", ExtArgs["result"]["cotizacionTragerDetalle"]>
   export type CotizacionTragerDetalleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cotizacion?: boolean | CotizacionTragerDefaultArgs<ExtArgs>
     producto?: boolean | ProductoDefaultArgs<ExtArgs>
@@ -13976,6 +14823,7 @@ export namespace Prisma {
       cantidad: number
       precioUnitario: number
       descuentoPct: number
+      gananciaPct: number
       subtotal: number
       stockDisponible: number | null
       observacion: string | null
@@ -14410,6 +15258,7 @@ export namespace Prisma {
     readonly cantidad: FieldRef<"CotizacionTragerDetalle", 'Int'>
     readonly precioUnitario: FieldRef<"CotizacionTragerDetalle", 'Float'>
     readonly descuentoPct: FieldRef<"CotizacionTragerDetalle", 'Float'>
+    readonly gananciaPct: FieldRef<"CotizacionTragerDetalle", 'Float'>
     readonly subtotal: FieldRef<"CotizacionTragerDetalle", 'Float'>
     readonly stockDisponible: FieldRef<"CotizacionTragerDetalle", 'Int'>
     readonly observacion: FieldRef<"CotizacionTragerDetalle", 'String'>
@@ -14833,6 +15682,2421 @@ export namespace Prisma {
 
 
   /**
+   * Model Venta
+   */
+
+  export type AggregateVenta = {
+    _count: VentaCountAggregateOutputType | null
+    _avg: VentaAvgAggregateOutputType | null
+    _sum: VentaSumAggregateOutputType | null
+    _min: VentaMinAggregateOutputType | null
+    _max: VentaMaxAggregateOutputType | null
+  }
+
+  export type VentaAvgAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    total: number | null
+    probabilidad: number | null
+  }
+
+  export type VentaSumAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    total: number | null
+    probabilidad: number | null
+  }
+
+  export type VentaMinAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cliente: string | null
+    contacto: string | null
+    cantidad: number | null
+    precio: number | null
+    total: number | null
+    estado: string | null
+    responsable: string | null
+    fechaCierre: Date | null
+    createdAt: Date | null
+    fechaProximaAccion: Date | null
+    origen: string | null
+    probabilidad: number | null
+    proximaAccion: string | null
+  }
+
+  export type VentaMaxAggregateOutputType = {
+    id: number | null
+    productoId: number | null
+    cliente: string | null
+    contacto: string | null
+    cantidad: number | null
+    precio: number | null
+    total: number | null
+    estado: string | null
+    responsable: string | null
+    fechaCierre: Date | null
+    createdAt: Date | null
+    fechaProximaAccion: Date | null
+    origen: string | null
+    probabilidad: number | null
+    proximaAccion: string | null
+  }
+
+  export type VentaCountAggregateOutputType = {
+    id: number
+    productoId: number
+    cliente: number
+    contacto: number
+    cantidad: number
+    precio: number
+    total: number
+    estado: number
+    responsable: number
+    fechaCierre: number
+    createdAt: number
+    fechaProximaAccion: number
+    origen: number
+    probabilidad: number
+    proximaAccion: number
+    _all: number
+  }
+
+
+  export type VentaAvgAggregateInputType = {
+    id?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    total?: true
+    probabilidad?: true
+  }
+
+  export type VentaSumAggregateInputType = {
+    id?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    total?: true
+    probabilidad?: true
+  }
+
+  export type VentaMinAggregateInputType = {
+    id?: true
+    productoId?: true
+    cliente?: true
+    contacto?: true
+    cantidad?: true
+    precio?: true
+    total?: true
+    estado?: true
+    responsable?: true
+    fechaCierre?: true
+    createdAt?: true
+    fechaProximaAccion?: true
+    origen?: true
+    probabilidad?: true
+    proximaAccion?: true
+  }
+
+  export type VentaMaxAggregateInputType = {
+    id?: true
+    productoId?: true
+    cliente?: true
+    contacto?: true
+    cantidad?: true
+    precio?: true
+    total?: true
+    estado?: true
+    responsable?: true
+    fechaCierre?: true
+    createdAt?: true
+    fechaProximaAccion?: true
+    origen?: true
+    probabilidad?: true
+    proximaAccion?: true
+  }
+
+  export type VentaCountAggregateInputType = {
+    id?: true
+    productoId?: true
+    cliente?: true
+    contacto?: true
+    cantidad?: true
+    precio?: true
+    total?: true
+    estado?: true
+    responsable?: true
+    fechaCierre?: true
+    createdAt?: true
+    fechaProximaAccion?: true
+    origen?: true
+    probabilidad?: true
+    proximaAccion?: true
+    _all?: true
+  }
+
+  export type VentaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Venta to aggregate.
+     */
+    where?: VentaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Ventas to fetch.
+     */
+    orderBy?: VentaOrderByWithRelationInput | VentaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VentaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Ventas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Ventas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Ventas
+    **/
+    _count?: true | VentaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VentaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VentaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VentaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VentaMaxAggregateInputType
+  }
+
+  export type GetVentaAggregateType<T extends VentaAggregateArgs> = {
+        [P in keyof T & keyof AggregateVenta]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVenta[P]>
+      : GetScalarType<T[P], AggregateVenta[P]>
+  }
+
+
+
+
+  export type VentaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaWhereInput
+    orderBy?: VentaOrderByWithAggregationInput | VentaOrderByWithAggregationInput[]
+    by: VentaScalarFieldEnum[] | VentaScalarFieldEnum
+    having?: VentaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VentaCountAggregateInputType | true
+    _avg?: VentaAvgAggregateInputType
+    _sum?: VentaSumAggregateInputType
+    _min?: VentaMinAggregateInputType
+    _max?: VentaMaxAggregateInputType
+  }
+
+  export type VentaGroupByOutputType = {
+    id: number
+    productoId: number
+    cliente: string
+    contacto: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado: string
+    responsable: string | null
+    fechaCierre: Date | null
+    createdAt: Date
+    fechaProximaAccion: Date | null
+    origen: string | null
+    probabilidad: number | null
+    proximaAccion: string | null
+    _count: VentaCountAggregateOutputType | null
+    _avg: VentaAvgAggregateOutputType | null
+    _sum: VentaSumAggregateOutputType | null
+    _min: VentaMinAggregateOutputType | null
+    _max: VentaMaxAggregateOutputType | null
+  }
+
+  type GetVentaGroupByPayload<T extends VentaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VentaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VentaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VentaGroupByOutputType[P]>
+            : GetScalarType<T[P], VentaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VentaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productoId?: boolean
+    cliente?: boolean
+    contacto?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    total?: boolean
+    estado?: boolean
+    responsable?: boolean
+    fechaCierre?: boolean
+    createdAt?: boolean
+    fechaProximaAccion?: boolean
+    origen?: boolean
+    probabilidad?: boolean
+    proximaAccion?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    VentaDetalle?: boolean | Venta$VentaDetalleArgs<ExtArgs>
+    _count?: boolean | VentaCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["venta"]>
+
+  export type VentaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productoId?: boolean
+    cliente?: boolean
+    contacto?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    total?: boolean
+    estado?: boolean
+    responsable?: boolean
+    fechaCierre?: boolean
+    createdAt?: boolean
+    fechaProximaAccion?: boolean
+    origen?: boolean
+    probabilidad?: boolean
+    proximaAccion?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["venta"]>
+
+  export type VentaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productoId?: boolean
+    cliente?: boolean
+    contacto?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    total?: boolean
+    estado?: boolean
+    responsable?: boolean
+    fechaCierre?: boolean
+    createdAt?: boolean
+    fechaProximaAccion?: boolean
+    origen?: boolean
+    probabilidad?: boolean
+    proximaAccion?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["venta"]>
+
+  export type VentaSelectScalar = {
+    id?: boolean
+    productoId?: boolean
+    cliente?: boolean
+    contacto?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    total?: boolean
+    estado?: boolean
+    responsable?: boolean
+    fechaCierre?: boolean
+    createdAt?: boolean
+    fechaProximaAccion?: boolean
+    origen?: boolean
+    probabilidad?: boolean
+    proximaAccion?: boolean
+  }
+
+  export type VentaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productoId" | "cliente" | "contacto" | "cantidad" | "precio" | "total" | "estado" | "responsable" | "fechaCierre" | "createdAt" | "fechaProximaAccion" | "origen" | "probabilidad" | "proximaAccion", ExtArgs["result"]["venta"]>
+  export type VentaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    VentaDetalle?: boolean | Venta$VentaDetalleArgs<ExtArgs>
+    _count?: boolean | VentaCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type VentaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+  export type VentaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+  }
+
+  export type $VentaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Venta"
+    objects: {
+      Producto: Prisma.$ProductoPayload<ExtArgs>
+      VentaDetalle: Prisma.$VentaDetallePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      productoId: number
+      cliente: string
+      contacto: string | null
+      cantidad: number
+      precio: number
+      total: number
+      estado: string
+      responsable: string | null
+      fechaCierre: Date | null
+      createdAt: Date
+      fechaProximaAccion: Date | null
+      origen: string | null
+      probabilidad: number | null
+      proximaAccion: string | null
+    }, ExtArgs["result"]["venta"]>
+    composites: {}
+  }
+
+  type VentaGetPayload<S extends boolean | null | undefined | VentaDefaultArgs> = $Result.GetResult<Prisma.$VentaPayload, S>
+
+  type VentaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VentaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VentaCountAggregateInputType | true
+    }
+
+  export interface VentaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Venta'], meta: { name: 'Venta' } }
+    /**
+     * Find zero or one Venta that matches the filter.
+     * @param {VentaFindUniqueArgs} args - Arguments to find a Venta
+     * @example
+     * // Get one Venta
+     * const venta = await prisma.venta.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VentaFindUniqueArgs>(args: SelectSubset<T, VentaFindUniqueArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Venta that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VentaFindUniqueOrThrowArgs} args - Arguments to find a Venta
+     * @example
+     * // Get one Venta
+     * const venta = await prisma.venta.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VentaFindUniqueOrThrowArgs>(args: SelectSubset<T, VentaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Venta that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaFindFirstArgs} args - Arguments to find a Venta
+     * @example
+     * // Get one Venta
+     * const venta = await prisma.venta.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VentaFindFirstArgs>(args?: SelectSubset<T, VentaFindFirstArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Venta that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaFindFirstOrThrowArgs} args - Arguments to find a Venta
+     * @example
+     * // Get one Venta
+     * const venta = await prisma.venta.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VentaFindFirstOrThrowArgs>(args?: SelectSubset<T, VentaFindFirstOrThrowArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Ventas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Ventas
+     * const ventas = await prisma.venta.findMany()
+     * 
+     * // Get first 10 Ventas
+     * const ventas = await prisma.venta.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ventaWithIdOnly = await prisma.venta.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VentaFindManyArgs>(args?: SelectSubset<T, VentaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Venta.
+     * @param {VentaCreateArgs} args - Arguments to create a Venta.
+     * @example
+     * // Create one Venta
+     * const Venta = await prisma.venta.create({
+     *   data: {
+     *     // ... data to create a Venta
+     *   }
+     * })
+     * 
+     */
+    create<T extends VentaCreateArgs>(args: SelectSubset<T, VentaCreateArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Ventas.
+     * @param {VentaCreateManyArgs} args - Arguments to create many Ventas.
+     * @example
+     * // Create many Ventas
+     * const venta = await prisma.venta.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VentaCreateManyArgs>(args?: SelectSubset<T, VentaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Ventas and returns the data saved in the database.
+     * @param {VentaCreateManyAndReturnArgs} args - Arguments to create many Ventas.
+     * @example
+     * // Create many Ventas
+     * const venta = await prisma.venta.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Ventas and only return the `id`
+     * const ventaWithIdOnly = await prisma.venta.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VentaCreateManyAndReturnArgs>(args?: SelectSubset<T, VentaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Venta.
+     * @param {VentaDeleteArgs} args - Arguments to delete one Venta.
+     * @example
+     * // Delete one Venta
+     * const Venta = await prisma.venta.delete({
+     *   where: {
+     *     // ... filter to delete one Venta
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VentaDeleteArgs>(args: SelectSubset<T, VentaDeleteArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Venta.
+     * @param {VentaUpdateArgs} args - Arguments to update one Venta.
+     * @example
+     * // Update one Venta
+     * const venta = await prisma.venta.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VentaUpdateArgs>(args: SelectSubset<T, VentaUpdateArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Ventas.
+     * @param {VentaDeleteManyArgs} args - Arguments to filter Ventas to delete.
+     * @example
+     * // Delete a few Ventas
+     * const { count } = await prisma.venta.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VentaDeleteManyArgs>(args?: SelectSubset<T, VentaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Ventas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Ventas
+     * const venta = await prisma.venta.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VentaUpdateManyArgs>(args: SelectSubset<T, VentaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Ventas and returns the data updated in the database.
+     * @param {VentaUpdateManyAndReturnArgs} args - Arguments to update many Ventas.
+     * @example
+     * // Update many Ventas
+     * const venta = await prisma.venta.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Ventas and only return the `id`
+     * const ventaWithIdOnly = await prisma.venta.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VentaUpdateManyAndReturnArgs>(args: SelectSubset<T, VentaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Venta.
+     * @param {VentaUpsertArgs} args - Arguments to update or create a Venta.
+     * @example
+     * // Update or create a Venta
+     * const venta = await prisma.venta.upsert({
+     *   create: {
+     *     // ... data to create a Venta
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Venta we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VentaUpsertArgs>(args: SelectSubset<T, VentaUpsertArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Ventas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCountArgs} args - Arguments to filter Ventas to count.
+     * @example
+     * // Count the number of Ventas
+     * const count = await prisma.venta.count({
+     *   where: {
+     *     // ... the filter for the Ventas we want to count
+     *   }
+     * })
+    **/
+    count<T extends VentaCountArgs>(
+      args?: Subset<T, VentaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VentaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Venta.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VentaAggregateArgs>(args: Subset<T, VentaAggregateArgs>): Prisma.PrismaPromise<GetVentaAggregateType<T>>
+
+    /**
+     * Group by Venta.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VentaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VentaGroupByArgs['orderBy'] }
+        : { orderBy?: VentaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VentaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVentaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Venta model
+   */
+  readonly fields: VentaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Venta.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VentaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    VentaDetalle<T extends Venta$VentaDetalleArgs<ExtArgs> = {}>(args?: Subset<T, Venta$VentaDetalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Venta model
+   */
+  interface VentaFieldRefs {
+    readonly id: FieldRef<"Venta", 'Int'>
+    readonly productoId: FieldRef<"Venta", 'Int'>
+    readonly cliente: FieldRef<"Venta", 'String'>
+    readonly contacto: FieldRef<"Venta", 'String'>
+    readonly cantidad: FieldRef<"Venta", 'Int'>
+    readonly precio: FieldRef<"Venta", 'Float'>
+    readonly total: FieldRef<"Venta", 'Float'>
+    readonly estado: FieldRef<"Venta", 'String'>
+    readonly responsable: FieldRef<"Venta", 'String'>
+    readonly fechaCierre: FieldRef<"Venta", 'DateTime'>
+    readonly createdAt: FieldRef<"Venta", 'DateTime'>
+    readonly fechaProximaAccion: FieldRef<"Venta", 'DateTime'>
+    readonly origen: FieldRef<"Venta", 'String'>
+    readonly probabilidad: FieldRef<"Venta", 'Float'>
+    readonly proximaAccion: FieldRef<"Venta", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Venta findUnique
+   */
+  export type VentaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter, which Venta to fetch.
+     */
+    where: VentaWhereUniqueInput
+  }
+
+  /**
+   * Venta findUniqueOrThrow
+   */
+  export type VentaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter, which Venta to fetch.
+     */
+    where: VentaWhereUniqueInput
+  }
+
+  /**
+   * Venta findFirst
+   */
+  export type VentaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter, which Venta to fetch.
+     */
+    where?: VentaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Ventas to fetch.
+     */
+    orderBy?: VentaOrderByWithRelationInput | VentaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Ventas.
+     */
+    cursor?: VentaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Ventas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Ventas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Ventas.
+     */
+    distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+  }
+
+  /**
+   * Venta findFirstOrThrow
+   */
+  export type VentaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter, which Venta to fetch.
+     */
+    where?: VentaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Ventas to fetch.
+     */
+    orderBy?: VentaOrderByWithRelationInput | VentaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Ventas.
+     */
+    cursor?: VentaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Ventas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Ventas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Ventas.
+     */
+    distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+  }
+
+  /**
+   * Venta findMany
+   */
+  export type VentaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter, which Ventas to fetch.
+     */
+    where?: VentaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Ventas to fetch.
+     */
+    orderBy?: VentaOrderByWithRelationInput | VentaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Ventas.
+     */
+    cursor?: VentaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Ventas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Ventas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Ventas.
+     */
+    distinct?: VentaScalarFieldEnum | VentaScalarFieldEnum[]
+  }
+
+  /**
+   * Venta create
+   */
+  export type VentaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Venta.
+     */
+    data: XOR<VentaCreateInput, VentaUncheckedCreateInput>
+  }
+
+  /**
+   * Venta createMany
+   */
+  export type VentaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Ventas.
+     */
+    data: VentaCreateManyInput | VentaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Venta createManyAndReturn
+   */
+  export type VentaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * The data used to create many Ventas.
+     */
+    data: VentaCreateManyInput | VentaCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Venta update
+   */
+  export type VentaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Venta.
+     */
+    data: XOR<VentaUpdateInput, VentaUncheckedUpdateInput>
+    /**
+     * Choose, which Venta to update.
+     */
+    where: VentaWhereUniqueInput
+  }
+
+  /**
+   * Venta updateMany
+   */
+  export type VentaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Ventas.
+     */
+    data: XOR<VentaUpdateManyMutationInput, VentaUncheckedUpdateManyInput>
+    /**
+     * Filter which Ventas to update
+     */
+    where?: VentaWhereInput
+    /**
+     * Limit how many Ventas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Venta updateManyAndReturn
+   */
+  export type VentaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * The data used to update Ventas.
+     */
+    data: XOR<VentaUpdateManyMutationInput, VentaUncheckedUpdateManyInput>
+    /**
+     * Filter which Ventas to update
+     */
+    where?: VentaWhereInput
+    /**
+     * Limit how many Ventas to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Venta upsert
+   */
+  export type VentaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Venta to update in case it exists.
+     */
+    where: VentaWhereUniqueInput
+    /**
+     * In case the Venta found by the `where` argument doesn't exist, create a new Venta with this data.
+     */
+    create: XOR<VentaCreateInput, VentaUncheckedCreateInput>
+    /**
+     * In case the Venta was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VentaUpdateInput, VentaUncheckedUpdateInput>
+  }
+
+  /**
+   * Venta delete
+   */
+  export type VentaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+    /**
+     * Filter which Venta to delete.
+     */
+    where: VentaWhereUniqueInput
+  }
+
+  /**
+   * Venta deleteMany
+   */
+  export type VentaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Ventas to delete
+     */
+    where?: VentaWhereInput
+    /**
+     * Limit how many Ventas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Venta.VentaDetalle
+   */
+  export type Venta$VentaDetalleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    where?: VentaDetalleWhereInput
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    cursor?: VentaDetalleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+  }
+
+  /**
+   * Venta without action
+   */
+  export type VentaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Venta
+     */
+    select?: VentaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Venta
+     */
+    omit?: VentaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model VentaDetalle
+   */
+
+  export type AggregateVentaDetalle = {
+    _count: VentaDetalleCountAggregateOutputType | null
+    _avg: VentaDetalleAvgAggregateOutputType | null
+    _sum: VentaDetalleSumAggregateOutputType | null
+    _min: VentaDetalleMinAggregateOutputType | null
+    _max: VentaDetalleMaxAggregateOutputType | null
+  }
+
+  export type VentaDetalleAvgAggregateOutputType = {
+    id: number | null
+    ventaId: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    subtotal: number | null
+  }
+
+  export type VentaDetalleSumAggregateOutputType = {
+    id: number | null
+    ventaId: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    subtotal: number | null
+  }
+
+  export type VentaDetalleMinAggregateOutputType = {
+    id: number | null
+    ventaId: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    subtotal: number | null
+  }
+
+  export type VentaDetalleMaxAggregateOutputType = {
+    id: number | null
+    ventaId: number | null
+    productoId: number | null
+    cantidad: number | null
+    precio: number | null
+    subtotal: number | null
+  }
+
+  export type VentaDetalleCountAggregateOutputType = {
+    id: number
+    ventaId: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+    _all: number
+  }
+
+
+  export type VentaDetalleAvgAggregateInputType = {
+    id?: true
+    ventaId?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    subtotal?: true
+  }
+
+  export type VentaDetalleSumAggregateInputType = {
+    id?: true
+    ventaId?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    subtotal?: true
+  }
+
+  export type VentaDetalleMinAggregateInputType = {
+    id?: true
+    ventaId?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    subtotal?: true
+  }
+
+  export type VentaDetalleMaxAggregateInputType = {
+    id?: true
+    ventaId?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    subtotal?: true
+  }
+
+  export type VentaDetalleCountAggregateInputType = {
+    id?: true
+    ventaId?: true
+    productoId?: true
+    cantidad?: true
+    precio?: true
+    subtotal?: true
+    _all?: true
+  }
+
+  export type VentaDetalleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VentaDetalle to aggregate.
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaDetalles to fetch.
+     */
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VentaDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VentaDetalles
+    **/
+    _count?: true | VentaDetalleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VentaDetalleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VentaDetalleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VentaDetalleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VentaDetalleMaxAggregateInputType
+  }
+
+  export type GetVentaDetalleAggregateType<T extends VentaDetalleAggregateArgs> = {
+        [P in keyof T & keyof AggregateVentaDetalle]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVentaDetalle[P]>
+      : GetScalarType<T[P], AggregateVentaDetalle[P]>
+  }
+
+
+
+
+  export type VentaDetalleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaDetalleWhereInput
+    orderBy?: VentaDetalleOrderByWithAggregationInput | VentaDetalleOrderByWithAggregationInput[]
+    by: VentaDetalleScalarFieldEnum[] | VentaDetalleScalarFieldEnum
+    having?: VentaDetalleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VentaDetalleCountAggregateInputType | true
+    _avg?: VentaDetalleAvgAggregateInputType
+    _sum?: VentaDetalleSumAggregateInputType
+    _min?: VentaDetalleMinAggregateInputType
+    _max?: VentaDetalleMaxAggregateInputType
+  }
+
+  export type VentaDetalleGroupByOutputType = {
+    id: number
+    ventaId: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+    _count: VentaDetalleCountAggregateOutputType | null
+    _avg: VentaDetalleAvgAggregateOutputType | null
+    _sum: VentaDetalleSumAggregateOutputType | null
+    _min: VentaDetalleMinAggregateOutputType | null
+    _max: VentaDetalleMaxAggregateOutputType | null
+  }
+
+  type GetVentaDetalleGroupByPayload<T extends VentaDetalleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VentaDetalleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VentaDetalleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VentaDetalleGroupByOutputType[P]>
+            : GetScalarType<T[P], VentaDetalleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VentaDetalleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ventaId?: boolean
+    productoId?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    subtotal?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ventaDetalle"]>
+
+  export type VentaDetalleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ventaId?: boolean
+    productoId?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    subtotal?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ventaDetalle"]>
+
+  export type VentaDetalleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ventaId?: boolean
+    productoId?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    subtotal?: boolean
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ventaDetalle"]>
+
+  export type VentaDetalleSelectScalar = {
+    id?: boolean
+    ventaId?: boolean
+    productoId?: boolean
+    cantidad?: boolean
+    precio?: boolean
+    subtotal?: boolean
+  }
+
+  export type VentaDetalleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ventaId" | "productoId" | "cantidad" | "precio" | "subtotal", ExtArgs["result"]["ventaDetalle"]>
+  export type VentaDetalleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }
+  export type VentaDetalleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }
+  export type VentaDetalleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    Venta?: boolean | VentaDefaultArgs<ExtArgs>
+  }
+
+  export type $VentaDetallePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VentaDetalle"
+    objects: {
+      Producto: Prisma.$ProductoPayload<ExtArgs>
+      Venta: Prisma.$VentaPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      ventaId: number
+      productoId: number
+      cantidad: number
+      precio: number
+      subtotal: number
+    }, ExtArgs["result"]["ventaDetalle"]>
+    composites: {}
+  }
+
+  type VentaDetalleGetPayload<S extends boolean | null | undefined | VentaDetalleDefaultArgs> = $Result.GetResult<Prisma.$VentaDetallePayload, S>
+
+  type VentaDetalleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VentaDetalleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VentaDetalleCountAggregateInputType | true
+    }
+
+  export interface VentaDetalleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VentaDetalle'], meta: { name: 'VentaDetalle' } }
+    /**
+     * Find zero or one VentaDetalle that matches the filter.
+     * @param {VentaDetalleFindUniqueArgs} args - Arguments to find a VentaDetalle
+     * @example
+     * // Get one VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VentaDetalleFindUniqueArgs>(args: SelectSubset<T, VentaDetalleFindUniqueArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VentaDetalle that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VentaDetalleFindUniqueOrThrowArgs} args - Arguments to find a VentaDetalle
+     * @example
+     * // Get one VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VentaDetalleFindUniqueOrThrowArgs>(args: SelectSubset<T, VentaDetalleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VentaDetalle that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleFindFirstArgs} args - Arguments to find a VentaDetalle
+     * @example
+     * // Get one VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VentaDetalleFindFirstArgs>(args?: SelectSubset<T, VentaDetalleFindFirstArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VentaDetalle that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleFindFirstOrThrowArgs} args - Arguments to find a VentaDetalle
+     * @example
+     * // Get one VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VentaDetalleFindFirstOrThrowArgs>(args?: SelectSubset<T, VentaDetalleFindFirstOrThrowArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VentaDetalles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VentaDetalles
+     * const ventaDetalles = await prisma.ventaDetalle.findMany()
+     * 
+     * // Get first 10 VentaDetalles
+     * const ventaDetalles = await prisma.ventaDetalle.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ventaDetalleWithIdOnly = await prisma.ventaDetalle.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VentaDetalleFindManyArgs>(args?: SelectSubset<T, VentaDetalleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VentaDetalle.
+     * @param {VentaDetalleCreateArgs} args - Arguments to create a VentaDetalle.
+     * @example
+     * // Create one VentaDetalle
+     * const VentaDetalle = await prisma.ventaDetalle.create({
+     *   data: {
+     *     // ... data to create a VentaDetalle
+     *   }
+     * })
+     * 
+     */
+    create<T extends VentaDetalleCreateArgs>(args: SelectSubset<T, VentaDetalleCreateArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VentaDetalles.
+     * @param {VentaDetalleCreateManyArgs} args - Arguments to create many VentaDetalles.
+     * @example
+     * // Create many VentaDetalles
+     * const ventaDetalle = await prisma.ventaDetalle.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VentaDetalleCreateManyArgs>(args?: SelectSubset<T, VentaDetalleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VentaDetalles and returns the data saved in the database.
+     * @param {VentaDetalleCreateManyAndReturnArgs} args - Arguments to create many VentaDetalles.
+     * @example
+     * // Create many VentaDetalles
+     * const ventaDetalle = await prisma.ventaDetalle.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VentaDetalles and only return the `id`
+     * const ventaDetalleWithIdOnly = await prisma.ventaDetalle.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VentaDetalleCreateManyAndReturnArgs>(args?: SelectSubset<T, VentaDetalleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VentaDetalle.
+     * @param {VentaDetalleDeleteArgs} args - Arguments to delete one VentaDetalle.
+     * @example
+     * // Delete one VentaDetalle
+     * const VentaDetalle = await prisma.ventaDetalle.delete({
+     *   where: {
+     *     // ... filter to delete one VentaDetalle
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VentaDetalleDeleteArgs>(args: SelectSubset<T, VentaDetalleDeleteArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VentaDetalle.
+     * @param {VentaDetalleUpdateArgs} args - Arguments to update one VentaDetalle.
+     * @example
+     * // Update one VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VentaDetalleUpdateArgs>(args: SelectSubset<T, VentaDetalleUpdateArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VentaDetalles.
+     * @param {VentaDetalleDeleteManyArgs} args - Arguments to filter VentaDetalles to delete.
+     * @example
+     * // Delete a few VentaDetalles
+     * const { count } = await prisma.ventaDetalle.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VentaDetalleDeleteManyArgs>(args?: SelectSubset<T, VentaDetalleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VentaDetalles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VentaDetalles
+     * const ventaDetalle = await prisma.ventaDetalle.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VentaDetalleUpdateManyArgs>(args: SelectSubset<T, VentaDetalleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VentaDetalles and returns the data updated in the database.
+     * @param {VentaDetalleUpdateManyAndReturnArgs} args - Arguments to update many VentaDetalles.
+     * @example
+     * // Update many VentaDetalles
+     * const ventaDetalle = await prisma.ventaDetalle.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VentaDetalles and only return the `id`
+     * const ventaDetalleWithIdOnly = await prisma.ventaDetalle.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VentaDetalleUpdateManyAndReturnArgs>(args: SelectSubset<T, VentaDetalleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VentaDetalle.
+     * @param {VentaDetalleUpsertArgs} args - Arguments to update or create a VentaDetalle.
+     * @example
+     * // Update or create a VentaDetalle
+     * const ventaDetalle = await prisma.ventaDetalle.upsert({
+     *   create: {
+     *     // ... data to create a VentaDetalle
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VentaDetalle we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VentaDetalleUpsertArgs>(args: SelectSubset<T, VentaDetalleUpsertArgs<ExtArgs>>): Prisma__VentaDetalleClient<$Result.GetResult<Prisma.$VentaDetallePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VentaDetalles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleCountArgs} args - Arguments to filter VentaDetalles to count.
+     * @example
+     * // Count the number of VentaDetalles
+     * const count = await prisma.ventaDetalle.count({
+     *   where: {
+     *     // ... the filter for the VentaDetalles we want to count
+     *   }
+     * })
+    **/
+    count<T extends VentaDetalleCountArgs>(
+      args?: Subset<T, VentaDetalleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VentaDetalleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VentaDetalle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VentaDetalleAggregateArgs>(args: Subset<T, VentaDetalleAggregateArgs>): Prisma.PrismaPromise<GetVentaDetalleAggregateType<T>>
+
+    /**
+     * Group by VentaDetalle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaDetalleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VentaDetalleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VentaDetalleGroupByArgs['orderBy'] }
+        : { orderBy?: VentaDetalleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VentaDetalleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVentaDetalleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VentaDetalle model
+   */
+  readonly fields: VentaDetalleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VentaDetalle.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VentaDetalleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Venta<T extends VentaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VentaDefaultArgs<ExtArgs>>): Prisma__VentaClient<$Result.GetResult<Prisma.$VentaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VentaDetalle model
+   */
+  interface VentaDetalleFieldRefs {
+    readonly id: FieldRef<"VentaDetalle", 'Int'>
+    readonly ventaId: FieldRef<"VentaDetalle", 'Int'>
+    readonly productoId: FieldRef<"VentaDetalle", 'Int'>
+    readonly cantidad: FieldRef<"VentaDetalle", 'Int'>
+    readonly precio: FieldRef<"VentaDetalle", 'Float'>
+    readonly subtotal: FieldRef<"VentaDetalle", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VentaDetalle findUnique
+   */
+  export type VentaDetalleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaDetalle to fetch.
+     */
+    where: VentaDetalleWhereUniqueInput
+  }
+
+  /**
+   * VentaDetalle findUniqueOrThrow
+   */
+  export type VentaDetalleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaDetalle to fetch.
+     */
+    where: VentaDetalleWhereUniqueInput
+  }
+
+  /**
+   * VentaDetalle findFirst
+   */
+  export type VentaDetalleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaDetalle to fetch.
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaDetalles to fetch.
+     */
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VentaDetalles.
+     */
+    cursor?: VentaDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VentaDetalles.
+     */
+    distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+  }
+
+  /**
+   * VentaDetalle findFirstOrThrow
+   */
+  export type VentaDetalleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaDetalle to fetch.
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaDetalles to fetch.
+     */
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VentaDetalles.
+     */
+    cursor?: VentaDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VentaDetalles.
+     */
+    distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+  }
+
+  /**
+   * VentaDetalle findMany
+   */
+  export type VentaDetalleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaDetalles to fetch.
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaDetalles to fetch.
+     */
+    orderBy?: VentaDetalleOrderByWithRelationInput | VentaDetalleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VentaDetalles.
+     */
+    cursor?: VentaDetalleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaDetalles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaDetalles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VentaDetalles.
+     */
+    distinct?: VentaDetalleScalarFieldEnum | VentaDetalleScalarFieldEnum[]
+  }
+
+  /**
+   * VentaDetalle create
+   */
+  export type VentaDetalleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VentaDetalle.
+     */
+    data: XOR<VentaDetalleCreateInput, VentaDetalleUncheckedCreateInput>
+  }
+
+  /**
+   * VentaDetalle createMany
+   */
+  export type VentaDetalleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VentaDetalles.
+     */
+    data: VentaDetalleCreateManyInput | VentaDetalleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VentaDetalle createManyAndReturn
+   */
+  export type VentaDetalleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * The data used to create many VentaDetalles.
+     */
+    data: VentaDetalleCreateManyInput | VentaDetalleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VentaDetalle update
+   */
+  export type VentaDetalleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VentaDetalle.
+     */
+    data: XOR<VentaDetalleUpdateInput, VentaDetalleUncheckedUpdateInput>
+    /**
+     * Choose, which VentaDetalle to update.
+     */
+    where: VentaDetalleWhereUniqueInput
+  }
+
+  /**
+   * VentaDetalle updateMany
+   */
+  export type VentaDetalleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VentaDetalles.
+     */
+    data: XOR<VentaDetalleUpdateManyMutationInput, VentaDetalleUncheckedUpdateManyInput>
+    /**
+     * Filter which VentaDetalles to update
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * Limit how many VentaDetalles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VentaDetalle updateManyAndReturn
+   */
+  export type VentaDetalleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * The data used to update VentaDetalles.
+     */
+    data: XOR<VentaDetalleUpdateManyMutationInput, VentaDetalleUncheckedUpdateManyInput>
+    /**
+     * Filter which VentaDetalles to update
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * Limit how many VentaDetalles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VentaDetalle upsert
+   */
+  export type VentaDetalleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VentaDetalle to update in case it exists.
+     */
+    where: VentaDetalleWhereUniqueInput
+    /**
+     * In case the VentaDetalle found by the `where` argument doesn't exist, create a new VentaDetalle with this data.
+     */
+    create: XOR<VentaDetalleCreateInput, VentaDetalleUncheckedCreateInput>
+    /**
+     * In case the VentaDetalle was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VentaDetalleUpdateInput, VentaDetalleUncheckedUpdateInput>
+  }
+
+  /**
+   * VentaDetalle delete
+   */
+  export type VentaDetalleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+    /**
+     * Filter which VentaDetalle to delete.
+     */
+    where: VentaDetalleWhereUniqueInput
+  }
+
+  /**
+   * VentaDetalle deleteMany
+   */
+  export type VentaDetalleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VentaDetalles to delete
+     */
+    where?: VentaDetalleWhereInput
+    /**
+     * Limit how many VentaDetalles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VentaDetalle without action
+   */
+  export type VentaDetalleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaDetalle
+     */
+    select?: VentaDetalleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaDetalle
+     */
+    omit?: VentaDetalleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaDetalleInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15025,7 +18289,8 @@ export namespace Prisma {
     entradas: 'entradas',
     salidas: 'salidas',
     fechaUltimaEntrada: 'fechaUltimaEntrada',
-    fechaUltimaSalida: 'fechaUltimaSalida'
+    fechaUltimaSalida: 'fechaUltimaSalida',
+    precioInstalador: 'precioInstalador'
   };
 
   export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
@@ -15051,9 +18316,16 @@ export namespace Prisma {
     id: 'id',
     cliente: 'cliente',
     contacto: 'contacto',
+    clienteTragerId: 'clienteTragerId',
+    contactoTragerId: 'contactoTragerId',
+    telefono: 'telefono',
+    correo: 'correo',
     tipoCliente: 'tipoCliente',
+    cargo: 'cargo',
     responsable: 'responsable',
     estado: 'estado',
+    moneda: 'moneda',
+    aplicaImpuesto: 'aplicaImpuesto',
     subtotal: 'subtotal',
     descuento: 'descuento',
     impuesto: 'impuesto',
@@ -15063,7 +18335,16 @@ export namespace Prisma {
     fechaEnvio: 'fechaEnvio',
     fechaSeguimiento: 'fechaSeguimiento',
     fechaCierre: 'fechaCierre',
+    probabilidadCierre: 'probabilidadCierre',
+    comentariosCliente: 'comentariosCliente',
+    objeciones: 'objeciones',
     observaciones: 'observaciones',
+    motivoPerdida: 'motivoPerdida',
+    motivoPostergacion: 'motivoPostergacion',
+    fechaReactivacion: 'fechaReactivacion',
+    version: 'version',
+    esActual: 'esActual',
+    cotizacionBaseId: 'cotizacionBaseId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     numero: 'numero'
@@ -15079,12 +18360,46 @@ export namespace Prisma {
     cantidad: 'cantidad',
     precioUnitario: 'precioUnitario',
     descuentoPct: 'descuentoPct',
+    gananciaPct: 'gananciaPct',
     subtotal: 'subtotal',
     stockDisponible: 'stockDisponible',
     observacion: 'observacion'
   };
 
   export type CotizacionTragerDetalleScalarFieldEnum = (typeof CotizacionTragerDetalleScalarFieldEnum)[keyof typeof CotizacionTragerDetalleScalarFieldEnum]
+
+
+  export const VentaScalarFieldEnum: {
+    id: 'id',
+    productoId: 'productoId',
+    cliente: 'cliente',
+    contacto: 'contacto',
+    cantidad: 'cantidad',
+    precio: 'precio',
+    total: 'total',
+    estado: 'estado',
+    responsable: 'responsable',
+    fechaCierre: 'fechaCierre',
+    createdAt: 'createdAt',
+    fechaProximaAccion: 'fechaProximaAccion',
+    origen: 'origen',
+    probabilidad: 'probabilidad',
+    proximaAccion: 'proximaAccion'
+  };
+
+  export type VentaScalarFieldEnum = (typeof VentaScalarFieldEnum)[keyof typeof VentaScalarFieldEnum]
+
+
+  export const VentaDetalleScalarFieldEnum: {
+    id: 'id',
+    ventaId: 'ventaId',
+    productoId: 'productoId',
+    cantidad: 'cantidad',
+    precio: 'precio',
+    subtotal: 'subtotal'
+  };
+
+  export type VentaDetalleScalarFieldEnum = (typeof VentaDetalleScalarFieldEnum)[keyof typeof VentaDetalleScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15206,6 +18521,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
     updatedAt?: DateTimeFilter<"Cliente"> | Date | string
     contactos?: ContactoClienteTragerListRelationFilter
+    cotizaciones?: CotizacionTragerListRelationFilter
   }
 
   export type ClienteOrderByWithRelationInput = {
@@ -15229,6 +18545,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     contactos?: ContactoClienteTragerOrderByRelationAggregateInput
+    cotizaciones?: CotizacionTragerOrderByRelationAggregateInput
   }
 
   export type ClienteWhereUniqueInput = Prisma.AtLeast<{
@@ -15255,6 +18572,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Cliente"> | Date | string
     updatedAt?: DateTimeFilter<"Cliente"> | Date | string
     contactos?: ContactoClienteTragerListRelationFilter
+    cotizaciones?: CotizacionTragerListRelationFilter
   }, "id" | "rut">
 
   export type ClienteOrderByWithAggregationInput = {
@@ -15325,6 +18643,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
     updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cotizaciones?: CotizacionTragerListRelationFilter
   }
 
   export type ContactoClienteTragerOrderByWithRelationInput = {
@@ -15340,6 +18659,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
+    cotizaciones?: CotizacionTragerOrderByRelationAggregateInput
   }
 
   export type ContactoClienteTragerWhereUniqueInput = Prisma.AtLeast<{
@@ -15358,6 +18678,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
     updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cotizaciones?: CotizacionTragerListRelationFilter
   }, "id">
 
   export type ContactoClienteTragerOrderByWithAggregationInput = {
@@ -15470,6 +18791,8 @@ export namespace Prisma {
     reprogramacionesCount?: IntFilter<"FunnelTragerOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
     esReactivacion?: BoolFilter<"FunnelTragerOpportunity"> | boolean
+    cotizacion?: XOR<CotizacionTragerNullableScalarRelationFilter, CotizacionTragerWhereInput> | null
+    producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelTragerArchivoListRelationFilter
     historialEtapas?: HistorialEtapaTragerListRelationFilter
   }
@@ -15545,6 +18868,8 @@ export namespace Prisma {
     reprogramacionesCount?: SortOrder
     fechaUltimoCambioEtapa?: SortOrderInput | SortOrder
     esReactivacion?: SortOrder
+    cotizacion?: CotizacionTragerOrderByWithRelationInput
+    producto?: ProductoOrderByWithRelationInput
     archivos?: FunnelTragerArchivoOrderByRelationAggregateInput
     historialEtapas?: HistorialEtapaTragerOrderByRelationAggregateInput
   }
@@ -15623,6 +18948,8 @@ export namespace Prisma {
     reprogramacionesCount?: IntFilter<"FunnelTragerOpportunity"> | number
     fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
     esReactivacion?: BoolFilter<"FunnelTragerOpportunity"> | boolean
+    cotizacion?: XOR<CotizacionTragerNullableScalarRelationFilter, CotizacionTragerWhereInput> | null
+    producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
     archivos?: FunnelTragerArchivoListRelationFilter
     historialEtapas?: HistorialEtapaTragerListRelationFilter
   }, "id">
@@ -16000,9 +19327,13 @@ export namespace Prisma {
     salidas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     CotizacionTragerDetalle?: CotizacionTragerDetalleListRelationFilter
     Movimiento?: MovimientoListRelationFilter
+    FunnelTragerOpportunity?: FunnelTragerOpportunityListRelationFilter
+    Venta?: VentaListRelationFilter
+    VentaDetalle?: VentaDetalleListRelationFilter
   }
 
   export type ProductoOrderByWithRelationInput = {
@@ -16030,9 +19361,13 @@ export namespace Prisma {
     salidas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
     fechaUltimaSalida?: SortOrderInput | SortOrder
+    precioInstalador?: SortOrderInput | SortOrder
     Categoria?: CategoriaOrderByWithRelationInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleOrderByRelationAggregateInput
     Movimiento?: MovimientoOrderByRelationAggregateInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityOrderByRelationAggregateInput
+    Venta?: VentaOrderByRelationAggregateInput
+    VentaDetalle?: VentaDetalleOrderByRelationAggregateInput
   }
 
   export type ProductoWhereUniqueInput = Prisma.AtLeast<{
@@ -16063,9 +19398,13 @@ export namespace Prisma {
     salidas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
     Categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     CotizacionTragerDetalle?: CotizacionTragerDetalleListRelationFilter
     Movimiento?: MovimientoListRelationFilter
+    FunnelTragerOpportunity?: FunnelTragerOpportunityListRelationFilter
+    Venta?: VentaListRelationFilter
+    VentaDetalle?: VentaDetalleListRelationFilter
   }, "id" | "sku">
 
   export type ProductoOrderByWithAggregationInput = {
@@ -16093,6 +19432,7 @@ export namespace Prisma {
     salidas?: SortOrderInput | SortOrder
     fechaUltimaEntrada?: SortOrderInput | SortOrder
     fechaUltimaSalida?: SortOrderInput | SortOrder
+    precioInstalador?: SortOrderInput | SortOrder
     _count?: ProductoCountOrderByAggregateInput
     _avg?: ProductoAvgOrderByAggregateInput
     _max?: ProductoMaxOrderByAggregateInput
@@ -16128,6 +19468,7 @@ export namespace Prisma {
     salidas?: IntNullableWithAggregatesFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableWithAggregatesFilter<"Producto"> | Date | string | null
+    precioInstalador?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
   }
 
   export type MovimientoWhereInput = {
@@ -16219,9 +19560,16 @@ export namespace Prisma {
     id?: IntFilter<"CotizacionTrager"> | number
     cliente?: StringFilter<"CotizacionTrager"> | string
     contacto?: StringNullableFilter<"CotizacionTrager"> | string | null
+    clienteTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    contactoTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    telefono?: StringNullableFilter<"CotizacionTrager"> | string | null
+    correo?: StringNullableFilter<"CotizacionTrager"> | string | null
     tipoCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    cargo?: StringNullableFilter<"CotizacionTrager"> | string | null
     responsable?: StringNullableFilter<"CotizacionTrager"> | string | null
     estado?: StringFilter<"CotizacionTrager"> | string
+    moneda?: StringFilter<"CotizacionTrager"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionTrager"> | boolean
     subtotal?: FloatFilter<"CotizacionTrager"> | number
     descuento?: FloatFilter<"CotizacionTrager"> | number
     impuesto?: FloatFilter<"CotizacionTrager"> | number
@@ -16231,20 +19579,39 @@ export namespace Prisma {
     fechaEnvio?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
     fechaSeguimiento?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
     fechaCierre?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    probabilidadCierre?: IntNullableFilter<"CotizacionTrager"> | number | null
+    comentariosCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    objeciones?: StringNullableFilter<"CotizacionTrager"> | string | null
     observaciones?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPerdida?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPostergacion?: StringNullableFilter<"CotizacionTrager"> | string | null
+    fechaReactivacion?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    version?: IntFilter<"CotizacionTrager"> | number
+    esActual?: BoolFilter<"CotizacionTrager"> | boolean
+    cotizacionBaseId?: IntNullableFilter<"CotizacionTrager"> | number | null
     createdAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
     updatedAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
     numero?: StringNullableFilter<"CotizacionTrager"> | string | null
     detalles?: CotizacionTragerDetalleListRelationFilter
+    FunnelTragerOpportunity?: FunnelTragerOpportunityListRelationFilter
+    clienteTrager?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    contactoTrager?: XOR<ContactoClienteTragerNullableScalarRelationFilter, ContactoClienteTragerWhereInput> | null
   }
 
   export type CotizacionTragerOrderByWithRelationInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrderInput | SortOrder
+    clienteTragerId?: SortOrderInput | SortOrder
+    contactoTragerId?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    cargo?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -16254,11 +19621,23 @@ export namespace Prisma {
     fechaEnvio?: SortOrderInput | SortOrder
     fechaSeguimiento?: SortOrderInput | SortOrder
     fechaCierre?: SortOrderInput | SortOrder
+    probabilidadCierre?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
+    motivoPerdida?: SortOrderInput | SortOrder
+    motivoPostergacion?: SortOrderInput | SortOrder
+    fechaReactivacion?: SortOrderInput | SortOrder
+    version?: SortOrder
+    esActual?: SortOrder
+    cotizacionBaseId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     numero?: SortOrderInput | SortOrder
     detalles?: CotizacionTragerDetalleOrderByRelationAggregateInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityOrderByRelationAggregateInput
+    clienteTrager?: ClienteOrderByWithRelationInput
+    contactoTrager?: ContactoClienteTragerOrderByWithRelationInput
   }
 
   export type CotizacionTragerWhereUniqueInput = Prisma.AtLeast<{
@@ -16269,9 +19648,16 @@ export namespace Prisma {
     NOT?: CotizacionTragerWhereInput | CotizacionTragerWhereInput[]
     cliente?: StringFilter<"CotizacionTrager"> | string
     contacto?: StringNullableFilter<"CotizacionTrager"> | string | null
+    clienteTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    contactoTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    telefono?: StringNullableFilter<"CotizacionTrager"> | string | null
+    correo?: StringNullableFilter<"CotizacionTrager"> | string | null
     tipoCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    cargo?: StringNullableFilter<"CotizacionTrager"> | string | null
     responsable?: StringNullableFilter<"CotizacionTrager"> | string | null
     estado?: StringFilter<"CotizacionTrager"> | string
+    moneda?: StringFilter<"CotizacionTrager"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionTrager"> | boolean
     subtotal?: FloatFilter<"CotizacionTrager"> | number
     descuento?: FloatFilter<"CotizacionTrager"> | number
     impuesto?: FloatFilter<"CotizacionTrager"> | number
@@ -16281,19 +19667,38 @@ export namespace Prisma {
     fechaEnvio?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
     fechaSeguimiento?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
     fechaCierre?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    probabilidadCierre?: IntNullableFilter<"CotizacionTrager"> | number | null
+    comentariosCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    objeciones?: StringNullableFilter<"CotizacionTrager"> | string | null
     observaciones?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPerdida?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPostergacion?: StringNullableFilter<"CotizacionTrager"> | string | null
+    fechaReactivacion?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    version?: IntFilter<"CotizacionTrager"> | number
+    esActual?: BoolFilter<"CotizacionTrager"> | boolean
+    cotizacionBaseId?: IntNullableFilter<"CotizacionTrager"> | number | null
     createdAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
     updatedAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
     detalles?: CotizacionTragerDetalleListRelationFilter
+    FunnelTragerOpportunity?: FunnelTragerOpportunityListRelationFilter
+    clienteTrager?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    contactoTrager?: XOR<ContactoClienteTragerNullableScalarRelationFilter, ContactoClienteTragerWhereInput> | null
   }, "id" | "numero">
 
   export type CotizacionTragerOrderByWithAggregationInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrderInput | SortOrder
+    clienteTragerId?: SortOrderInput | SortOrder
+    contactoTragerId?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
     tipoCliente?: SortOrderInput | SortOrder
+    cargo?: SortOrderInput | SortOrder
     responsable?: SortOrderInput | SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -16303,7 +19708,16 @@ export namespace Prisma {
     fechaEnvio?: SortOrderInput | SortOrder
     fechaSeguimiento?: SortOrderInput | SortOrder
     fechaCierre?: SortOrderInput | SortOrder
+    probabilidadCierre?: SortOrderInput | SortOrder
+    comentariosCliente?: SortOrderInput | SortOrder
+    objeciones?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
+    motivoPerdida?: SortOrderInput | SortOrder
+    motivoPostergacion?: SortOrderInput | SortOrder
+    fechaReactivacion?: SortOrderInput | SortOrder
+    version?: SortOrder
+    esActual?: SortOrder
+    cotizacionBaseId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     numero?: SortOrderInput | SortOrder
@@ -16321,9 +19735,16 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"CotizacionTrager"> | number
     cliente?: StringWithAggregatesFilter<"CotizacionTrager"> | string
     contacto?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    clienteTragerId?: IntNullableWithAggregatesFilter<"CotizacionTrager"> | number | null
+    contactoTragerId?: IntNullableWithAggregatesFilter<"CotizacionTrager"> | number | null
+    telefono?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    correo?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
     tipoCliente?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    cargo?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
     responsable?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
     estado?: StringWithAggregatesFilter<"CotizacionTrager"> | string
+    moneda?: StringWithAggregatesFilter<"CotizacionTrager"> | string
+    aplicaImpuesto?: BoolWithAggregatesFilter<"CotizacionTrager"> | boolean
     subtotal?: FloatWithAggregatesFilter<"CotizacionTrager"> | number
     descuento?: FloatWithAggregatesFilter<"CotizacionTrager"> | number
     impuesto?: FloatWithAggregatesFilter<"CotizacionTrager"> | number
@@ -16333,7 +19754,16 @@ export namespace Prisma {
     fechaEnvio?: DateTimeNullableWithAggregatesFilter<"CotizacionTrager"> | Date | string | null
     fechaSeguimiento?: DateTimeNullableWithAggregatesFilter<"CotizacionTrager"> | Date | string | null
     fechaCierre?: DateTimeNullableWithAggregatesFilter<"CotizacionTrager"> | Date | string | null
+    probabilidadCierre?: IntNullableWithAggregatesFilter<"CotizacionTrager"> | number | null
+    comentariosCliente?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    objeciones?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
     observaciones?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    motivoPerdida?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    motivoPostergacion?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
+    fechaReactivacion?: DateTimeNullableWithAggregatesFilter<"CotizacionTrager"> | Date | string | null
+    version?: IntWithAggregatesFilter<"CotizacionTrager"> | number
+    esActual?: BoolWithAggregatesFilter<"CotizacionTrager"> | boolean
+    cotizacionBaseId?: IntNullableWithAggregatesFilter<"CotizacionTrager"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"CotizacionTrager"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CotizacionTrager"> | Date | string
     numero?: StringNullableWithAggregatesFilter<"CotizacionTrager"> | string | null
@@ -16349,6 +19779,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionTragerDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionTragerDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionTragerDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionTragerDetalle"> | number
     subtotal?: FloatFilter<"CotizacionTragerDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionTragerDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionTragerDetalle"> | string | null
@@ -16363,6 +19794,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
@@ -16380,6 +19812,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionTragerDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionTragerDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionTragerDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionTragerDetalle"> | number
     subtotal?: FloatFilter<"CotizacionTragerDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionTragerDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionTragerDetalle"> | string | null
@@ -16394,6 +19827,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrderInput | SortOrder
     observacion?: SortOrderInput | SortOrder
@@ -16414,9 +19848,185 @@ export namespace Prisma {
     cantidad?: IntWithAggregatesFilter<"CotizacionTragerDetalle"> | number
     precioUnitario?: FloatWithAggregatesFilter<"CotizacionTragerDetalle"> | number
     descuentoPct?: FloatWithAggregatesFilter<"CotizacionTragerDetalle"> | number
+    gananciaPct?: FloatWithAggregatesFilter<"CotizacionTragerDetalle"> | number
     subtotal?: FloatWithAggregatesFilter<"CotizacionTragerDetalle"> | number
     stockDisponible?: IntNullableWithAggregatesFilter<"CotizacionTragerDetalle"> | number | null
     observacion?: StringNullableWithAggregatesFilter<"CotizacionTragerDetalle"> | string | null
+  }
+
+  export type VentaWhereInput = {
+    AND?: VentaWhereInput | VentaWhereInput[]
+    OR?: VentaWhereInput[]
+    NOT?: VentaWhereInput | VentaWhereInput[]
+    id?: IntFilter<"Venta"> | number
+    productoId?: IntFilter<"Venta"> | number
+    cliente?: StringFilter<"Venta"> | string
+    contacto?: StringNullableFilter<"Venta"> | string | null
+    cantidad?: IntFilter<"Venta"> | number
+    precio?: FloatFilter<"Venta"> | number
+    total?: FloatFilter<"Venta"> | number
+    estado?: StringFilter<"Venta"> | string
+    responsable?: StringNullableFilter<"Venta"> | string | null
+    fechaCierre?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    fechaProximaAccion?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    origen?: StringNullableFilter<"Venta"> | string | null
+    probabilidad?: FloatNullableFilter<"Venta"> | number | null
+    proximaAccion?: StringNullableFilter<"Venta"> | string | null
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    VentaDetalle?: VentaDetalleListRelationFilter
+  }
+
+  export type VentaOrderByWithRelationInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cliente?: SortOrder
+    contacto?: SortOrderInput | SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    estado?: SortOrder
+    responsable?: SortOrderInput | SortOrder
+    fechaCierre?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    fechaProximaAccion?: SortOrderInput | SortOrder
+    origen?: SortOrderInput | SortOrder
+    probabilidad?: SortOrderInput | SortOrder
+    proximaAccion?: SortOrderInput | SortOrder
+    Producto?: ProductoOrderByWithRelationInput
+    VentaDetalle?: VentaDetalleOrderByRelationAggregateInput
+  }
+
+  export type VentaWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: VentaWhereInput | VentaWhereInput[]
+    OR?: VentaWhereInput[]
+    NOT?: VentaWhereInput | VentaWhereInput[]
+    productoId?: IntFilter<"Venta"> | number
+    cliente?: StringFilter<"Venta"> | string
+    contacto?: StringNullableFilter<"Venta"> | string | null
+    cantidad?: IntFilter<"Venta"> | number
+    precio?: FloatFilter<"Venta"> | number
+    total?: FloatFilter<"Venta"> | number
+    estado?: StringFilter<"Venta"> | string
+    responsable?: StringNullableFilter<"Venta"> | string | null
+    fechaCierre?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    fechaProximaAccion?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    origen?: StringNullableFilter<"Venta"> | string | null
+    probabilidad?: FloatNullableFilter<"Venta"> | number | null
+    proximaAccion?: StringNullableFilter<"Venta"> | string | null
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    VentaDetalle?: VentaDetalleListRelationFilter
+  }, "id">
+
+  export type VentaOrderByWithAggregationInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cliente?: SortOrder
+    contacto?: SortOrderInput | SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    estado?: SortOrder
+    responsable?: SortOrderInput | SortOrder
+    fechaCierre?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    fechaProximaAccion?: SortOrderInput | SortOrder
+    origen?: SortOrderInput | SortOrder
+    probabilidad?: SortOrderInput | SortOrder
+    proximaAccion?: SortOrderInput | SortOrder
+    _count?: VentaCountOrderByAggregateInput
+    _avg?: VentaAvgOrderByAggregateInput
+    _max?: VentaMaxOrderByAggregateInput
+    _min?: VentaMinOrderByAggregateInput
+    _sum?: VentaSumOrderByAggregateInput
+  }
+
+  export type VentaScalarWhereWithAggregatesInput = {
+    AND?: VentaScalarWhereWithAggregatesInput | VentaScalarWhereWithAggregatesInput[]
+    OR?: VentaScalarWhereWithAggregatesInput[]
+    NOT?: VentaScalarWhereWithAggregatesInput | VentaScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Venta"> | number
+    productoId?: IntWithAggregatesFilter<"Venta"> | number
+    cliente?: StringWithAggregatesFilter<"Venta"> | string
+    contacto?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    cantidad?: IntWithAggregatesFilter<"Venta"> | number
+    precio?: FloatWithAggregatesFilter<"Venta"> | number
+    total?: FloatWithAggregatesFilter<"Venta"> | number
+    estado?: StringWithAggregatesFilter<"Venta"> | string
+    responsable?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    fechaCierre?: DateTimeNullableWithAggregatesFilter<"Venta"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Venta"> | Date | string
+    fechaProximaAccion?: DateTimeNullableWithAggregatesFilter<"Venta"> | Date | string | null
+    origen?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    probabilidad?: FloatNullableWithAggregatesFilter<"Venta"> | number | null
+    proximaAccion?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+  }
+
+  export type VentaDetalleWhereInput = {
+    AND?: VentaDetalleWhereInput | VentaDetalleWhereInput[]
+    OR?: VentaDetalleWhereInput[]
+    NOT?: VentaDetalleWhereInput | VentaDetalleWhereInput[]
+    id?: IntFilter<"VentaDetalle"> | number
+    ventaId?: IntFilter<"VentaDetalle"> | number
+    productoId?: IntFilter<"VentaDetalle"> | number
+    cantidad?: IntFilter<"VentaDetalle"> | number
+    precio?: FloatFilter<"VentaDetalle"> | number
+    subtotal?: FloatFilter<"VentaDetalle"> | number
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    Venta?: XOR<VentaScalarRelationFilter, VentaWhereInput>
+  }
+
+  export type VentaDetalleOrderByWithRelationInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+    Producto?: ProductoOrderByWithRelationInput
+    Venta?: VentaOrderByWithRelationInput
+  }
+
+  export type VentaDetalleWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: VentaDetalleWhereInput | VentaDetalleWhereInput[]
+    OR?: VentaDetalleWhereInput[]
+    NOT?: VentaDetalleWhereInput | VentaDetalleWhereInput[]
+    ventaId?: IntFilter<"VentaDetalle"> | number
+    productoId?: IntFilter<"VentaDetalle"> | number
+    cantidad?: IntFilter<"VentaDetalle"> | number
+    precio?: FloatFilter<"VentaDetalle"> | number
+    subtotal?: FloatFilter<"VentaDetalle"> | number
+    Producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    Venta?: XOR<VentaScalarRelationFilter, VentaWhereInput>
+  }, "id">
+
+  export type VentaDetalleOrderByWithAggregationInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+    _count?: VentaDetalleCountOrderByAggregateInput
+    _avg?: VentaDetalleAvgOrderByAggregateInput
+    _max?: VentaDetalleMaxOrderByAggregateInput
+    _min?: VentaDetalleMinOrderByAggregateInput
+    _sum?: VentaDetalleSumOrderByAggregateInput
+  }
+
+  export type VentaDetalleScalarWhereWithAggregatesInput = {
+    AND?: VentaDetalleScalarWhereWithAggregatesInput | VentaDetalleScalarWhereWithAggregatesInput[]
+    OR?: VentaDetalleScalarWhereWithAggregatesInput[]
+    NOT?: VentaDetalleScalarWhereWithAggregatesInput | VentaDetalleScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"VentaDetalle"> | number
+    ventaId?: IntWithAggregatesFilter<"VentaDetalle"> | number
+    productoId?: IntWithAggregatesFilter<"VentaDetalle"> | number
+    cantidad?: IntWithAggregatesFilter<"VentaDetalle"> | number
+    precio?: FloatWithAggregatesFilter<"VentaDetalle"> | number
+    subtotal?: FloatWithAggregatesFilter<"VentaDetalle"> | number
   }
 
   export type ClienteCreateInput = {
@@ -16439,6 +20049,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     contactos?: ContactoClienteTragerCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionTragerCreateNestedManyWithoutClienteTragerInput
   }
 
   export type ClienteUncheckedCreateInput = {
@@ -16462,6 +20073,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     contactos?: ContactoClienteTragerUncheckedCreateNestedManyWithoutClienteInput
+    cotizaciones?: CotizacionTragerUncheckedCreateNestedManyWithoutClienteTragerInput
   }
 
   export type ClienteUpdateInput = {
@@ -16484,6 +20096,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactos?: ContactoClienteTragerUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionTragerUpdateManyWithoutClienteTragerNestedInput
   }
 
   export type ClienteUncheckedUpdateInput = {
@@ -16507,6 +20120,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contactos?: ContactoClienteTragerUncheckedUpdateManyWithoutClienteNestedInput
+    cotizaciones?: CotizacionTragerUncheckedUpdateManyWithoutClienteTragerNestedInput
   }
 
   export type ClienteCreateManyInput = {
@@ -16585,6 +20199,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContactosInput
+    cotizaciones?: CotizacionTragerCreateNestedManyWithoutContactoTragerInput
   }
 
   export type ContactoClienteTragerUncheckedCreateInput = {
@@ -16599,6 +20214,7 @@ export namespace Prisma {
     observaciones?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionTragerUncheckedCreateNestedManyWithoutContactoTragerInput
   }
 
   export type ContactoClienteTragerUpdateInput = {
@@ -16612,6 +20228,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+    cotizaciones?: CotizacionTragerUpdateManyWithoutContactoTragerNestedInput
   }
 
   export type ContactoClienteTragerUncheckedUpdateInput = {
@@ -16626,6 +20243,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionTragerUncheckedUpdateManyWithoutContactoTragerNestedInput
   }
 
   export type ContactoClienteTragerCreateManyInput = {
@@ -16678,7 +20296,6 @@ export namespace Prisma {
     region?: string | null
     comuna?: string | null
     unidadNegocio?: string | null
-    productoId?: number | null
     cantidadEstimada?: number | null
     urgencia?: string | null
     tipoUso?: string | null
@@ -16709,7 +20326,6 @@ export namespace Prisma {
     observaciones?: string | null
     origen?: string | null
     estadoStock?: string | null
-    cotizacionId?: number | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
@@ -16738,6 +20354,8 @@ export namespace Prisma {
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
     esReactivacion?: boolean
+    cotizacion?: CotizacionTragerCreateNestedOneWithoutFunnelTragerOpportunityInput
+    producto?: ProductoCreateNestedOneWithoutFunnelTragerOpportunityInput
     archivos?: FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput
     historialEtapas?: HistorialEtapaTragerCreateNestedManyWithoutOportunidadInput
   }
@@ -16827,7 +20445,6 @@ export namespace Prisma {
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
     unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
-    productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
     urgencia?: NullableStringFieldUpdateOperationsInput | string | null
     tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16858,7 +20475,6 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
-    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16887,6 +20503,8 @@ export namespace Prisma {
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    cotizacion?: CotizacionTragerUpdateOneWithoutFunnelTragerOpportunityNestedInput
+    producto?: ProductoUpdateOneWithoutFunnelTragerOpportunityNestedInput
     archivos?: FunnelTragerArchivoUpdateManyWithoutOportunidadNestedInput
     historialEtapas?: HistorialEtapaTragerUpdateManyWithoutOportunidadNestedInput
   }
@@ -17049,7 +20667,6 @@ export namespace Prisma {
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
     unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
-    productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
     urgencia?: NullableStringFieldUpdateOperationsInput | string | null
     tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17080,7 +20697,6 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
-    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17396,9 +21012,13 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateInput = {
@@ -17426,8 +21046,12 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUpdateInput = {
@@ -17453,9 +21077,13 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateInput = {
@@ -17483,8 +21111,12 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateManyInput = {
@@ -17512,6 +21144,7 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
   }
 
   export type ProductoUpdateManyMutationInput = {
@@ -17537,6 +21170,7 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type ProductoUncheckedUpdateManyInput = {
@@ -17564,6 +21198,7 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type MovimientoCreateInput = {
@@ -17656,9 +21291,14 @@ export namespace Prisma {
   export type CotizacionTragerCreateInput = {
     cliente: string
     contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -17668,20 +21308,39 @@ export namespace Prisma {
     fechaEnvio?: Date | string | null
     fechaSeguimiento?: Date | string | null
     fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
     observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     numero?: string | null
     detalles?: CotizacionTragerDetalleCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteTrager?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoTrager?: ContactoClienteTragerCreateNestedOneWithoutCotizacionesInput
   }
 
   export type CotizacionTragerUncheckedCreateInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteTragerId?: number | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -17691,19 +21350,34 @@ export namespace Prisma {
     fechaEnvio?: Date | string | null
     fechaSeguimiento?: Date | string | null
     fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
     observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     numero?: string | null
     detalles?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
   }
 
   export type CotizacionTragerUpdateInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -17713,20 +21387,39 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
     detalles?: CotizacionTragerDetalleUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteTrager?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoTrager?: ContactoClienteTragerUpdateOneWithoutCotizacionesNestedInput
   }
 
   export type CotizacionTragerUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -17736,20 +21429,37 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
     detalles?: CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
   }
 
   export type CotizacionTragerCreateManyInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteTragerId?: number | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -17759,7 +21469,16 @@ export namespace Prisma {
     fechaEnvio?: Date | string | null
     fechaSeguimiento?: Date | string | null
     fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
     observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     numero?: string | null
@@ -17768,9 +21487,14 @@ export namespace Prisma {
   export type CotizacionTragerUpdateManyMutationInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -17780,7 +21504,16 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17790,9 +21523,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -17802,7 +21542,16 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17812,6 +21561,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -17826,6 +21576,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -17835,6 +21586,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17849,6 +21601,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17861,6 +21614,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -17870,6 +21624,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17882,9 +21637,194 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VentaCreateInput = {
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+    Producto: ProductoCreateNestedOneWithoutVentaInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutVentaInput
+  }
+
+  export type VentaUncheckedCreateInput = {
+    id?: number
+    productoId: number
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutVentaInput
+  }
+
+  export type VentaUpdateInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    Producto?: ProductoUpdateOneRequiredWithoutVentaNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutVentaNestedInput
+  }
+
+  export type VentaUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutVentaNestedInput
+  }
+
+  export type VentaCreateManyInput = {
+    id?: number
+    productoId: number
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+  }
+
+  export type VentaUpdateManyMutationInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VentaUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VentaDetalleCreateInput = {
+    cantidad: number
+    precio: number
+    subtotal: number
+    Producto: ProductoCreateNestedOneWithoutVentaDetalleInput
+    Venta: VentaCreateNestedOneWithoutVentaDetalleInput
+  }
+
+  export type VentaDetalleUncheckedCreateInput = {
+    id?: number
+    ventaId: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
+  export type VentaDetalleUpdateInput = {
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    Producto?: ProductoUpdateOneRequiredWithoutVentaDetalleNestedInput
+    Venta?: VentaUpdateOneRequiredWithoutVentaDetalleNestedInput
+  }
+
+  export type VentaDetalleUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ventaId?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type VentaDetalleCreateManyInput = {
+    id?: number
+    ventaId: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
+  export type VentaDetalleUpdateManyMutationInput = {
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type VentaDetalleUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ventaId?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -17950,12 +21890,22 @@ export namespace Prisma {
     none?: ContactoClienteTragerWhereInput
   }
 
+  export type CotizacionTragerListRelationFilter = {
+    every?: CotizacionTragerWhereInput
+    some?: CotizacionTragerWhereInput
+    none?: CotizacionTragerWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type ContactoClienteTragerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CotizacionTragerOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18211,6 +22161,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type CotizacionTragerNullableScalarRelationFilter = {
+    is?: CotizacionTragerWhereInput | null
+    isNot?: CotizacionTragerWhereInput | null
+  }
+
+  export type ProductoNullableScalarRelationFilter = {
+    is?: ProductoWhereInput | null
+    isNot?: ProductoWhereInput | null
   }
 
   export type FunnelTragerArchivoListRelationFilter = {
@@ -18723,11 +22683,41 @@ export namespace Prisma {
     none?: MovimientoWhereInput
   }
 
+  export type FunnelTragerOpportunityListRelationFilter = {
+    every?: FunnelTragerOpportunityWhereInput
+    some?: FunnelTragerOpportunityWhereInput
+    none?: FunnelTragerOpportunityWhereInput
+  }
+
+  export type VentaListRelationFilter = {
+    every?: VentaWhereInput
+    some?: VentaWhereInput
+    none?: VentaWhereInput
+  }
+
+  export type VentaDetalleListRelationFilter = {
+    every?: VentaDetalleWhereInput
+    some?: VentaDetalleWhereInput
+    none?: VentaDetalleWhereInput
+  }
+
   export type CotizacionTragerDetalleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type MovimientoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FunnelTragerOpportunityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VentaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VentaDetalleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18756,6 +22746,7 @@ export namespace Prisma {
     salidas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
+    precioInstalador?: SortOrder
   }
 
   export type ProductoAvgOrderByAggregateInput = {
@@ -18770,6 +22761,7 @@ export namespace Prisma {
     stockInicial?: SortOrder
     entradas?: SortOrder
     salidas?: SortOrder
+    precioInstalador?: SortOrder
   }
 
   export type ProductoMaxOrderByAggregateInput = {
@@ -18797,6 +22789,7 @@ export namespace Prisma {
     salidas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
+    precioInstalador?: SortOrder
   }
 
   export type ProductoMinOrderByAggregateInput = {
@@ -18824,6 +22817,7 @@ export namespace Prisma {
     salidas?: SortOrder
     fechaUltimaEntrada?: SortOrder
     fechaUltimaSalida?: SortOrder
+    precioInstalador?: SortOrder
   }
 
   export type ProductoSumOrderByAggregateInput = {
@@ -18838,6 +22832,7 @@ export namespace Prisma {
     stockInicial?: SortOrder
     entradas?: SortOrder
     salidas?: SortOrder
+    precioInstalador?: SortOrder
   }
 
   export type ProductoScalarRelationFilter = {
@@ -18902,13 +22897,30 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type ClienteNullableScalarRelationFilter = {
+    is?: ClienteWhereInput | null
+    isNot?: ClienteWhereInput | null
+  }
+
+  export type ContactoClienteTragerNullableScalarRelationFilter = {
+    is?: ContactoClienteTragerWhereInput | null
+    isNot?: ContactoClienteTragerWhereInput | null
+  }
+
   export type CotizacionTragerCountOrderByAggregateInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteTragerId?: SortOrder
+    contactoTragerId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -18918,7 +22930,16 @@ export namespace Prisma {
     fechaEnvio?: SortOrder
     fechaSeguimiento?: SortOrder
     fechaCierre?: SortOrder
+    probabilidadCierre?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
     observaciones?: SortOrder
+    motivoPerdida?: SortOrder
+    motivoPostergacion?: SortOrder
+    fechaReactivacion?: SortOrder
+    version?: SortOrder
+    esActual?: SortOrder
+    cotizacionBaseId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     numero?: SortOrder
@@ -18926,19 +22947,31 @@ export namespace Prisma {
 
   export type CotizacionTragerAvgOrderByAggregateInput = {
     id?: SortOrder
+    clienteTragerId?: SortOrder
+    contactoTragerId?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
     total?: SortOrder
+    probabilidadCierre?: SortOrder
+    version?: SortOrder
+    cotizacionBaseId?: SortOrder
   }
 
   export type CotizacionTragerMaxOrderByAggregateInput = {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteTragerId?: SortOrder
+    contactoTragerId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -18948,7 +22981,16 @@ export namespace Prisma {
     fechaEnvio?: SortOrder
     fechaSeguimiento?: SortOrder
     fechaCierre?: SortOrder
+    probabilidadCierre?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
     observaciones?: SortOrder
+    motivoPerdida?: SortOrder
+    motivoPostergacion?: SortOrder
+    fechaReactivacion?: SortOrder
+    version?: SortOrder
+    esActual?: SortOrder
+    cotizacionBaseId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     numero?: SortOrder
@@ -18958,9 +23000,16 @@ export namespace Prisma {
     id?: SortOrder
     cliente?: SortOrder
     contacto?: SortOrder
+    clienteTragerId?: SortOrder
+    contactoTragerId?: SortOrder
+    telefono?: SortOrder
+    correo?: SortOrder
     tipoCliente?: SortOrder
+    cargo?: SortOrder
     responsable?: SortOrder
     estado?: SortOrder
+    moneda?: SortOrder
+    aplicaImpuesto?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
@@ -18970,7 +23019,16 @@ export namespace Prisma {
     fechaEnvio?: SortOrder
     fechaSeguimiento?: SortOrder
     fechaCierre?: SortOrder
+    probabilidadCierre?: SortOrder
+    comentariosCliente?: SortOrder
+    objeciones?: SortOrder
     observaciones?: SortOrder
+    motivoPerdida?: SortOrder
+    motivoPostergacion?: SortOrder
+    fechaReactivacion?: SortOrder
+    version?: SortOrder
+    esActual?: SortOrder
+    cotizacionBaseId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     numero?: SortOrder
@@ -18978,10 +23036,15 @@ export namespace Prisma {
 
   export type CotizacionTragerSumOrderByAggregateInput = {
     id?: SortOrder
+    clienteTragerId?: SortOrder
+    contactoTragerId?: SortOrder
     subtotal?: SortOrder
     descuento?: SortOrder
     impuesto?: SortOrder
     total?: SortOrder
+    probabilidadCierre?: SortOrder
+    version?: SortOrder
+    cotizacionBaseId?: SortOrder
   }
 
   export type CotizacionTragerScalarRelationFilter = {
@@ -18996,6 +23059,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -19008,6 +23072,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
   }
@@ -19019,6 +23084,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -19031,6 +23097,7 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
     observacion?: SortOrder
@@ -19043,8 +23110,131 @@ export namespace Prisma {
     cantidad?: SortOrder
     precioUnitario?: SortOrder
     descuentoPct?: SortOrder
+    gananciaPct?: SortOrder
     subtotal?: SortOrder
     stockDisponible?: SortOrder
+  }
+
+  export type VentaCountOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cliente?: SortOrder
+    contacto?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    estado?: SortOrder
+    responsable?: SortOrder
+    fechaCierre?: SortOrder
+    createdAt?: SortOrder
+    fechaProximaAccion?: SortOrder
+    origen?: SortOrder
+    probabilidad?: SortOrder
+    proximaAccion?: SortOrder
+  }
+
+  export type VentaAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    probabilidad?: SortOrder
+  }
+
+  export type VentaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cliente?: SortOrder
+    contacto?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    estado?: SortOrder
+    responsable?: SortOrder
+    fechaCierre?: SortOrder
+    createdAt?: SortOrder
+    fechaProximaAccion?: SortOrder
+    origen?: SortOrder
+    probabilidad?: SortOrder
+    proximaAccion?: SortOrder
+  }
+
+  export type VentaMinOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cliente?: SortOrder
+    contacto?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    estado?: SortOrder
+    responsable?: SortOrder
+    fechaCierre?: SortOrder
+    createdAt?: SortOrder
+    fechaProximaAccion?: SortOrder
+    origen?: SortOrder
+    probabilidad?: SortOrder
+    proximaAccion?: SortOrder
+  }
+
+  export type VentaSumOrderByAggregateInput = {
+    id?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    total?: SortOrder
+    probabilidad?: SortOrder
+  }
+
+  export type VentaScalarRelationFilter = {
+    is?: VentaWhereInput
+    isNot?: VentaWhereInput
+  }
+
+  export type VentaDetalleCountOrderByAggregateInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type VentaDetalleAvgOrderByAggregateInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type VentaDetalleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type VentaDetalleMinOrderByAggregateInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type VentaDetalleSumOrderByAggregateInput = {
+    id?: SortOrder
+    ventaId?: SortOrder
+    productoId?: SortOrder
+    cantidad?: SortOrder
+    precio?: SortOrder
+    subtotal?: SortOrder
   }
 
   export type ContactoClienteTragerCreateNestedManyWithoutClienteInput = {
@@ -19054,11 +23244,25 @@ export namespace Prisma {
     connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
   }
 
+  export type CotizacionTragerCreateNestedManyWithoutClienteTragerInput = {
+    create?: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput> | CotizacionTragerCreateWithoutClienteTragerInput[] | CotizacionTragerUncheckedCreateWithoutClienteTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutClienteTragerInput | CotizacionTragerCreateOrConnectWithoutClienteTragerInput[]
+    createMany?: CotizacionTragerCreateManyClienteTragerInputEnvelope
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+  }
+
   export type ContactoClienteTragerUncheckedCreateNestedManyWithoutClienteInput = {
     create?: XOR<ContactoClienteTragerCreateWithoutClienteInput, ContactoClienteTragerUncheckedCreateWithoutClienteInput> | ContactoClienteTragerCreateWithoutClienteInput[] | ContactoClienteTragerUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutClienteInput | ContactoClienteTragerCreateOrConnectWithoutClienteInput[]
     createMany?: ContactoClienteTragerCreateManyClienteInputEnvelope
     connect?: ContactoClienteTragerWhereUniqueInput | ContactoClienteTragerWhereUniqueInput[]
+  }
+
+  export type CotizacionTragerUncheckedCreateNestedManyWithoutClienteTragerInput = {
+    create?: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput> | CotizacionTragerCreateWithoutClienteTragerInput[] | CotizacionTragerUncheckedCreateWithoutClienteTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutClienteTragerInput | CotizacionTragerCreateOrConnectWithoutClienteTragerInput[]
+    createMany?: CotizacionTragerCreateManyClienteTragerInputEnvelope
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19091,6 +23295,20 @@ export namespace Prisma {
     deleteMany?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
   }
 
+  export type CotizacionTragerUpdateManyWithoutClienteTragerNestedInput = {
+    create?: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput> | CotizacionTragerCreateWithoutClienteTragerInput[] | CotizacionTragerUncheckedCreateWithoutClienteTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutClienteTragerInput | CotizacionTragerCreateOrConnectWithoutClienteTragerInput[]
+    upsert?: CotizacionTragerUpsertWithWhereUniqueWithoutClienteTragerInput | CotizacionTragerUpsertWithWhereUniqueWithoutClienteTragerInput[]
+    createMany?: CotizacionTragerCreateManyClienteTragerInputEnvelope
+    set?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    disconnect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    delete?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    update?: CotizacionTragerUpdateWithWhereUniqueWithoutClienteTragerInput | CotizacionTragerUpdateWithWhereUniqueWithoutClienteTragerInput[]
+    updateMany?: CotizacionTragerUpdateManyWithWhereWithoutClienteTragerInput | CotizacionTragerUpdateManyWithWhereWithoutClienteTragerInput[]
+    deleteMany?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -19113,10 +23331,38 @@ export namespace Prisma {
     deleteMany?: ContactoClienteTragerScalarWhereInput | ContactoClienteTragerScalarWhereInput[]
   }
 
+  export type CotizacionTragerUncheckedUpdateManyWithoutClienteTragerNestedInput = {
+    create?: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput> | CotizacionTragerCreateWithoutClienteTragerInput[] | CotizacionTragerUncheckedCreateWithoutClienteTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutClienteTragerInput | CotizacionTragerCreateOrConnectWithoutClienteTragerInput[]
+    upsert?: CotizacionTragerUpsertWithWhereUniqueWithoutClienteTragerInput | CotizacionTragerUpsertWithWhereUniqueWithoutClienteTragerInput[]
+    createMany?: CotizacionTragerCreateManyClienteTragerInputEnvelope
+    set?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    disconnect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    delete?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    update?: CotizacionTragerUpdateWithWhereUniqueWithoutClienteTragerInput | CotizacionTragerUpdateWithWhereUniqueWithoutClienteTragerInput[]
+    updateMany?: CotizacionTragerUpdateManyWithWhereWithoutClienteTragerInput | CotizacionTragerUpdateManyWithWhereWithoutClienteTragerInput[]
+    deleteMany?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+  }
+
   export type ClienteCreateNestedOneWithoutContactosInput = {
     create?: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutContactosInput
     connect?: ClienteWhereUniqueInput
+  }
+
+  export type CotizacionTragerCreateNestedManyWithoutContactoTragerInput = {
+    create?: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput> | CotizacionTragerCreateWithoutContactoTragerInput[] | CotizacionTragerUncheckedCreateWithoutContactoTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutContactoTragerInput | CotizacionTragerCreateOrConnectWithoutContactoTragerInput[]
+    createMany?: CotizacionTragerCreateManyContactoTragerInputEnvelope
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+  }
+
+  export type CotizacionTragerUncheckedCreateNestedManyWithoutContactoTragerInput = {
+    create?: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput> | CotizacionTragerCreateWithoutContactoTragerInput[] | CotizacionTragerUncheckedCreateWithoutContactoTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutContactoTragerInput | CotizacionTragerCreateOrConnectWithoutContactoTragerInput[]
+    createMany?: CotizacionTragerCreateManyContactoTragerInputEnvelope
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
   }
 
   export type ClienteUpdateOneRequiredWithoutContactosNestedInput = {
@@ -19125,6 +23371,46 @@ export namespace Prisma {
     upsert?: ClienteUpsertWithoutContactosInput
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContactosInput, ClienteUpdateWithoutContactosInput>, ClienteUncheckedUpdateWithoutContactosInput>
+  }
+
+  export type CotizacionTragerUpdateManyWithoutContactoTragerNestedInput = {
+    create?: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput> | CotizacionTragerCreateWithoutContactoTragerInput[] | CotizacionTragerUncheckedCreateWithoutContactoTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutContactoTragerInput | CotizacionTragerCreateOrConnectWithoutContactoTragerInput[]
+    upsert?: CotizacionTragerUpsertWithWhereUniqueWithoutContactoTragerInput | CotizacionTragerUpsertWithWhereUniqueWithoutContactoTragerInput[]
+    createMany?: CotizacionTragerCreateManyContactoTragerInputEnvelope
+    set?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    disconnect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    delete?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    update?: CotizacionTragerUpdateWithWhereUniqueWithoutContactoTragerInput | CotizacionTragerUpdateWithWhereUniqueWithoutContactoTragerInput[]
+    updateMany?: CotizacionTragerUpdateManyWithWhereWithoutContactoTragerInput | CotizacionTragerUpdateManyWithWhereWithoutContactoTragerInput[]
+    deleteMany?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+  }
+
+  export type CotizacionTragerUncheckedUpdateManyWithoutContactoTragerNestedInput = {
+    create?: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput> | CotizacionTragerCreateWithoutContactoTragerInput[] | CotizacionTragerUncheckedCreateWithoutContactoTragerInput[]
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutContactoTragerInput | CotizacionTragerCreateOrConnectWithoutContactoTragerInput[]
+    upsert?: CotizacionTragerUpsertWithWhereUniqueWithoutContactoTragerInput | CotizacionTragerUpsertWithWhereUniqueWithoutContactoTragerInput[]
+    createMany?: CotizacionTragerCreateManyContactoTragerInputEnvelope
+    set?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    disconnect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    delete?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    connect?: CotizacionTragerWhereUniqueInput | CotizacionTragerWhereUniqueInput[]
+    update?: CotizacionTragerUpdateWithWhereUniqueWithoutContactoTragerInput | CotizacionTragerUpdateWithWhereUniqueWithoutContactoTragerInput[]
+    updateMany?: CotizacionTragerUpdateManyWithWhereWithoutContactoTragerInput | CotizacionTragerUpdateManyWithWhereWithoutContactoTragerInput[]
+    deleteMany?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+  }
+
+  export type CotizacionTragerCreateNestedOneWithoutFunnelTragerOpportunityInput = {
+    create?: XOR<CotizacionTragerCreateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutFunnelTragerOpportunityInput
+    connect?: CotizacionTragerWhereUniqueInput
+  }
+
+  export type ProductoCreateNestedOneWithoutFunnelTragerOpportunityInput = {
+    create?: XOR<ProductoCreateWithoutFunnelTragerOpportunityInput, ProductoUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutFunnelTragerOpportunityInput
+    connect?: ProductoWhereUniqueInput
   }
 
   export type FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput = {
@@ -19185,6 +23471,26 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type CotizacionTragerUpdateOneWithoutFunnelTragerOpportunityNestedInput = {
+    create?: XOR<CotizacionTragerCreateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    connectOrCreate?: CotizacionTragerCreateOrConnectWithoutFunnelTragerOpportunityInput
+    upsert?: CotizacionTragerUpsertWithoutFunnelTragerOpportunityInput
+    disconnect?: CotizacionTragerWhereInput | boolean
+    delete?: CotizacionTragerWhereInput | boolean
+    connect?: CotizacionTragerWhereUniqueInput
+    update?: XOR<XOR<CotizacionTragerUpdateToOneWithWhereWithoutFunnelTragerOpportunityInput, CotizacionTragerUpdateWithoutFunnelTragerOpportunityInput>, CotizacionTragerUncheckedUpdateWithoutFunnelTragerOpportunityInput>
+  }
+
+  export type ProductoUpdateOneWithoutFunnelTragerOpportunityNestedInput = {
+    create?: XOR<ProductoCreateWithoutFunnelTragerOpportunityInput, ProductoUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutFunnelTragerOpportunityInput
+    upsert?: ProductoUpsertWithoutFunnelTragerOpportunityInput
+    disconnect?: ProductoWhereInput | boolean
+    delete?: ProductoWhereInput | boolean
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutFunnelTragerOpportunityInput, ProductoUpdateWithoutFunnelTragerOpportunityInput>, ProductoUncheckedUpdateWithoutFunnelTragerOpportunityInput>
   }
 
   export type FunnelTragerArchivoUpdateManyWithoutOportunidadNestedInput = {
@@ -19333,6 +23639,27 @@ export namespace Prisma {
     connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
   }
 
+  export type FunnelTragerOpportunityCreateNestedManyWithoutProductoInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput> | FunnelTragerOpportunityCreateWithoutProductoInput[] | FunnelTragerOpportunityUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutProductoInput | FunnelTragerOpportunityCreateOrConnectWithoutProductoInput[]
+    createMany?: FunnelTragerOpportunityCreateManyProductoInputEnvelope
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+  }
+
+  export type VentaCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaCreateManyProductoInputEnvelope
+    connect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+  }
+
+  export type VentaDetalleCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput> | VentaDetalleCreateWithoutProductoInput[] | VentaDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutProductoInput | VentaDetalleCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaDetalleCreateManyProductoInputEnvelope
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+  }
+
   export type CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutProductoInput, CotizacionTragerDetalleUncheckedCreateWithoutProductoInput> | CotizacionTragerDetalleCreateWithoutProductoInput[] | CotizacionTragerDetalleUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutProductoInput | CotizacionTragerDetalleCreateOrConnectWithoutProductoInput[]
@@ -19345,6 +23672,27 @@ export namespace Prisma {
     connectOrCreate?: MovimientoCreateOrConnectWithoutProductoInput | MovimientoCreateOrConnectWithoutProductoInput[]
     createMany?: MovimientoCreateManyProductoInputEnvelope
     connect?: MovimientoWhereUniqueInput | MovimientoWhereUniqueInput[]
+  }
+
+  export type FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput> | FunnelTragerOpportunityCreateWithoutProductoInput[] | FunnelTragerOpportunityUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutProductoInput | FunnelTragerOpportunityCreateOrConnectWithoutProductoInput[]
+    createMany?: FunnelTragerOpportunityCreateManyProductoInputEnvelope
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+  }
+
+  export type VentaUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaCreateManyProductoInputEnvelope
+    connect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+  }
+
+  export type VentaDetalleUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput> | VentaDetalleCreateWithoutProductoInput[] | VentaDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutProductoInput | VentaDetalleCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaDetalleCreateManyProductoInputEnvelope
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
   }
 
   export type CategoriaUpdateOneRequiredWithoutProductoNestedInput = {
@@ -19383,6 +23731,48 @@ export namespace Prisma {
     deleteMany?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
   }
 
+  export type FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput> | FunnelTragerOpportunityCreateWithoutProductoInput[] | FunnelTragerOpportunityUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutProductoInput | FunnelTragerOpportunityCreateOrConnectWithoutProductoInput[]
+    upsert?: FunnelTragerOpportunityUpsertWithWhereUniqueWithoutProductoInput | FunnelTragerOpportunityUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: FunnelTragerOpportunityCreateManyProductoInputEnvelope
+    set?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    disconnect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    delete?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    update?: FunnelTragerOpportunityUpdateWithWhereUniqueWithoutProductoInput | FunnelTragerOpportunityUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: FunnelTragerOpportunityUpdateManyWithWhereWithoutProductoInput | FunnelTragerOpportunityUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
+  }
+
+  export type VentaUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaUpsertWithWhereUniqueWithoutProductoInput | VentaUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaCreateManyProductoInputEnvelope
+    set?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    disconnect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    delete?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    connect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    update?: VentaUpdateWithWhereUniqueWithoutProductoInput | VentaUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaUpdateManyWithWhereWithoutProductoInput | VentaUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaScalarWhereInput | VentaScalarWhereInput[]
+  }
+
+  export type VentaDetalleUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput> | VentaDetalleCreateWithoutProductoInput[] | VentaDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutProductoInput | VentaDetalleCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaDetalleUpsertWithWhereUniqueWithoutProductoInput | VentaDetalleUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaDetalleCreateManyProductoInputEnvelope
+    set?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    disconnect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    delete?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    update?: VentaDetalleUpdateWithWhereUniqueWithoutProductoInput | VentaDetalleUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaDetalleUpdateManyWithWhereWithoutProductoInput | VentaDetalleUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+  }
+
   export type CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutProductoInput, CotizacionTragerDetalleUncheckedCreateWithoutProductoInput> | CotizacionTragerDetalleCreateWithoutProductoInput[] | CotizacionTragerDetalleUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutProductoInput | CotizacionTragerDetalleCreateOrConnectWithoutProductoInput[]
@@ -19411,6 +23801,48 @@ export namespace Prisma {
     deleteMany?: MovimientoScalarWhereInput | MovimientoScalarWhereInput[]
   }
 
+  export type FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput> | FunnelTragerOpportunityCreateWithoutProductoInput[] | FunnelTragerOpportunityUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutProductoInput | FunnelTragerOpportunityCreateOrConnectWithoutProductoInput[]
+    upsert?: FunnelTragerOpportunityUpsertWithWhereUniqueWithoutProductoInput | FunnelTragerOpportunityUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: FunnelTragerOpportunityCreateManyProductoInputEnvelope
+    set?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    disconnect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    delete?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    update?: FunnelTragerOpportunityUpdateWithWhereUniqueWithoutProductoInput | FunnelTragerOpportunityUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: FunnelTragerOpportunityUpdateManyWithWhereWithoutProductoInput | FunnelTragerOpportunityUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
+  }
+
+  export type VentaUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput> | VentaCreateWithoutProductoInput[] | VentaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCreateOrConnectWithoutProductoInput | VentaCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaUpsertWithWhereUniqueWithoutProductoInput | VentaUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaCreateManyProductoInputEnvelope
+    set?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    disconnect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    delete?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    connect?: VentaWhereUniqueInput | VentaWhereUniqueInput[]
+    update?: VentaUpdateWithWhereUniqueWithoutProductoInput | VentaUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaUpdateManyWithWhereWithoutProductoInput | VentaUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaScalarWhereInput | VentaScalarWhereInput[]
+  }
+
+  export type VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput> | VentaDetalleCreateWithoutProductoInput[] | VentaDetalleUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutProductoInput | VentaDetalleCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaDetalleUpsertWithWhereUniqueWithoutProductoInput | VentaDetalleUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaDetalleCreateManyProductoInputEnvelope
+    set?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    disconnect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    delete?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    update?: VentaDetalleUpdateWithWhereUniqueWithoutProductoInput | VentaDetalleUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaDetalleUpdateManyWithWhereWithoutProductoInput | VentaDetalleUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+  }
+
   export type ProductoCreateNestedOneWithoutMovimientoInput = {
     create?: XOR<ProductoCreateWithoutMovimientoInput, ProductoUncheckedCreateWithoutMovimientoInput>
     connectOrCreate?: ProductoCreateOrConnectWithoutMovimientoInput
@@ -19432,11 +23864,37 @@ export namespace Prisma {
     connect?: CotizacionTragerDetalleWhereUniqueInput | CotizacionTragerDetalleWhereUniqueInput[]
   }
 
+  export type FunnelTragerOpportunityCreateNestedManyWithoutCotizacionInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput> | FunnelTragerOpportunityCreateWithoutCotizacionInput[] | FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput | FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput[]
+    createMany?: FunnelTragerOpportunityCreateManyCotizacionInputEnvelope
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+  }
+
+  export type ClienteCreateNestedOneWithoutCotizacionesInput = {
+    create?: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCotizacionesInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ContactoClienteTragerCreateNestedOneWithoutCotizacionesInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutCotizacionesInput, ContactoClienteTragerUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutCotizacionesInput
+    connect?: ContactoClienteTragerWhereUniqueInput
+  }
+
   export type CotizacionTragerDetalleUncheckedCreateNestedManyWithoutCotizacionInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutCotizacionInput, CotizacionTragerDetalleUncheckedCreateWithoutCotizacionInput> | CotizacionTragerDetalleCreateWithoutCotizacionInput[] | CotizacionTragerDetalleUncheckedCreateWithoutCotizacionInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutCotizacionInput | CotizacionTragerDetalleCreateOrConnectWithoutCotizacionInput[]
     createMany?: CotizacionTragerDetalleCreateManyCotizacionInputEnvelope
     connect?: CotizacionTragerDetalleWhereUniqueInput | CotizacionTragerDetalleWhereUniqueInput[]
+  }
+
+  export type FunnelTragerOpportunityUncheckedCreateNestedManyWithoutCotizacionInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput> | FunnelTragerOpportunityCreateWithoutCotizacionInput[] | FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput | FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput[]
+    createMany?: FunnelTragerOpportunityCreateManyCotizacionInputEnvelope
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
   }
 
   export type CotizacionTragerDetalleUpdateManyWithoutCotizacionNestedInput = {
@@ -19453,6 +23911,40 @@ export namespace Prisma {
     deleteMany?: CotizacionTragerDetalleScalarWhereInput | CotizacionTragerDetalleScalarWhereInput[]
   }
 
+  export type FunnelTragerOpportunityUpdateManyWithoutCotizacionNestedInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput> | FunnelTragerOpportunityCreateWithoutCotizacionInput[] | FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput | FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput[]
+    upsert?: FunnelTragerOpportunityUpsertWithWhereUniqueWithoutCotizacionInput | FunnelTragerOpportunityUpsertWithWhereUniqueWithoutCotizacionInput[]
+    createMany?: FunnelTragerOpportunityCreateManyCotizacionInputEnvelope
+    set?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    disconnect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    delete?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    update?: FunnelTragerOpportunityUpdateWithWhereUniqueWithoutCotizacionInput | FunnelTragerOpportunityUpdateWithWhereUniqueWithoutCotizacionInput[]
+    updateMany?: FunnelTragerOpportunityUpdateManyWithWhereWithoutCotizacionInput | FunnelTragerOpportunityUpdateManyWithWhereWithoutCotizacionInput[]
+    deleteMany?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
+  }
+
+  export type ClienteUpdateOneWithoutCotizacionesNestedInput = {
+    create?: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCotizacionesInput
+    upsert?: ClienteUpsertWithoutCotizacionesInput
+    disconnect?: ClienteWhereInput | boolean
+    delete?: ClienteWhereInput | boolean
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutCotizacionesInput, ClienteUpdateWithoutCotizacionesInput>, ClienteUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteTragerUpdateOneWithoutCotizacionesNestedInput = {
+    create?: XOR<ContactoClienteTragerCreateWithoutCotizacionesInput, ContactoClienteTragerUncheckedCreateWithoutCotizacionesInput>
+    connectOrCreate?: ContactoClienteTragerCreateOrConnectWithoutCotizacionesInput
+    upsert?: ContactoClienteTragerUpsertWithoutCotizacionesInput
+    disconnect?: ContactoClienteTragerWhereInput | boolean
+    delete?: ContactoClienteTragerWhereInput | boolean
+    connect?: ContactoClienteTragerWhereUniqueInput
+    update?: XOR<XOR<ContactoClienteTragerUpdateToOneWithWhereWithoutCotizacionesInput, ContactoClienteTragerUpdateWithoutCotizacionesInput>, ContactoClienteTragerUncheckedUpdateWithoutCotizacionesInput>
+  }
+
   export type CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionNestedInput = {
     create?: XOR<CotizacionTragerDetalleCreateWithoutCotizacionInput, CotizacionTragerDetalleUncheckedCreateWithoutCotizacionInput> | CotizacionTragerDetalleCreateWithoutCotizacionInput[] | CotizacionTragerDetalleUncheckedCreateWithoutCotizacionInput[]
     connectOrCreate?: CotizacionTragerDetalleCreateOrConnectWithoutCotizacionInput | CotizacionTragerDetalleCreateOrConnectWithoutCotizacionInput[]
@@ -19465,6 +23957,20 @@ export namespace Prisma {
     update?: CotizacionTragerDetalleUpdateWithWhereUniqueWithoutCotizacionInput | CotizacionTragerDetalleUpdateWithWhereUniqueWithoutCotizacionInput[]
     updateMany?: CotizacionTragerDetalleUpdateManyWithWhereWithoutCotizacionInput | CotizacionTragerDetalleUpdateManyWithWhereWithoutCotizacionInput[]
     deleteMany?: CotizacionTragerDetalleScalarWhereInput | CotizacionTragerDetalleScalarWhereInput[]
+  }
+
+  export type FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput = {
+    create?: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput> | FunnelTragerOpportunityCreateWithoutCotizacionInput[] | FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput[]
+    connectOrCreate?: FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput | FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput[]
+    upsert?: FunnelTragerOpportunityUpsertWithWhereUniqueWithoutCotizacionInput | FunnelTragerOpportunityUpsertWithWhereUniqueWithoutCotizacionInput[]
+    createMany?: FunnelTragerOpportunityCreateManyCotizacionInputEnvelope
+    set?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    disconnect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    delete?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    connect?: FunnelTragerOpportunityWhereUniqueInput | FunnelTragerOpportunityWhereUniqueInput[]
+    update?: FunnelTragerOpportunityUpdateWithWhereUniqueWithoutCotizacionInput | FunnelTragerOpportunityUpdateWithWhereUniqueWithoutCotizacionInput[]
+    updateMany?: FunnelTragerOpportunityUpdateManyWithWhereWithoutCotizacionInput | FunnelTragerOpportunityUpdateManyWithWhereWithoutCotizacionInput[]
+    deleteMany?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
   }
 
   export type CotizacionTragerCreateNestedOneWithoutDetallesInput = {
@@ -19493,6 +23999,90 @@ export namespace Prisma {
     upsert?: ProductoUpsertWithoutCotizacionTragerDetalleInput
     connect?: ProductoWhereUniqueInput
     update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutCotizacionTragerDetalleInput, ProductoUpdateWithoutCotizacionTragerDetalleInput>, ProductoUncheckedUpdateWithoutCotizacionTragerDetalleInput>
+  }
+
+  export type ProductoCreateNestedOneWithoutVentaInput = {
+    create?: XOR<ProductoCreateWithoutVentaInput, ProductoUncheckedCreateWithoutVentaInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentaInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type VentaDetalleCreateNestedManyWithoutVentaInput = {
+    create?: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput> | VentaDetalleCreateWithoutVentaInput[] | VentaDetalleUncheckedCreateWithoutVentaInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutVentaInput | VentaDetalleCreateOrConnectWithoutVentaInput[]
+    createMany?: VentaDetalleCreateManyVentaInputEnvelope
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+  }
+
+  export type VentaDetalleUncheckedCreateNestedManyWithoutVentaInput = {
+    create?: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput> | VentaDetalleCreateWithoutVentaInput[] | VentaDetalleUncheckedCreateWithoutVentaInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutVentaInput | VentaDetalleCreateOrConnectWithoutVentaInput[]
+    createMany?: VentaDetalleCreateManyVentaInputEnvelope
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+  }
+
+  export type ProductoUpdateOneRequiredWithoutVentaNestedInput = {
+    create?: XOR<ProductoCreateWithoutVentaInput, ProductoUncheckedCreateWithoutVentaInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentaInput
+    upsert?: ProductoUpsertWithoutVentaInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutVentaInput, ProductoUpdateWithoutVentaInput>, ProductoUncheckedUpdateWithoutVentaInput>
+  }
+
+  export type VentaDetalleUpdateManyWithoutVentaNestedInput = {
+    create?: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput> | VentaDetalleCreateWithoutVentaInput[] | VentaDetalleUncheckedCreateWithoutVentaInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutVentaInput | VentaDetalleCreateOrConnectWithoutVentaInput[]
+    upsert?: VentaDetalleUpsertWithWhereUniqueWithoutVentaInput | VentaDetalleUpsertWithWhereUniqueWithoutVentaInput[]
+    createMany?: VentaDetalleCreateManyVentaInputEnvelope
+    set?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    disconnect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    delete?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    update?: VentaDetalleUpdateWithWhereUniqueWithoutVentaInput | VentaDetalleUpdateWithWhereUniqueWithoutVentaInput[]
+    updateMany?: VentaDetalleUpdateManyWithWhereWithoutVentaInput | VentaDetalleUpdateManyWithWhereWithoutVentaInput[]
+    deleteMany?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+  }
+
+  export type VentaDetalleUncheckedUpdateManyWithoutVentaNestedInput = {
+    create?: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput> | VentaDetalleCreateWithoutVentaInput[] | VentaDetalleUncheckedCreateWithoutVentaInput[]
+    connectOrCreate?: VentaDetalleCreateOrConnectWithoutVentaInput | VentaDetalleCreateOrConnectWithoutVentaInput[]
+    upsert?: VentaDetalleUpsertWithWhereUniqueWithoutVentaInput | VentaDetalleUpsertWithWhereUniqueWithoutVentaInput[]
+    createMany?: VentaDetalleCreateManyVentaInputEnvelope
+    set?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    disconnect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    delete?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    connect?: VentaDetalleWhereUniqueInput | VentaDetalleWhereUniqueInput[]
+    update?: VentaDetalleUpdateWithWhereUniqueWithoutVentaInput | VentaDetalleUpdateWithWhereUniqueWithoutVentaInput[]
+    updateMany?: VentaDetalleUpdateManyWithWhereWithoutVentaInput | VentaDetalleUpdateManyWithWhereWithoutVentaInput[]
+    deleteMany?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+  }
+
+  export type ProductoCreateNestedOneWithoutVentaDetalleInput = {
+    create?: XOR<ProductoCreateWithoutVentaDetalleInput, ProductoUncheckedCreateWithoutVentaDetalleInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentaDetalleInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type VentaCreateNestedOneWithoutVentaDetalleInput = {
+    create?: XOR<VentaCreateWithoutVentaDetalleInput, VentaUncheckedCreateWithoutVentaDetalleInput>
+    connectOrCreate?: VentaCreateOrConnectWithoutVentaDetalleInput
+    connect?: VentaWhereUniqueInput
+  }
+
+  export type ProductoUpdateOneRequiredWithoutVentaDetalleNestedInput = {
+    create?: XOR<ProductoCreateWithoutVentaDetalleInput, ProductoUncheckedCreateWithoutVentaDetalleInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentaDetalleInput
+    upsert?: ProductoUpsertWithoutVentaDetalleInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutVentaDetalleInput, ProductoUpdateWithoutVentaDetalleInput>, ProductoUncheckedUpdateWithoutVentaDetalleInput>
+  }
+
+  export type VentaUpdateOneRequiredWithoutVentaDetalleNestedInput = {
+    create?: XOR<VentaCreateWithoutVentaDetalleInput, VentaUncheckedCreateWithoutVentaDetalleInput>
+    connectOrCreate?: VentaCreateOrConnectWithoutVentaDetalleInput
+    upsert?: VentaUpsertWithoutVentaDetalleInput
+    connect?: VentaWhereUniqueInput
+    update?: XOR<XOR<VentaUpdateToOneWithWhereWithoutVentaDetalleInput, VentaUpdateWithoutVentaDetalleInput>, VentaUncheckedUpdateWithoutVentaDetalleInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -19776,6 +24366,7 @@ export namespace Prisma {
     observaciones?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionTragerCreateNestedManyWithoutContactoTragerInput
   }
 
   export type ContactoClienteTragerUncheckedCreateWithoutClienteInput = {
@@ -19789,6 +24380,7 @@ export namespace Prisma {
     observaciones?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionTragerUncheckedCreateNestedManyWithoutContactoTragerInput
   }
 
   export type ContactoClienteTragerCreateOrConnectWithoutClienteInput = {
@@ -19798,6 +24390,93 @@ export namespace Prisma {
 
   export type ContactoClienteTragerCreateManyClienteInputEnvelope = {
     data: ContactoClienteTragerCreateManyClienteInput | ContactoClienteTragerCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CotizacionTragerCreateWithoutClienteTragerInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutCotizacionInput
+    contactoTrager?: ContactoClienteTragerCreateNestedOneWithoutCotizacionesInput
+  }
+
+  export type CotizacionTragerUncheckedCreateWithoutClienteTragerInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
+  }
+
+  export type CotizacionTragerCreateOrConnectWithoutClienteTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    create: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput>
+  }
+
+  export type CotizacionTragerCreateManyClienteTragerInputEnvelope = {
+    data: CotizacionTragerCreateManyClienteTragerInput | CotizacionTragerCreateManyClienteTragerInput[]
     skipDuplicates?: boolean
   }
 
@@ -19834,6 +24513,63 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ContactoClienteTrager"> | Date | string
   }
 
+  export type CotizacionTragerUpsertWithWhereUniqueWithoutClienteTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    update: XOR<CotizacionTragerUpdateWithoutClienteTragerInput, CotizacionTragerUncheckedUpdateWithoutClienteTragerInput>
+    create: XOR<CotizacionTragerCreateWithoutClienteTragerInput, CotizacionTragerUncheckedCreateWithoutClienteTragerInput>
+  }
+
+  export type CotizacionTragerUpdateWithWhereUniqueWithoutClienteTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    data: XOR<CotizacionTragerUpdateWithoutClienteTragerInput, CotizacionTragerUncheckedUpdateWithoutClienteTragerInput>
+  }
+
+  export type CotizacionTragerUpdateManyWithWhereWithoutClienteTragerInput = {
+    where: CotizacionTragerScalarWhereInput
+    data: XOR<CotizacionTragerUpdateManyMutationInput, CotizacionTragerUncheckedUpdateManyWithoutClienteTragerInput>
+  }
+
+  export type CotizacionTragerScalarWhereInput = {
+    AND?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+    OR?: CotizacionTragerScalarWhereInput[]
+    NOT?: CotizacionTragerScalarWhereInput | CotizacionTragerScalarWhereInput[]
+    id?: IntFilter<"CotizacionTrager"> | number
+    cliente?: StringFilter<"CotizacionTrager"> | string
+    contacto?: StringNullableFilter<"CotizacionTrager"> | string | null
+    clienteTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    contactoTragerId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    telefono?: StringNullableFilter<"CotizacionTrager"> | string | null
+    correo?: StringNullableFilter<"CotizacionTrager"> | string | null
+    tipoCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    cargo?: StringNullableFilter<"CotizacionTrager"> | string | null
+    responsable?: StringNullableFilter<"CotizacionTrager"> | string | null
+    estado?: StringFilter<"CotizacionTrager"> | string
+    moneda?: StringFilter<"CotizacionTrager"> | string
+    aplicaImpuesto?: BoolFilter<"CotizacionTrager"> | boolean
+    subtotal?: FloatFilter<"CotizacionTrager"> | number
+    descuento?: FloatFilter<"CotizacionTrager"> | number
+    impuesto?: FloatFilter<"CotizacionTrager"> | number
+    total?: FloatFilter<"CotizacionTrager"> | number
+    fechaCotizacion?: DateTimeFilter<"CotizacionTrager"> | Date | string
+    fechaVencimiento?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    fechaEnvio?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    fechaSeguimiento?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    fechaCierre?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    probabilidadCierre?: IntNullableFilter<"CotizacionTrager"> | number | null
+    comentariosCliente?: StringNullableFilter<"CotizacionTrager"> | string | null
+    objeciones?: StringNullableFilter<"CotizacionTrager"> | string | null
+    observaciones?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPerdida?: StringNullableFilter<"CotizacionTrager"> | string | null
+    motivoPostergacion?: StringNullableFilter<"CotizacionTrager"> | string | null
+    fechaReactivacion?: DateTimeNullableFilter<"CotizacionTrager"> | Date | string | null
+    version?: IntFilter<"CotizacionTrager"> | number
+    esActual?: BoolFilter<"CotizacionTrager"> | boolean
+    cotizacionBaseId?: IntNullableFilter<"CotizacionTrager"> | number | null
+    createdAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
+    updatedAt?: DateTimeFilter<"CotizacionTrager"> | Date | string
+    numero?: StringNullableFilter<"CotizacionTrager"> | string | null
+  }
+
   export type ClienteCreateWithoutContactosInput = {
     nombre: string
     rut?: string | null
@@ -19853,6 +24589,7 @@ export namespace Prisma {
     activo?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionTragerCreateNestedManyWithoutClienteTragerInput
   }
 
   export type ClienteUncheckedCreateWithoutContactosInput = {
@@ -19875,11 +24612,99 @@ export namespace Prisma {
     activo?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    cotizaciones?: CotizacionTragerUncheckedCreateNestedManyWithoutClienteTragerInput
   }
 
   export type ClienteCreateOrConnectWithoutContactosInput = {
     where: ClienteWhereUniqueInput
     create: XOR<ClienteCreateWithoutContactosInput, ClienteUncheckedCreateWithoutContactosInput>
+  }
+
+  export type CotizacionTragerCreateWithoutContactoTragerInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteTrager?: ClienteCreateNestedOneWithoutCotizacionesInput
+  }
+
+  export type CotizacionTragerUncheckedCreateWithoutContactoTragerInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    clienteTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
+  }
+
+  export type CotizacionTragerCreateOrConnectWithoutContactoTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    create: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput>
+  }
+
+  export type CotizacionTragerCreateManyContactoTragerInputEnvelope = {
+    data: CotizacionTragerCreateManyContactoTragerInput | CotizacionTragerCreateManyContactoTragerInput[]
+    skipDuplicates?: boolean
   }
 
   export type ClienteUpsertWithoutContactosInput = {
@@ -19912,6 +24737,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionTragerUpdateManyWithoutClienteTragerNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutContactosInput = {
@@ -19934,6 +24760,173 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionTragerUncheckedUpdateManyWithoutClienteTragerNestedInput
+  }
+
+  export type CotizacionTragerUpsertWithWhereUniqueWithoutContactoTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    update: XOR<CotizacionTragerUpdateWithoutContactoTragerInput, CotizacionTragerUncheckedUpdateWithoutContactoTragerInput>
+    create: XOR<CotizacionTragerCreateWithoutContactoTragerInput, CotizacionTragerUncheckedCreateWithoutContactoTragerInput>
+  }
+
+  export type CotizacionTragerUpdateWithWhereUniqueWithoutContactoTragerInput = {
+    where: CotizacionTragerWhereUniqueInput
+    data: XOR<CotizacionTragerUpdateWithoutContactoTragerInput, CotizacionTragerUncheckedUpdateWithoutContactoTragerInput>
+  }
+
+  export type CotizacionTragerUpdateManyWithWhereWithoutContactoTragerInput = {
+    where: CotizacionTragerScalarWhereInput
+    data: XOR<CotizacionTragerUpdateManyMutationInput, CotizacionTragerUncheckedUpdateManyWithoutContactoTragerInput>
+  }
+
+  export type CotizacionTragerCreateWithoutFunnelTragerOpportunityInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleCreateNestedManyWithoutCotizacionInput
+    clienteTrager?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoTrager?: ContactoClienteTragerCreateNestedOneWithoutCotizacionesInput
+  }
+
+  export type CotizacionTragerUncheckedCreateWithoutFunnelTragerOpportunityInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    clienteTragerId?: number | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+    detalles?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutCotizacionInput
+  }
+
+  export type CotizacionTragerCreateOrConnectWithoutFunnelTragerOpportunityInput = {
+    where: CotizacionTragerWhereUniqueInput
+    create: XOR<CotizacionTragerCreateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedCreateWithoutFunnelTragerOpportunityInput>
+  }
+
+  export type ProductoCreateWithoutFunnelTragerOpportunityInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutFunnelTragerOpportunityInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutFunnelTragerOpportunityInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutFunnelTragerOpportunityInput, ProductoUncheckedCreateWithoutFunnelTragerOpportunityInput>
   }
 
   export type FunnelTragerArchivoCreateWithoutOportunidadInput = {
@@ -19994,6 +24987,168 @@ export namespace Prisma {
   export type HistorialEtapaTragerCreateManyOportunidadInputEnvelope = {
     data: HistorialEtapaTragerCreateManyOportunidadInput | HistorialEtapaTragerCreateManyOportunidadInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CotizacionTragerUpsertWithoutFunnelTragerOpportunityInput = {
+    update: XOR<CotizacionTragerUpdateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedUpdateWithoutFunnelTragerOpportunityInput>
+    create: XOR<CotizacionTragerCreateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    where?: CotizacionTragerWhereInput
+  }
+
+  export type CotizacionTragerUpdateToOneWithWhereWithoutFunnelTragerOpportunityInput = {
+    where?: CotizacionTragerWhereInput
+    data: XOR<CotizacionTragerUpdateWithoutFunnelTragerOpportunityInput, CotizacionTragerUncheckedUpdateWithoutFunnelTragerOpportunityInput>
+  }
+
+  export type CotizacionTragerUpdateWithoutFunnelTragerOpportunityInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUpdateManyWithoutCotizacionNestedInput
+    clienteTrager?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoTrager?: ContactoClienteTragerUpdateOneWithoutCotizacionesNestedInput
+  }
+
+  export type CotizacionTragerUncheckedUpdateWithoutFunnelTragerOpportunityInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+  }
+
+  export type ProductoUpsertWithoutFunnelTragerOpportunityInput = {
+    update: XOR<ProductoUpdateWithoutFunnelTragerOpportunityInput, ProductoUncheckedUpdateWithoutFunnelTragerOpportunityInput>
+    create: XOR<ProductoCreateWithoutFunnelTragerOpportunityInput, ProductoUncheckedCreateWithoutFunnelTragerOpportunityInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutFunnelTragerOpportunityInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutFunnelTragerOpportunityInput, ProductoUncheckedUpdateWithoutFunnelTragerOpportunityInput>
+  }
+
+  export type ProductoUpdateWithoutFunnelTragerOpportunityInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutFunnelTragerOpportunityInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type FunnelTragerArchivoUpsertWithWhereUniqueWithoutOportunidadInput = {
@@ -20067,7 +25222,6 @@ export namespace Prisma {
     region?: string | null
     comuna?: string | null
     unidadNegocio?: string | null
-    productoId?: number | null
     cantidadEstimada?: number | null
     urgencia?: string | null
     tipoUso?: string | null
@@ -20098,7 +25252,6 @@ export namespace Prisma {
     observaciones?: string | null
     origen?: string | null
     estadoStock?: string | null
-    cotizacionId?: number | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
@@ -20127,6 +25280,8 @@ export namespace Prisma {
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
     esReactivacion?: boolean
+    cotizacion?: CotizacionTragerCreateNestedOneWithoutFunnelTragerOpportunityInput
+    producto?: ProductoCreateNestedOneWithoutFunnelTragerOpportunityInput
     historialEtapas?: HistorialEtapaTragerCreateNestedManyWithoutOportunidadInput
   }
 
@@ -20230,7 +25385,6 @@ export namespace Prisma {
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
     unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
-    productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
     urgencia?: NullableStringFieldUpdateOperationsInput | string | null
     tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20261,7 +25415,6 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
-    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20290,6 +25443,8 @@ export namespace Prisma {
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    cotizacion?: CotizacionTragerUpdateOneWithoutFunnelTragerOpportunityNestedInput
+    producto?: ProductoUpdateOneWithoutFunnelTragerOpportunityNestedInput
     historialEtapas?: HistorialEtapaTragerUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -20377,7 +25532,6 @@ export namespace Prisma {
     region?: string | null
     comuna?: string | null
     unidadNegocio?: string | null
-    productoId?: number | null
     cantidadEstimada?: number | null
     urgencia?: string | null
     tipoUso?: string | null
@@ -20408,7 +25562,6 @@ export namespace Prisma {
     observaciones?: string | null
     origen?: string | null
     estadoStock?: string | null
-    cotizacionId?: number | null
     motivoPerdida?: string | null
     motivoPostergacion?: string | null
     fechaReactivacion?: Date | string | null
@@ -20437,6 +25590,8 @@ export namespace Prisma {
     reprogramacionesCount?: number
     fechaUltimoCambioEtapa?: Date | string | null
     esReactivacion?: boolean
+    cotizacion?: CotizacionTragerCreateNestedOneWithoutFunnelTragerOpportunityInput
+    producto?: ProductoCreateNestedOneWithoutFunnelTragerOpportunityInput
     archivos?: FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput
   }
 
@@ -20540,7 +25695,6 @@ export namespace Prisma {
     region?: NullableStringFieldUpdateOperationsInput | string | null
     comuna?: NullableStringFieldUpdateOperationsInput | string | null
     unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
-    productoId?: NullableIntFieldUpdateOperationsInput | number | null
     cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
     urgencia?: NullableStringFieldUpdateOperationsInput | string | null
     tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20571,7 +25725,6 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     origen?: NullableStringFieldUpdateOperationsInput | string | null
     estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
-    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
     motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
     motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
     fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20600,6 +25753,8 @@ export namespace Prisma {
     reprogramacionesCount?: IntFieldUpdateOperationsInput | number
     fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    cotizacion?: CotizacionTragerUpdateOneWithoutFunnelTragerOpportunityNestedInput
+    producto?: ProductoUpdateOneWithoutFunnelTragerOpportunityNestedInput
     archivos?: FunnelTragerArchivoUpdateManyWithoutOportunidadNestedInput
   }
 
@@ -20700,8 +25855,12 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCategoriaInput = {
@@ -20728,8 +25887,12 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCategoriaInput = {
@@ -20786,6 +25949,7 @@ export namespace Prisma {
     salidas?: IntNullableFilter<"Producto"> | number | null
     fechaUltimaEntrada?: DateTimeNullableFilter<"Producto"> | Date | string | null
     fechaUltimaSalida?: DateTimeNullableFilter<"Producto"> | Date | string | null
+    precioInstalador?: FloatNullableFilter<"Producto"> | number | null
   }
 
   export type CategoriaCreateWithoutProductoInput = {
@@ -20806,6 +25970,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -20818,6 +25983,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -20863,6 +26029,233 @@ export namespace Prisma {
 
   export type MovimientoCreateManyProductoInputEnvelope = {
     data: MovimientoCreateManyProductoInput | MovimientoCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FunnelTragerOpportunityCreateWithoutProductoInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
+    cotizacion?: CotizacionTragerCreateNestedOneWithoutFunnelTragerOpportunityInput
+    archivos?: FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaTragerCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedCreateWithoutProductoInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    cotizacionId?: number | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
+    archivos?: FunnelTragerArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaTragerUncheckedCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelTragerOpportunityCreateOrConnectWithoutProductoInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    create: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput>
+  }
+
+  export type FunnelTragerOpportunityCreateManyProductoInputEnvelope = {
+    data: FunnelTragerOpportunityCreateManyProductoInput | FunnelTragerOpportunityCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VentaCreateWithoutProductoInput = {
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutVentaInput
+  }
+
+  export type VentaUncheckedCreateWithoutProductoInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutVentaInput
+  }
+
+  export type VentaCreateOrConnectWithoutProductoInput = {
+    where: VentaWhereUniqueInput
+    create: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaCreateManyProductoInputEnvelope = {
+    data: VentaCreateManyProductoInput | VentaCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VentaDetalleCreateWithoutProductoInput = {
+    cantidad: number
+    precio: number
+    subtotal: number
+    Venta: VentaCreateNestedOneWithoutVentaDetalleInput
+  }
+
+  export type VentaDetalleUncheckedCreateWithoutProductoInput = {
+    id?: number
+    ventaId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
+  export type VentaDetalleCreateOrConnectWithoutProductoInput = {
+    where: VentaDetalleWhereUniqueInput
+    create: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaDetalleCreateManyProductoInputEnvelope = {
+    data: VentaDetalleCreateManyProductoInput | VentaDetalleCreateManyProductoInput[]
     skipDuplicates?: boolean
   }
 
@@ -20912,6 +26305,7 @@ export namespace Prisma {
     cantidad?: IntFilter<"CotizacionTragerDetalle"> | number
     precioUnitario?: FloatFilter<"CotizacionTragerDetalle"> | number
     descuentoPct?: FloatFilter<"CotizacionTragerDetalle"> | number
+    gananciaPct?: FloatFilter<"CotizacionTragerDetalle"> | number
     subtotal?: FloatFilter<"CotizacionTragerDetalle"> | number
     stockDisponible?: IntNullableFilter<"CotizacionTragerDetalle"> | number | null
     observacion?: StringNullableFilter<"CotizacionTragerDetalle"> | string | null
@@ -20949,6 +26343,163 @@ export namespace Prisma {
     userId?: IntNullableFilter<"Movimiento"> | number | null
   }
 
+  export type FunnelTragerOpportunityUpsertWithWhereUniqueWithoutProductoInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    update: XOR<FunnelTragerOpportunityUpdateWithoutProductoInput, FunnelTragerOpportunityUncheckedUpdateWithoutProductoInput>
+    create: XOR<FunnelTragerOpportunityCreateWithoutProductoInput, FunnelTragerOpportunityUncheckedCreateWithoutProductoInput>
+  }
+
+  export type FunnelTragerOpportunityUpdateWithWhereUniqueWithoutProductoInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    data: XOR<FunnelTragerOpportunityUpdateWithoutProductoInput, FunnelTragerOpportunityUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type FunnelTragerOpportunityUpdateManyWithWhereWithoutProductoInput = {
+    where: FunnelTragerOpportunityScalarWhereInput
+    data: XOR<FunnelTragerOpportunityUpdateManyMutationInput, FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type FunnelTragerOpportunityScalarWhereInput = {
+    AND?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
+    OR?: FunnelTragerOpportunityScalarWhereInput[]
+    NOT?: FunnelTragerOpportunityScalarWhereInput | FunnelTragerOpportunityScalarWhereInput[]
+    id?: IntFilter<"FunnelTragerOpportunity"> | number
+    cliente?: StringFilter<"FunnelTragerOpportunity"> | string
+    contacto?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    telefono?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    correo?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    tipoCliente?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    rutEmpresa?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    region?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    comuna?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    unidadNegocio?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    productoId?: IntNullableFilter<"FunnelTragerOpportunity"> | number | null
+    cantidadEstimada?: IntNullableFilter<"FunnelTragerOpportunity"> | number | null
+    urgencia?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    tipoUso?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    necesidadSoporteTecnico?: BoolNullableFilter<"FunnelTragerOpportunity"> | boolean | null
+    alternativaProducto?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    comision?: FloatNullableFilter<"FunnelTragerOpportunity"> | number | null
+    margenEstimado?: FloatNullableFilter<"FunnelTragerOpportunity"> | number | null
+    fechaComprometidaEnvio?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    versionCotizacion?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    comentariosCliente?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    objeciones?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    ordenCompra?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    correoAceptacion?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    condicionesComerciales?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    coordinacionAdministrativa?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    estadoDocumentacion?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    traspasoAdministracion?: BoolNullableFilter<"FunnelTragerOpportunity"> | boolean | null
+    traspasoERP?: BoolNullableFilter<"FunnelTragerOpportunity"> | boolean | null
+    coordinacionDespacho?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    estadoComercialOrden?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    estadoDocumentacionVenta?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    responsable?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    etapa?: StringFilter<"FunnelTragerOpportunity"> | string
+    montoEstimado?: FloatFilter<"FunnelTragerOpportunity"> | number
+    probabilidadCierre?: IntNullableFilter<"FunnelTragerOpportunity"> | number | null
+    proximaAccion?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    fechaProximaAccion?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    observaciones?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    origen?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    estadoStock?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    cotizacionId?: IntNullableFilter<"FunnelTragerOpportunity"> | number | null
+    motivoPerdida?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    motivoPostergacion?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    fechaReactivacion?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    documentoRespaldo?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    fechaCierre?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    createdAt?: DateTimeFilter<"FunnelTragerOpportunity"> | Date | string
+    updatedAt?: DateTimeFilter<"FunnelTragerOpportunity"> | Date | string
+    probabilidad?: IntNullableFilter<"FunnelTragerOpportunity"> | number | null
+    flujoPosterior?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    motivoDescarte?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    tipoBroker?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    fechaEstimadaDespacho?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    fechaSeguimientoPostventa?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    nombreOportunidad?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    cargoContacto?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    direccionProyecto?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    tipoOportunidad?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    fechaProbableCierre?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    riesgoTecnico?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    comentariosInternos?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    observacionesTecnicas?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    observacionCamposFaltantes?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    lineaProducto?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    descuento?: FloatNullableFilter<"FunnelTragerOpportunity"> | number | null
+    stockOportunidad?: StringNullableFilter<"FunnelTragerOpportunity"> | string | null
+    reprogramacionesCount?: IntFilter<"FunnelTragerOpportunity"> | number
+    fechaUltimoCambioEtapa?: DateTimeNullableFilter<"FunnelTragerOpportunity"> | Date | string | null
+    esReactivacion?: BoolFilter<"FunnelTragerOpportunity"> | boolean
+  }
+
+  export type VentaUpsertWithWhereUniqueWithoutProductoInput = {
+    where: VentaWhereUniqueInput
+    update: XOR<VentaUpdateWithoutProductoInput, VentaUncheckedUpdateWithoutProductoInput>
+    create: XOR<VentaCreateWithoutProductoInput, VentaUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaUpdateWithWhereUniqueWithoutProductoInput = {
+    where: VentaWhereUniqueInput
+    data: XOR<VentaUpdateWithoutProductoInput, VentaUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type VentaUpdateManyWithWhereWithoutProductoInput = {
+    where: VentaScalarWhereInput
+    data: XOR<VentaUpdateManyMutationInput, VentaUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type VentaScalarWhereInput = {
+    AND?: VentaScalarWhereInput | VentaScalarWhereInput[]
+    OR?: VentaScalarWhereInput[]
+    NOT?: VentaScalarWhereInput | VentaScalarWhereInput[]
+    id?: IntFilter<"Venta"> | number
+    productoId?: IntFilter<"Venta"> | number
+    cliente?: StringFilter<"Venta"> | string
+    contacto?: StringNullableFilter<"Venta"> | string | null
+    cantidad?: IntFilter<"Venta"> | number
+    precio?: FloatFilter<"Venta"> | number
+    total?: FloatFilter<"Venta"> | number
+    estado?: StringFilter<"Venta"> | string
+    responsable?: StringNullableFilter<"Venta"> | string | null
+    fechaCierre?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    fechaProximaAccion?: DateTimeNullableFilter<"Venta"> | Date | string | null
+    origen?: StringNullableFilter<"Venta"> | string | null
+    probabilidad?: FloatNullableFilter<"Venta"> | number | null
+    proximaAccion?: StringNullableFilter<"Venta"> | string | null
+  }
+
+  export type VentaDetalleUpsertWithWhereUniqueWithoutProductoInput = {
+    where: VentaDetalleWhereUniqueInput
+    update: XOR<VentaDetalleUpdateWithoutProductoInput, VentaDetalleUncheckedUpdateWithoutProductoInput>
+    create: XOR<VentaDetalleCreateWithoutProductoInput, VentaDetalleUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaDetalleUpdateWithWhereUniqueWithoutProductoInput = {
+    where: VentaDetalleWhereUniqueInput
+    data: XOR<VentaDetalleUpdateWithoutProductoInput, VentaDetalleUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type VentaDetalleUpdateManyWithWhereWithoutProductoInput = {
+    where: VentaDetalleScalarWhereInput
+    data: XOR<VentaDetalleUpdateManyMutationInput, VentaDetalleUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type VentaDetalleScalarWhereInput = {
+    AND?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+    OR?: VentaDetalleScalarWhereInput[]
+    NOT?: VentaDetalleScalarWhereInput | VentaDetalleScalarWhereInput[]
+    id?: IntFilter<"VentaDetalle"> | number
+    ventaId?: IntFilter<"VentaDetalle"> | number
+    productoId?: IntFilter<"VentaDetalle"> | number
+    cantidad?: IntFilter<"VentaDetalle"> | number
+    precio?: FloatFilter<"VentaDetalle"> | number
+    subtotal?: FloatFilter<"VentaDetalle"> | number
+  }
+
   export type ProductoCreateWithoutMovimientoInput = {
     nombre: string
     descripcion?: string | null
@@ -20972,8 +26523,12 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutMovimientoInput = {
@@ -21001,7 +26556,11 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutMovimientoInput = {
@@ -21043,8 +26602,12 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
     CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutMovimientoInput = {
@@ -21072,13 +26635,18 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CotizacionTragerDetalleCreateWithoutCotizacionInput = {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -21091,6 +26659,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -21104,6 +26673,245 @@ export namespace Prisma {
   export type CotizacionTragerDetalleCreateManyCotizacionInputEnvelope = {
     data: CotizacionTragerDetalleCreateManyCotizacionInput | CotizacionTragerDetalleCreateManyCotizacionInput[]
     skipDuplicates?: boolean
+  }
+
+  export type FunnelTragerOpportunityCreateWithoutCotizacionInput = {
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
+    producto?: ProductoCreateNestedOneWithoutFunnelTragerOpportunityInput
+    archivos?: FunnelTragerArchivoCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaTragerCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    productoId?: number | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
+    archivos?: FunnelTragerArchivoUncheckedCreateNestedManyWithoutOportunidadInput
+    historialEtapas?: HistorialEtapaTragerUncheckedCreateNestedManyWithoutOportunidadInput
+  }
+
+  export type FunnelTragerOpportunityCreateOrConnectWithoutCotizacionInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    create: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput>
+  }
+
+  export type FunnelTragerOpportunityCreateManyCotizacionInputEnvelope = {
+    data: FunnelTragerOpportunityCreateManyCotizacionInput | FunnelTragerOpportunityCreateManyCotizacionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ClienteCreateWithoutCotizacionesInput = {
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
+    contactoNombre?: string | null
+    contactoTelefono?: string | null
+    contactoCorreo?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteTragerCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutCotizacionesInput = {
+    id?: number
+    nombre: string
+    rut?: string | null
+    email?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    razonSocial?: string | null
+    nombreEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    tipoCliente?: string | null
+    canalVenta?: string | null
+    observaciones?: string | null
+    contactoNombre?: string | null
+    contactoTelefono?: string | null
+    contactoCorreo?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contactos?: ContactoClienteTragerUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutCotizacionesInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteTragerCreateWithoutCotizacionesInput = {
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContactosInput
+  }
+
+  export type ContactoClienteTragerUncheckedCreateWithoutCotizacionesInput = {
+    id?: number
+    clienteId: number
+    nombre: string
+    cargo?: string | null
+    telefono?: string | null
+    correo?: string | null
+    principal?: boolean
+    activo?: boolean
+    observaciones?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContactoClienteTragerCreateOrConnectWithoutCotizacionesInput = {
+    where: ContactoClienteTragerWhereUniqueInput
+    create: XOR<ContactoClienteTragerCreateWithoutCotizacionesInput, ContactoClienteTragerUncheckedCreateWithoutCotizacionesInput>
   }
 
   export type CotizacionTragerDetalleUpsertWithWhereUniqueWithoutCotizacionInput = {
@@ -21122,12 +26930,127 @@ export namespace Prisma {
     data: XOR<CotizacionTragerDetalleUpdateManyMutationInput, CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionInput>
   }
 
+  export type FunnelTragerOpportunityUpsertWithWhereUniqueWithoutCotizacionInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    update: XOR<FunnelTragerOpportunityUpdateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedUpdateWithoutCotizacionInput>
+    create: XOR<FunnelTragerOpportunityCreateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedCreateWithoutCotizacionInput>
+  }
+
+  export type FunnelTragerOpportunityUpdateWithWhereUniqueWithoutCotizacionInput = {
+    where: FunnelTragerOpportunityWhereUniqueInput
+    data: XOR<FunnelTragerOpportunityUpdateWithoutCotizacionInput, FunnelTragerOpportunityUncheckedUpdateWithoutCotizacionInput>
+  }
+
+  export type FunnelTragerOpportunityUpdateManyWithWhereWithoutCotizacionInput = {
+    where: FunnelTragerOpportunityScalarWhereInput
+    data: XOR<FunnelTragerOpportunityUpdateManyMutationInput, FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionInput>
+  }
+
+  export type ClienteUpsertWithoutCotizacionesInput = {
+    update: XOR<ClienteUpdateWithoutCotizacionesInput, ClienteUncheckedUpdateWithoutCotizacionesInput>
+    create: XOR<ClienteCreateWithoutCotizacionesInput, ClienteUncheckedCreateWithoutCotizacionesInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutCotizacionesInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutCotizacionesInput, ClienteUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ClienteUpdateWithoutCotizacionesInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteTragerUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutCotizacionesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    rut?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    razonSocial?: NullableStringFieldUpdateOperationsInput | string | null
+    nombreEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    canalVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoNombre?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTelefono?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoCorreo?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactos?: ContactoClienteTragerUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ContactoClienteTragerUpsertWithoutCotizacionesInput = {
+    update: XOR<ContactoClienteTragerUpdateWithoutCotizacionesInput, ContactoClienteTragerUncheckedUpdateWithoutCotizacionesInput>
+    create: XOR<ContactoClienteTragerCreateWithoutCotizacionesInput, ContactoClienteTragerUncheckedCreateWithoutCotizacionesInput>
+    where?: ContactoClienteTragerWhereInput
+  }
+
+  export type ContactoClienteTragerUpdateToOneWithWhereWithoutCotizacionesInput = {
+    where?: ContactoClienteTragerWhereInput
+    data: XOR<ContactoClienteTragerUpdateWithoutCotizacionesInput, ContactoClienteTragerUncheckedUpdateWithoutCotizacionesInput>
+  }
+
+  export type ContactoClienteTragerUpdateWithoutCotizacionesInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContactosNestedInput
+  }
+
+  export type ContactoClienteTragerUncheckedUpdateWithoutCotizacionesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clienteId?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    principal?: BoolFieldUpdateOperationsInput | boolean
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CotizacionTragerCreateWithoutDetallesInput = {
     cliente: string
     contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -21137,19 +27060,38 @@ export namespace Prisma {
     fechaEnvio?: Date | string | null
     fechaSeguimiento?: Date | string | null
     fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
     observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     numero?: string | null
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutCotizacionInput
+    clienteTrager?: ClienteCreateNestedOneWithoutCotizacionesInput
+    contactoTrager?: ContactoClienteTragerCreateNestedOneWithoutCotizacionesInput
   }
 
   export type CotizacionTragerUncheckedCreateWithoutDetallesInput = {
     id?: number
     cliente: string
     contacto?: string | null
+    clienteTragerId?: number | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
     tipoCliente?: string | null
+    cargo?: string | null
     responsable?: string | null
     estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
     subtotal?: number
     descuento?: number
     impuesto?: number
@@ -21159,10 +27101,20 @@ export namespace Prisma {
     fechaEnvio?: Date | string | null
     fechaSeguimiento?: Date | string | null
     fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
     observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     numero?: string | null
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutCotizacionInput
   }
 
   export type CotizacionTragerCreateOrConnectWithoutDetallesInput = {
@@ -21193,8 +27145,12 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     Categoria: CategoriaCreateNestedOneWithoutProductoInput
     Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCotizacionTragerDetalleInput = {
@@ -21222,7 +27178,11 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
     Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCotizacionTragerDetalleInput = {
@@ -21244,9 +27204,14 @@ export namespace Prisma {
   export type CotizacionTragerUpdateWithoutDetallesInput = {
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -21256,19 +27221,38 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteTrager?: ClienteUpdateOneWithoutCotizacionesNestedInput
+    contactoTrager?: ContactoClienteTragerUpdateOneWithoutCotizacionesNestedInput
   }
 
   export type CotizacionTragerUncheckedUpdateWithoutDetallesInput = {
     id?: IntFieldUpdateOperationsInput | number
     cliente?: StringFieldUpdateOperationsInput | string
     contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
     tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
     responsable?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
     subtotal?: FloatFieldUpdateOperationsInput | number
     descuento?: FloatFieldUpdateOperationsInput | number
     impuesto?: FloatFieldUpdateOperationsInput | number
@@ -21278,10 +27262,20 @@ export namespace Prisma {
     fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     numero?: NullableStringFieldUpdateOperationsInput | string | null
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
   }
 
   export type ProductoUpsertWithoutCotizacionTragerDetalleInput = {
@@ -21318,8 +27312,12 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCotizacionTragerDetalleInput = {
@@ -21347,7 +27345,422 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoCreateWithoutVentaInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutVentaInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    VentaDetalle?: VentaDetalleUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutVentaInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutVentaInput, ProductoUncheckedCreateWithoutVentaInput>
+  }
+
+  export type VentaDetalleCreateWithoutVentaInput = {
+    cantidad: number
+    precio: number
+    subtotal: number
+    Producto: ProductoCreateNestedOneWithoutVentaDetalleInput
+  }
+
+  export type VentaDetalleUncheckedCreateWithoutVentaInput = {
+    id?: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
+  export type VentaDetalleCreateOrConnectWithoutVentaInput = {
+    where: VentaDetalleWhereUniqueInput
+    create: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput>
+  }
+
+  export type VentaDetalleCreateManyVentaInputEnvelope = {
+    data: VentaDetalleCreateManyVentaInput | VentaDetalleCreateManyVentaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductoUpsertWithoutVentaInput = {
+    update: XOR<ProductoUpdateWithoutVentaInput, ProductoUncheckedUpdateWithoutVentaInput>
+    create: XOR<ProductoCreateWithoutVentaInput, ProductoUncheckedCreateWithoutVentaInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutVentaInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutVentaInput, ProductoUncheckedUpdateWithoutVentaInput>
+  }
+
+  export type ProductoUpdateWithoutVentaInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutVentaInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type VentaDetalleUpsertWithWhereUniqueWithoutVentaInput = {
+    where: VentaDetalleWhereUniqueInput
+    update: XOR<VentaDetalleUpdateWithoutVentaInput, VentaDetalleUncheckedUpdateWithoutVentaInput>
+    create: XOR<VentaDetalleCreateWithoutVentaInput, VentaDetalleUncheckedCreateWithoutVentaInput>
+  }
+
+  export type VentaDetalleUpdateWithWhereUniqueWithoutVentaInput = {
+    where: VentaDetalleWhereUniqueInput
+    data: XOR<VentaDetalleUpdateWithoutVentaInput, VentaDetalleUncheckedUpdateWithoutVentaInput>
+  }
+
+  export type VentaDetalleUpdateManyWithWhereWithoutVentaInput = {
+    where: VentaDetalleScalarWhereInput
+    data: XOR<VentaDetalleUpdateManyMutationInput, VentaDetalleUncheckedUpdateManyWithoutVentaInput>
+  }
+
+  export type ProductoCreateWithoutVentaDetalleInput = {
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    Categoria: CategoriaCreateNestedOneWithoutProductoInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityCreateNestedManyWithoutProductoInput
+    Venta?: VentaCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutVentaDetalleInput = {
+    id?: number
+    nombre: string
+    descripcion?: string | null
+    stock: number
+    ubicacion?: string | null
+    createdAt?: Date | string
+    precio: number
+    minStock?: number
+    activo?: boolean
+    criticidad?: string
+    imagen?: string | null
+    categoriaId: number
+    stockReservado?: number
+    sku?: string | null
+    disponibilidad?: string | null
+    formato?: string | null
+    cantidadCaja?: string | null
+    precioUsd?: number | null
+    precioSugerido?: number | null
+    stockInicial?: number | null
+    entradas?: number | null
+    salidas?: number | null
+    fechaUltimaEntrada?: Date | string | null
+    fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedCreateNestedManyWithoutProductoInput
+    Movimiento?: MovimientoUncheckedCreateNestedManyWithoutProductoInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedCreateNestedManyWithoutProductoInput
+    Venta?: VentaUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutVentaDetalleInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutVentaDetalleInput, ProductoUncheckedCreateWithoutVentaDetalleInput>
+  }
+
+  export type VentaCreateWithoutVentaDetalleInput = {
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+    Producto: ProductoCreateNestedOneWithoutVentaInput
+  }
+
+  export type VentaUncheckedCreateWithoutVentaDetalleInput = {
+    id?: number
+    productoId: number
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+  }
+
+  export type VentaCreateOrConnectWithoutVentaDetalleInput = {
+    where: VentaWhereUniqueInput
+    create: XOR<VentaCreateWithoutVentaDetalleInput, VentaUncheckedCreateWithoutVentaDetalleInput>
+  }
+
+  export type ProductoUpsertWithoutVentaDetalleInput = {
+    update: XOR<ProductoUpdateWithoutVentaDetalleInput, ProductoUncheckedUpdateWithoutVentaDetalleInput>
+    create: XOR<ProductoCreateWithoutVentaDetalleInput, ProductoUncheckedCreateWithoutVentaDetalleInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutVentaDetalleInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutVentaDetalleInput, ProductoUncheckedUpdateWithoutVentaDetalleInput>
+  }
+
+  export type ProductoUpdateWithoutVentaDetalleInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    Categoria?: CategoriaUpdateOneRequiredWithoutProductoNestedInput
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutVentaDetalleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    ubicacion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    precio?: FloatFieldUpdateOperationsInput | number
+    minStock?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    criticidad?: StringFieldUpdateOperationsInput | string
+    imagen?: NullableStringFieldUpdateOperationsInput | string | null
+    categoriaId?: IntFieldUpdateOperationsInput | number
+    stockReservado?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    disponibilidad?: NullableStringFieldUpdateOperationsInput | string | null
+    formato?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadCaja?: NullableStringFieldUpdateOperationsInput | string | null
+    precioUsd?: NullableFloatFieldUpdateOperationsInput | number | null
+    precioSugerido?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockInicial?: NullableIntFieldUpdateOperationsInput | number | null
+    entradas?: NullableIntFieldUpdateOperationsInput | number | null
+    salidas?: NullableIntFieldUpdateOperationsInput | number | null
+    fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
+    CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
+    Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type VentaUpsertWithoutVentaDetalleInput = {
+    update: XOR<VentaUpdateWithoutVentaDetalleInput, VentaUncheckedUpdateWithoutVentaDetalleInput>
+    create: XOR<VentaCreateWithoutVentaDetalleInput, VentaUncheckedCreateWithoutVentaDetalleInput>
+    where?: VentaWhereInput
+  }
+
+  export type VentaUpdateToOneWithWhereWithoutVentaDetalleInput = {
+    where?: VentaWhereInput
+    data: XOR<VentaUpdateWithoutVentaDetalleInput, VentaUncheckedUpdateWithoutVentaDetalleInput>
+  }
+
+  export type VentaUpdateWithoutVentaDetalleInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    Producto?: ProductoUpdateOneRequiredWithoutVentaNestedInput
+  }
+
+  export type VentaUncheckedUpdateWithoutVentaDetalleInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactoClienteTragerCreateManyClienteInput = {
@@ -21363,6 +27776,43 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CotizacionTragerCreateManyClienteTragerInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    contactoTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+  }
+
   export type ContactoClienteTragerUpdateWithoutClienteInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     cargo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21373,6 +27823,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionTragerUpdateManyWithoutContactoTragerNestedInput
   }
 
   export type ContactoClienteTragerUncheckedUpdateWithoutClienteInput = {
@@ -21386,6 +27837,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotizaciones?: CotizacionTragerUncheckedUpdateManyWithoutContactoTragerNestedInput
   }
 
   export type ContactoClienteTragerUncheckedUpdateManyWithoutClienteInput = {
@@ -21399,6 +27851,271 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CotizacionTragerUpdateWithoutClienteTragerInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutCotizacionNestedInput
+    contactoTrager?: ContactoClienteTragerUpdateOneWithoutCotizacionesNestedInput
+  }
+
+  export type CotizacionTragerUncheckedUpdateWithoutClienteTragerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
+  }
+
+  export type CotizacionTragerUncheckedUpdateManyWithoutClienteTragerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    contactoTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CotizacionTragerCreateManyContactoTragerInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    clienteTragerId?: number | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    cargo?: string | null
+    responsable?: string | null
+    estado?: string
+    moneda?: string
+    aplicaImpuesto?: boolean
+    subtotal?: number
+    descuento?: number
+    impuesto?: number
+    total?: number
+    fechaCotizacion?: Date | string
+    fechaVencimiento?: Date | string | null
+    fechaEnvio?: Date | string | null
+    fechaSeguimiento?: Date | string | null
+    fechaCierre?: Date | string | null
+    probabilidadCierre?: number | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    observaciones?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    version?: number
+    esActual?: boolean
+    cotizacionBaseId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    numero?: string | null
+  }
+
+  export type CotizacionTragerUpdateWithoutContactoTragerInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutCotizacionNestedInput
+    clienteTrager?: ClienteUpdateOneWithoutCotizacionesNestedInput
+  }
+
+  export type CotizacionTragerUncheckedUpdateWithoutContactoTragerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
+    detalles?: CotizacionTragerDetalleUncheckedUpdateManyWithoutCotizacionNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionNestedInput
+  }
+
+  export type CotizacionTragerUncheckedUpdateManyWithoutContactoTragerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    clienteTragerId?: NullableIntFieldUpdateOperationsInput | number | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    cargo?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    moneda?: StringFieldUpdateOperationsInput | string
+    aplicaImpuesto?: BoolFieldUpdateOperationsInput | boolean
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    descuento?: FloatFieldUpdateOperationsInput | number
+    impuesto?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    fechaCotizacion?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaVencimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    esActual?: BoolFieldUpdateOperationsInput | boolean
+    cotizacionBaseId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    numero?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FunnelTragerArchivoCreateManyOportunidadInput = {
@@ -21507,6 +28224,7 @@ export namespace Prisma {
     salidas?: number | null
     fechaUltimaEntrada?: Date | string | null
     fechaUltimaSalida?: Date | string | null
+    precioInstalador?: number | null
   }
 
   export type ProductoUpdateWithoutCategoriaInput = {
@@ -21532,8 +28250,12 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCategoriaInput = {
@@ -21560,8 +28282,12 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
     CotizacionTragerDetalle?: CotizacionTragerDetalleUncheckedUpdateManyWithoutProductoNestedInput
     Movimiento?: MovimientoUncheckedUpdateManyWithoutProductoNestedInput
+    FunnelTragerOpportunity?: FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoNestedInput
+    Venta?: VentaUncheckedUpdateManyWithoutProductoNestedInput
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateManyWithoutCategoriaInput = {
@@ -21588,6 +28314,7 @@ export namespace Prisma {
     salidas?: NullableIntFieldUpdateOperationsInput | number | null
     fechaUltimaEntrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fechaUltimaSalida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    precioInstalador?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type CotizacionTragerDetalleCreateManyProductoInput = {
@@ -21596,6 +28323,7 @@ export namespace Prisma {
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
@@ -21613,10 +28341,108 @@ export namespace Prisma {
     userId?: number | null
   }
 
+  export type FunnelTragerOpportunityCreateManyProductoInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    cotizacionId?: number | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
+  }
+
+  export type VentaCreateManyProductoInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    cantidad: number
+    precio: number
+    total: number
+    estado?: string
+    responsable?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    fechaProximaAccion?: Date | string | null
+    origen?: string | null
+    probabilidad?: number | null
+    proximaAccion?: string | null
+  }
+
+  export type VentaDetalleCreateManyProductoInput = {
+    id?: number
+    ventaId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
   export type CotizacionTragerDetalleUpdateWithoutProductoInput = {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21629,6 +28455,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21640,6 +28467,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21680,21 +28508,389 @@ export namespace Prisma {
     userId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type FunnelTragerOpportunityUpdateWithoutProductoInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    cotizacion?: CotizacionTragerUpdateOneWithoutFunnelTragerOpportunityNestedInput
+    archivos?: FunnelTragerArchivoUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaTragerUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    archivos?: FunnelTragerArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaTragerUncheckedUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    cotizacionId?: NullableIntFieldUpdateOperationsInput | number | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaUpdateWithoutProductoInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    VentaDetalle?: VentaDetalleUpdateManyWithoutVentaNestedInput
+  }
+
+  export type VentaUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    VentaDetalle?: VentaDetalleUncheckedUpdateManyWithoutVentaNestedInput
+  }
+
+  export type VentaUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    estado?: StringFieldUpdateOperationsInput | string
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    probabilidad?: NullableFloatFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VentaDetalleUpdateWithoutProductoInput = {
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    Venta?: VentaUpdateOneRequiredWithoutVentaDetalleNestedInput
+  }
+
+  export type VentaDetalleUncheckedUpdateWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ventaId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type VentaDetalleUncheckedUpdateManyWithoutProductoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ventaId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+  }
+
   export type CotizacionTragerDetalleCreateManyCotizacionInput = {
     id?: number
     productoId: number
     cantidad: number
     precioUnitario: number
     descuentoPct?: number
+    gananciaPct?: number
     subtotal: number
     stockDisponible?: number | null
     observacion?: string | null
+  }
+
+  export type FunnelTragerOpportunityCreateManyCotizacionInput = {
+    id?: number
+    cliente: string
+    contacto?: string | null
+    telefono?: string | null
+    correo?: string | null
+    tipoCliente?: string | null
+    rutEmpresa?: string | null
+    region?: string | null
+    comuna?: string | null
+    unidadNegocio?: string | null
+    productoId?: number | null
+    cantidadEstimada?: number | null
+    urgencia?: string | null
+    tipoUso?: string | null
+    necesidadSoporteTecnico?: boolean | null
+    alternativaProducto?: string | null
+    comision?: number | null
+    margenEstimado?: number | null
+    fechaComprometidaEnvio?: Date | string | null
+    versionCotizacion?: string | null
+    comentariosCliente?: string | null
+    objeciones?: string | null
+    ordenCompra?: string | null
+    correoAceptacion?: string | null
+    condicionesComerciales?: string | null
+    coordinacionAdministrativa?: string | null
+    estadoDocumentacion?: string | null
+    traspasoAdministracion?: boolean | null
+    traspasoERP?: boolean | null
+    coordinacionDespacho?: string | null
+    estadoComercialOrden?: string | null
+    estadoDocumentacionVenta?: string | null
+    responsable?: string | null
+    etapa?: string
+    montoEstimado?: number
+    probabilidadCierre?: number | null
+    proximaAccion?: string | null
+    fechaProximaAccion?: Date | string | null
+    observaciones?: string | null
+    origen?: string | null
+    estadoStock?: string | null
+    motivoPerdida?: string | null
+    motivoPostergacion?: string | null
+    fechaReactivacion?: Date | string | null
+    documentoRespaldo?: string | null
+    fechaCierre?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    probabilidad?: number | null
+    flujoPosterior?: string | null
+    motivoDescarte?: string | null
+    tipoBroker?: string | null
+    fechaEstimadaDespacho?: Date | string | null
+    fechaSeguimientoPostventa?: Date | string | null
+    nombreOportunidad?: string | null
+    cargoContacto?: string | null
+    direccionProyecto?: string | null
+    tipoOportunidad?: string | null
+    fechaProbableCierre?: Date | string | null
+    riesgoTecnico?: string | null
+    comentariosInternos?: string | null
+    observacionesTecnicas?: string | null
+    observacionCamposFaltantes?: string | null
+    lineaProducto?: string | null
+    descuento?: number | null
+    stockOportunidad?: string | null
+    reprogramacionesCount?: number
+    fechaUltimoCambioEtapa?: Date | string | null
+    esReactivacion?: boolean
   }
 
   export type CotizacionTragerDetalleUpdateWithoutCotizacionInput = {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21707,6 +28903,7 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21718,9 +28915,260 @@ export namespace Prisma {
     cantidad?: IntFieldUpdateOperationsInput | number
     precioUnitario?: FloatFieldUpdateOperationsInput | number
     descuentoPct?: FloatFieldUpdateOperationsInput | number
+    gananciaPct?: FloatFieldUpdateOperationsInput | number
     subtotal?: FloatFieldUpdateOperationsInput | number
     stockDisponible?: NullableIntFieldUpdateOperationsInput | number | null
     observacion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FunnelTragerOpportunityUpdateWithoutCotizacionInput = {
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    producto?: ProductoUpdateOneWithoutFunnelTragerOpportunityNestedInput
+    archivos?: FunnelTragerArchivoUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaTragerUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedUpdateWithoutCotizacionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    productoId?: NullableIntFieldUpdateOperationsInput | number | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+    archivos?: FunnelTragerArchivoUncheckedUpdateManyWithoutOportunidadNestedInput
+    historialEtapas?: HistorialEtapaTragerUncheckedUpdateManyWithoutOportunidadNestedInput
+  }
+
+  export type FunnelTragerOpportunityUncheckedUpdateManyWithoutCotizacionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cliente?: StringFieldUpdateOperationsInput | string
+    contacto?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    rutEmpresa?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    comuna?: NullableStringFieldUpdateOperationsInput | string | null
+    unidadNegocio?: NullableStringFieldUpdateOperationsInput | string | null
+    productoId?: NullableIntFieldUpdateOperationsInput | number | null
+    cantidadEstimada?: NullableIntFieldUpdateOperationsInput | number | null
+    urgencia?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoUso?: NullableStringFieldUpdateOperationsInput | string | null
+    necesidadSoporteTecnico?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    alternativaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    comision?: NullableFloatFieldUpdateOperationsInput | number | null
+    margenEstimado?: NullableFloatFieldUpdateOperationsInput | number | null
+    fechaComprometidaEnvio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    versionCotizacion?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosCliente?: NullableStringFieldUpdateOperationsInput | string | null
+    objeciones?: NullableStringFieldUpdateOperationsInput | string | null
+    ordenCompra?: NullableStringFieldUpdateOperationsInput | string | null
+    correoAceptacion?: NullableStringFieldUpdateOperationsInput | string | null
+    condicionesComerciales?: NullableStringFieldUpdateOperationsInput | string | null
+    coordinacionAdministrativa?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacion?: NullableStringFieldUpdateOperationsInput | string | null
+    traspasoAdministracion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    traspasoERP?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    coordinacionDespacho?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoComercialOrden?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoDocumentacionVenta?: NullableStringFieldUpdateOperationsInput | string | null
+    responsable?: NullableStringFieldUpdateOperationsInput | string | null
+    etapa?: StringFieldUpdateOperationsInput | string
+    montoEstimado?: FloatFieldUpdateOperationsInput | number
+    probabilidadCierre?: NullableIntFieldUpdateOperationsInput | number | null
+    proximaAccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProximaAccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    origen?: NullableStringFieldUpdateOperationsInput | string | null
+    estadoStock?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPerdida?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoPostergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaReactivacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentoRespaldo?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    probabilidad?: NullableIntFieldUpdateOperationsInput | number | null
+    flujoPosterior?: NullableStringFieldUpdateOperationsInput | string | null
+    motivoDescarte?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoBroker?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaEstimadaDespacho?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fechaSeguimientoPostventa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nombreOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    cargoContacto?: NullableStringFieldUpdateOperationsInput | string | null
+    direccionProyecto?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    fechaProbableCierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    riesgoTecnico?: NullableStringFieldUpdateOperationsInput | string | null
+    comentariosInternos?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionesTecnicas?: NullableStringFieldUpdateOperationsInput | string | null
+    observacionCamposFaltantes?: NullableStringFieldUpdateOperationsInput | string | null
+    lineaProducto?: NullableStringFieldUpdateOperationsInput | string | null
+    descuento?: NullableFloatFieldUpdateOperationsInput | number | null
+    stockOportunidad?: NullableStringFieldUpdateOperationsInput | string | null
+    reprogramacionesCount?: IntFieldUpdateOperationsInput | number
+    fechaUltimoCambioEtapa?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    esReactivacion?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaDetalleCreateManyVentaInput = {
+    id?: number
+    productoId: number
+    cantidad: number
+    precio: number
+    subtotal: number
+  }
+
+  export type VentaDetalleUpdateWithoutVentaInput = {
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    Producto?: ProductoUpdateOneRequiredWithoutVentaDetalleNestedInput
+  }
+
+  export type VentaDetalleUncheckedUpdateWithoutVentaInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type VentaDetalleUncheckedUpdateManyWithoutVentaInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productoId?: IntFieldUpdateOperationsInput | number
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
 

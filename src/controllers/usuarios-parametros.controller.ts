@@ -52,6 +52,19 @@ function validarGestionIngenieria(
 }
 
 /**
+ * Cada usuario se administra solo desde su portal de origen (ver getRolesByEmpresa).
+ * Responde 403 si el usuario es de otro portal.
+ */
+function validarUsuarioDelPortal(res: Response, usuario: { rol: RolUsuario }, empresa: Empresa): boolean {
+  if (esRolDeEmpresa(usuario.rol, empresa)) return true;
+  res.status(403).json({
+    success: false,
+    error: 'Este usuario pertenece a otro portal. Adminístralo desde Usuarios y parámetros de su portal.',
+  });
+  return false;
+}
+
+/**
  * GET /api/beck/usuarios-parametros
  * GET /api/firemat/usuarios-parametros
  * Lista usuarios del contexto de empresa indicado (empresa inyectada por middleware de ruta)
@@ -203,6 +216,10 @@ export const actualizarUsuarioParametros = async (req: Request, res: Response): 
       return;
     }
 
+    if (!validarUsuarioDelPortal(res, usuarioExistente, empresa)) {
+      return;
+    }
+
     const data: { nombre?: string; email?: string; rol?: RolUsuario; activo?: boolean } = {};
     let rolFinal: RolUsuario | undefined;
 
@@ -310,11 +327,16 @@ export const actualizarUsuarioParametros = async (req: Request, res: Response): 
 export const eliminarUsuarioParametros = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
+    const empresa = req.empresaContexto as Empresa;
 
     const usuarioExistente = await prisma.usuario.findUnique({ where: { id } });
 
     if (!usuarioExistente) {
       res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+      return;
+    }
+
+    if (!validarUsuarioDelPortal(res, usuarioExistente, empresa)) {
       return;
     }
 

@@ -46,6 +46,9 @@ export const TODOS_LOS_MODULOS: string[] = [
   'trager_cotizaciones',
   'trager_inventario',
   'trager_movimientos',
+  'trager_reportes',
+  'trager_usuarios_parametros',
+  'trager_ventas',
 ];
 
 function buildPermisos(
@@ -137,6 +140,40 @@ export const PERMISOS_POR_ROL: Record<RolUsuario, PermisoBase[]> = {
         'firemat_inventario',
         'firemat_movimientos',
         'firemat_reportes',
+      ],
+      true,
+      false,
+    ),
+  ),
+
+  // Roles de Trager: mismos accesos que sus equivalentes de Firemat, sobre los módulos de Trager.
+  vendedor_trager: buildPermisos({
+    ...grant(['trager_funnel', 'trager_cotizaciones', 'trager_clientes'], true, true),
+    ...grant(
+      ['trager_dashboard', 'trager_productos', 'trager_categorias', 'trager_inventario', 'trager_ventas', 'trager_movimientos', 'trager_reportes'],
+      true,
+      false,
+    ),
+  }),
+
+  bodeguero_trager: buildPermisos({
+    ...grant(['trager_productos', 'trager_categorias', 'trager_inventario', 'trager_ventas'], true, true),
+    ...grant(['trager_dashboard', 'trager_movimientos', 'trager_reportes'], true, false),
+  }),
+
+  visualizador_trager: buildPermisos(
+    grant(
+      [
+        'trager_dashboard',
+        'trager_funnel',
+        'trager_cotizaciones',
+        'trager_clientes',
+        'trager_productos',
+        'trager_categorias',
+        'trager_inventario',
+        'trager_ventas',
+        'trager_movimientos',
+        'trager_reportes',
       ],
       true,
       false,

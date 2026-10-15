@@ -1,6 +1,6 @@
 import { RolUsuario } from '@prisma/client';
 
-export type Empresa = 'beck' | 'firemat';
+export type Empresa = 'beck' | 'firemat' | 'trager';
 
 export const ROLES_BECK: RolUsuario[] = [
   RolUsuario.administrador,
@@ -20,6 +20,9 @@ export const ROLES_EXCLUIDOS_COMERCIALES_BECK: RolUsuario[] = [
   RolUsuario.vendedor_firemat,
   RolUsuario.bodeguero,
   RolUsuario.visualizador_firemat,
+  RolUsuario.vendedor_trager,
+  RolUsuario.bodeguero_trager,
+  RolUsuario.visualizador_trager,
 ];
 
 export const ROLES_COMERCIALES_BECK: RolUsuario[] = Object.values(RolUsuario).filter(
@@ -36,6 +39,19 @@ export const ROLES_FIREMAT: RolUsuario[] = [
 export const ROLES_COMERCIALES_FIREMAT: RolUsuario[] = [
   RolUsuario.administrador,
   RolUsuario.vendedor_firemat,
+];
+
+// Roles propios de Trager, equivalentes a los de Firemat.
+export const ROLES_TRAGER: RolUsuario[] = [
+  RolUsuario.administrador,
+  RolUsuario.vendedor_trager,
+  RolUsuario.bodeguero_trager,
+  RolUsuario.visualizador_trager,
+];
+
+export const ROLES_COMERCIALES_TRAGER: RolUsuario[] = [
+  RolUsuario.administrador,
+  RolUsuario.vendedor_trager,
 ];
 
 export const ROLES_EXCLUIDOS_RESPONSABLE_COTIZACIONES: RolUsuario[] = [
@@ -60,11 +76,24 @@ export const ROLES_CREABLES_FIREMAT: RolUsuario[] = [
   RolUsuario.visualizador_firemat,
 ];
 
+export const ROLES_CREABLES_TRAGER: RolUsuario[] = [
+  RolUsuario.vendedor_trager,
+  RolUsuario.bodeguero_trager,
+  RolUsuario.visualizador_trager,
+];
+
+/**
+ * Roles propios de cada portal: definen qué usuarios aparecen y se pueden administrar en su
+ * "Usuarios y parámetros". Los administradores son usuarios de Beck, así que solo aparecen ahí.
+ * El acceso a las plataformas no depende de esto, sino de los permisos de cada usuario.
+ */
 export function getRolesByEmpresa(empresa: Empresa): RolUsuario[] {
-  return empresa === 'beck' ? ROLES_BECK : ROLES_FIREMAT;
+  if (empresa === 'trager') return ROLES_CREABLES_TRAGER;
+  return empresa === 'beck' ? ROLES_BECK : ROLES_CREABLES_FIREMAT;
 }
 
 export function getRolesCreablesByEmpresa(empresa: Empresa): RolUsuario[] {
+  if (empresa === 'trager') return ROLES_CREABLES_TRAGER;
   return empresa === 'beck' ? ROLES_CREABLES_BECK : ROLES_CREABLES_FIREMAT;
 }
 

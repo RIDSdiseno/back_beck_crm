@@ -1,4 +1,7 @@
+// Productos de Trager: misma lógica que Firemat (firemat/productos.controller.ts) sobre la base de Trager.
+// Sin códigos de barra (son de la app de bodega, fuera de alcance por ahora).
 import { Request, Response } from 'express';
+import ExcelJS from 'exceljs';
 import { Prisma } from '../../generated/trager-client';
 import { tragerPrisma } from '../../config/tragerPrisma';
 import { uploadImageDetailed, deleteImage } from '../../config/cloudinary';
@@ -63,6 +66,7 @@ const toDTO = (p: ProdWithCat) => ({
   precioClp: p.precio,
   precioUsd: p.precioUsd,
   precioSugerido: p.precioSugerido,
+  precioInstalador: p.precioInstalador,
   disponibilidad: p.disponibilidad,
   formato: p.formato,
   cantidadCaja: p.cantidadCaja,
@@ -79,26 +83,64 @@ const toDTO = (p: ProdWithCat) => ({
   createdAt: p.createdAt,
 });
 
+const excelText = (value: unknown): string => {
+  if (value === null || value === undefined) return '';
+  const text = String(value);
+  return /^[=+\-@]/.test(text.trimStart()) ? `'${text}` : text;
+};
+
+const formatExcelDate = (value: Date | null | undefined): string => {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('es-CL', {
+    timeZone: 'America/Santiago',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(value);
+};
+
+const buildProductosWhere = (query: Request['query']): Prisma.ProductoWhereInput => {
+  const { q, activo, categoriaId } = query;
+  const where: Prisma.ProductoWhereInput = {};
+
+  if (typeof activo === 'string') where.activo = activo === 'true';
+  if (typeof categoriaId === 'string' && categoriaId.trim()) {
+    const id = parseInt(categoriaId, 10);
+    if (!isNaN(id)) where.categoriaId = id;
+  }
+  if (typeof q === 'string' && q.trim()) {
+    where.OR = [
+      { sku: { contains: q.trim(), mode: 'insensitive' } },
+      { nombre: { contains: q.trim(), mode: 'insensitive' } },
+      { descripcion: { contains: q.trim(), mode: 'insensitive' } },
+    ];
+  }
+
+  return where;
+};
+
+const styleWorksheet = (worksheet: ExcelJS.Worksheet): void => {
+  const header = worksheet.getRow(1);
+  header.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF111827' } };
+  header.alignment = { vertical: 'middle', horizontal: 'center' };
+  header.height = 24;
+  worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+  if (worksheet.columnCount > 0) {
+    worksheet.autoFilter = {
+      from: { row: 1, column: 1 },
+      to: { row: 1, column: worksheet.columnCount },
+    };
+  }
+};
+
 export const getProductosTrager = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { q, activo, categoriaId } = req.query;
-    const where: Prisma.ProductoWhereInput = {};
-
-    if (typeof activo === 'string') where.activo = activo === 'true';
-    if (typeof categoriaId === 'string' && categoriaId.trim()) {
-      const id = parseInt(categoriaId, 10);
-      if (!isNaN(id)) where.categoriaId = id;
-    }
-    if (typeof q === 'string' && q.trim()) {
-      where.OR = [
-        { sku: { contains: q.trim(), mode: 'insensitive' } },
-        { nombre: { contains: q.trim(), mode: 'insensitive' } },
-        { descripcion: { contains: q.trim(), mode: 'insensitive' } },
-      ];
-    }
-
     const productos = await tragerPrisma.producto.findMany({
-      where,
+      where: buildProductosWhere(req.query),
       include: { Categoria: true },
       orderBy: { createdAt: 'desc' },
     });
@@ -107,6 +149,95 @@ export const getProductosTrager = async (req: Request, res: Response): Promise<v
   } catch (error) {
     console.error('Error al obtener productos Trager:', error);
     res.status(500).json({ success: false, error: 'Error al obtener productos' });
+  }
+};
+
+export const exportProductosTrager = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const productos = await tragerPrisma.producto.findMany({
+      where: buildProductosWhere(req.query),
+      include: { Categoria: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'CRM Trager';
+    workbook.created = new Date();
+
+    const productosSheet = workbook.addWorksheet('Productos');
+    productosSheet.columns = [
+      { header: 'SKU / Product Code', key: 'sku', width: 22 },
+      { header: 'Producto', key: 'nombre', width: 35 },
+      { header: 'Descripción', key: 'descripcion', width: 45 },
+      { header: 'Categoría', key: 'categoria', width: 22 },
+      { header: 'Disponibilidad', key: 'disponibilidad', width: 18 },
+      { header: 'Formato', key: 'formato', width: 18 },
+      { header: 'Cantidad por caja', key: 'cantidadCaja', width: 18 },
+      { header: 'Precio USD', key: 'precioUsd', width: 16 },
+      { header: 'Precio CLP', key: 'precio', width: 16 },
+      { header: 'Precio sugerido', key: 'precioSugerido', width: 18 },
+      { header: 'Precio instalador', key: 'precioInstalador', width: 18 },
+      { header: 'Stock inicial', key: 'stockInicial', width: 14 },
+      { header: 'Stock actual', key: 'stock', width: 14 },
+      { header: 'Stock reservado', key: 'stockReservado', width: 16 },
+      { header: 'Stock disponible', key: 'stockDisponible', width: 16 },
+      { header: 'Stock mínimo', key: 'minStock', width: 14 },
+      { header: 'Ubicación', key: 'ubicacion', width: 24 },
+      { header: 'Criticidad', key: 'criticidad', width: 14 },
+      { header: 'Estado', key: 'activo', width: 12 },
+      { header: 'Fecha creación', key: 'createdAt', width: 20 },
+      { header: 'URL imagen', key: 'imagen', width: 45 },
+    ];
+
+    for (const producto of productos) {
+      productosSheet.addRow({
+        sku: excelText(producto.sku),
+        nombre: excelText(producto.nombre),
+        descripcion: excelText(producto.descripcion),
+        categoria: excelText(producto.Categoria.nombre),
+        disponibilidad: excelText(producto.disponibilidad),
+        formato: excelText(producto.formato),
+        cantidadCaja: excelText(producto.cantidadCaja),
+        precioUsd: producto.precioUsd ?? 0,
+        precio: producto.precio,
+        precioSugerido: producto.precioSugerido ?? 0,
+        precioInstalador: producto.precioInstalador ?? 0,
+        stockInicial: producto.stockInicial ?? 0,
+        stock: producto.stock,
+        stockReservado: producto.stockReservado,
+        stockDisponible: producto.stock - producto.stockReservado,
+        minStock: producto.minStock,
+        ubicacion: excelText(producto.ubicacion),
+        criticidad: excelText(producto.criticidad),
+        activo: producto.activo ? 'Activo' : 'Inactivo',
+        createdAt: formatExcelDate(producto.createdAt),
+        imagen: excelText(producto.imagen),
+      });
+    }
+
+    productosSheet.getColumn('precioUsd').numFmt = 'US$#,##0.00';
+    productosSheet.getColumn('precio').numFmt = '$#,##0';
+    productosSheet.getColumn('precioSugerido').numFmt = '$#,##0';
+    productosSheet.getColumn('precioInstalador').numFmt = '$#,##0';
+    styleWorksheet(productosSheet);
+
+
+    const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="productos_trager_${timestamp}.xlsx"`,
+    );
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Error al exportar productos Trager:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ success: false, error: 'Error al exportar productos' });
+    }
   }
 };
 
@@ -154,6 +285,7 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
       cantidadCaja,
       precioUsd,
       precioSugerido,
+      precioInstalador,
     } = req.body;
 
     if (!nombre || typeof nombre !== 'string' || !nombre.trim()) {
@@ -192,6 +324,14 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
       precioSugeridoNum = normalizePriceField(precioSugerido);
       if (!Number.isFinite(precioSugeridoNum) || precioSugeridoNum < 0) {
         res.status(400).json({ success: false, error: 'precioSugerido debe ser >= 0' });
+        return;
+      }
+    }
+    let precioInstaladorNum: number | undefined;
+    if (precioInstalador !== undefined) {
+      precioInstaladorNum = normalizePriceField(precioInstalador);
+      if (!Number.isFinite(precioInstaladorNum) || precioInstaladorNum < 0) {
+        res.status(400).json({ success: false, error: 'precioInstalador debe ser >= 0' });
         return;
       }
     }
@@ -249,32 +389,33 @@ export const createProductoTrager = async (req: Request, res: Response): Promise
       }
     }
 
-    // Igual que Firemat: el stock inicial cuenta como entrada y queda en el kardex.
     const ahora = new Date();
+
     const producto = await tragerPrisma.$transaction(async (tx) => {
       const prod = await tx.producto.create({
-      data: {
-        nombre: nombre.trim(),
-        sku: sku.trim(),
-        descripcion: descripcion?.trim() ?? null,
-        categoriaId: catId,
-        precio: precioNum,
-        precioUsd: precioUsdNum,
-        precioSugerido: precioSugeridoNum,
-        disponibilidad: disponibilidad?.trim() || null,
-        formato: formato?.trim() || null,
-        cantidadCaja: cantidadCaja?.trim() || null,
-        stock: stockIni,
-        stockInicial: stockIni,
-        entradas: stockIni,
-        fechaUltimaEntrada: stockIni > 0 ? ahora : null,
-        minStock: stockMin,
-        ubicacion: ubicacion?.trim() ?? null,
-        criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
-        activo: activoBool ?? true,
-        imagen: imagenFinal,
-      },
-      include: { Categoria: true },
+        data: {
+          nombre: nombre.trim(),
+          sku: sku.trim(),
+          descripcion: descripcion?.trim() ?? null,
+          categoriaId: catId,
+          precio: precioNum,
+          precioUsd: precioUsdNum,
+          precioSugerido: precioSugeridoNum,
+          precioInstalador: precioInstaladorNum,
+          disponibilidad: disponibilidad?.trim() || null,
+          formato: formato?.trim() || null,
+          cantidadCaja: cantidadCaja?.trim() || null,
+          stock: stockIni,
+          stockInicial: stockIni,
+          entradas: stockIni,
+          fechaUltimaEntrada: stockIni > 0 ? ahora : null,
+          minStock: stockMin,
+          ubicacion: ubicacion?.trim() ?? null,
+          criticidad: criticidad !== undefined ? normCriticidad(String(criticidad)) : 'Media',
+          activo: activoBool ?? true,
+          imagen: imagenFinal,
+        },
+        include: { Categoria: true },
       });
 
       if (stockIni > 0) {
@@ -321,7 +462,7 @@ export const updateProductoTrager = async (req: Request, res: Response): Promise
     if ('stock' in req.body || 'stockActual' in req.body || 'stock_actual' in req.body) {
       res.status(400).json({
         success: false,
-        error: 'stockActual no se puede modificar directamente desde el CRUD de productos.',
+        error: 'stockActual no se puede modificar directamente. Use /trager/inventario para registrar movimientos.',
       });
       return;
     }
@@ -343,6 +484,7 @@ export const updateProductoTrager = async (req: Request, res: Response): Promise
       cantidadCaja,
       precioUsd,
       precioSugerido,
+      precioInstalador,
     } = req.body;
 
     const data: Prisma.ProductoUpdateInput = {};
@@ -411,6 +553,15 @@ export const updateProductoTrager = async (req: Request, res: Response): Promise
         return;
       }
       data.precioSugerido = p;
+    }
+
+    if (precioInstalador !== undefined) {
+      const p = normalizePriceField(precioInstalador);
+      if (!Number.isFinite(p) || p < 0) {
+        res.status(400).json({ success: false, error: 'precioInstalador debe ser >= 0' });
+        return;
+      }
+      data.precioInstalador = p;
     }
 
     if (cantidadCaja !== undefined) {

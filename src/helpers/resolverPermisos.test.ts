@@ -9,12 +9,28 @@ const permiso = (modulo: string, permitido: boolean) => ({
 const ver = (lista: ReturnType<typeof resolverPermisos>, modulo: string) =>
   lista.find(p => p.modulo === modulo)?.puedeVer;
 
-test('Conserva plataformas nativas y no concede Trager por defecto', () => {
+const ROLES_TRAGER = ['vendedor_trager', 'bodeguero_trager', 'visualizador_trager'];
+
+test('Conserva plataformas nativas y solo concede Trager por defecto a sus roles', () => {
   assert.equal(ver(PERMISOS_POR_ROL.vendedor, 'beck_acceder_plataforma'), true);
   assert.equal(ver(PERMISOS_POR_ROL.vendedor_firemat, 'firemat_acceder_plataforma'), true);
   for (const [rol, lista] of Object.entries(PERMISOS_POR_ROL)) {
-    assert.equal(ver(lista, 'trager_acceder_plataforma'), rol === 'administrador');
+    assert.equal(ver(lista, 'trager_acceder_plataforma'), rol === 'administrador' || ROLES_TRAGER.includes(rol));
   }
+});
+
+test('Los roles de Trager no reciben acceso a Beck ni a Firemat por defecto', () => {
+  for (const rol of ROLES_TRAGER) {
+    const lista = PERMISOS_POR_ROL[rol as keyof typeof PERMISOS_POR_ROL];
+    assert.equal(ver(lista, 'beck_acceder_plataforma'), false);
+    assert.equal(ver(lista, 'firemat_acceder_plataforma'), false);
+    assert.equal(ver(lista, 'trager_dashboard'), true);
+  }
+  // El bodeguero edita inventario pero no ve el funnel; el visualizador solo ve.
+  assert.equal(PERMISOS_POR_ROL.bodeguero_trager.find(p => p.modulo === 'trager_inventario')?.puedeEditar, true);
+  assert.equal(ver(PERMISOS_POR_ROL.bodeguero_trager, 'trager_funnel'), false);
+  // (el acceso a la plataforma siempre se otorga completo, como en Firemat)
+  assert.equal(PERMISOS_POR_ROL.visualizador_trager.some(p => p.puedeEditar && !p.modulo.endsWith('_acceder_plataforma')), false);
 });
 
 test('Permiso anterior Firemat conserva su acceso pero no habilita Trager', () => {

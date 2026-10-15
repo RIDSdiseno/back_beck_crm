@@ -17,8 +17,10 @@ const buildDateRange = (
   return desde || hasta ? range : undefined;
 };
 
-const ESTADOS_ACTIVOS_COT = new Set(['ENVIADA', 'REVISADA', 'APROBADA', 'EN_NEGOCIACION']);
-const ETAPAS_ACTIVAS_OP = new Set(['PROSPECTO', 'CALIFICADO', 'PROPUESTA', 'NEGOCIACION']);
+// Activas: las que todavía no se aceptan, rechazan ni vencen.
+const ESTADOS_ACTIVOS_COT = new Set(['BORRADOR', 'ENVIADA']);
+// Mismo criterio que el dashboard del funnel de Firemat.
+const ETAPAS_CERRADAS_OP = new Set(['GANADA', 'PERDIDA', 'POSTERGADA', 'DESCARTADO']);
 
 export const getReportesFiremat = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -69,10 +71,12 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
     if (typeof estadoCotizacion === 'string' && estadoCotizacion.trim())
       cotizacionesWhere.estado = estadoCotizacion.trim();
 
-    const oportunidadesWhere: Prisma.OportunidadWhereInput = {};
+    // Las oportunidades salen del funnel (la tabla Oportunidad es antigua y no se usa).
+    const oportunidadesWhere: Prisma.FunnelFirematOpportunityWhereInput = {};
     if (dateRange) oportunidadesWhere.createdAt = dateRange;
     if (typeof etapaOportunidad === 'string' && etapaOportunidad.trim())
       oportunidadesWhere.etapa = etapaOportunidad.trim();
+    if (prodId) oportunidadesWhere.productoId = prodId;
 
     const movimientosWhere: Prisma.MovimientoWhereInput = {};
     if (dateRange) movimientosWhere.createdAt = dateRange;
@@ -96,9 +100,9 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
         where: cotizacionesWhere,
         orderBy: { fechaCotizacion: 'desc' },
       }),
-      firematPrisma.oportunidad.findMany({
+      firematPrisma.funnelFirematOpportunity.findMany({
         where: oportunidadesWhere,
-        orderBy: { createdAt: 'desc' },
+        select: { etapa: true, montoEstimado: true },
       }),
       firematPrisma.movimiento.findMany({
         where: movimientosWhere,
@@ -131,9 +135,7 @@ export const getReportesFiremat = async (req: Request, res: Response): Promise<v
     ).length;
 
     const oportunidadesTotal = oportunidades.length;
-    const oportunidadesActivas = oportunidades.filter((o) =>
-      ETAPAS_ACTIVAS_OP.has(o.etapa),
-    ).length;
+    const oportunidadesActivas = oportunidades.filter((o) => !ETAPAS_CERRADAS_OP.has(o.etapa)).length;
 
 
     const vxmMap = new Map<string, { cantidad: number; monto: number }>();

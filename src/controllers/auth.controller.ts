@@ -16,8 +16,8 @@ const ALLOWED_EMAIL_DOMAINS = ['@becksoluciones.cl', '@firemat.cl'] as const;
 const isDominioValido = (email: string): boolean =>
   ALLOWED_EMAIL_DOMAINS.some(domain => email.endsWith(domain));
 
-const getEmpresaDefault = (email: string): 'beck' | 'firemat' =>
-  email.endsWith('@firemat.cl') ? 'firemat' : 'beck';
+const getEmpresaDefault = (email: string): 'beck' | 'firemat' | 'trager' =>
+  email.endsWith('@firemat.cl') ? 'firemat' : email.endsWith('@trager.cl') ? 'trager' : 'beck';
 
 type AuthUser = {
   id: string;
@@ -101,7 +101,11 @@ const findOrCreateMicrosoftUser = async (azureId: string, email: string, nombre:
     return usuario;
   }
 
-  const defaultRol: RolUsuario = email.endsWith('@firemat.cl') ? 'visualizador_firemat' : 'visualizador';
+  const defaultRol: RolUsuario = email.endsWith('@firemat.cl')
+    ? 'visualizador_firemat'
+    : email.endsWith('@trager.cl')
+      ? 'visualizador_trager'
+      : 'visualizador';
 
   return prisma.usuario.create({
     data: {

@@ -9,7 +9,10 @@ export type RolUsuario =
   | 'vendedor_firemat'
   | 'bodeguero'
   | 'visualizador_firemat'
-  | 'cliente';
+  | 'cliente'
+  | 'vendedor_trager'
+  | 'bodeguero_trager'
+  | 'visualizador_trager';
 
 export interface Usuario {
   id: string;
@@ -168,7 +171,7 @@ export interface AuthResponse {
     nombre: string;
     email: string;
     rol: RolUsuario;
-    empresaDefault: 'beck' | 'firemat';
+    empresaDefault: 'beck' | 'firemat' | 'trager';
   };
 }
 
